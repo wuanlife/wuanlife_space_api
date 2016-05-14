@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `group_base` (
   `name` varchar(11) CHARACTER SET gbk NOT NULL UNIQUE COMMENT '组名',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表' AUTO_INCREMENT=1 ;
 
 
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `post_base` (
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`id`),
   KEY `user_base_id` (`user_base_id`,`group_base_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖' AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖' AUTO_INCREMENT=1 ;
 
 
 
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `user_base` (
   `Email` varchar(30) COLLATE utf8_bin NOT NULL UNIQUE COMMENT '邮箱',
   PRIMARY KEY (`id`)
 
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本' AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本' AUTO_INCREMENT=1 ;
 
 
 
