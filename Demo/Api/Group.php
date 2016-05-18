@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 /**
 * 星球接口类
 */
@@ -103,6 +103,52 @@ class Api_Group extends PhalApi_Api
                     'desc' => '帖子正文',
                 ),
             ),
+        	
+        	'sPost' => array(
+        			'user_id'    => array(
+        					'name'    => 'user_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '用户id',
+        			),
+        			'post_id'    => array(
+        					'name'    => 'post_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '帖子id',
+        			),
+        	),
+        		
+        	'unSPost' => array(
+        			'user_id'    => array(
+        					'name'    => 'user_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '用户id',
+        			),
+        			'post_id'    => array(
+        					'name'    => 'post_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '帖子id',
+        			),
+        	),
+        		
+        	'dPost' => array(
+        			'user_id'    => array(
+        					'name'    => 'user_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '用户id',
+        			),
+        			'post_id'    => array(
+        					'name'    => 'post_id',
+        					'type'    => 'int',
+        					'require' => true,
+        					'desc'    => '帖子id',
+        			),
+        	),
+        		
         );
     }
 
@@ -215,7 +261,7 @@ class Api_Group extends PhalApi_Api
         $rs = array(
             'lists'  => array(),
             );
-        $pages = 20;                //每页数量
+        $pages = 30;                //每页数量
         $domain = new Domain_Group();
         $rs['lists'] =  $domain->lists($this->page, $pages);
         $rs['pageCount'] = $domain->pages['pageCount'];
@@ -250,6 +296,8 @@ class Api_Group extends PhalApi_Api
 
         return $rs;
     }
+    
+
     
 }
 

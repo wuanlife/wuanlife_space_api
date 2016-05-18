@@ -48,4 +48,21 @@ class Domain_Post {
         $rs = $model->editPost($data);
         return $rs;
     }
+    public function sPost($data){
+    	$this->model = new Model_Group();
+    	$rs = $this->model->sPost($data);
+    	return $rs;
+    }
+    
+    public function unSPost($data){
+    	$this->model = new Model_Group();
+    	$rs = $this->model->unSPost($data);
+    	return $rs;
+    }
+    
+    public function dPost($data){
+    	$this->model = new Model_Group();
+    	$rs = $this->model->dPost($data);
+    	return $rs;
+    }
 }

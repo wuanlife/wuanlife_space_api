@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * 数据库接口服务类
  */
@@ -200,4 +200,61 @@ class Api_Post extends PhalApi_Api{
         $rs = $domain->editPost($data);
         return $rs;
     }
-}
+    /**
+     * 置顶帖子
+     * @desc 帖子置顶
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function sPost(){
+    	$rs = array();
+    	$data = array(
+    			'user_id'       => $this->user_id,
+    			'post_id'       => $this->post_id,
+    	);
+    
+    	$domain = new Domain_Group();
+    	$rs = $domain->sPost($data);
+    
+    	return $rs;
+    }
+    
+    /**
+     * 取消置顶帖子
+     * @desc 取消帖子置顶
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function unSPost(){
+    	$rs = array();
+    	$data = array(
+    			'user_id'       => $this->user_id,
+    			'post_id'       => $this->post_id,
+    	);
+    
+    	$domain = new Domain_Group();
+    	$rs = $domain->unSPost($data);
+    
+    	return $rs;
+    }
+    
+    /**
+     * 删除帖子
+     * @desc 删除帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function dPost(){
+    	$rs = array();
+    	$data = array(
+    			'user_id'       => $this->user_id,
+    			'post_id'       => $this->post_id,
+    	);
+    
+    	$domain = new Domain_Group();
+    	$rs = $domain->dPost($data);
+    
+    	return $rs;
+    }
+}  
+    

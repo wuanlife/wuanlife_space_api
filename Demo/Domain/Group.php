@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 
 class Domain_Group {
 	public $rs = array(
@@ -139,7 +139,7 @@ class Domain_Group {
 	public function lists($page,$pages){
 		$this->model  = new Model_Group();
 		$all_num      = $this->model->getAllNum();				//总条
-		$page_num     =empty($pages)?20:$pages;					//每页条数
+		$page_num     =empty($pages)?30:$pages;					//每页条数
 		$page_all_num =ceil($all_num/$page_num);				//总页数
 		if ($page_all_num == 0){
 			$page_all_num =1;
@@ -183,8 +183,7 @@ class Domain_Group {
 
 		return $this->rs;
 	}
-
-
+	
 }
 
 
