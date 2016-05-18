@@ -104,50 +104,7 @@ class Api_Group extends PhalApi_Api
                 ),
             ),
         	
-        	'sPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
-        		
-        	'unSPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
-        		
-        	'dPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
+        	
         		
         );
     }

@@ -182,7 +182,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         return 'user';
     }
     
-    public function sPost($data){
+    public function stickyPost($data){
     	$rs = array();
     	 
     	$sqla=DI()->notorm->post_base
@@ -212,7 +212,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     	return $rs;
     }
     
-    public function unSPost($data){
+    public function unStickyPost($data){
     	$rs = array();
     
     	$sqla=DI()->notorm->post_base
@@ -242,7 +242,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     	return $rs;
     }
     
-    public function dPost($data){
+    public function deletePost($data){
     	$rs = array();
     
     	$sqla=DI()->notorm->post_base

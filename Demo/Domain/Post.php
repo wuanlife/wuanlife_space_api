@@ -48,21 +48,24 @@ class Domain_Post {
         $rs = $model->editPost($data);
         return $rs;
     }
-    public function sPost($data){
-    	$this->model = new Model_Group();
-    	$rs = $this->model->sPost($data);
+    public function stickyPost($data){
+	$rs = array();
+    	$model = new Model_Post();
+    	$rs = $model->stickyPost($data);
     	return $rs;
     }
     
-    public function unSPost($data){
-    	$this->model = new Model_Group();
-    	$rs = $this->model->unSPost($data);
+    public function unStickyPost($data){
+	$rs = array();
+    	$model = new Model_Post();
+    	$rs = $model->unStickyPost($data);
     	return $rs;
     }
     
-    public function dPost($data){
-    	$this->model = new Model_Group();
-    	$rs = $this->model->dPost($data);
+    public function deletePost($data){
+	$rs = array();
+    	$model = new Model_Post();
+    	$rs = $model->deletePost($data);
     	return $rs;
     }
 }
