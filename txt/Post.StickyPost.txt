@@ -19,7 +19,6 @@ code            整型   操作码，1表示置顶帖子成功，0表示置顶帖子失败
 re             字符串  提示信息
 
 6.示例：
-登录账号
 http://dev.wuanlife.com:800/?service=Post.StickyPost&user_id=13&post_id=1
 JSON:
 {

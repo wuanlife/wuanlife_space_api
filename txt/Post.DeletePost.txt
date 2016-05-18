@@ -19,7 +19,6 @@ code            整型   操作码，1表示删帖成功，0表示删帖失败
 re             字符串  提示信息
 
 6.示例：
-登录账号
 http://dev.wuanlife.com:800/?service=Post.DeletePost&user_id=13&post_id=1
 JSON:
 {
