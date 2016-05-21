@@ -31,7 +31,7 @@ class Api_Group extends PhalApi_Api
                     'ext' => array('jpg', 'jpeg', 'png')
                 ),
 				'g_introduction'    => array(
-                    'name'    => 'introduction',
+                    'name'    => 'g_introduction',
                     'type'    => 'string',
                     'require' => false,
                     'min'     => '1',
@@ -118,16 +118,6 @@ class Api_Group extends PhalApi_Api
                     'min' => '1',
                     'require' => true,
                     'desc' => '帖子正文',
-                ),
-            ),
-			'upload' => array(
-                'file' => array(
-                    'name' => 'file', 
-                    'type' => 'file', 
-                    'min' => 0, 
-                    'max' => 1024 * 1024, 
-                    'range' => array('image/jpg', 'image/jpeg', 'image/png'), 
-                    'ext' => array('jpg', 'jpeg', 'png')
                 ),
             ),
         );
