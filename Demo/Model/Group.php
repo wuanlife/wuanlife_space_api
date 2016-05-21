@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 /**
 * 星球相关DB操作
 */
@@ -15,6 +15,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 	public function getUser($user_id){
 		return DI()->notorm->user_base->select('nickname')->where('id = ?', $user_id)->fetchOne();
 	}
+
 
 	public function getAllNum(){
 		return $this->getORM()->count('id');
@@ -38,9 +39,41 @@ class Model_Group extends PhalApi_Model_NotORM{
     protected function getTableName($id){
         return 'group_base';
     }
-	
 
-    
+	public function getJoined($limit_st, $page_num,$user_id){
+		$group_detail=DI()->notorm->group_detail;
+		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','joiner')->fetchRows();
+		foreach ($rows as $key=>$value){
+			$row[]=$value["group_base_id"];
+		}
+		$arr_string = join(',', $row);
+		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
+			."WHERE gb.id IN($arr_string)"
+			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
+			.'ORDER BY COUNT(gb.id) DESC '
+			.'LIMIT :limit_st,:page_num';
+		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
+
+		return $this->getORM()->queryAll($sql, $params);
+	}
+
+	public function getCreate($limit_st, $page_num,$user_id){
+		$group_detail=DI()->notorm->group_detail;
+		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','creater')->fetchRows();
+		foreach ($rows as $key=>$value){
+			$row[]=$value["group_base_id"];
+		}
+		$arr_string = join(',', $row);
+		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
+			."WHERE gb.id IN($arr_string)"
+			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
+			.'ORDER BY COUNT(gb.id) DESC '
+			.'LIMIT :limit_st,:page_num';
+		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
+
+		return $this->getORM()->queryAll($sql, $params);
+	}	
+
 }
 
 

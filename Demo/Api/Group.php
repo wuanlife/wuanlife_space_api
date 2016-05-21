@@ -1,34 +1,35 @@
-﻿<?php 
+<?php 
 /**
 * 星球接口类
 */
 class Api_Group extends PhalApi_Api
 {
-    public function getRules(){
+    public function getRules()
+    {
         return array(
             'create' => array(
-                'user_id'    => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
                     'require' => true,
-                    'desc'    => '用户id',
+                    'desc' => '用户id',
                 ),
-                'g_name'    => array(
-                    'name'    => 'name',
-                    'type'    => 'string',
+                'g_name' => array(
+                    'name' => 'name',
+                    'type' => 'string',
                     'require' => true,
-                    'min'     => '1',
-                    'max'     => '80',
-                    'desc'    => '星球名称',
+                    'min' => '1',
+                    'max' => '80',
+                    'desc' => '星球名称',
                 ),
             ),
 
             'join' => array(
-                'user_id'    => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
                     'require' => true,
-                    'desc'    => '用户id',
+                    'desc' => '用户id',
                 ),
                 'g_id' => array(
                     'name' => 'group_base_id',
@@ -40,27 +41,27 @@ class Api_Group extends PhalApi_Api
             ),
 
             'gStatus' => array(
-                'user_id'    => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
                     'require' => true,
-                    'desc'    => '用户id',
+                    'desc' => '用户id',
                 ),
                 'g_id' => array(
-                    'name'    => 'group_base_id',
-                    'type'    => 'int',
+                    'name' => 'group_base_id',
+                    'type' => 'int',
                     'require' => true,
-                    'min'     => '1',
-                    'desc'    => '星球ID',
+                    'min' => '1',
+                    'desc' => '星球ID',
                 ),
             ),
 
             'uStatus' => array(
-                'user_id'    => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
                     'require' => true,
-                    'desc'    => '用户id',
+                    'desc' => '用户id',
                 ),
             ),
 
@@ -75,11 +76,11 @@ class Api_Group extends PhalApi_Api
             ),
 
             'posts' => array(
-                'user_id'    => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
                     'require' => true,
-                    'desc'    => '用户id',
+                    'desc' => '用户id',
                 ),
                 'g_id' => array(
                     'name' => 'group_base_id',
@@ -103,9 +104,36 @@ class Api_Group extends PhalApi_Api
                     'desc' => '帖子正文',
                 ),
             ),
-        	
-        	
-        		
+            'getjoined' => array(
+                'page' => array(
+                    'name' => 'page',
+                    'type' => 'int',
+                    'require' => false,
+                    'default' => 1,
+                    'desc' => '当前页面',
+                ),
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
+                    'require' => true,
+                    'desc' => '用户id',
+                ),
+            ),
+            'getcreate' => array(
+                'page' => array(
+                    'name' => 'page',
+                    'type' => 'int',
+                    'require' => false,
+                    'default' => 1,
+                    'desc' => '当前页面',
+                ),
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
+                    'require' => true,
+                    'desc' => '用户id',
+                ),
+            ),
         );
     }
 
@@ -119,12 +147,13 @@ class Api_Group extends PhalApi_Api
      * @return string info.name 星球名称
      * @return string msg 提示信息
      */
-    public function create(){
+    public function create()
+    {
         $rs = array();
 
         $data = array(
             'user_id' => $this->user_id,
-            'name'    => $this->g_name,
+            'name' => $this->g_name,
         );
 
         $domain = new Domain_Group();
@@ -143,11 +172,12 @@ class Api_Group extends PhalApi_Api
      * @return string info.user_base_id 加入者ID
      * @return string msg 提示信息
      */
-    public function join(){
+    public function join()
+    {
         $rs = array();
         $data = array(
             'user_id' => $this->user_id,
-            'g_id'    => $this->g_id,
+            'g_id' => $this->g_id,
         );
         $domain = new Domain_Group();
         $rs = $domain->join($data);
@@ -164,7 +194,8 @@ class Api_Group extends PhalApi_Api
      * @return string info.nickname 用户昵称
      * @return string msg 提示信息
      */
-    public function uStatus(){
+    public function uStatus()
+    {
         $rs = array();
         $data = array(
             'user_id' => $this->user_id,
@@ -181,11 +212,12 @@ class Api_Group extends PhalApi_Api
      * @return int code 操作码，1表示已加入，0表示未加入
      * @return string msg 提示信息
      */
-    public function gStatus(){
+    public function gStatus()
+    {
         $rs = array();
         $data = array(
             'user_id' => $this->user_id,
-            'g_id'    => $this->g_id,
+            'g_id' => $this->g_id,
         );
         $domain = new Domain_Group();
         $rs = $domain->gStatus($data);
@@ -214,13 +246,14 @@ class Api_Group extends PhalApi_Api
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
-    public function lists(){
+    public function lists()
+    {
         $rs = array(
-            'lists'  => array(),
-            );
-        $pages = 30;                //每页数量
+            'lists' => array(),
+        );
+        $pages = 20;                //每页数量
         $domain = new Domain_Group();
-        $rs['lists'] =  $domain->lists($this->page, $pages);
+        $rs['lists'] = $domain->lists($this->page, $pages);
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         return $rs;
@@ -239,26 +272,71 @@ class Api_Group extends PhalApi_Api
      * @return string info.title 帖子标题
      * @return string msg 提示信息
      */
-    public function posts(){
+    public function posts()
+    {
         $rs = array();
         $data = array(
-                'user_id'       => $this->user_id,
-                'group_base_id' => $this->g_id,
-                'title'         => $this->title,
-                'text'          => $this->text,
-            );
+            'user_id' => $this->user_id,
+            'group_base_id' => $this->g_id,
+            'title' => $this->title,
+            'text' => $this->text,
+        );
 
         $domain = new Domain_Group();
         $rs = $domain->posts($data);
 
         return $rs;
     }
-    
 
-    
+
+    /**
+     * 通过用户id找出已加入的星球
+     * @desc 按成员数降序显示星球列表
+     * @return int lists 星球列表对象
+     * @return int lists.name 星球名称
+     * @return int lists.id 星球ID
+     * @return int lists.num 星球成员数
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function getJoined()
+    {
+        $user_id=$this->user_id;
+        $rs = array(
+            'list' => array(),
+        );
+        $pages = 20;                //每页数量
+        $domain = new Domain_Group();
+        $rs['lists'] = $domain->getJoined($this->page, $pages, $user_id);
+        $rs['pageCount'] = $domain->pages['pageCount'];
+        $rs['currentPage'] = $domain->pages['currentPage'];
+        return $rs;
+    }
+
+    /**
+     * 通过用户id找出已创建的星球
+     * @desc 按成员数降序显示星球列表
+     * @return int lists 星球列表对象
+     * @return int lists.name 星球名称
+     * @return int lists.id 星球ID
+     * @return int lists.num 星球成员数
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function getCreate()
+    {
+        $user_id=$this->user_id;
+        $rs = array(
+            'list' => array(),
+        );
+        $pages = 20;                //每页数量
+        $domain = new Domain_Group();
+        $rs['lists'] = $domain->getCreate($this->page, $pages, $user_id);
+        $rs['pageCount'] = $domain->pages['pageCount'];
+        $rs['currentPage'] = $domain->pages['currentPage'];
+        return $rs;
+    }
 }
-
-
 
 
  ?>

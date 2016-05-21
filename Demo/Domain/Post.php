@@ -48,24 +48,4 @@ class Domain_Post {
         $rs = $model->editPost($data);
         return $rs;
     }
-    public function stickyPost($data){
-	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->stickyPost($data);
-    	return $rs;
-    }
-    
-    public function unStickyPost($data){
-	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->unStickyPost($data);
-    	return $rs;
-    }
-    
-    public function deletePost($data){
-	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->deletePost($data);
-    	return $rs;
-    }
 }

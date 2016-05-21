@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 
 class Domain_Group {
 	public $rs = array(
@@ -72,6 +72,7 @@ class Domain_Group {
 			$data2 = array(
 				'group_base_id' => $result['id'],
 				'user_base_id'  => $this->cookie['userID'], 
+				'authorization' =>'creater',
 			);
 			$result2 = DI()->notorm->group_detail->insert($data2);
 			// $result2 = $this->model->add(group_detail,$data2);
@@ -94,6 +95,7 @@ class Domain_Group {
 			$data = array(
 				'group_base_id' => $data['g_id'],
 				'user_base_id'  => $this->cookie['userID'],
+				'authorization' =>'joiner',
 			);
 
 			$result = DI()->notorm->group_detail->insert($data);
@@ -139,7 +141,7 @@ class Domain_Group {
 	public function lists($page,$pages){
 		$this->model  = new Model_Group();
 		$all_num      = $this->model->getAllNum();				//总条
-		$page_num     =empty($pages)?30:$pages;					//每页条数
+		$page_num     =empty($pages)?20:$pages;					//每页条数
 		$page_all_num =ceil($all_num/$page_num);				//总页数
 		if ($page_all_num == 0){
 			$page_all_num =1;
@@ -183,7 +185,41 @@ class Domain_Group {
 
 		return $this->rs;
 	}
-	
+
+	public function getJoined($page,$pages,$user_id){
+		$this->model  = new Model_Group();
+		$all_num      = $this->model->getAllNum();				//总条
+		$page_num     =empty($pages)?20:$pages;					//每页条数
+		$page_all_num =ceil($all_num/$page_num);				//总页数
+		if ($page_all_num == 0){
+			$page_all_num =1;
+		}
+		$page         =empty($page)?1:$page;					//当前页数
+		$page         =(int)$page;								//安全强制转换
+		$limit_st     =($page-1)*$page_num;						//起始数
+
+		$this->pages['pageCount'] = $page_all_num;
+		$this->pages['currentPage'] = $page;
+		return $this->model->getJoined($limit_st, $page_num,$user_id);
+	}
+
+	public function getCreate($page,$pages,$user_id){
+		$this->model  = new Model_Group();
+		$all_num      = $this->model->getAllNum();				//总条
+		$page_num     =empty($pages)?20:$pages;					//每页条数
+		$page_all_num =ceil($all_num/$page_num);				//总页数
+		if ($page_all_num == 0){
+			$page_all_num =1;
+		}
+		$page         =empty($page)?1:$page;					//当前页数
+		$page         =(int)$page;								//安全强制转换
+		$limit_st     =($page-1)*$page_num;						//起始数
+
+		$this->pages['pageCount'] = $page_all_num;
+		$this->pages['currentPage'] = $page;
+		return $this->model->getCreate($limit_st, $page_num,$user_id);
+	}
+
 }
 
 

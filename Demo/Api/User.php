@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * 登录注册服务类
  */
@@ -20,7 +20,7 @@ class Api_User extends PhalApi_Api{
                 'password' => array(
                     'name'    => 'password',
                     'type'    => 'string',
-                    'min'     => '6',
+                    'min'     => '1',
                     'require' => true,
                     'desc'    => '用户密码'
                 ),

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * 数据库接口服务类
  */
@@ -34,51 +34,7 @@ class Api_Post extends PhalApi_Api{
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'title' => array('name' => 'title', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子标题'),
                 'text' => array('name' => 'text', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子内容'),
-            ),
-	    	'stickyPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
-        		
-        	'unStickyPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
-        		
-        	'deletePost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
+            )
         );
     }
 
@@ -244,61 +200,4 @@ class Api_Post extends PhalApi_Api{
         $rs = $domain->editPost($data);
         return $rs;
     }
-    /**
-     * 置顶帖子
-     * @desc 帖子置顶
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
-     */
-    public function stickyPost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
-    
-    	$domain = new Domain_Post();
-    	$rs = $domain->stickyPost($data);
-    
-    	return $rs;
-    }
-    
-    /**
-     * 取消置顶帖子
-     * @desc 取消帖子置顶
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
-     */
-    public function unStickyPost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
-    
-    	$domain = new Domain_Post();
-    	$rs = $domain->unStickyPost($data);
-    
-    	return $rs;
-    }
-    
-    /**
-     * 删除帖子
-     * @desc 删除帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
-     */
-    public function deletePost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
-    
-    	$domain = new Domain_Post();
-    	$rs = $domain->deletePost($data);
-    
-    	return $rs;
-    }
-}  
-    
+}
