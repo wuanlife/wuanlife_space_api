@@ -11,5 +11,8 @@ return array(
     'apiCommonRules' => array(
         //'sign' => array('name' => 'sign', 'require' => true),
     ),
-
+    /**
+     * 云上传引擎,支持local,oss,upyun
+     */
+    'UCloudEngine' => 'local',
 );

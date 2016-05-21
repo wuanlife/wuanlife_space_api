@@ -1,11 +1,36 @@
-﻿-- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump
 -- version phpStudy 2014
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2016 年 01 月 22 日 15:46
--- 服务器版本: 5.5.38
--- PHP 版本: 5.3.29
+-- 生成日期: 2016 �?05 �?21 �?19:06
+-- 服务器版本: 5.5.47
+-- PHP 版本: 5.5.30
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- 数据库: `wuan`
+--
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `authorization`
+--
+
+CREATE TABLE IF NOT EXISTS `authorization` (
+  `area_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限位置区分',
+  `aser_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限区分',
+  `note` varchar(8) COLLATE utf8_bin NOT NULL COMMENT '说明'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限表';
 
 -- --------------------------------------------------------
 
@@ -15,12 +40,12 @@
 
 CREATE TABLE IF NOT EXISTS `group_base` (
   `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '组id',
-  `name` varchar(11) CHARACTER SET gbk NOT NULL UNIQUE COMMENT '组名',
+  `name` varchar(11) CHARACTER SET gbk NOT NULL COMMENT '组名',
+  `g_image` varchar(255) CHARACTER SET gbk DEFAULT NULL COMMENT '组图片',
+  `g_introduction` varchar(50) CHARACTER SET gbk DEFAULT NULL COMMENT '组介绍',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表' AUTO_INCREMENT=4 ;
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -33,7 +58,6 @@ CREATE TABLE IF NOT EXISTS `group_detail` (
   `user_base_id` int(5) unsigned NOT NULL COMMENT '成员id',
   `authorization` varchar(9) CHARACTER SET utf8 NOT NULL COMMENT '身份'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组成员表';
-
 
 -- --------------------------------------------------------
 
@@ -51,9 +75,7 @@ CREATE TABLE IF NOT EXISTS `post_base` (
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`id`),
   KEY `user_base_id` (`user_base_id`,`group_base_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖' AUTO_INCREMENT=13 ;
-
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -73,8 +95,6 @@ CREATE TABLE IF NOT EXISTS `post_detail` (
   KEY `user_base_id` (`user_base_id`,`replyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='回复帖';
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -84,13 +104,12 @@ CREATE TABLE IF NOT EXISTS `post_detail` (
 CREATE TABLE IF NOT EXISTS `user_base` (
   `id` int(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户id',
   `password` varchar(35) COLLATE utf8_bin NOT NULL COMMENT '密码',
-  `nickname` varchar(20) COLLATE utf8_bin NOT NULL UNIQUE COMMENT '昵称',
-  `Email` varchar(30) COLLATE utf8_bin NOT NULL UNIQUE COMMENT '邮箱',
-  PRIMARY KEY (`id`)
-
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本' AUTO_INCREMENT=13 ;
-
-
+  `nickname` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '昵称',
+  `Email` varchar(30) COLLATE utf8_bin NOT NULL COMMENT '邮箱',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nickname` (`nickname`),
+  UNIQUE KEY `Email` (`Email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -106,4 +125,6 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   PRIMARY KEY (`user_base_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户详情';
 
-
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
