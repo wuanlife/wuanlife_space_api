@@ -1,4 +1,4 @@
-<?php
+﻿   <?php
 
 class Model_Post extends PhalApi_Model_NotORM {
 
@@ -8,7 +8,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs   = array();
         $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
              . 'GROUP BY pb.id '
              . 'ORDER BY MAX(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
@@ -40,9 +40,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['groupID'] = $groupData['0']['groupID'];
         $rs['groupName'] = $groupData['0']['groupName'];
 
-        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname '
+        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
              . 'GROUP BY pb.id '
              . 'ORDER BY MAX(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
@@ -69,7 +69,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs   = array();
         $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
              . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'
              . 'GROUP BY pb.id '
              . 'ORDER BY MAX(pd.createTime) DESC '
@@ -181,4 +181,99 @@ class Model_Post extends PhalApi_Model_NotORM {
     protected function getTableName($id) {
         return 'user';
     }
+    
+    public function stickyPost($data){
+    	$rs = array();
+    	 
+    	$sqla=DI()->notorm->post_base
+    	->select('group_base_id')
+    	->where('id=?',$data['post_id'])
+    	->fetchone();
+    	 
+    	$sqlb=DI()->notorm->group_detail
+    	->select('user_base_id')
+    	->where('group_base_id=?',$sqla['group_base_id'])
+    	->fetchone();
+    	 
+    	$s_data = array(
+    			'sticky' => '1',
+    	);
+    	 
+    	if($data['user_id']==$sqlb['user_base_id']) {
+    		$s = DI()->notorm->post_base
+    		->where('id =?', $data['post_id'])
+    		->update($s_data);
+    		$rs['code']=1;
+    		$rs['re']="操作成功";
+    	}else{
+    		$rs['code']=0;
+    		$rs['re']="仅星球创建者能置顶帖子!";
+    	}
+    	return $rs;
+    }
+    
+    public function unStickyPost($data){
+    	$rs = array();
+    
+    	$sqla=DI()->notorm->post_base
+    	->select('group_base_id')
+    	->where('id=?',$data['post_id'])
+    	->fetchone();
+    
+    	$sqlb=DI()->notorm->group_detail
+    	->select('user_base_id')
+    	->where('group_base_id=?',$sqla['group_base_id'])
+    	->fetchone();
+    
+    	$s_data = array(
+    			'sticky' => '0',
+    	);
+    
+    	if($data['user_id']==$sqlb['user_base_id']) {
+    		$s = DI()->notorm->post_base
+    		->where('id =?', $data['post_id'])
+    		->update($s_data);
+    		$rs['code']=1;
+    		$rs['re']="操作成功";
+    	}else{
+    		$rs['code']=0;
+    		$rs['re']="仅星球创建者能取消置顶帖子!";
+    	}
+    	return $rs;
+    }
+    
+    public function deletePost($data){
+    	$rs = array();
+    
+    	$sqla=DI()->notorm->post_base
+    	->select('group_base_id')
+    	->where('id=?',$data['post_id'])
+    	->fetchone();
+    
+    	$sqlb=DI()->notorm->group_detail
+    	->select('user_base_id')
+    	->where('group_base_id=?',$sqla['group_base_id'])
+    	->fetchone();
+    
+    	$d_data = array(
+    			'`delete`' => '1',
+    	);
+    
+    	if($data['user_id']==$sqlb['user_base_id']) {
+    		$sa = DI()->notorm->post_base
+    		->where('id =?', $data['post_id'])
+    		->update($d_data);
+    		$sb = DI()->notorm->post_detail
+    		->where('post_base_id=?', $data['post_id'])
+    		->update($d_data);
+    		$rs['code']=1;
+    		$rs['re']="操作成功";
+    	}else{
+    		$rs['code']=0;
+    		$rs['re']="仅星球创建者能删除帖子!";
+    	}
+    	return $rs;
+    }
+    
 }
+   
