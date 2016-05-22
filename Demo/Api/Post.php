@@ -107,6 +107,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 每个星球页面帖子显示
      * @desc 星球页面帖子显示
+     * @return int post.digest 加精
      * @return int posts.postID 帖子ID
      * @return string posts.title 标题
      * @return string posts.text 内容
@@ -116,7 +117,6 @@ class Api_Post extends PhalApi_Api{
      * @return string posts.groupName 星球名称
      * @return int pageCount 总页数
      * @return int currentPage 当前页
-     * @return int digest 加精
      */
     public function getGroupPost(){
         $data   = array();
