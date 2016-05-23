@@ -74,43 +74,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 		return $this->getORM()->queryAll($sql, $params);
 	}
 
-	public function getJoined($limit_st, $page_num,$user_id){
-		$group_detail=DI()->notorm->group_detail;
-		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','joiner')->fetchRows();
-		foreach ($rows as $key=>$value){
-			$row[]=$value["group_base_id"];
-		}
-		$arr_string = join(',', $row);
-		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
-			."WHERE gb.id IN($arr_string)"
-			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-			.'ORDER BY COUNT(gb.id) DESC '
-			.'LIMIT :limit_st,:page_num';
-		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
-
-		return $this->getORM()->queryAll($sql, $params);
-	}
-
-	public function getCreate($limit_st, $page_num,$user_id){
-		$group_detail=DI()->notorm->group_detail;
-		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','creater')->fetchRows();
-		foreach ($rows as $key=>$value){
-			$row[]=$value["group_base_id"];
-		}
-		$arr_string = join(',', $row);
-		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
-			."WHERE gb.id IN($arr_string)"
-			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-			.'ORDER BY COUNT(gb.id) DESC '
-			.'LIMIT :limit_st,:page_num';
-		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
-
-		return $this->getORM()->queryAll($sql, $params);
-	}
-
 }
-
-
 
 
 
