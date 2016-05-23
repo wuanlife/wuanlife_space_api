@@ -64,21 +64,25 @@ class Domain_Group {
 		$this->model = new Model_Group();
 		$this->checkStatus($data['user_id']);
 		$this->checkN($data['name']);
-		
-		//设置上传路径 设置方法参考3.2
-        DI()->ucloud->set('save_path',date('Y/m/d'));
+		//上传操作
+        $date=date("Y-m-d");
+        $path="../upload/$date";
+        if(!is_readable($path)) {
+            is_file($path) or mkdir($path);
+        }
+        move_uploaded_file($_FILES["g_image"]["tmp_name"],
+        "$path/" . $_FILES["g_image"]["name"]);
+        if(empty($_FILES["g_image"]["name"])) {
+            $_FILES["g_image"]["data"]=NULL;
+        }
+        else {
+            $_FILES["g_image"]["data"] = "$path/" . $_FILES["g_image"]["name"];
+        }
+		if(empty($data['g_introduction'])) {
+			$data['g_introduction']=NULL;
+		}
+        $data = array('name' => $data['name'],'g_image'=>$_FILES["g_image"]["data"],'g_introduction' => $data['g_introduction']) ;
 
-        //新增修改文件名设置上传的文件名称
-		$files = explode(".",$data['g_image']['name']);
-		$filename = $files[0];
-        DI()->ucloud->set('file_name', $filename);
-
-        //上传表单名
-        $image = DI()->ucloud->upfile($data['g_image']);
-        //返回上传路径
-        $data = array('name' => $data['name'],'g_image' => $image['url'],'g_introduction' => $data['g_introduction']) ;
-		
-		
 		if ($this->u_status == '1' && $this->g_status =='1') {
 			$result = DI()->notorm->group_base->insert($data);
 			// $result = $this->model->add(group_base,$data);
