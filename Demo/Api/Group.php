@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * 星球接口类
 */
@@ -21,16 +21,15 @@ class Api_Group extends PhalApi_Api
                     'max'     => '80',
                     'desc'    => '星球名称',
                 ),
-				'file' => array(
-                    'name' => 'file', 
-                    'type' => 'file', 
-					'require' => false,
-                    'min' => 0, 
-                    'max' => 1024 * 1024, 
-                    'range' => array('image/jpg', 'image/jpeg', 'image/png'), 
+                'file' => array(
+                    'name' => 'file',
+                    'type' => 'file'||NULL,
+                    'min' => 0,
+                    'max' => 1024 * 1024,
+                    'range' => array('image/jpg', 'image/jpeg', 'image/png'),
                     'ext' => array('jpg', 'jpeg', 'png')
                 ),
-				'g_introduction'    => array(
+                'g_introduction'    => array(
                     'name'    => 'g_introduction',
                     'type'    => 'string',
                     'require' => false,
@@ -139,8 +138,8 @@ class Api_Group extends PhalApi_Api
         $data = array(
             'user_id' => $this->user_id,
             'name'    => $this->g_name,
-			'g_image'    => $this->file,
-			'g_introduction' => $this->g_introduction,
+            'g_image'    => $this->file,
+            'g_introduction' => $this->g_introduction,
         );
 
         $domain = new Domain_Group();
@@ -268,7 +267,7 @@ class Api_Group extends PhalApi_Api
 
         return $rs;
     }
-    
+
 }
 
 
