@@ -119,6 +119,38 @@ class Api_Group extends PhalApi_Api
                     'desc' => '帖子正文',
                 ),
             ),
+            
+            'getjoined' => array(
+                'page' => array(
+                    'name' => 'page',
+                    'type' => 'int',
+                    'require' => false,
+                    'default' => 1,
+                    'desc' => '当前页面',
+                ),
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
+                    'require' => true,
+                    'desc' => '用户id',
+                ),
+            ),
+            
+            'getcreate' => array(
+                'page' => array(
+                    'name' => 'page',
+                    'type' => 'int',
+                    'require' => false,
+                    'default' => 1,
+                    'desc' => '当前页面',
+                ),
+                'user_id' => array(
+                    'name' => 'user_id',
+                    'type' => 'int',
+                    'require' => true,
+                    'desc' => '用户id',
+                ),
+            ),            
         );
     }
 
@@ -268,6 +300,53 @@ class Api_Group extends PhalApi_Api
         return $rs;
     }
 
+    /**
+     * 通过用户id找出已加入的星球
+     * @desc 按成员数降序显示星球列表
+     * @return int lists 星球列表对象
+     * @return int lists.name 星球名称
+     * @return int lists.id 星球ID
+     * @return int lists.num 星球成员数
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function getJoined()
+    {
+        $user_id=$this->user_id;
+        $rs = array(
+            'list' => array(),
+        );
+        $pages = 20;                //每页数量
+        $domain = new Domain_Group();
+        $rs['lists'] = $domain->getJoined($this->page, $pages, $user_id);
+        $rs['pageCount'] = $domain->pages['pageCount'];
+        $rs['currentPage'] = $domain->pages['currentPage'];
+        return $rs;
+    }
+
+    /**
+     * 通过用户id找出已创建的星球
+     * @desc 按成员数降序显示星球列表
+     * @return int lists 星球列表对象
+     * @return int lists.name 星球名称
+     * @return int lists.id 星球ID
+     * @return int lists.num 星球成员数
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function getCreate()
+    {
+        $user_id=$this->user_id;
+        $rs = array(
+            'list' => array(),
+        );
+        $pages = 20;                //每页数量
+        $domain = new Domain_Group();
+        $rs['lists'] = $domain->getCreate($this->page, $pages, $user_id);
+        $rs['pageCount'] = $domain->pages['pageCount'];
+        $rs['currentPage'] = $domain->pages['currentPage'];
+        return $rs;
+    }    
 }
 
 
