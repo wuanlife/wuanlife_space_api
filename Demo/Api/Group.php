@@ -17,7 +17,7 @@ class Api_Group extends PhalApi_Api
                     'name'    => 'name',
                     'type'    => 'string',
                     'require' => true,
-                    'min'     => '1',
+                    'min'     => '0',
                     'max'     => '80',
                     'desc'    => '星球名称',
                 ),
