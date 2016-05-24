@@ -46,8 +46,9 @@ class Model_Group extends PhalApi_Model_NotORM{
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
+		$groupnum=count($row);
 		$arr_string = join(',', $row);
-		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
+		$sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,$groupnum AS num FROM group_base gb "
 			."WHERE gb.id IN($arr_string)"
 			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
 			.'ORDER BY COUNT(gb.id) DESC '
@@ -63,8 +64,9 @@ class Model_Group extends PhalApi_Model_NotORM{
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
+		$groupnum=count($row);
 		$arr_string = join(',', $row);
-		$sql="SELECT gb.name,gb.id,COUNT('$row') AS num FROM group_base gb "
+		$sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction ,$groupnum AS num FROM group_base gb "
 			."WHERE gb.id IN($arr_string)"
 			.'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
 			.'ORDER BY COUNT(gb.id) DESC '

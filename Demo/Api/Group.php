@@ -312,11 +312,11 @@ class Api_Group extends PhalApi_Api
     {
         $user_id=$this->user_id;
         $rs = array(
-            'list' => array(),
+            'groups' => array(),
         );
         $pages = 20;                //每页数量
         $domain = new Domain_Group();
-        $rs['lists'] = $domain->getJoined($this->page, $pages, $user_id);
+        $rs['groups'] = $domain->getJoined($this->page, $pages, $user_id);
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         return $rs;
@@ -336,11 +336,11 @@ class Api_Group extends PhalApi_Api
     {
         $user_id=$this->user_id;
         $rs = array(
-            'list' => array(),
+            'groups' => array(),
         );
         $pages = 20;                //每页数量
         $domain = new Domain_Group();
-        $rs['lists'] = $domain->getCreate($this->page, $pages, $user_id);
+        $rs['groups'] = $domain->getCreate($this->page, $pages, $user_id);
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         return $rs;
