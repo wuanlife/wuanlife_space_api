@@ -17,17 +17,18 @@ class Api_Group extends PhalApi_Api
                     'name'    => 'name',
                     'type'    => 'string',
                     'require' => true,
-                    'min'     => '1',
+                    'min'     => '0',
                     'max'     => '80',
                     'desc'    => '星球名称',
                 ),
-                'file' => array(
-                    'name' => 'file',
+                'g_image' => array(
+                    'name' => 'image',
                     'type' => 'file'||NULL,
                     'min' => 0,
                     'max' => 1024 * 1024,
                     'range' => array('image/jpg', 'image/jpeg', 'image/png'),
-                    'ext' => array('jpg', 'jpeg', 'png')
+                    'ext' => array('jpg', 'jpeg', 'png'),
+					'desc'=>'星球图标',
                 ),
                 'g_introduction'    => array(
                     'name'    => 'g_introduction',
@@ -170,14 +171,11 @@ class Api_Group extends PhalApi_Api
         $data = array(
             'user_id' => $this->user_id,
             'name'    => $this->g_name,
-            'g_image'    => $this->file,
+            'g_image'    => $this->g_image,
             'g_introduction' => $this->g_introduction,
         );
-
         $domain = new Domain_Group();
         $rs = $domain->create($data);
-
-
         return $rs;
     }
     /**
