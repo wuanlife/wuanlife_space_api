@@ -42,7 +42,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 
 	public function getJoined($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
-		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','joiner')->fetchRows();
+		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','03')->fetchRows();
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
@@ -59,7 +59,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 
 	public function getCreate($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
-		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','creater')->fetchRows();
+		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','01')->fetchRows();
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
