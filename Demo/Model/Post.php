@@ -1,4 +1,4 @@
-ï»¿   <?php
+<?php
 
 class Model_Post extends PhalApi_Model_NotORM {
 
@@ -133,7 +133,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function PostReply($data) {
         $rs = array();
         $time = date('Y-m-d H:i:s',time());
-        //æŸ¥è¯¢æœ€å¤§æ¥¼å±‚
+        //²éÑ¯×î´óÂ¥²ã
         $sql=DI()->notorm->post_detail
         ->select('post_base_id,user_base_id,max(floor)')
         ->where('post_base_id =?',$data['post_base_id'])
@@ -174,7 +174,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             $rs['info']['createTime']=$time;
         }else{
             $rs['code']=0;
-            $rs['msg']="æ‚¨æ²¡æœ‰æƒé™!";
+            $rs['msg']="ÄúÃ»ÓĞÈ¨ÏŞ!";
         }
         return $rs;
     }
@@ -193,6 +193,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     	$sqlb=DI()->notorm->group_detail
     	->select('user_base_id')
     	->where('group_base_id=?',$sqla['group_base_id'])
+    	->and('authorization=?',01)
     	->fetchone();
     	 
     	$s_data = array(
@@ -204,10 +205,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->where('id =?', $data['post_id'])
     		->update($s_data);
     		$rs['code']=1;
-    		$rs['re']="æ“ä½œæˆåŠŸ";
+    		$rs['re']="²Ù×÷³É¹¦";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½ç½®é¡¶å¸–å­!";
+    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÖÃ¶¥Ìû×Ó!";
     	}
     	return $rs;
     }
@@ -223,6 +224,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     	$sqlb=DI()->notorm->group_detail
     	->select('user_base_id')
     	->where('group_base_id=?',$sqla['group_base_id'])
+    	->and('authorization=?',01)
     	->fetchone();
     
     	$s_data = array(
@@ -234,10 +236,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->where('id =?', $data['post_id'])
     		->update($s_data);
     		$rs['code']=1;
-    		$rs['re']="æ“ä½œæˆåŠŸ";
+    		$rs['re']="²Ù×÷³É¹¦";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½å–æ¶ˆç½®é¡¶å¸–å­!";
+    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÈ¡ÏûÖÃ¶¥Ìû×Ó!";
     	}
     	return $rs;
     }
@@ -253,8 +255,9 @@ class Model_Post extends PhalApi_Model_NotORM {
     	$sqlb=DI()->notorm->group_detail
     	->select('user_base_id')
     	->where('group_base_id=?',$sqla['group_base_id'])
+    	->and('authorization=?',01)
     	->fetchone();
-    
+    	
     	$d_data = array(
     			'`delete`' => '1',
     	);
@@ -267,10 +270,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->where('post_base_id=?', $data['post_id'])
     		->update($d_data);
     		$rs['code']=1;
-    		$rs['re']="æ“ä½œæˆåŠŸ";
+    		$rs['re']="²Ù×÷³É¹¦";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½åˆ é™¤å¸–å­!";
+    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÉ¾³ıÌû×Ó!";
     	}
     	return $rs;
     }
