@@ -74,7 +74,7 @@ class Domain_Group {
         }
         move_uploaded_file($_FILES["g_image"]["tmp_name"],
         "$path/" . $_FILES["g_image"]["name"]);//移动文件
-		include "../../Library/resizeImage.php";
+		include "../Library/resizeImage.php";
         $imageresize = new ResizeImage("$path/" . $_FILES["g_image"]["name"], 94, 94,1, "$path/" . $_FILES["g_image"]["name"]);//裁剪图片
         if(empty($_FILES["g_image"]["name"])) {
             $_FILES["g_image"]["data"]=NULL;
