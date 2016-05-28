@@ -133,7 +133,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function PostReply($data) {
         $rs = array();
         $time = date('Y-m-d H:i:s',time());
-        //²éÑ¯×î´óÂ¥²ã
+        //æŸ¥è¯¢æœ€å¤§æ¥¼å±‚
         $sql=DI()->notorm->post_detail
         ->select('post_base_id,user_base_id,max(floor)')
         ->where('post_base_id =?',$data['post_base_id'])
@@ -174,7 +174,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             $rs['info']['createTime']=$time;
         }else{
             $rs['code']=0;
-            $rs['msg']="ÄúÃ»ÓĞÈ¨ÏŞ!";
+            $rs['msg']="æ‚¨æ²¡æœ‰æƒé™!";
         }
         return $rs;
     }
@@ -205,10 +205,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->where('id =?', $data['post_id'])
     		->update($s_data);
     		$rs['code']=1;
-    		$rs['re']="²Ù×÷³É¹¦";
+    		$rs['re']="æ“ä½œæˆåŠŸ";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÖÃ¶¥Ìû×Ó!";
+    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½ç½®é¡¶å¸–å­!";
     	}
     	return $rs;
     }
@@ -236,10 +236,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->where('id =?', $data['post_id'])
     		->update($s_data);
     		$rs['code']=1;
-    		$rs['re']="²Ù×÷³É¹¦";
+    		$rs['re']="æ“ä½œæˆåŠŸ";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÈ¡ÏûÖÃ¶¥Ìû×Ó!";
+    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½å–æ¶ˆç½®é¡¶å¸–å­!";
     	}
     	return $rs;
     }
@@ -266,14 +266,14 @@ class Model_Post extends PhalApi_Model_NotORM {
     		$sa = DI()->notorm->post_base
     		->where('id =?', $data['post_id'])
     		->update($d_data);
-    		$sb = DI()->notorm->post_detail
+    		/*$sb = DI()->notorm->post_detail
     		->where('post_base_id=?', $data['post_id'])
-    		->update($d_data);
+    		->update($d_data);*/
     		$rs['code']=1;
-    		$rs['re']="²Ù×÷³É¹¦";
+    		$rs['re']="æ“ä½œæˆåŠŸ";
     	}else{
     		$rs['code']=0;
-    		$rs['re']="½öĞÇÇò´´½¨ÕßÄÜÉ¾³ıÌû×Ó!";
+    		$rs['re']="ä»…æ˜Ÿçƒåˆ›å»ºè€…èƒ½åˆ é™¤å¸–å­!";
     	}
     	return $rs;
     }
