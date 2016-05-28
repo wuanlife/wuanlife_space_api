@@ -64,14 +64,18 @@ class Domain_Group {
 		$this->model = new Model_Group();
 		$this->checkStatus($data['user_id']);
 		$this->checkN($data['name']);
-		//上传操作
-        $date=date("Y-m-d");
+		//上传路径
+		$date=date("Y/m/d");
         $path="../upload/$date";
+		if ($this->u_status == '1' && $this->g_status =='1') {
+	    //上传操作
         if(!is_readable($path)) {
-            is_file($path) or mkdir($path);
+            is_file($path) or mkdir($path,0,true);
         }
         move_uploaded_file($_FILES["g_image"]["tmp_name"],
-        "$path/" . $_FILES["g_image"]["name"]);
+        "$path/" . $_FILES["g_image"]["name"]);//移动文件
+		include "../../Library/resizeImage.php";
+        $imageresize = new ResizeImage("$path/" . $_FILES["g_image"]["name"], 94, 94,1, "$path/" . $_FILES["g_image"]["name"]);//裁剪图片
         if(empty($_FILES["g_image"]["name"])) {
             $_FILES["g_image"]["data"]=NULL;
         }
@@ -82,8 +86,8 @@ class Domain_Group {
 			$data['g_introduction']=NULL;
 		}
         $data = array('name' => $data['name'],'g_image'=>$_FILES["g_image"]["data"],'g_introduction' => $data['g_introduction']) ;
-
-		if ($this->u_status == '1' && $this->g_status =='1') {
+			
+			
 			$result = DI()->notorm->group_base->insert($data);
 			// $result = $this->model->add(group_base,$data);
 			$data2 = array(
@@ -100,7 +104,6 @@ class Domain_Group {
 		}else{
 			$this->rs['msg'] = $this->msg;
 		}
-        
 		return $this->rs;
 	}
 
