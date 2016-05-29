@@ -68,7 +68,7 @@ ctrl+c退出
     PORT=80 node app.js
     forever start --uid wuanlife bin/www
     echo "forever start -a --uid wuanlife /home/www/html/wuanlife/bin/www" >>/etc/rc.d/rc.local
-访问下你的IP，应该可以访问了。
+访问下http://YourIP，应该可以访问了。
 ####四、修改配置
 其中，API代码需修改数据库配置，前端代码需修改接口地址，修改后重启node。
 
