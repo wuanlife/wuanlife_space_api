@@ -4,7 +4,7 @@
 --
 -- 主机: localhost
 -- 生成日期: 2016 �?05 �?21 �?19:06
--- 服务器版本: 5.5.47
+-- 服务器版�? 5.5.47
 -- PHP 版本: 5.5.30
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- 数据库: `wuan`
+-- 数据�? `wuan`
 --
 
 -- --------------------------------------------------------
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `authorization` (
   `area_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限位置区分',
   `aser_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限区分',
   `note` varchar(8) COLLATE utf8_bin NOT NULL COMMENT '说明'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限表';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限�?;
 
 -- --------------------------------------------------------
 
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS `authorization` (
 CREATE TABLE IF NOT EXISTS `group_base` (
   `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '组id',
   `name` varchar(11) CHARACTER SET gbk NOT NULL COMMENT '组名',
-  `g_image` varchar(255) CHARACTER SET gbk DEFAULT NULL COMMENT '组图片',
-  `g_introduction` varchar(50) CHARACTER SET gbk DEFAULT NULL COMMENT '组介绍',
+  `g_image` varchar(255) CHARACTER SET gbk DEFAULT NULL COMMENT '组图�?,
+  `g_introduction` varchar(50) CHARACTER SET gbk DEFAULT NULL COMMENT '组介�?,
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表' AUTO_INCREMENT=1 ;
@@ -87,13 +87,13 @@ CREATE TABLE IF NOT EXISTS `post_detail` (
   `post_base_id` int(5) unsigned NOT NULL COMMENT '帖子id',
   `user_base_id` int(5) unsigned NOT NULL COMMENT '回帖人id',
   `replyid` int(5) unsigned DEFAULT NULL COMMENT '回复的id',
-  `text` varchar(140) COLLATE utf8_bin NOT NULL COMMENT '内容',
+  `text` varchar(5000) COLLATE utf8_bin NOT NULL COMMENT '内容',
   `floor` int(4) NOT NULL COMMENT '楼层',
   `createTime` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '发布时间',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   PRIMARY KEY (`post_base_id`,`floor`),
   KEY `user_base_id` (`user_base_id`,`replyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='回复帖';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='回复�?;
 
 -- --------------------------------------------------------
 
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `user_base` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nickname` (`nickname`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基�? AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `user_base` (
 CREATE TABLE IF NOT EXISTS `user_detail` (
   `user_base_id` int(5) unsigned NOT NULL COMMENT '用户id',
   `authorization` varchar(9) CHARACTER SET utf8 NOT NULL COMMENT '身份',
-  `status` int(1) NOT NULL COMMENT '状态',
+  `status` int(1) NOT NULL COMMENT '状�?,
   `lastLogTime` datetime NOT NULL COMMENT '上次登录',
   PRIMARY KEY (`user_base_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户详情';
