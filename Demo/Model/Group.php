@@ -43,6 +43,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 	public function getJoined($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
 		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','03')->fetchRows();
+		if (!empty($rows)) {
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
@@ -54,13 +55,22 @@ class Model_Group extends PhalApi_Model_NotORM{
 			.'ORDER BY COUNT(gb.id) DESC '
 			.'LIMIT :limit_st,:page_num';
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
+		$re=$this->getORM()->queryAll($sql, $params);
+	}else{
+			$re[name]=NULl;
+			$re[id]=NULl;
+			$re[g_image]=NULL;
+			$re[g_introduction]=NULL;
+			$re[num]=0;	
+		}
 
-		return $this->getORM()->queryAll($sql, $params);
+		return $re;
 	}
 
 	public function getCreate($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
 		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','01')->fetchRows();
+		if (!empty($rows)) {
 		foreach ($rows as $key=>$value){
 			$row[]=$value["group_base_id"];
 		}
@@ -73,7 +83,16 @@ class Model_Group extends PhalApi_Model_NotORM{
 			.'LIMIT :limit_st,:page_num';
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 
-		return $this->getORM()->queryAll($sql, $params);
+		$re=$this->getORM()->queryAll($sql, $params);
+		}else{
+			$re[name]=NULl;
+			$re[id]=NULl;
+			$re[g_image]=NULL;
+			$re[g_introduction]=NULL;
+			$re[num]=0;
+		}
+
+		return $re;
 	}
 
 }
