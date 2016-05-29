@@ -38,7 +38,7 @@ JSON:
             "user_base_id": 3,
             "name": "测试88",
             "g_introduction": "照片裁剪",
-            "URL": "../upload/2016/05/28/apic14052.jpg"
+            "URL": "../upload/group/2016/05/28/apic14052.jpg"
         }
     },
     "msg": ""
