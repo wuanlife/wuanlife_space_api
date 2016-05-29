@@ -1,0 +1,56 @@
+1.API名称、描述
+Group.GetCreate
+获取用户创建星球的接口
+
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=Group.GetCreate
+
+3.请求方式：
+GET
+
+4.参数说明：
+参数名字        类型  是否必须    默认值    范围                   说明
+user_id         整型   必须                                        用户id
+
+5.返回值说明：
+返回字段                 类型        说明
+groups.name              string      星球名称
+groups.id                int         星球id
+groups.g_image           string      星球图片
+groups.g_introduction    string      星球介绍
+group.num                int         星球数量
+pageCount                int         总页数
+currentPage              int         当前页
+
+6.示例：
+显示用户ID为4所加入的星球
+http://dev.wuanlife.com:800/?service=Group.GetCreate&user_id=4
+
+JSON
+{
+    "ret": 200,
+    "data": {
+        "groups": [
+            {
+                "name": "44",
+                "id": "3",
+                "g_image": "55555555",
+                "g_introduction": "555555555555555",
+                "num": "2"
+            },
+            {
+                "name": "33",
+                "id": "2",
+                "g_image": "444444",
+                "g_introduction": "55555555",
+                "num": "2"
+            }
+        ],
+        "pageCount": 1,
+        "currentPage": 1
+    },
+    "msg": ""
+}
+
+
