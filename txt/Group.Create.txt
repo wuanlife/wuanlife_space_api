@@ -20,6 +20,8 @@ info                 对象   星球信息对象
 info.group_base_id   整型   星球ID
 info.user_base_id    字符串 创建者ID
 info.name            字符串 星球名称
+info.g_introduction  字符串 星球简介
+info.URL             字符串 星球图标路径
 msg                  字符串 提示信息
 
 6.示例：
@@ -33,8 +35,10 @@ JSON:
         "msg": "",
         "info": {
             "group_base_id": "48",
-            "user_base_id": "15",
-            "name": "鬼扯1"
+            "user_base_id": 3,
+            "name": "测试88",
+            "g_introduction": "照片裁剪",
+            "URL": "../upload/2016/05/28/apic14052.jpg"
         }
     },
     "msg": ""

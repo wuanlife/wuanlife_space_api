@@ -52,5 +52,5 @@ DI()->cache = function () {
 if (!empty($_GET['callback'])) {
     DI()->response = new PhalApi_Response_JsonP($_GET['callback']);
 }
-$loader->addDirs('Library');
-DI()->ucloud = new UCloud_Lite();//初始化上传插件
+//$loader->addDirs('Library');
+//DI()->ucloud = new UCloud_Lite();//初始化上传插件
