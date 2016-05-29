@@ -74,7 +74,12 @@ class Domain_Group {
         }
         move_uploaded_file($_FILES["g_image"]["tmp_name"],
         "$path/" . date("His") . $_FILES["g_image"]["name"]);//移动文件
-		$size = getimagesize ("$path/" . date("His") . $_FILES["g_image"]["name"]);
+		if(empty($_FILES["g_image"]["name"])){
+			$size=array(94,94);
+		}
+			else{
+				$size = getimagesize ("$path/" . date("His") . $_FILES["g_image"]["name"]);
+			}
 		if($size[0]<=94&&$size[1]<=94){
 			
 		}
@@ -195,7 +200,12 @@ class Domain_Group {
 			}
 			move_uploaded_file($_FILES["p_image"]["tmp_name"],
 			"$path/" . date("His") . $_FILES["p_image"]["name"]);//移动文件
-			$size = getimagesize ("$path/" . date("His") . $_FILES["p_image"]["name"]);
+			if(empty($_FILES["p_image"]["name"])){
+				$size=array(94,94);
+			}
+				else{
+					$size = getimagesize ("$path/" . date("His") . $_FILES["p_image"]["name"]);
+				}
 			if($size[0]<=94&&$size[1]<=94){
 			
 			}
