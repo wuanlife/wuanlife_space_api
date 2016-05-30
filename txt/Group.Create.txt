@@ -13,6 +13,7 @@ POST
 参数名字    类型  是否必须    默认值    范围                   说明
 user_id     整型   必须                                         用户id
 name       字符串  必须               最小：1 最大：80       星球名称
+g_image     文件   可选                                      星球图片
 
 5.返回值说明：
 code                 整型   操作码，1表示创建成功，0表示创建失败
@@ -38,7 +39,7 @@ JSON:
             "user_base_id": 3,
             "name": "测试88",
             "g_introduction": "照片裁剪",
-            "URL": "../upload/2016/05/28/apic14052.jpg"
+            "URL": "../upload/group/2016/05/28/apic14052.jpg"
         }
     },
     "msg": ""

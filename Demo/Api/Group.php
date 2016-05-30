@@ -119,6 +119,15 @@ class Api_Group extends PhalApi_Api
                     'require' => true,
                     'desc' => '帖子正文',
                 ),
+				'p_image' => array(
+                    'name' => 'image',
+                    'type' => 'file'||NULL,
+                    'min' => 0,
+                    'max' => 1024 * 1024,
+                    'range' => array('image/jpg', 'image/jpeg', 'image/png'),
+                    'ext' => array('jpg', 'jpeg', 'png'),
+					'desc'=>'星球图标',
+                ),
             ),
             
             'getjoined' => array(
@@ -290,6 +299,7 @@ class Api_Group extends PhalApi_Api
                 'group_base_id' => $this->g_id,
                 'title'         => $this->title,
                 'text'          => $this->text,
+				'p_image'       => $this->p_image,
             );
 
         $domain = new Domain_Group();

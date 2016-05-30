@@ -66,21 +66,32 @@ class Domain_Group {
 		$this->checkN($data['name']);
 		//上传路径
 		$date=date("Y/m/d");
-        $path="../upload/$date";
+        $path="../upload/group/$date";
 		if ($this->u_status == '1' && $this->g_status =='1') {
 	    //上传操作
         if(!is_readable($path)) {
             is_file($path) or mkdir($path,0,true);
         }
         move_uploaded_file($_FILES["g_image"]["tmp_name"],
-        "$path/" . $_FILES["g_image"]["name"]);//移动文件
-		include "../Library/resizeImage.php";
-        $imageresize = new ResizeImage("$path/" . $_FILES["g_image"]["name"], 94, 94,1, "$path/" . $_FILES["g_image"]["name"]);//裁剪图片
-        if(empty($_FILES["g_image"]["name"])) {
-            $_FILES["g_image"]["data"]=NULL;
+        "$path/" . date("His") . $_FILES["g_image"]["name"]);//移动文件
+		if(empty($_FILES["g_image"]["name"])){
+			$size=array(94,94);
+		}
+			else{
+				$size = getimagesize ("$path/" . date("His") . $_FILES["g_image"]["name"]);
+			}
+		if($size[0]<=94&&$size[1]<=94){
+			
+		}
+		    else{
+				include "../Library/resizeImage.php";
+                $imageresize = new ResizeImage("$path/" .  date("His") . $_FILES["g_image"]["name"], 94, 94,1, "$path/" .  date("His") . $_FILES["g_image"]["name"]);//裁剪图片
+			}
+		if(empty($_FILES["g_image"]["name"])) {
+             $_FILES["g_image"]["data"]=NULL;
         }
         else {
-            $_FILES["g_image"]["data"] = "$path/" . $_FILES["g_image"]["name"];
+            $_FILES["g_image"]["data"] = "$path/" .  date("His") . $_FILES["g_image"]["name"];
         }
 		if(empty($data['g_introduction'])) {
 			$data['g_introduction']=NULL;
@@ -179,8 +190,35 @@ class Domain_Group {
 		$this->model = new Model_Group();
 		$this->checkStatus($data['user_id']);
 		$this->checkG($data['group_base_id']);
-
+        //上传路径
+		$date=date("Y/m/d");
+        $path="../upload/posts/$date";
 		if ($this->u_status == '1' && $this->g_status == '1') {
+			//上传操作
+			if(!is_readable($path)) {
+				is_file($path) or mkdir($path,0,true);
+			}
+			move_uploaded_file($_FILES["p_image"]["tmp_name"],
+			"$path/" . date("His") . $_FILES["p_image"]["name"]);//移动文件
+			if(empty($_FILES["p_image"]["name"])){
+				$size=array(94,94);
+			}
+				else{
+					$size = getimagesize ("$path/" . date("His") . $_FILES["p_image"]["name"]);
+				}
+			if($size[0]<=94&&$size[1]<=94){
+			
+			}
+		    else{
+				include "../Library/resizeImage.php";
+				$imageresize = new ResizeImage("$path/" .  date("His") . $_FILES["p_image"]["name"], 94, 94,1, "$path/" .  date("His") . $_FILES["p_image"]["name"]);//裁剪图片
+			}
+			if(empty($_FILES["p_image"]["name"])) {
+				$_FILES["p_image"]["data"]=NULL;
+			}
+			else {
+				$_FILES["p_image"]["data"] = "$path/" .  date("His") . $_FILES["p_image"]["name"];
+			}
 			$b_data = array(
 				'user_base_id'  => $this->cookie['userID'],
 				'group_base_id' => $data['group_base_id'],
@@ -196,9 +234,15 @@ class Domain_Group {
 				'createTime' => $time,
 			);
 			$pd = DI()->notorm->post_detail->insert($d_data);
+			$i_data = array(
+				'id'        => $pb['id'],
+				'p_image'   => $_FILES["p_image"]["data"],			
+			);
+			$pi = DI()->notorm->post_image->insert($i_data);
 			$this->rs['code'] = 1;
 			$this->rs['info'] = $pd;
 			$this->rs['info']['title']=$pb['title'];
+			$this->rs['info']['URL']=$pi['p_image'];
 		}else{
 			$this->rs['msg'] = $this->msg;
 		}
