@@ -263,8 +263,9 @@ class Api_Group extends PhalApi_Api
      * 星球列表
      * @desc 按成员数降序显示星球列表
      * @return int lists 星球列表对象
-     * @return int lists.name 星球名称
-     * @return int lists.id 星球ID
+     * @return string lists.name 星球名称
+     * @return string lists.g_image 星球图片
+     * @return string lists.g_introduction 星球介绍
      * @return int lists.num 星球成员数
      * @return int pageCount 总页数
      * @return int currentPage 当前页
