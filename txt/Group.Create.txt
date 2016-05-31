@@ -20,6 +20,7 @@ code                 整型   操作码，1表示创建成功，0表示创建失
 info                 对象   星球信息对象
 info.group_base_id   整型   星球ID
 info.user_base_id    字符串 创建者ID
+info.authorization	字符串	权限，03表示会员
 info.name            字符串 星球名称
 info.g_introduction  字符串 星球简介
 info.URL             字符串 星球图标路径

@@ -171,6 +171,7 @@ class Api_Group extends PhalApi_Api
      * @return object info 星球信息对象
      * @return int info.group_base_id 星球ID
      * @return string info.user_base_id 创建者ID
+     * @return string info.authorization 权限，01表示创建者
      * @return string info.name 星球名称
      * @return string msg 提示信息
      */
@@ -194,6 +195,7 @@ class Api_Group extends PhalApi_Api
      * @return object info 星球信息对象
      * @return int info.group_base_id 加入星球ID
      * @return string info.user_base_id 加入者ID
+     * @return string info.authorization 权限，03表示会员
      * @return string msg 提示信息
      */
     public function join(){

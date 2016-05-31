@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * 数据库接口服务类
  */
@@ -163,6 +163,8 @@ class Api_Post extends PhalApi_Api{
      * @return string nickname 发帖人
      * @return date createTime 发帖时间
      * @return boolean editRight 编辑权限(0为无权限，1有)
+     * @return boolean deleteRight 删除权限(0为无权限，1有)
+     * @return boolean stickyRight 置顶权限(0为无权限，1有)
      */
     public function getPostBase(){
 
@@ -170,13 +172,26 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getPostBase($this->postID);
-
-        $userID=$this->userID;
-        if($data[0]['id']==$userID)
-        {
-            $data[0]['editRight']=1;
+        if ($this->userID !=null){
+            $userID=$this->userID;
+            $createrId = $domain->getCreaterId($data[0]['groupID']); 
+            if($data[0]['id']==$userID)
+            {
+                $data[0]['editRight']=1;
+            }else{
+                $data[0]['editRight']=0;
+            }
+            if($createrId['id']==$userID){
+                $data[0]['deleteRight']=1;
+                $data[0]['stickyRight']=1;
+            }else{
+                $data[0]['deleteRight']=0;
+                $data[0]['stickyRight']=0;
+            }
         }else{
             $data[0]['editRight']=0;
+            $data[0]['deleteRight']=0;
+            $data[0]['stickyRight']=0;
         }
         $data[0]['text'] = strip_tags($data[0]['text']);
         return $data[0];

@@ -17,7 +17,8 @@ group_base_id   整型  必须                  最小：1                星球
 code                整型  操作码，1表示加入成功，0表示加入失败
 info                对象  星球信息对象
 info.group_base_id  整型  加入星球ID
-info.user_base_id   字符串 加入者ID
+info.user_base_id   整型 加入者ID
+info.authorization   字符串 权限,03表示会员
 msg                 字符串 提示信息
 
 6.示例：
