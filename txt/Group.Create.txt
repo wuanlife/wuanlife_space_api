@@ -14,6 +14,7 @@ POST
 user_id     整型   必须                                         用户id
 name       字符串  必须               最小：1 最大：80       星球名称
 g_image     文件   可选                                      星球图片
+g_introduction  字符串  可选                                 星球简介
 
 5.返回值说明：
 code                 整型   操作码，1表示创建成功，0表示创建失败
