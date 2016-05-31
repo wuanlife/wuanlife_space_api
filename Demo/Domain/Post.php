@@ -70,4 +70,19 @@ class Domain_Post {
     	return $rs;
     }
     
+    public function deleteHtmlPosts($data){
+        $rs = $data;
+        for ($i=0; $i<count($rs['posts']); $i++) {
+        $rs['posts'][$i]['text'] = strip_tags($rs['posts'][$i]['text']);
+        }
+        return $rs;
+    }
+
+    public function deleteHtmlReply($data){
+        $rs = $data;
+        for ($i=0; $i<count($rs['reply']); $i++) {
+        $rs['reply'][$i]['text'] = strip_tags($rs['reply'][$i]['text']);
+        }
+        return $rs;
+    }
 }
