@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 /**
 * 星球相关DB操作
 */
@@ -22,7 +22,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 	}
 
 	public function lists($limit_st, $page_num){
-		$sql='SELECT gb.name,gb.id,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
+		$sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
 			.'where gb.id = gd.group_base_id '
             .'GROUP BY gd.group_base_id HAVING COUNT(gd.user_base_id)>=1 '
             .'ORDER BY COUNT(gd.user_base_id) DESC '

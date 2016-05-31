@@ -105,7 +105,7 @@ class Domain_Group {
             $data2 = array(
                 'group_base_id' => $result['id'],
                 'user_base_id'  => $this->cookie['userID'],
-                'authorization'=>'01',
+                'authorization'=>"01",
             );
             $result2 = DI()->notorm->group_detail->insert($data2);
             // $result2 = $this->model->add(group_detail,$data2);
@@ -129,6 +129,7 @@ class Domain_Group {
             $data = array(
                 'group_base_id' => $data['g_id'],
                 'user_base_id'  => $this->cookie['userID'],
+                'authorization' => "03",
             );
 
             $result = DI()->notorm->group_detail->insert($data);

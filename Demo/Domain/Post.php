@@ -85,4 +85,10 @@ class Domain_Post {
         }
         return $rs;
     }
+
+    public function getCreaterId($groupID){
+        $model = new Model_Post();
+        $createrId = $model->getCreaterId($groupID);
+        return $createrId;
+    }
 }
