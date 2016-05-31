@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * 数据库接口服务类
  */
@@ -100,7 +100,8 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getIndexPost($this->page);
-
+        $data = $domain->deleteHtmlPosts($data);
+        
         return $data;
     }
 
@@ -123,6 +124,7 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getGroupPost($this->groupID,$this->page);
+        $data = $domain->deleteHtmlPosts($data);
 
         return $data;
     }
@@ -145,6 +147,7 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getMyGroupPost($this->userID,$this->page);
+        $data = $domain->deleteHtmlPosts($data);
 
         return $data;
     }
@@ -175,6 +178,7 @@ class Api_Post extends PhalApi_Api{
         }else{
             $data[0]['editRight']=0;
         }
+        $data[0]['text'] = strip_tags($data[0]['text']);
         return $data[0];
     }
 
@@ -195,7 +199,7 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getPostReply($this->postID,$this->page);
-
+        $data = $domain->deleteHtmlReply($data);
         return $data;
     }
     /**
