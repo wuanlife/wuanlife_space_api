@@ -66,11 +66,12 @@ class Domain_Group {
         $this->checkN($data['name']);
         //上传路径
         $date=date("Y/m/d");
-        $path="../upload/group/$date";
+		$RootDIR = dirname(__FILE__);
+        $path=$RootDIR."/../upload/group/$date";
         if ($this->u_status == '1' && $this->g_status =='1') {
         //上传操作
         if(!is_readable($path)) {
-            is_file($path) or mkdir($path,0,true);
+            is_file($path) or mkdir($path,0777,true);
         }
         move_uploaded_file($_FILES["g_image"]["tmp_name"],
         "$path/" . date("His") . $_FILES["g_image"]["name"]);//移动文件
@@ -193,11 +194,12 @@ class Domain_Group {
         $this->checkG($data['group_base_id']);
         //上传路径
         $date=date("Y/m/d");
-        $path="../upload/posts/$date";
+		$RootDIR = dirname(__FILE__);
+		$path=$RootDIR."/../upload/posts/$date";
         if ($this->u_status == '1' && $this->g_status == '1') {
             //上传操作
             if(!is_readable($path)) {
-                is_file($path) or mkdir($path,0,true);
+                is_file($path) or mkdir($path,0777,true);
             }
             move_uploaded_file($_FILES["p_image"]["tmp_name"],
             "$path/" . date("His") . $_FILES["p_image"]["name"]);//移动文件
