@@ -314,7 +314,8 @@ class Api_Group extends PhalApi_Api
     /**
      * 通过用户id找出已加入的星球
      * @desc 按成员数降序显示星球列表
-     * @return int groups 星球列表对象
+     * @return int code 操作码，1表示加入成功，0表示加入失败
+     * @return object groups 星球列表对象
      * @return int groups.name 星球名称
      * @return int groups.id 星球ID
      * @return string groups.g_image 星球图片
@@ -340,7 +341,8 @@ class Api_Group extends PhalApi_Api
     /**
      * 通过用户id找出已创建的星球
      * @desc 按成员数降序显示星球列表
-     * @return int groups 星球列表对象
+     * @return int code 操作码，1表示加入成功，0表示加入失败
+     * @return object groups 星球列表对象
      * @return int groups.name 星球名称
      * @return int groups.id 星球ID
      * @return string groups.g_image 星球图片
