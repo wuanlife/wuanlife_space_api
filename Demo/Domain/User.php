@@ -3,7 +3,7 @@
 class Domain_User {
 
     /*
-    µÇÂ¼¼ì²é
+    ç™»å½•æ£€æŸ¥
 
     */
 
@@ -13,7 +13,7 @@ class Domain_User {
         return $rs;
     }
     /*
-    ×¢²á¼ì²é
+    æ³¨å†Œæ£€æŸ¥
 
     */
 
@@ -23,7 +23,7 @@ class Domain_User {
         return $rs;
     }
     /*
-	×¢Ïú¼ì²é
+	æ³¨é”€æ£€æŸ¥
 
     */
     public function logout(){
