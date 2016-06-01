@@ -129,7 +129,7 @@ class Api_Group extends PhalApi_Api
 					'desc'=>'星球图标',
                 ),
             ),
-            
+
             'getjoined' => array(
                 'page' => array(
                     'name' => 'page',
@@ -145,7 +145,7 @@ class Api_Group extends PhalApi_Api
                     'desc' => '用户id',
                 ),
             ),
-            
+
             'getcreate' => array(
                 'page' => array(
                     'name' => 'page',
@@ -160,7 +160,7 @@ class Api_Group extends PhalApi_Api
                     'require' => true,
                     'desc' => '用户id',
                 ),
-            ),            
+            ),
         );
     }
 
@@ -263,8 +263,9 @@ class Api_Group extends PhalApi_Api
      * 星球列表
      * @desc 按成员数降序显示星球列表
      * @return int lists 星球列表对象
-     * @return int lists.name 星球名称
-     * @return int lists.id 星球ID
+     * @return string lists.name 星球名称
+     * @return string lists.g_image 星球图片
+     * @return string lists.g_introduction 星球介绍
      * @return int lists.num 星球成员数
      * @return int pageCount 总页数
      * @return int currentPage 当前页
@@ -313,10 +314,13 @@ class Api_Group extends PhalApi_Api
     /**
      * 通过用户id找出已加入的星球
      * @desc 按成员数降序显示星球列表
-     * @return int lists 星球列表对象
-     * @return int lists.name 星球名称
-     * @return int lists.id 星球ID
-     * @return int lists.num 星球成员数
+     * @return int code 操作码，1表示加入成功，0表示加入失败
+     * @return object groups 星球列表对象
+     * @return int groups.name 星球名称
+     * @return int groups.id 星球ID
+     * @return string groups.g_image 星球图片
+     * @return int groups.num 星球成员数
+     * @return string groups.g_introduction 星球介绍
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
@@ -337,10 +341,13 @@ class Api_Group extends PhalApi_Api
     /**
      * 通过用户id找出已创建的星球
      * @desc 按成员数降序显示星球列表
-     * @return int lists 星球列表对象
-     * @return int lists.name 星球名称
-     * @return int lists.id 星球ID
-     * @return int lists.num 星球成员数
+     * @return int code 操作码，1表示加入成功，0表示加入失败
+     * @return object groups 星球列表对象
+     * @return int groups.name 星球名称
+     * @return int groups.id 星球ID
+     * @return string groups.g_image 星球图片
+     * @return int groups.num 星球成员数
+     * @return string groups.g_introduction 星球介绍
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
@@ -356,7 +363,7 @@ class Api_Group extends PhalApi_Api
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         return $rs;
-    }    
+    }
 }
 
 
