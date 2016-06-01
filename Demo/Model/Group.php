@@ -57,8 +57,8 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 		$re=$this->getORM()->queryAll($sql, $params);
 	}else{
-			$re['name']=NULl;
-			$re['id']=NULl;
+			$re['name']=NULL;
+			$re['id']=NULL;
 			$re['g_image']=NULL;
 			$re['g_introduction']=NULL;
 			$re['num']=0;	
@@ -85,8 +85,8 @@ class Model_Group extends PhalApi_Model_NotORM{
 
 		$re=$this->getORM()->queryAll($sql, $params);
 		}else{
-			$re['name']=NULl;
-			$re['id']=NULl;
+			$re['name']=NULL;
+			$re['id']=NULL;
 			$re['g_image']=NULL;
 			$re['g_introduction']=NULL;
 			$re['num']=0;
