@@ -256,7 +256,7 @@ class Domain_Group {
 
     public function getJoined($page,$pages,$user_id){
         $this->model  = new Model_Group();
-        $all_num      = $this->model->getAllNum();              //总条
+        $all_num      = $this->model->getAllGroupJoinednum($user_id);              //总条
         $page_num     =empty($pages)?20:$pages;                 //每页条数
         $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
@@ -273,8 +273,8 @@ class Domain_Group {
 
     public function getCreate($page,$pages,$user_id){
         $this->model  = new Model_Group();
-        $all_num      = $this->model->getAllNum();              //总条
-        $page_num     =empty($pages)?20:$pages;                 //每页条数
+        $all_num      = $this->model->getAllGroupCreatenum($user_id);          //总条
+        $page_num     =empty($pages)?2:$pages;                 //每页条数
         $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
             $page_all_num =1;

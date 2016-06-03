@@ -40,6 +40,19 @@ class Model_Group extends PhalApi_Model_NotORM{
         return 'group_base';
     }
 
+	public function getAllGroupJoinednum($user_id)
+	{
+		$group_detail = DI()->notorm->group_detail;
+		$rows = $group_detail->where('user_base_id=?', $user_id)->where('authorization=?', '03')->fetchRows();
+		if (!empty($rows)) {
+			foreach ($rows as $key => $value) {
+				$row[] = $value["group_base_id"];
+			}
+			$groupnum = count($row);
+			return $groupnum;
+		}
+	}	
+	
 	public function getJoined($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
 		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','03')->fetchRows();
@@ -63,6 +76,19 @@ class Model_Group extends PhalApi_Model_NotORM{
 		return $re;
 	}
 
+	public function getAllGroupCreatenum($user_id)
+	{
+		$group_detail = DI()->notorm->group_detail;
+		$rows = $group_detail->where('user_base_id=?', $user_id)->where('authorization=?', '01')->fetchRows();
+		if (!empty($rows)) {
+			foreach ($rows as $key => $value) {
+				$row[] = $value["group_base_id"];
+			}
+			$groupnum = count($row);
+			return $groupnum;
+		}
+	}
+
 	public function getCreate($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
 		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','01')->fetchRows();
@@ -80,7 +106,6 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 
 		$re=$this->getORM()->queryAll($sql, $params);
-
 
 		}else{
 			$re=array();
