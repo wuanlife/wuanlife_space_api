@@ -23,18 +23,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 表的结构 `authorization`
---
-
-CREATE TABLE IF NOT EXISTS `authorization` (
-  `area_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限位置区分',
-  `aser_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限区分',
-  `note` varchar(8) COLLATE utf8_bin NOT NULL COMMENT '说明'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限�?;
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `group_base`
 --
 
