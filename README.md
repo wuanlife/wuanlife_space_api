@@ -30,5 +30,5 @@
 [帖子回复](/wiki/Post.PostReply.md)<br>
 [帖子编辑](/wiki/Post.editPost.md)<br>
 [帖子删除](/wiki/Post.DeletePost.md)<br>
-[帖子置顶](/wiki/Group.StickyPost.md)<br>
-[帖子置顶取消](/wiki/Group.UnStickyPost.md)<br>
+[帖子置顶](/wiki/Post.StickyPost.md)<br>
+[帖子置顶取消](/wiki/Post.UnStickyPost.md)<br>
