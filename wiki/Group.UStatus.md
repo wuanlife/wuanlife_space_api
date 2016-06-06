@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apilost/?service=Group.UStatus
+接口URL：http://apihost/?service=Group.UStatus
 
 请求方式：POST
 
