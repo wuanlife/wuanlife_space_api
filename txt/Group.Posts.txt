@@ -14,7 +14,7 @@ user_id         整型   必须                                          用户i
 group_base_id   整型   必须                  最小：1               发帖星球ID
 title           字符串 必须                  最小：1                帖子标题
 text            字符串 必须                  最小：1                帖子正文
-p_image         文件   可选                                         帖子图片
+p_image         字符串   可选                                       帖子图片base64编码
         
 5.返回值说明：
 code                整型   操作码，1表示发布成功，0表示发布失败
@@ -40,11 +40,11 @@ http://dev.wuanlife.com:800/?service=Group.Posts&user_id=3&group_base_id=3&title
         "info": {
             "post_base_id": "5",
             "user_base_id": 1,
-            "text": "6666666666666666666",
+            "text": "qweasf",
             "floor": "1",
             "createTime": "2016-05-29 20:43:38",
-            "title": "陈世超测试666",
-            "URL": "../upload/posts/2016/05/29/204338file.jpg"
+            "title": "123",
+            "URL": ".."
         }
     },
     "msg": ""
