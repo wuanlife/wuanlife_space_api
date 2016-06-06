@@ -34,7 +34,7 @@ class Api_Group extends PhalApi_Api
                     'name'    => 'g_introduction',
                     'type'    => 'string',
                     'require' => false,
-                    'min'     => '1',
+                    'min'     => '0',
                     'max'     => '50',
                     'desc'    => '星球简介',
                 ),
