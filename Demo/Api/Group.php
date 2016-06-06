@@ -22,13 +22,10 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '星球名称',
                 ),
                 'g_image' => array(
-                    'name' => 'image',
-                    'type' => 'file'||NULL,
-                    'min' => 0,
-                    'max' => 1024 * 1024,
-                    'range' => array('image/jpg', 'image/jpeg', 'image/png'),
-                    'ext' => array('jpg', 'jpeg', 'png'),
-					'desc'=>'星球图标',
+                    'name' => 'g_image',
+                    'type' => 'string',
+                    'require' => false,
+                    'desc'=>'星球图标',
                 ),
                 'g_introduction'    => array(
                     'name'    => 'g_introduction',
@@ -119,14 +116,11 @@ class Api_Group extends PhalApi_Api
                     'require' => true,
                     'desc' => '帖子正文',
                 ),
-				'p_image' => array(
-                    'name' => 'image',
-                    'type' => 'file'||NULL,
-                    'min' => 0,
-                    'max' => 1024 * 1024,
-                    'range' => array('image/jpg', 'image/jpeg', 'image/png'),
-                    'ext' => array('jpg', 'jpeg', 'png'),
-					'desc'=>'星球图标',
+                'p_image' => array(
+                    'name' => 'p_image',
+                    'type' => 'string',
+                    'require' => false,
+                    'desc'=>'帖子图片',
                 ),
             ),
 
@@ -302,7 +296,7 @@ class Api_Group extends PhalApi_Api
                 'group_base_id' => $this->g_id,
                 'title'         => $this->title,
                 'text'          => $this->text,
-				'p_image'       => $this->p_image,
+                'p_image'       => $this->p_image,
             );
 
         $domain = new Domain_Group();
