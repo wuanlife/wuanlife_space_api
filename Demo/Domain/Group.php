@@ -216,7 +216,7 @@ class Domain_Group {
         $output_file_without_extentnion = time();
         $path_with_end_slash = "$path";
         if ($this->u_status == '1' && $this->g_status == '1') {
-            if(!empty($data["g_image"])) {
+            if(!empty($data["p_image"])) {
                 //创建上传路径
                 if(!is_readable($path)) {
                     is_file($path) or mkdir($path,0777,true);
