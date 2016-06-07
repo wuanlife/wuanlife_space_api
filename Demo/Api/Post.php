@@ -115,6 +115,7 @@ class Api_Post extends PhalApi_Api{
      * @return date posts.createTime 发帖时间
      * @return string posts.nickname 发帖人
      * @return int posts.groupID 星球ID
+     * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
      * @return string posts.groupName 星球名称
      * @return int pageCount 总页数
      * @return int currentPage 当前页
@@ -162,6 +163,7 @@ class Api_Post extends PhalApi_Api{
      * @return int id 用户ID
      * @return string nickname 发帖人
      * @return date createTime 发帖时间
+     * @return int sticky 是否置顶（0为未置顶，1置顶）
      * @return boolean editRight 编辑权限(0为无权限，1有)
      * @return boolean deleteRight 删除权限(0为无权限，1有)
      * @return boolean stickyRight 置顶权限(0为无权限，1有)

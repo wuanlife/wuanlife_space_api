@@ -50,6 +50,14 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
+            'judge'=>array(
+                'user_id' => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id'
+                ),
+            )
 
         );
     }
@@ -108,6 +116,12 @@ class Api_User extends PhalApi_Api{
         $rs = array('code' => '', 'msg' => '');
         $domain = new Domain_User();
         $rs = $domain->logout();
+        return $rs;
+    }
+
+    public function judge(){
+        $domain = new Domain_User();
+        $rs =$domain->judge($this->user_id);
         return $rs;
     }
 }

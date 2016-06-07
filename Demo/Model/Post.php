@@ -40,7 +40,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['groupID'] = $groupData['0']['groupID'];
         $rs['groupName'] = $groupData['0']['groupName'];
 
-        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname '
+        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
              . 'GROUP BY pb.id '
@@ -94,11 +94,17 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function getPostBase($postID) {
 
         $rs   = array();
-        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime '
+        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.id=:post_id AND pd.floor=1' ;
         $params = array(':post_id' =>$postID );
         $rs = DI()->notorm->post_base->queryAll($sql, $params);
+        if (empty($rs))
+        {
+            $rs[0]['groupID']=0;
+            $rs[0]['id']=0;
+            $rs[0]['text']=0;
+        }
 
         return $rs;
     }

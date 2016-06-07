@@ -97,4 +97,14 @@ class Model_User extends PhalApi_Model_NotORM {
         $this->msg = '注销成功！';
         return $this;
     }
+
+    public function judge($user_id){
+        $sql=DI()->notorm->user_base->select('id')->where('id= ?',$user_id)->fetch();
+        if(!empty($sql)){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
 }

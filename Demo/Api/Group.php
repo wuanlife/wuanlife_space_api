@@ -313,7 +313,7 @@ class Api_Group extends PhalApi_Api
      * @return int groups.name 星球名称
      * @return int groups.id 星球ID
      * @return string groups.g_image 星球图片
-     * @return int groups.num 星球成员数
+     * @return int num 星球成员数
      * @return string groups.g_introduction 星球介绍
      * @return int pageCount 总页数
      * @return int currentPage 当前页
@@ -341,7 +341,7 @@ class Api_Group extends PhalApi_Api
      * @return int groups.name 星球名称
      * @return int groups.id 星球ID
      * @return string groups.g_image 星球图片
-     * @return int groups.num 星球成员数
+     * @return int num 星球成员数
      * @return string groups.g_introduction 星球介绍
      * @return int pageCount 总页数
      * @return int currentPage 当前页

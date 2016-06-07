@@ -32,6 +32,13 @@ class Domain_User {
         return $rs;
     }
 
+    public function judge($user_id){
+        $model=new Model_User();
+        $rs=$model->judge($user_id);
+        return $rs;
+        
+    }
+
 }
 
 
