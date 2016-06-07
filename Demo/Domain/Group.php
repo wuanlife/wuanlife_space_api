@@ -278,6 +278,7 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
+        $this->pages['num']=$all_num;
         return $this->model->getJoined($limit_st, $page_num,$user_id);
     }
 
@@ -295,6 +296,7 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
+        $this->pages['num']=$all_num;        
         return $this->model->getCreate($limit_st, $page_num,$user_id);
     }
 

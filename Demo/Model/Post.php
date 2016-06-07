@@ -279,9 +279,10 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
     
     public function getCreaterId($groupID){
-        $createrId=DI()->notorm->post_base
-        ->select('user_base_id','id')
+        $createrId=DI()->notorm->group_detail
+        ->select('user_base_id')
         ->where('group_base_id=?',$groupID)
+        ->and('authorization=?','01')
         ->fetchone();
         return $createrId;
         }

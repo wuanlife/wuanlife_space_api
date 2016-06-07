@@ -172,26 +172,22 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $data = $domain->getPostBase($this->postID);
+        $data[0]['editRight']=0;
+        $data[0]['deleteRight']=0;
+        $data[0]['stickyRight']=0;
+
         if ($this->userID !=null){
             $userID=$this->userID;
             $createrId = $domain->getCreaterId($data[0]['groupID']); 
             if($data[0]['id']==$userID)
             {
                 $data[0]['editRight']=1;
-            }else{
-                $data[0]['editRight']=0;
+                $data[0]['deleteRight']=1;
             }
-            if($createrId['id']==$userID){
+            if($createrId['user_base_id']==$userID){
                 $data[0]['deleteRight']=1;
                 $data[0]['stickyRight']=1;
-            }else{
-                $data[0]['deleteRight']=0;
-                $data[0]['stickyRight']=0;
             }
-        }else{
-            $data[0]['editRight']=0;
-            $data[0]['deleteRight']=0;
-            $data[0]['stickyRight']=0;
         }
         $data[0]['text'] = strip_tags($data[0]['text']);
         return $data[0];
