@@ -250,7 +250,7 @@ class Domain_Group {
             $pd = DI()->notorm->post_detail->insert($d_data);
             $i_data = array(
                 'id'        => $pb['id'],
-                'p_image'   => "..".substr($data["p_image"],53),
+                'p_image'   => $data["p_image"],
             );
             $pi = DI()->notorm->post_image->insert($i_data);
             $this->rs['code'] = 1;
@@ -278,7 +278,6 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
-        $this->pages['num']=$all_num;
         return $this->model->getJoined($limit_st, $page_num,$user_id);
     }
 
@@ -296,7 +295,6 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
-        $this->pages['num']=$all_num;        
         return $this->model->getCreate($limit_st, $page_num,$user_id);
     }
 
