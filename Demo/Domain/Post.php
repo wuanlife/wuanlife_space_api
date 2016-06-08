@@ -51,22 +51,55 @@ class Domain_Post {
     
     public function stickyPost($data){
     	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->stickyPost($data);
-    	return $rs;
+    	$domain = new Domain_Post();
+        $domain1 = new Domain_User();
+    	$sqla = $domain->getGroupId($data['post_id']);
+        $sqlb = $domain1->judgeCreate($data['user_id'],$sqla);
+        
+        if($sqlb) {
+            $model=new Model_Post();
+            $rs = $model->stickyPost($data);
+
+        }else{
+            $rs['code']=0;
+            $rs['re']="仅星球创建者能取消置顶帖子!";
+        }
+        return $rs;
     }
     	
     public function unStickyPost($data){
-    	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->unStickyPost($data);
-    	return $rs;
+        $rs = array();
+        $domain = new Domain_Post();
+        $domain1 = new Domain_User();
+        $sqla = $domain->getGroupId($data['post_id']);
+        $sqlb = $domain1->judgeCreate($data['user_id'],$sqla);
+
+        if($sqlb) {
+            $model=new Model_Post();
+            $rs = $model->unStickyPost($data);
+
+        }else{
+            $rs['code']=0;
+            $rs['re']="仅星球创建者能取消置顶帖子!";
+        }
+        return $rs;
     }
     		
     public function deletePost($data){
-    	$rs = array();
-    	$model = new Model_Post();
-    	$rs = $model->deletePost($data);
+        $rs = array();
+        $domain = new Domain_Post();
+        $domain1 = new Domain_User();
+        $sqla = $domain->getGroupId($data['post_id']);
+        $sqlb = $domain1->judgeCreate($data['user_id'],$sqla);
+        $sqlc = $domain->judgePoster($data['user_id'],$data['post_id'],$sqla);
+        $sqld = $domain1->judgeAdmin($data['user_id']);
+        if($sqlb||$sqlc||$sqld){
+            $model = new Model_Post();
+            $rs = $model->deletePost($data);
+        }else{
+            $rs['code']=0;
+            $rs['re']="仅星球创建者和发帖者和管理员能删除帖子!";
+        }
     	return $rs;
     }
     
@@ -85,10 +118,30 @@ class Domain_Post {
         }
         return $rs;
     }
-
+/*
+ * 获取创建者id
+ */
     public function getCreaterId($groupID){
         $model = new Model_Post();
         $createrId = $model->getCreaterId($groupID);
         return $createrId;
     }
+/*
+ * 获取星球id
+ */
+    public function getGroupId($post_id){
+        $model = new Model_Post();
+        $group_Id = $model->getGroupId($post_id);
+        return $group_Id;
+    }
+    
+ /*
+  * 判断是否为发帖者
+  */   
+    public function judgePoster($user_id,$post_id){
+        $model = new Model_Post();
+        $rs = $model->judgePoster($user_id,$post_id);
+        return $rs;
+    }
+    
 }

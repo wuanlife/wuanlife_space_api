@@ -98,8 +98,28 @@ class Model_User extends PhalApi_Model_NotORM {
         return $this;
     }
 
-    public function judge($user_id){
+    public function judgeExist($user_id){
         $sql=DI()->notorm->user_base->select('id')->where('id= ?',$user_id)->fetch();
+        if(!empty($sql)){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+    public function judgeAdmin($user_id){
+        $sql=DI()->notorm->user_detail->select('authorization')->where('user_base_id= ?',$user_id)->and('authorization=?',02)->fetch();
+        if(!empty($sql)){
+                $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+    public function judgeCreate($user_id,$group_id){
+        $sql=DI()->notorm->group_detail->select('user_base_id')->where('user_base_id= ?',$user_id)->where('group_base_id=?',$group_id)->and('authorization=?',01)->fetch();
         if(!empty($sql)){
             $rs=1;
         }else{

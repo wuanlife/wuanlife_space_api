@@ -92,7 +92,6 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
 
     public function getPostBase($postID) {
-
         $rs   = array();
         $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
@@ -189,86 +188,42 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
     
     public function stickyPost($data){
-    	$rs = array();
-    	 
-    	$sqla=DI()->notorm->post_base
-    	->select('group_base_id')
-    	->where('id=?',$data['post_id'])
-    	->fetchone();
-    	 
-    	$sqlb=DI()->notorm->group_detail
-    	->select('user_base_id')
-    	->where('group_base_id=?',$sqla['group_base_id'])
-    	->and('authorization=?',01)
-    	->fetchone();
-    	 
-    	$s_data = array(
-    			'sticky' => '1',
-    	);
-    	 
-    	if($data['user_id']==$sqlb['user_base_id']) {
-    		$s = DI()->notorm->post_base
-    		->where('id =?', $data['post_id'])
-    		->update($s_data);
-    		$rs['code']=1;
-    		$rs['re']="操作成功";
-    	}else{
-    		$rs['code']=0;
-    		$rs['re']="仅星球创建者能置顶帖子!";
-    	}
-    	return $rs;
+        $rs = array();
+
+        $s_data = array(
+            'sticky' => '1',
+        );
+        $s = DI()->notorm->post_base
+            ->where('id =?', $data['post_id'])
+            ->update($s_data);
+        $rs['code']=1;
+        $rs['re']="操作成功";
+
+        return $rs;
     }
     
     public function unStickyPost($data){
     	$rs = array();
-    
-    	$sqla=DI()->notorm->post_base
-    	->select('group_base_id')
-    	->where('id=?',$data['post_id'])
-    	->fetchone();
-    
-    	$sqlb=DI()->notorm->group_detail
-    	->select('user_base_id')
-    	->where('group_base_id=?',$sqla['group_base_id'])
-    	->and('authorization=?',01)
-    	->fetchone();
-    
+        
     	$s_data = array(
     			'sticky' => '0',
     	);
-    
-    	if($data['user_id']==$sqlb['user_base_id']) {
     		$s = DI()->notorm->post_base
     		->where('id =?', $data['post_id'])
     		->update($s_data);
     		$rs['code']=1;
     		$rs['re']="操作成功";
-    	}else{
-    		$rs['code']=0;
-    		$rs['re']="仅星球创建者能取消置顶帖子!";
-    	}
+    	
     	return $rs;
     }
     
     public function deletePost($data){
     	$rs = array();
-    
-    	$sqla=DI()->notorm->post_base
-    	->select('group_base_id')
-    	->where('id=?',$data['post_id'])
-    	->fetchone();
-    
-    	$sqlb=DI()->notorm->group_detail
-    	->select('user_base_id')
-    	->where('group_base_id=?',$sqla['group_base_id'])
-    	->and('authorization=?',01)
-    	->fetchone();
-    	
+        
     	$d_data = array(
     			'`delete`' => '1',
     	);
-    
-    	if($data['user_id']==$sqlb['user_base_id']) {
+        
     		$sa = DI()->notorm->post_base
     		->where('id =?', $data['post_id'])
     		->update($d_data);
@@ -277,10 +232,6 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->update($d_data);*/
     		$rs['code']=1;
     		$rs['re']="操作成功";
-    	}else{
-    		$rs['code']=0;
-    		$rs['re']="仅星球创建者能删除帖子!";
-    	}
     	return $rs;
     }
     
@@ -292,5 +243,23 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchone();
         return $createrId;
         }
+    
+    public function getGroupId($post_id){
+        $sqla=DI()->notorm->post_base
+            ->select('group_base_id')
+            ->where('id=?',$post_id)
+            ->fetchone();
+        return $sqla;
+    }
+
+    public function judgePoster($user_id,$post_id){
+        $sql=DI()->notorm->post_detail->select('floor')->where('user_base_id=?',$user_id)->where('post_base_id=?',$post_id)->fetch();
+        if($sql==1){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
 }
    

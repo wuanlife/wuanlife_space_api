@@ -50,12 +50,18 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
-            'judge'=>array(
+            'judgeCreate'=>array(
                 'user_id' => array(
                     'name'    => 'user_id',
                     'type'    => 'int',
                     'require' => true,
                     'desc'    => '用户id'
+                ),
+                'group_id' => array(
+                    'name'    => 'group_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '星球id'
                 ),
             )
 
@@ -119,9 +125,9 @@ class Api_User extends PhalApi_Api{
         return $rs;
     }
 
-    public function judge(){
+    public function judgeCreate(){
         $domain = new Domain_User();
-        $rs =$domain->judge($this->user_id);
+        $rs =$domain->judgeCreate($this->user_id,$this->group_id);
         return $rs;
     }
 }

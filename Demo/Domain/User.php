@@ -31,14 +31,33 @@ class Domain_User {
         $rs = $model->logout();
         return $rs;
     }
-
-    public function judge($user_id){
+/*
+ * 判断用户是否存在
+ */
+    public function judgeExist($user_id){
         $model=new Model_User();
-        $rs=$model->judge($user_id);
+        $rs=$model->judgeExist($user_id);
         return $rs;
         
     }
 
+/*
+ * 判断用户是否为管理员
+ */
+    public function judgeAdmin($user_id){
+        $model=new Model_User();
+        $rs=$model->judgeAdmin($user_id);
+        return $rs;       
+    }
+
+/*
+ * 判断用户是否为星球创建者
+ */
+    public function judgeCreate($user_id,$group_id){
+        $model=new Model_User();
+        $rs=$model->judgeCreate($user_id,$group_id);
+        return $rs;
+    }   
 }
 
 
