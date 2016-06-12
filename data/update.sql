@@ -41,4 +41,12 @@ INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
 ('02', '02', '星球-管理'),
 ('02', '03', '星球-成员');
 
+-- 2016/06/12
+-- tupian
 
+ALTER TABLE `post_image`
+CHANGE COLUMN `id` `post_base_id`  int(9) NOT NULL COMMENT '帖子id' FIRST ,
+MODIFY COLUMN `p_image`  varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '帖子图片' AFTER `postbaseid`,
+MODIFY COLUMN `delete`  int(1) NULL DEFAULT 0 COMMENT '删除' AFTER `p_image`,
+ADD COLUMN `post_image_id`  int(9) NOT NULL AFTER `post_base_id`,
+ADD PRIMARY KEY (`post_base_id`, `post_image_id`);
