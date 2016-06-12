@@ -225,7 +225,7 @@ class Domain_Group {
                 $filepath = $this->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
                 $size = getimagesize ($filepath);
                 if($size[0]>94&&$size[1]>94){
-                    include "../Library/resizeimage.php";
+                    include "../../Library/resizeimage.php";
                     $imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
                 }
                     $data["p_image"] = substr($filepath,-39);
@@ -249,7 +249,7 @@ class Domain_Group {
             );
             $pd = DI()->notorm->post_detail->insert($d_data);
             $i_data = array(
-                'id'        => $pb['id'],
+                'post_base_id'        => $pb['id'],
                 'p_image'   => $data["p_image"],
             );
             $pi = DI()->notorm->post_image->insert($i_data);
@@ -257,6 +257,7 @@ class Domain_Group {
             $this->rs['info'] = $pd;
             $this->rs['info']['title']=$pb['title'];
             $this->rs['info']['URL']=$pi['p_image'];
+			$this->rs['info']['post_image_id']=$pi['id'];
         }else{
             $this->rs['msg'] = $this->msg;
         }
