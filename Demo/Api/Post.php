@@ -181,7 +181,8 @@ class Api_Post extends PhalApi_Api{
 
         if ($this->userID !=null){
             $userID=$this->userID;
-            $creater= $domain2->judgeCreate($userID,$this->postID);
+            $groupID=$domain->getGroupId($this->postID);
+            $creater= $domain2->judgeCreate($userID,$groupID);
             $poster = $domain->judgePoster($userID,$this->postID);
             $admin = $domain2->judgeAdmin($userID);
             if($poster)

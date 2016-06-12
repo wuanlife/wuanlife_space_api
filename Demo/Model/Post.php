@@ -254,7 +254,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 
     public function judgePoster($user_id,$post_id){
         $sql=DI()->notorm->post_detail->select('floor')->where('user_base_id=?',$user_id)->where('post_base_id=?',$post_id)->fetch();
-        if($sql==1){
+        if($sql['floor']==1){
             $rs=1;
         }else{
             $rs=0;
