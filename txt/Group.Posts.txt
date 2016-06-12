@@ -27,24 +27,26 @@ info.floor          整型   帖子楼层
 info.createTime     字符串 帖子发布时间
 info.title          字符串 帖子标题
 info.URL            字符串 帖子图片地址
+info.post_base_id   整型   帖子图片id
 
 
 6.示例：
-在id为3的星球创建标题为123，内容为qweasf的帖子
-http://dev.wuanlife.com:800/?service=Group.Posts&user_id=3&group_base_id=3&title=123&text=qweasf
+在id为3的星球创建标题为上传测试，内容为65163的帖子
+http://dev.wuanlife.com:800/?service=Group.Posts
 {
     "ret": 200,
     "data": {
         "code": 1,
         "msg": "",
         "info": {
-            "post_base_id": "5",
+            "post_base_id": "84",
             "user_base_id": 1,
-            "text": "qweasf",
+            "text": "65163",
             "floor": "1",
-            "createTime": "2016-05-29 20:43:38",
-            "title": "123",
-            "URL": ".."
+            "createTime": "2016-06-12 19:51:10",
+            "title": "上传测试",
+            "URL": "/upload/posts/2016/06/12/1465732270.jpg",
+            "post_image_id": "18"
         }
     },
     "msg": ""
