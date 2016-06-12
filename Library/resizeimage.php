@@ -59,10 +59,10 @@
                 }
                 if($ratio>=$resize_ratio) {
                     //高度优先
-                    imagecopyresampled($newimg, $this->im, 0, 0,(($this->width)/3),0, $this->resize_width,$this->resize_height, (($this->height)*$resize_ratio), $this->height);
+                    imagecopyresampled($newimg, $this->im, 0, 0,(($this->width)/500),0, $this->resize_width,$this->resize_height, (($this->height)*$resize_ratio), $this->height);
                 } else {
                     //宽度优先
-                    imagecopyresampled($newimg, $this->im, 0, 0,0,(($this->height)/3), $this->resize_width, $this->resize_height, $this->width, (($this->width)/$resize_ratio));
+                    imagecopyresampled($newimg, $this->im, 0, 0,0,(($this->height)/500), $this->resize_width, $this->resize_height, $this->width, (($this->width)/$resize_ratio));
                 }
             } else {
                 //不裁图
