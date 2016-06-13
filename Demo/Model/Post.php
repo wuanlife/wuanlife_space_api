@@ -49,7 +49,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $params = array(':group_id' =>$groupID,':start' =>($page-1)*$num , ':num' =>$num);
         $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
 
-        $sql = 'SELECT ceil(count(id)/:num) AS pageCount '
+        $sql = 'SELECT ceil(count(:pb.id)/:num) AS pageCount '
              . 'FROM post_base pb,group_base gb '
              . 'WHERE pb.group_base_id=gb.id AND gb.id=:group_id ';
 
@@ -77,9 +77,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
         $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
 
-        $sql = 'SELECT ceil(count(id)/:num) AS pageCount '
+        $sql = 'SELECT ceil(count(:pb.id)/:num) AS pageCount '
              . 'FROM post_base pb,group_base gb,group_detail gd '
-             . 'WHERE pb.group_base_id=gb.id AND gb.id=gd.group_base_id AND gd.user_base_id=:user_id ';
+             . 'WHERE pb.group_base_id=gb.id AND gb.id=gd.group_base_id AND gd.user_base_id=:user_id AND pb.delete=0 ';
 
         $params = array(':user_id' =>$userID,':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
@@ -130,7 +130,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchALL();
 
         $rs['postID']=$postID;
-        $sql = 'SELECT ceil(count(id)/:num) AS pageCount,count(*) AS replyCount '
+        $sql = 'SELECT ceil(count(:pb.id)/:num) AS pageCount,count(*) AS replyCount '
          . 'FROM post_detail '
          . 'WHERE post_base_id=:post_id AND post_detail.floor>1 ';
 
