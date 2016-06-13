@@ -34,6 +34,8 @@ class Api_Post extends PhalApi_Api{
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'title' => array('name' => 'title', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子标题'),
                 'text' => array('name' => 'text', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子内容'),
+                'p_image' => array('name' => 'p_image','type' => 'string','require' => false,'desc'=>'帖子图片',),
+                'post_image_id'  => array('name' => 'post_image_id','type' => 'int','require' => false,'desc'=>'帖子图片id'),
             ),
 	    	'stickyPost' => array(
         			'user_id'    => array(
@@ -199,9 +201,8 @@ class Api_Post extends PhalApi_Api{
                 $data[0]['stickyRight']=1;
             }
         }
-        $data[0]['text'] = strip_tags($data[0]['text']);
         return $data[0];
-    }
+	}
 
     /**
      * 帖子的回复
@@ -265,6 +266,8 @@ class Api_Post extends PhalApi_Api{
             'post_base_id'  => $this->post_base_id,
             'title'         => $this->title,
             'text'          => $this->text,
+            'p_image'       => $this->p_image,
+            'post_image_id'        => $this->post_image_id,
         );
         $domain = new Domain_Post();
         $rs = $domain->editPost($data);
