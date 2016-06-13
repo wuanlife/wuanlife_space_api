@@ -124,6 +124,7 @@ class Domain_Group {
                 $this->rs['info'] = $result2;
                 $this->rs['info']['name'] = $result['name'];
                 $this->rs['info']['g_introduction'] = $result['g_introduction'];
+				if(!empty($data["g_image"])) {$data["g_image"] = $_SERVER['HTTP_HOST'].substr($filepath,-39);}
                 $this->rs['info']['URL'] = $data["g_image"];
                 $this->rs['code'] = 1;
             }
@@ -216,23 +217,6 @@ class Domain_Group {
         $output_file_without_extentnion = time();
         $path_with_end_slash = "$path";
         if ($this->u_status == '1' && $this->g_status == '1') {
-            if(!empty($data["p_image"])) {
-                //创建上传路径
-                if(!is_readable($path)) {
-                    is_file($path) or mkdir($path,0777,true);
-                }
-                //调用接口保存base64字符串为图片
-                $filepath = $this->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
-                $size = getimagesize ($filepath);
-                if($size[0]>94&&$size[1]>94){
-                    include "../../Library/resizeimage.php";
-                    $imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
-                }
-                    $data["p_image"] = substr($filepath,-39);
-            }
-            else{
-                $data["p_image"]=NULL;
-            }
             $b_data = array(
                 'user_base_id'  => $this->cookie['userID'],
                 'group_base_id' => $data['group_base_id'],
@@ -248,11 +232,30 @@ class Domain_Group {
                 'createTime' => $time,
             );
             $pd = DI()->notorm->post_detail->insert($d_data);
+            if(!empty($data["p_image"])) {
+                //创建上传路径
+                if(!is_readable($path)) {
+                    is_file($path) or mkdir($path,0777,true);
+                }
+                //调用接口保存base64字符串为图片
+                $filepath = $this->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
+                $size = getimagesize ($filepath);
+                if($size[0]>94&&$size[1]>94){
+                    include "../Library/resizeimage.php";
+                    $imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
+                }
+                    $data["p_image"] = substr($filepath,-39);
             $i_data = array(
                 'post_base_id'        => $pb['id'],
                 'p_image'   => $data["p_image"],
             );
             $pi = DI()->notorm->post_image->insert($i_data);
+					$pi['p_image']=$_SERVER['HTTP_HOST'].$pi['p_image'];
+                    //$pi['p_image'] = DI()->notorm->post_image->select('p_image')->where('post_base_id =?', $pb['id'])->AND('post_image.delete=?','0')->fetchall();
+            }
+            else{
+				$pi = NULL;
+			}			
             $this->rs['code'] = 1;
             $this->rs['info'] = $pd;
             $this->rs['info']['title']=$pb['title'];
