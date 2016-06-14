@@ -241,7 +241,7 @@ class Domain_Group {
                 $filepath = $this->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
                 $size = getimagesize ($filepath);
                 if($size[0]>94&&$size[1]>94){
-                    include "../Library/resizeimage.php";
+                    include "../../Library/resizeimage.php";
                     $imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
                 }
                     $data["p_image"] = substr($filepath,-39);
