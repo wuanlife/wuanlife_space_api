@@ -98,6 +98,7 @@ class Model_Post extends PhalApi_Model_NotORM {
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.id=:post_id AND pd.floor=1' ;
         $params = array(':post_id' =>$postID );
         $rs = DI()->notorm->post_base->queryAll($sql, $params);
+		@$rs[0]['sticky']=(int)$rs[0]['sticky'];
 	    if (empty($rs)) {
             $rs=NULL;
         }
@@ -108,7 +109,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             ->AND('post_image.delete=?','0');
             // ->fetchall();
         foreach ($results as $key => $row) {
-            $p_image[$key] = array($row['post_image_id']=>$_SERVER['HTTP_HOST'].$row['p_image']);
+            $p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
         }
 		$rs[0]['p_image']=$p_image;
 		if(empty($p_image)){
