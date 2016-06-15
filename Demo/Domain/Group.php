@@ -122,7 +122,7 @@ class Domain_Group {
                 $this->rs['info'] = $result2;
                 $this->rs['info']['name'] = $result['name'];
                 $this->rs['info']['g_introduction'] = $result['g_introduction'];
-                if(!empty($data["g_image"])) {$data["g_image"] = $_SERVER['HTTP_HOST'].substr($filepath,-39);}
+                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}
                 $this->rs['info']['URL'] = $data["g_image"];
                 $this->rs['code'] = 1;
             }
