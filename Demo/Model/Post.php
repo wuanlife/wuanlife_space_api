@@ -186,32 +186,16 @@ class Model_Post extends PhalApi_Model_NotORM {
 				->AND('post_image.post_base_id = ?',$data['post_base_id'])
 				->update(array('`delete`'=>'1'));
 			}
-            if(!empty($data["p_image"])) {
-				//创建上传路径
-				$date=date("Y/m/d");
-				$RootDIR = dirname(__FILE__);
-				$path=$RootDIR."/../../Public/demo/upload/posts/$date/";
-				$base64_image_string = $data["p_image"];
-				$output_file_without_extentnion = time();
-				$path_with_end_slash = "$path";
-				if(!is_readable($path)) {
-					is_file($path) or mkdir($path,0777,true);
+			$domain = new Domain_Group();
+			$pei = array("id"=>$data['post_base_id']);
+            foreach ($data['p_image'] as $key => $value) {
+				if(!empty($value)) {
+					$fileName = $domain->doFileUpload($key,$value);
+					$pi = $domain->saveData($fileName,$value,$pei);
 				}
-				//调用接口保存base64字符串为图片
-				$domain = new Domain_Group();
-				$filepath = $domain->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
-				$size = getimagesize ($filepath);
-				if($size[0]>94&&$size[1]>94){
-					include "../../Library/resizeimage.php";
-					$imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
+				else {
+					$pi = NULL;
 				}
-				$data["p_image"] = substr($filepath,-39);
-				$i_data = array(
-					'post_base_id'=> $data['post_base_id'],
-					'p_image'=> $data['p_image'],
-				);
-				//新增一张图片
-				$pi = DI()->notorm->post_image->insert($i_data);
 			}
             $rs['code']=1;
             $rs['info']['post_base_id']=$data['post_base_id'];
@@ -220,17 +204,19 @@ class Model_Post extends PhalApi_Model_NotORM {
             $rs['info']['text']=$data['text'];
 			$p_image = array();
 			$results = DI()->notorm->post_image
-            ->select('p_image')
+            ->select('p_image,post_image_id')
             ->where('post_base_id =?', $data['post_base_id'])
             ->AND('post_image.delete=?','0');
             // ->fetchall();
+			/*不需要返回URL值
 			foreach ($results as $key => $row) {
-				$p_image[$key] = $_SERVER['HTTP_HOST'].$row['p_image'];
+				$p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
 			}
 			if(empty($p_image)){
 				$p_image=NULL;
 			}
 			$rs['info']['URL']=$p_image;
+			*/
             $rs['info']['floor']=1;
             $rs['info']['createTime']=$time;
         }else{
