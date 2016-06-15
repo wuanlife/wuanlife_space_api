@@ -34,7 +34,7 @@ class Api_Post extends PhalApi_Api{
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'title' => array('name' => 'title', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子标题'),
                 'text' => array('name' => 'text', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '帖子内容'),
-                'p_image' => array('name' => 'p_image','type' => 'string','require' => false,'desc'=>'帖子图片',),
+                'p_image' => array('name' => 'p_image','type' => 'array','require' => false,'desc'=>'帖子图片',),
                 'post_image_id'  => array('name' => 'post_image_id','type' => 'int','require' => false,'desc'=>'帖子图片id'),
             ),
 	    	'stickyPost' => array(
