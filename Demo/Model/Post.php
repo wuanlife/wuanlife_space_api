@@ -131,9 +131,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchALL();
 
         $rs['postID']=$postID;
-        $sql = 'SELECT ceil(count(:pb.id)/:num) AS pageCount,count(*) AS replyCount '
-         . 'FROM post_detail '
-         . 'WHERE post_base_id=:post_id AND post_detail.floor>1 ';
+        $sql = 'SELECT ceil(count(pd.post_base_id)/:num) AS pageCount,count(*) AS replyCount '
+         . 'FROM post_detail as pd '
+         . 'WHERE pd.post_base_id=:post_id AND pd.floor>1 ';
 
         $params = array(':post_id' =>$postID,':num' =>$num);
         $count = DI()->notorm->user_base->queryAll($sql, $params);
