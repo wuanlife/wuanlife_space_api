@@ -28,7 +28,13 @@ class Model_Group extends PhalApi_Model_NotORM{
             .'ORDER BY COUNT(gd.user_base_id) DESC '
             .'LIMIT :limit_st,:page_num';
         $params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
-        return $this->getORM()->queryAll($sql, $params);
+        $re = $this->getORM()->queryAll($sql, $params);
+		foreach ($re as $key=>$value){
+			if(!empty($value['g_image'])) {
+				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
+			}
+		}
+		return $re;
 	}
 
 	public function add($table,$data){
@@ -69,7 +75,12 @@ class Model_Group extends PhalApi_Model_NotORM{
 			.'LIMIT :limit_st,:page_num';
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 		$re=$this->getORM()->queryAll($sql, $params);
-	}else{
+		foreach ($re as $key=>$value){
+			if(!empty($value['g_image'])) {
+				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
+			}
+		}
+	    }else{
 			$re=array();
 		}
 
@@ -106,7 +117,11 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 
 		$re=$this->getORM()->queryAll($sql, $params);
-
+		foreach ($re as $key=>$value){
+			if(!empty($value['g_image'])) {
+				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
+			}
+		}
 		}else{
 			$re=array();
 		}
