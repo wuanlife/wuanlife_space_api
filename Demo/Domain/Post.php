@@ -102,11 +102,28 @@ class Domain_Post {
         }
     	return $rs;
     }
-    
+/*
+ * 删除帖子列表html
+ */
     public function deleteHtmlPosts($data){
         $rs = $data;
         for ($i=0; $i<count($rs['posts']); $i++) {
         $rs['posts'][$i]['text'] = strip_tags($rs['posts'][$i]['text']);
+            
+        }
+        return $rs;
+    }
+
+/*
+ * 提取帖子列表中文本部分的html标签
+ */
+    public function getImageUrl($data){
+        $rs = $data;
+        for ($i=0; $i<count($rs['posts']); $i++) {
+        $rs['posts'][$i]['text'] = str_replace('\"', '', $rs['posts'][$i]['text']);
+        preg_match_all('/<img[^>]*src\s?=\s?[\'|"]([^\'|"]*)[\'|"]/is', $rs['posts'][$i]['text'], $picarr);
+        $rs['posts'][$i]['image']=$picarr['1'];
+            
         }
         return $rs;
     }
