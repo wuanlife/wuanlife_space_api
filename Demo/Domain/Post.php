@@ -166,7 +166,7 @@ class Domain_Post {
     public function deleteImageGif($data)
     {
         $rs = $data;
-        $datab = "/http:\/\/.*?\.gif/";
+        $datab = "/([http|https]):\/\/.*?\.gif/";
         foreach ($rs['posts'] as $key1 => $value) {
             if(!empty($value['image'])){
                 foreach ($value['image'] as $key2 => $image) {
