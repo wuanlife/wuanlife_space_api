@@ -123,7 +123,6 @@ class Domain_Post {
         $rs['posts'][$i]['text'] = str_replace('\"', '', $rs['posts'][$i]['text']);
         preg_match_all('/<img[^>]*src\s?=\s?[\'|"]([^\'|"]*)[\'|"]/is', $rs['posts'][$i]['text'], $picarr);
         $rs['posts'][$i]['image']=$picarr['1'];
-            
         }
         return $rs;
     }
@@ -160,5 +159,36 @@ class Domain_Post {
         $rs = $model->judgePoster($user_id,$post_id);
         return $rs;
     }
+
+ /*
+  * 过滤帖子列表image中gif格式的url
+  */ 
+    public function deleteImageGif($data)
+    {
+        $rs = $data;
+        $datab = "/http:\/\/.*?\.gif/";
+        foreach ($rs['posts'] as $key1 => $value) {
+            if(!empty($value['image'])){
+                foreach ($value['image'] as $key2 => $image) {
+                    if(preg_match($datab, $image)){
+                        unset($rs['posts'][$key1]['image'][$key2]);
+                    }
+                }
+            }
+        }
+        return $rs;
+    }
     
+ /*
+  * 设置帖子列表image图片url上限
+  */ 
+    public function postImageLimit($data){
+        $rs=$data;
+        foreach ($rs['posts'] as $key => $value) {
+            if(count($value['image'])>3){
+                $rs['posts'][$key]['image'] = array_slice($value['image'],0,3);
+            }
+        }
+        return $rs;
+    }
 }

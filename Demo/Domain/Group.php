@@ -223,15 +223,15 @@ class Domain_Group {
                 'createTime' => $time,
             );
             $pd = DI()->notorm->post_detail->insert($d_data);
-            foreach ($data['p_image'] as $key => $value) {
+/*            foreach ($data['p_image'] as $key => $value) {
                 if(!empty($value)) {
                     $fileName = $this->doFileUpload($key,$value);
                     $pi = $this->saveData($fileName,$value,$pb);
             }
             else{
                 $pi = NULL;
-            }           
-            }
+            }    
+            }*/
             $this->rs['code'] = 1;
             $this->rs['info'] = $pd;
             $this->rs['info']['title']=$pb['title'];
@@ -279,11 +279,11 @@ class Domain_Group {
         $this->pages['num']=$all_num;        
         return $this->model->getCreate($limit_st, $page_num,$user_id);
     }
-    public function doFileUpload($order, $base64String) {
+/*    public function doFileUpload($order, $base64String) {
         $fileName = time() . "_" . $order;
         //echo "File " . $fileName . " upload....<br />";
         return $fileName;
-    }
+    }*/
 
     public function saveData($fileName,$value,$pb) {
         $date=date("Y/m/d");

@@ -103,6 +103,8 @@ class Api_Post extends PhalApi_Api{
         $domain = new Domain_Post();
         $data = $domain->getIndexPost($this->page);
         $data = $domain->getImageUrl($data);
+        $data = $domain->deleteImageGif($data);
+        $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
         
         return $data;
@@ -129,6 +131,8 @@ class Api_Post extends PhalApi_Api{
         $domain = new Domain_Post();
         $data = $domain->getGroupPost($this->groupID,$this->page);
         $data = $domain->getImageUrl($data);
+        $data = $domain->deleteImageGif($data);
+        $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
 
         return $data;
@@ -153,6 +157,8 @@ class Api_Post extends PhalApi_Api{
         $domain = new Domain_Post();
         $data = $domain->getMyGroupPost($this->userID,$this->page);
         $data = $domain->getImageUrl($data);
+        $data = $domain->deleteImageGif($data);
+        $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
 
         return $data;
