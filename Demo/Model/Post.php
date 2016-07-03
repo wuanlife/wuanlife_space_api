@@ -16,7 +16,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
-             . "FROM post_base WHERE post_base.delete='0'";
+             . "FROM post_base WHERE post_base.delete=0";
 
         $params = array(':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
@@ -44,14 +44,15 @@ class Model_Post extends PhalApi_Model_NotORM {
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
              . 'GROUP BY pb.id '
-             . 'ORDER BY MAX(pd.createTime) DESC '
+             . 'ORDER BY pb.sticky DESC, '
+             . 'MAX(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
         $params = array(':group_id' =>$groupID,':start' =>($page-1)*$num , ':num' =>$num);
         $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
              . 'FROM post_base pb,group_base gb '
-             . 'WHERE pb.group_base_id=gb.id AND gb.id=:group_id ';
+             . 'WHERE pb.group_base_id=gb.id AND gb.id=:group_id AND pb.delete=0 ';
 
         $params = array(':group_id' =>$groupID,':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
