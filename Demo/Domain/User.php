@@ -31,15 +31,7 @@ class Domain_User {
         $rs = $model->logout();
         return $rs;
     }
-/*
- * 判断用户是否存在
- */
-    public function judgeExist($user_id){
-        $model=new Model_User();
-        $rs=$model->judgeExist($user_id);
-        return $rs;
-        
-    }
+
 
 /*
  * 判断用户是否为管理员

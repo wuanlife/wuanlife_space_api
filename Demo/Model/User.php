@@ -98,7 +98,7 @@ class Model_User extends PhalApi_Model_NotORM {
         return $this;
     }
 
-    public function judgeExist($user_id){
+    public function judgeUserExist($user_id){
         $sql=DI()->notorm->user_base->select('id')->where('id= ?',$user_id)->fetch();
         if(!empty($sql)){
             $rs=1;

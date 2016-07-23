@@ -330,6 +330,7 @@ class Api_Group extends PhalApi_Api
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         $rs['num']=$domain->pages['num'];
+        $rs['user_name']=$domain->pages['user_name'];
         return $rs;
     }
 
@@ -358,6 +359,7 @@ class Api_Group extends PhalApi_Api
         $rs['pageCount'] = $domain->pages['pageCount'];
         $rs['currentPage'] = $domain->pages['currentPage'];
         $rs['num']=$domain->pages['num'];
+        $rs['user_name']=$domain->pages['user_name'];
         return $rs;
     }
 }

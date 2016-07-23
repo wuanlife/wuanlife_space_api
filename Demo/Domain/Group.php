@@ -60,7 +60,7 @@ class Domain_Group {
         $this->cookie['nickname'] = $rs['nickname'];
     }
 
-    public function save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash ) {
+/*    public function save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash ) {
         $splited = explode(',', substr( $base64_image_string , 5 ) , 2);
         $mime=$splited[0];
         $data=$splited[1];
@@ -73,21 +73,21 @@ class Domain_Group {
         }
         file_put_contents( $path_with_end_slash . $output_file_with_extentnion, base64_decode($data) );
         return $path_with_end_slash . $output_file_with_extentnion;
-    }
+    }*/
 
     public function create($data) {
             $this->model = new Model_Group();
             $this->checkStatus($data['user_id']);
             $this->checkN($data['name']);
-            //上传路径
+ /*           //上传路径
         $date=date("Y/m/d");
             $RootDIR = dirname(__FILE__);
             $path=$RootDIR."/../../Public/demo/upload/group/$date/";
             $base64_image_string = $data["g_image"];
             $output_file_without_extentnion = time();
-            $path_with_end_slash = "$path";
+            $path_with_end_slash = "$path";*/
             if ($this->u_status == '1' && $this->g_status =='1') {
-                if(!empty($data["g_image"])) {
+/*                if(!empty($data["g_image"])) {
                     //创建上传路径
                     if(!is_readable($path)) {
                         is_file($path) or mkdir($path,0777,true);
@@ -103,7 +103,7 @@ class Domain_Group {
                 }
                 else{
                     $data["g_image"]=NULL;
-                }
+                }*/
                     if(empty($data['g_introduction'])) {
                         $data['g_introduction']=NULL;
                     }
@@ -122,7 +122,7 @@ class Domain_Group {
                 $this->rs['info'] = $result2;
                 $this->rs['info']['name'] = $result['name'];
                 $this->rs['info']['g_introduction'] = $result['g_introduction'];
-                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}
+/*                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}*/
                 $this->rs['info']['URL'] = $data["g_image"];
                 $this->rs['code'] = 1;
             }
@@ -259,6 +259,7 @@ class Domain_Group {
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
         $this->pages['num']=$all_num;
+        $this->pages['user_name']=$this->model->getUser($user_id);
         return $this->model->getJoined($limit_st, $page_num,$user_id);
     }
 
@@ -276,7 +277,8 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
-        $this->pages['num']=$all_num;        
+        $this->pages['num']=$all_num;
+        $this->pages['user_name']=$this->model->getUser($user_id);
         return $this->model->getCreate($limit_st, $page_num,$user_id);
     }
 /*    public function doFileUpload($order, $base64String) {
@@ -285,7 +287,7 @@ class Domain_Group {
         return $fileName;
     }*/
 
-    public function saveData($fileName,$value,$pb) {
+/*    public function saveData($fileName,$value,$pb) {
         $date=date("Y/m/d");
         $RootDIR = dirname(__FILE__);
         $path=$RootDIR."/../../Public/demo/upload/posts/$date/";
@@ -312,7 +314,7 @@ class Domain_Group {
         $pi['p_image']=$_SERVER['HTTP_HOST'].$pi['p_image'];
         //echo "Save " . $filepath . " success!<br />";
         return $pi;
-    }
+    }*/
 }
 
 

@@ -13,7 +13,8 @@ class Model_Group extends PhalApi_Model_NotORM{
 	}
 
 	public function getUser($user_id){
-		return DI()->notorm->user_base->select('nickname')->where('id = ?', $user_id)->fetchOne();
+		$re=DI()->notorm->user_base->select('nickname')->where('id = ?', $user_id)->fetchOne();
+		return $re['nickname'];
 	}
 
 
@@ -129,6 +130,15 @@ class Model_Group extends PhalApi_Model_NotORM{
 		return $re;
 	}
 
+	public function judgePostExist($group_id){
+		$sql=DI()->notorm->group_detail->select('group_base_id')->where('group_base_id= ?',$group_id)->fetch();
+		if(!empty($sql)){
+			$rs=1;
+		}else{
+			$rs=0;
+		}
+		return $rs;
+	}
 }
 
 

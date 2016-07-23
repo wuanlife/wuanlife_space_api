@@ -187,7 +187,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 				->AND('post_image.post_base_id = ?',$data['post_base_id'])
 				->update(array('`delete`'=>'1'));
 			}
-			$domain = new Domain_Group();
+/*			$domain = new Domain_Group();
 			$pei = array("id"=>$data['post_base_id']);
             foreach ($data['p_image'] as $key => $value) {
 				if(!empty($value)) {
@@ -197,7 +197,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 				else {
 					$pi = NULL;
 				}
-			}
+			}*/
             $rs['code']=1;
             $rs['info']['post_base_id']=$data['post_base_id'];
             $rs['info']['user_base_id']=$data['user_id'];
@@ -298,6 +298,17 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function judgePoster($user_id,$post_id){
         $sql=DI()->notorm->post_detail->select('floor')->where('user_base_id=?',$user_id)->where('post_base_id=?',$post_id)->fetch();
         if($sql['floor']==1){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+
+    public function judgePostExist($post_id){
+        $sql=DI()->notorm->post_detail->select('post_base_id')->where('post_base_id= ?',$post_id)->fetch();
+        if(!empty($sql)){
             $rs=1;
         }else{
             $rs=0;

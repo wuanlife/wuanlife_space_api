@@ -150,6 +150,7 @@ class Api_Post extends PhalApi_Api{
      * @return string posts.groupName 星球名称
      * @return int pageCount 总页数
      * @return int currentPage 当前页
+     * @return string user_name 用户名
      */
     public function getMyGroupPost(){
         $data   = array();
@@ -253,8 +254,14 @@ class Api_Post extends PhalApi_Api{
             'floor'         => '',
             'createTime'    => '',
         );
+        $domain1 = new Domain_Common();
         $domain = new Domain_Post();
-        $rs = $domain->PostReply($data);
+        $judge =$domain1->judgePostExist($this->post_base_id);
+        if($judge) {
+            $rs = $domain->PostReply($data);
+        }else{
+            $rs=null;
+        }
         return $rs;
     }
     /**

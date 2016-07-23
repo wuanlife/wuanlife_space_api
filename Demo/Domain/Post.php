@@ -19,7 +19,9 @@ class Domain_Post {
     public function getMyGroupPost($userID,$page) {
         $rs = array();
         $model = new Model_Post();
+        $model1 = new Model_Group();
         $rs = $model->getMyGroupPost($userID,$page);
+        $rs['user_name'] = $model1->getUser($userID);
         return $rs;
     }
 
@@ -191,4 +193,7 @@ class Domain_Post {
         }
         return $rs;
     }
+    
+
+
 }
