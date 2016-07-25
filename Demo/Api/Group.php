@@ -24,7 +24,7 @@ class Api_Group extends PhalApi_Api
                 'g_image' => array(
                     'name' => 'g_image',
                     'type' => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'=>'星球图标',
                 ),
                 'g_introduction'    => array(

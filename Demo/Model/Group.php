@@ -30,11 +30,11 @@ class Model_Group extends PhalApi_Model_NotORM{
             .'LIMIT :limit_st,:page_num';
         $params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
         $re = $this->getORM()->queryAll($sql, $params);
-		foreach ($re as $key=>$value){
+/*		foreach ($re as $key=>$value){
 			if(!empty($value['g_image'])) {
 				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
 			}
-		}
+		}*/
 		return $re;
 	}
 
@@ -78,7 +78,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$re=$this->getORM()->queryAll($sql, $params);
 		foreach ($re as $key=>$value){
 			if(!empty($value['g_image'])) {
-				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
+				$re[$key]['g_image']=$value['g_image'];
 			}
 		}
 	    }else{
@@ -120,7 +120,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$re=$this->getORM()->queryAll($sql, $params);
 		foreach ($re as $key=>$value){
 			if(!empty($value['g_image'])) {
-				$re[$key]['g_image']="http://".$_SERVER['HTTP_HOST'].$value['g_image'];
+				$re[$key]['g_image']=$value['g_image'];
 			}
 		}
 		}else{
