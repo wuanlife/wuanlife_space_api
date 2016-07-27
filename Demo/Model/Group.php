@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * 星球相关DB操作
 */
@@ -58,8 +58,8 @@ class Model_Group extends PhalApi_Model_NotORM{
 			$groupnum = count($row);
 			return $groupnum;
 		}
-	}	
-	
+	}
+
 	public function getJoined($limit_st, $page_num,$user_id){
 		$group_detail=DI()->notorm->group_detail;
 		$rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','03')->fetchRows();
@@ -130,7 +130,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 		return $re;
 	}
 
-	public function judgePostExist($group_id){
+	public function judgeGroupExist($group_id){
 		$sql=DI()->notorm->group_detail->select('group_base_id')->where('group_base_id= ?',$group_id)->fetch();
 		if(!empty($sql)){
 			$rs=1;
@@ -139,6 +139,23 @@ class Model_Group extends PhalApi_Model_NotORM{
 		}
 		return $rs;
 	}
+
+	public function getGroup($group_id){
+		$re=DI()->notorm->group_base->select('id','name','g_introduction')->where('id=?',$group_id)->fetch();
+		return $re;
+	}
+
+	public function modifyGroup($group_id,$g_introduction){
+		$data=array('g_introduction'=>$g_introduction);
+		$sql=DI()->notorm->group_base->where('id=?',$group_id)->update($data);
+		return $sql;
+	}
+
+
+
+
+
+
 }
 
 

@@ -39,7 +39,7 @@ class Domain_User {
     public function judgeAdmin($user_id){
         $model=new Model_User();
         $rs=$model->judgeAdmin($user_id);
-        return $rs;       
+        return $rs;
     }
 
 /*
@@ -49,7 +49,19 @@ class Domain_User {
         $model=new Model_User();
         $rs=$model->judgeCreate($user_id,$group_id);
         return $rs;
-    }   
+    }
+
+    public function getUser($user_id){
+        $model=new Model_User();
+        $rs=$model->getUser($user_id);
+        return $rs;
+    }
+
+    public function modifyUser($user_id,$sex,$year,$month,$day){
+        $model=new Model_User();
+        $rs=$model->modifyUser($user_id,$sex,$year,$month,$day);
+        return $rs;
+    }
 }
 
 

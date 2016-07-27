@@ -155,6 +155,44 @@ class Api_Group extends PhalApi_Api
                     'desc' => '用户id',
                 ),
             ),
+
+            'getgroup' =>array(
+                'group_id' =>array(
+                    'name' =>'group_id',
+                    'type' =>'int',
+                    'require' =>true,
+                    'desc'=>'星球id',
+                ),
+                'user_id'=>array(
+                    'name'=>'user_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'用户id',
+                    ),
+            ),
+
+            'modifygroup'=>array(
+                'group_id'=>array(
+                    'name'=>'group_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'星球id'
+                    ),
+                'user_id'=>array(
+                    'name'=>'user_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'用户id'
+                    ),
+                'g_introduction'    => array(
+                    'name'    => 'g_introduction',
+                    'type'    => 'string',
+                    'require' => true,
+                    'min'     => '0',
+                    'max'     => '200',
+                    'desc'    => '星球简介',
+                ),
+            ),
         );
     }
 
@@ -362,7 +400,71 @@ class Api_Group extends PhalApi_Api
         $rs['user_name']=$domain->pages['user_name'];
         return $rs;
     }
+/**
+ *获取星球详情
+ * @return int  ret   操作码 200代表成功
+ * @return object data 星球信息对象
+ * @return int data.id 星球id
+ * @return string data.name 星球名称
+ * @return string data.g_introduction 星球介绍
+ * @return int data.cteate 判断是否为创建者 1为创建者
+ * @return string msg 报错信息
+ */
+    public function getGroup()
+    {
+        $group_id=$this->group_id;
+        $user_id=$this->user_id;
+        $common = new Domain_Common();
+        $user = new Domain_User();
+        $exist = $common->judgeGroupExist($group_id);
+        $create = $user->judgeCreate($user_id,$group_id);
+        if($exist){
+                $group = new Domain_Group();
+                $rs=$group->getGroup($group_id);
+            if($create){
+               $rs['create']=1;
+        }else{
+               $rs['create']=0;
+        }
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+/**
+ *修改星球详情
+ * @return int  ret   操作码 200代表成功
+ * @return int data 2代表不是创建者 3代表星球不存在 1代表修改成功 0代表没有改动
+ * @return string msg 信息
+ */
+    public function modifyGroup(){
+        $group_id=$this->group_id;
+        $user_id=$this->user_id;
+        $g_introduction=$this->g_introduction;
+        $common = new Domain_Common();
+        $user = new Domain_User();
+        $exist = $common->judgeGroupExist($group_id);
+        $create = $user->judgeCreate($user_id,$group_id);
+        if($exist){
+            if($create){
+                $group = new Domain_Group();
+                $rs=$group->modifyGroup($group_id,$g_introduction);
+        }else{
+            $rs=2;
+        }
+        }else{
+            $rs=3;
+        }
+        return $rs;
+    }
+
+
+
+
+
+
 }
+
 
 
 

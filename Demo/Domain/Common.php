@@ -32,7 +32,7 @@ class Domain_Common
  * */
     public function judgeGroupExist($group_id){
         $model=new Model_Group();
-        $rs=$model->judgePostExist($group_id);
+        $rs=$model->judgeGroupExist($group_id);
         return $rs;
-    }    
+    }
 }

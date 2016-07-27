@@ -63,7 +63,51 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '星球id'
                 ),
-            )
+            ),
+
+            'getUser'=>array(
+                'user_id' => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id'
+                ),
+            ),
+
+            'modifyUser'=>array(
+                'user_id'=>array(
+                    'name'=>'user_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'用户id'
+                    ),
+                'sex'=>array(
+                    'name'=>'sex',
+                    'type'=>'string',
+                    'require'=>true,
+                    'desc'=>'性别'
+                    ),
+                'year'    => array(
+                    'name'    => 'year',
+                    'type'    => 'string',
+                    'require' => true,
+                    'desc'    => '年',
+                ),
+                'month'    => array(
+                    'name'    => 'month',
+                    'type'    => 'string',
+                    'require' => true,
+                    'desc'    => '月',
+                ),
+                'day'    => array(
+                    'name'    => 'day',
+                    'type'    => 'string',
+                    'require' => true,
+                    'desc'    => '日',
+                ),
+
+            ),
+
 
         );
     }
@@ -130,4 +174,36 @@ class Api_User extends PhalApi_Api{
         $rs =$domain->judgeCreate($this->user_id,$this->group_id);
         return $rs;
     }
+
+/**
+ *获取用户信息
+ * @return int  ret   操作码 200代表成功
+ * @return object data 用户信息对象
+ * @return string data.Email 用户Email
+ * @return string data.nickname 用户名称
+ * @return string data.sex 用户性别
+ * @return string data.year年
+ * @return string data.month月
+ * @return string data.day日
+ * @return string data.testmail 是否验证邮箱
+ * @return string msg 报错信息
+ */
+    public function getUser(){
+        $domain=new Domain_User();
+        $rs=$domain->getUser($this->user_id);
+        return $rs;
+    }
+
+/**
+ *修改星球详情
+ * @return int  ret   操作码 200代表成功
+ * @return int data 1代表成功修改 0代表没有改动
+ * @return string msg 信息
+ */
+    public function modifyUser(){
+        $domain=new Domain_User();
+        $rs=$domain->modifyUser($this->user_id,$this->sex,$this->year,$this->month,$this->day);
+        return $rs;
+    }
+
 }

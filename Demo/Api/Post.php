@@ -51,7 +51,7 @@ class Api_Post extends PhalApi_Api{
         					'desc'    => '帖子id',
         			),
         	),
-        		
+
         	'unStickyPost' => array(
         			'user_id'    => array(
         					'name'    => 'user_id',
@@ -66,7 +66,7 @@ class Api_Post extends PhalApi_Api{
         					'desc'    => '帖子id',
         			),
         	),
-        		
+
         	'deletePost' => array(
         			'user_id'    => array(
         					'name'    => 'user_id',
@@ -106,7 +106,7 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
-        
+
         return $data;
     }
 
@@ -221,7 +221,7 @@ class Api_Post extends PhalApi_Api{
      * @return string reply.nickname 回帖人
      * @return date reply.createTime 回帖时间
      * @return int postID 帖子ID
-     * @return int replyCount 回帖数    
+     * @return int replyCount 回帖数
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
@@ -301,13 +301,13 @@ class Api_Post extends PhalApi_Api{
     			'user_id'       => $this->user_id,
     			'post_id'       => $this->post_id,
     	);
-    
+
     	$domain = new Domain_Post();
     	$rs = $domain->stickyPost($data);
-    
+
     	return $rs;
     }
-    
+
     /**
      * 取消置顶帖子
      * @desc 取消帖子置顶
@@ -320,13 +320,13 @@ class Api_Post extends PhalApi_Api{
     			'user_id'       => $this->user_id,
     			'post_id'       => $this->post_id,
     	);
-    
+
     	$domain = new Domain_Post();
     	$rs = $domain->unStickyPost($data);
-    
+
     	return $rs;
     }
-    
+
     /**
      * 删除帖子
      * @desc 删除帖子
@@ -339,11 +339,10 @@ class Api_Post extends PhalApi_Api{
     			'user_id'       => $this->user_id,
     			'post_id'       => $this->post_id,
     	);
-    
+
     	$domain = new Domain_Post();
     	$rs = $domain->deletePost($data);
-    
+
     	return $rs;
     }
-}  
-    
+}

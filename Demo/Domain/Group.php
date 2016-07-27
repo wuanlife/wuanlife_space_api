@@ -206,7 +206,7 @@ class Domain_Group {
         $this->checkStatus($data['user_id']);
         $this->checkG($data['group_base_id']);
         //上传路径
-        
+
         if ($this->u_status == '1' && $this->g_status == '1') {
             $b_data = array(
                 'user_base_id'  => $this->cookie['userID'],
@@ -230,7 +230,7 @@ class Domain_Group {
             }
             else{
                 $pi = NULL;
-            }    
+            }
             }*/
             $this->rs['code'] = 1;
             $this->rs['info'] = $pd;
@@ -280,6 +280,19 @@ class Domain_Group {
         $this->pages['num']=$all_num;
         $this->pages['user_name']=$this->model->getUser($user_id);
         return $this->model->getCreate($limit_st, $page_num,$user_id);
+    }
+
+
+    public function getGroup($group_id){
+        $this->model=new Model_Group();
+        $this->rs=$this->model->getGroup($group_id);
+        return $this->rs;
+    }
+
+    public function modifyGroup($group_id,$g_introduction){
+        $this->model=new Model_Group();
+        $this->rs=$this->model->modifyGroup($group_id,$g_introduction);
+        return $this->rs;
     }
 /*    public function doFileUpload($order, $base64String) {
         $fileName = time() . "_" . $order;

@@ -15,7 +15,7 @@ class Domain_Post {
         $rs = $model->getGroupPost($groupID,$page);
         return $rs;
     }
-    
+
     public function getMyGroupPost($userID,$page) {
         $rs = array();
         $model = new Model_Post();
@@ -50,14 +50,14 @@ class Domain_Post {
         $rs = $model->editPost($data);
         return $rs;
     }
-    
+
     public function stickyPost($data){
     	$rs = array();
     	$domain = new Domain_Post();
         $domain1 = new Domain_User();
     	$sqla = $domain->getGroupId($data['post_id']);
         $sqlb = $domain1->judgeCreate($data['user_id'],$sqla);
-        
+
         if($sqlb) {
             $model=new Model_Post();
             $rs = $model->stickyPost($data);
@@ -68,7 +68,7 @@ class Domain_Post {
         }
         return $rs;
     }
-    	
+
     public function unStickyPost($data){
         $rs = array();
         $domain = new Domain_Post();
@@ -86,7 +86,7 @@ class Domain_Post {
         }
         return $rs;
     }
-    		
+
     public function deletePost($data){
         $rs = array();
         $domain = new Domain_Post();
@@ -111,7 +111,7 @@ class Domain_Post {
         $rs = $data;
         for ($i=0; $i<count($rs['posts']); $i++) {
         $rs['posts'][$i]['text'] = strip_tags($rs['posts'][$i]['text']);
-            
+
         }
         return $rs;
     }
@@ -152,10 +152,10 @@ class Domain_Post {
         $group_Id = $model->getGroupId($post_id);
         return $group_Id;
     }
-    
+
  /*
   * 判断是否为发帖者
-  */   
+  */
     public function judgePoster($user_id,$post_id){
         $model = new Model_Post();
         $rs = $model->judgePoster($user_id,$post_id);
@@ -164,7 +164,7 @@ class Domain_Post {
 
  /*
   * 过滤帖子列表image中gif格式的url
-  */ 
+  */
     public function deleteImageGif($data)
     {
         $rs = $data;
@@ -180,10 +180,10 @@ class Domain_Post {
         }
         return $rs;
     }
-    
+
  /*
   * 设置帖子列表image图片url上限
-  */ 
+  */
     public function postImageLimit($data){
         $rs=$data;
         foreach ($rs['posts'] as $key => $value) {
@@ -193,7 +193,7 @@ class Domain_Post {
         }
         return $rs;
     }
-    
+
 
 
 }

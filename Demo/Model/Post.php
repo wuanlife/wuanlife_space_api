@@ -229,7 +229,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     protected function getTableName($id) {
         return 'user';
     }
-    
+
     public function stickyPost($data){
         $rs = array();
 
@@ -244,10 +244,10 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         return $rs;
     }
-    
+
     public function unStickyPost($data){
     	$rs = array();
-        
+
     	$s_data = array(
     			'sticky' => '0',
     	);
@@ -256,17 +256,17 @@ class Model_Post extends PhalApi_Model_NotORM {
     		->update($s_data);
     		$rs['code']=1;
     		$rs['re']="操作成功";
-    	
+
     	return $rs;
     }
-    
+
     public function deletePost($data){
     	$rs = array();
-        
+
     	$d_data = array(
     			'`delete`' => '1',
     	);
-        
+
     		$sa = DI()->notorm->post_base
     		->where('id =?', $data['post_id'])
     		->update($d_data);
@@ -277,7 +277,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     		$rs['re']="操作成功";
     	return $rs;
     }
-    
+
     public function getCreaterId($groupID){
         $createrId=DI()->notorm->group_detail
         ->select('user_base_id')
@@ -286,7 +286,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchone();
         return $createrId;
         }
-    
+
     public function getGroupId($post_id){
         $sqla=DI()->notorm->post_base
             ->select('group_base_id')
@@ -316,4 +316,4 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 }
-   
+
