@@ -83,7 +83,7 @@ class Api_User extends PhalApi_Api{
                     ),
                 'sex'=>array(
                     'name'=>'sex',
-                    'type'=>'string',
+                    'type'=>'int',
                     'require'=>true,
                     'desc'=>'性别'
                     ),
@@ -181,7 +181,7 @@ class Api_User extends PhalApi_Api{
  * @return object data 用户信息对象
  * @return string data.Email 用户Email
  * @return string data.nickname 用户名称
- * @return string data.sex 用户性别
+ * @return string data.sex 用户性别 0 为未设 1为男 2为女
  * @return string data.year年
  * @return string data.month月
  * @return string data.day日

@@ -129,20 +129,17 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
     public function getUser($user_id){
-        $sql=DI()->notorm->user_base->select('Email','nickname','sex','year','month','day','testmail')->where('id=?',$user_id)->fetch();
+        $sql=DI()->notorm->user_detail->select('Email','nickname','sex','year','month','day','mailChecked')->where('id=?',$user_id)->fetch();
         return $sql;
     }
 
     public function modifyUser($user_id,$sex,$year,$month,$day){
-        $data=array('sex'=>$sex);
-        $data1=array('year'=>$year);
-        $data2=array('month'=>$month);
-        $data3=array('day'=>$day);
-        $sql=DI()->notorm->user_base->where('id=?',$user_id)->update($data);
-        $sql1=DI()->notorm->user_base->where('id=?',$user_id)->update($data1);
-        $sql2=DI()->notorm->user_base->where('id=?',$user_id)->update($data2);
-        $sql3=DI()->notorm->user_base->where('id=?',$user_id)->update($data3);
-        if($sql||$sql1||$sql2||$sql3){
+        $data=array('sex'=>$sex,
+            'year'=>$year,
+            'month'=>$month,
+            'day'=>$day);
+        $sql=DI()->notorm->user_detail->where('user_base_id=?',$user_id)->update($data);
+        if($sql){
             $re=1;
         }else{
             $re=0;

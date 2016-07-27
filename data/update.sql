@@ -42,13 +42,13 @@ INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
 UPDATE `user_detail` SET `authorization`='01' WHERE `user_base_id`='1'
 
 --2016/07/27
---add user sex
-ALTER TABLE `user_base` ADD `sex` varchar(2) not null  DEFAULT 'm' COMMENT '性别';
---add user year
-ALTER TABLE `user_base` ADD `year` varchar(4) not null  DEFAULT '2000' COMMENT '年';
---add user month
-ALTER TABLE `user_base` ADD `month` varchar(2) not null  DEFAULT '00' COMMENT '月';
---add user day
-ALTER TABLE `user_base` ADD `day` varchar(2) not null  DEFAULT '00' COMMENT '日';
---add user testmail
-ALTER TABLE `user_base` ADD `testmail` varchar(2) not null  DEFAULT '0' COMMENT '是否验证邮箱';
+-- add user sex
+ALTER TABLE `user_detail` ADD `sex` int(1) not null  DEFAULT '0' COMMENT '性别';
+-- add user year
+ALTER TABLE `user_detail` ADD `year` varchar(4) COMMENT '年';
+-- add user month
+ALTER TABLE `user_detail` ADD `month` varchar(2) COMMENT '月';
+-- add user day
+ALTER TABLE `user_detail` ADD `day` varchar(2) COMMENT '日';
+-- add user testmail
+ALTER TABLE `user_detail` ADD `mailChecked` varchar(2) not null  DEFAULT '0' COMMENT '是否验证邮箱';
