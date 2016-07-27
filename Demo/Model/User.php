@@ -129,7 +129,7 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
     public function getUserInfo($user_id){
-        $sql=DI()->notorm->user_detail->select('sex','year','month','day','mailChecked')->where('user_base_id=?',$user_id)->fetch();
+        $sql=DI()->notorm->user_detail->select('user_base_id as userID','sex','year','month','day','mailChecked')->where('user_base_id=?',$user_id)->fetch();
         $sqlb=DI()->notorm->user_base->select('Email','nickname')->where('id=?',$user_id)->fetch();
         $sql['Email']=$sqlb['Email'];
         $sql['nickname']=$sqlb['nickname'];
