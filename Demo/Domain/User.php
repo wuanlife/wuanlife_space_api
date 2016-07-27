@@ -51,15 +51,15 @@ class Domain_User {
         return $rs;
     }
 
-    public function getUser($user_id){
+    public function getUserInfo($user_id){
         $model=new Model_User();
-        $rs=$model->getUser($user_id);
+        $rs=$model->getUserInfo($user_id);
         return $rs;
     }
 
-    public function modifyUser($user_id,$sex,$year,$month,$day){
+    public function alterUserInfo($user_id,$sex,$year,$month,$day){
         $model=new Model_User();
-        $rs=$model->modifyUser($user_id,$sex,$year,$month,$day);
+        $rs=$model->alterUserInfo($user_id,$sex,$year,$month,$day);
         return $rs;
     }
 }

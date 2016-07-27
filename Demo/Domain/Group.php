@@ -283,15 +283,15 @@ class Domain_Group {
     }
 
 
-    public function getGroup($group_id){
+    public function getGroupInfo($group_id){
         $this->model=new Model_Group();
-        $this->rs=$this->model->getGroup($group_id);
+        $this->rs=$this->model->getGroupInfo($group_id);
         return $this->rs;
     }
 
-    public function modifyGroup($group_id,$g_introduction){
+    public function alterGroupInfo($group_id,$g_introduction,$g_image){
         $this->model=new Model_Group();
-        $this->rs=$this->model->modifyGroup($group_id,$g_introduction);
+        $this->rs=$this->model->alterGroupInfo($group_id,$g_introduction,$g_image);
         return $this->rs;
     }
 /*    public function doFileUpload($order, $base64String) {

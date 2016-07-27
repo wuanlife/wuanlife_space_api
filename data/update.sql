@@ -41,7 +41,7 @@ INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
 -- set user admin
 UPDATE `user_detail` SET `authorization`='01' WHERE `user_base_id`='1'
 
---2016/07/27
+-- 2016/07/27
 -- add user sex
 ALTER TABLE `user_detail` ADD `sex` int(1) not null  DEFAULT '0' COMMENT 'ÐÔ±ð';
 -- add user year

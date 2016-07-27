@@ -140,13 +140,14 @@ class Model_Group extends PhalApi_Model_NotORM{
 		return $rs;
 	}
 
-	public function getGroup($group_id){
-		$re=DI()->notorm->group_base->select('id','name','g_introduction')->where('id=?',$group_id)->fetch();
+	public function getGroupInfo($group_id){
+		$re=DI()->notorm->group_base->select('id as groupID','name','g_introduction','g_image')->where('id=?',$group_id)->fetch();
 		return $re;
 	}
 
-	public function modifyGroup($group_id,$g_introduction){
-		$data=array('g_introduction'=>$g_introduction);
+	public function alterGroupInfo($group_id,$g_introduction,$g_image){
+		$data=array('g_introduction'=>$g_introduction,
+			'g_image'=>$g_image);
 		$sql=DI()->notorm->group_base->where('id=?',$group_id)->update($data);
 		return $sql;
 	}

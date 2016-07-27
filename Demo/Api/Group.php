@@ -156,7 +156,7 @@ class Api_Group extends PhalApi_Api
                 ),
             ),
 
-            'getgroup' =>array(
+            'getGroupInfo' =>array(
                 'group_id' =>array(
                     'name' =>'group_id',
                     'type' =>'int',
@@ -171,7 +171,7 @@ class Api_Group extends PhalApi_Api
                     ),
             ),
 
-            'modifygroup'=>array(
+            'alterGroupInfo'=>array(
                 'group_id'=>array(
                     'name'=>'group_id',
                     'type'=>'int',
@@ -191,6 +191,12 @@ class Api_Group extends PhalApi_Api
                     'min'     => '0',
                     'max'     => '200',
                     'desc'    => '星球简介',
+                ),
+                'g_image'=>array(
+                    'name'=>'g_image',
+                    'type'=>'string',
+                    'require'=>true,
+                    'desc'=>'星球图片',
                 ),
             ),
         );
@@ -402,45 +408,44 @@ class Api_Group extends PhalApi_Api
     }
 /**
  *获取星球详情
- * @return int  ret   操作码 200代表成功
+* @desc 获取星球详情接口
  * @return object data 星球信息对象
- * @return int data.id 星球id
- * @return string data.name 星球名称
- * @return string data.g_introduction 星球介绍
- * @return int data.cteate 判断是否为创建者 1为创建者
- * @return string msg 报错信息
+ * @return int id 星球id
+ * @return string name 星球名称
+ * @return string g_introduction 星球介绍
+ * @return int cteate 判断是否为创建者 1为创建者
  */
-    public function getGroup()
+    public function getGroupInfo()
     {
         $group_id=$this->group_id;
         $user_id=$this->user_id;
         $common = new Domain_Common();
         $user = new Domain_User();
         $exist = $common->judgeGroupExist($group_id);
-        $create = $user->judgeCreate($user_id,$group_id);
+        $createor = $user->judgeCreate($user_id,$group_id);
         if($exist){
                 $group = new Domain_Group();
-                $rs=$group->getGroup($group_id);
-            if($create){
-               $rs['create']=1;
+                $rs=$group->getGroupInfo($group_id);
+/*            if($createor){
+               $rs['createor']=1;
         }else{
-               $rs['create']=0;
-        }
+               $rs['createor']=0;
+        }*/
         }else{
             $rs=0;
         }
         return $rs;
     }
 /**
- *修改星球详情
- * @return int  ret   操作码 200代表成功
+ *修改星球接口
+* @desc 修改星球详情
  * @return int data 2代表不是创建者 3代表星球不存在 1代表修改成功 0代表没有改动
- * @return string msg 信息
  */
-    public function modifyGroup(){
+    public function alterGroupInfo(){
         $group_id=$this->group_id;
         $user_id=$this->user_id;
         $g_introduction=$this->g_introduction;
+        $g_image=$this->g_image;
         $common = new Domain_Common();
         $user = new Domain_User();
         $exist = $common->judgeGroupExist($group_id);
@@ -448,7 +453,7 @@ class Api_Group extends PhalApi_Api
         if($exist){
             if($create){
                 $group = new Domain_Group();
-                $rs=$group->modifyGroup($group_id,$g_introduction);
+                $rs=$group->alterGroupInfo($group_id,$g_introduction,$g_image);
         }else{
             $rs=2;
         }
