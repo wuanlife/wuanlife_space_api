@@ -161,15 +161,14 @@ class Api_User extends PhalApi_Api{
 /**
  *获取用户信息
  * @desc 用于获取用户的信息
- * @return object data 用户信息对象
  * @return string Email 用户Email
  * @return string nickname 用户名称
- * @return int sex 用户性别 0为未设，1为男，2为女
+ * @return int sex 用户性别,0为未设，1为男，2为女
  * @return string year 年
  * @return string month 月
  * @return string day 日
  * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
- * @return  int user_id 用户id
+ * @return int user_id 用户id
  */
     public function getUserInfo(){
         $domain=new Domain_User();

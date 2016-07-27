@@ -409,7 +409,6 @@ class Api_Group extends PhalApi_Api
 /**
  *获取星球详情
 * @desc 获取星球详情接口
- * @return object data 星球信息对象
  * @return int groupID 星球id
  * @return string groupName 星球名称
  * @return string g_introduction 星球介绍
