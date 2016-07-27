@@ -50,20 +50,7 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
-            'judgeCreate'=>array(
-                'user_id' => array(
-                    'name'    => 'user_id',
-                    'type'    => 'int',
-                    'require' => true,
-                    'desc'    => '用户id'
-                ),
-                'group_id' => array(
-                    'name'    => 'group_id',
-                    'type'    => 'int',
-                    'require' => true,
-                    'desc'    => '星球id'
-                ),
-            ),
+
 
             'getUserInfo'=>array(
                 'user_id' => array(
@@ -169,11 +156,7 @@ class Api_User extends PhalApi_Api{
         return $rs;
     }
 
-    public function judgeCreate(){
-        $domain = new Domain_User();
-        $rs =$domain->judgeCreate($this->user_id,$this->group_id);
-        return $rs;
-    }
+
 
 /**
  *获取用户信息
@@ -181,22 +164,24 @@ class Api_User extends PhalApi_Api{
  * @return object data 用户信息对象
  * @return string Email 用户Email
  * @return string nickname 用户名称
- * @return string sex 用户性别 0为未设 1为男 2为女
+ * @return int sex 用户性别 0为未设，1为男，2为女
  * @return string year 年
  * @return string month 月
  * @return string day 日
- * @return string testmail 是否验证邮箱
+ * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
+ * @return  int user_id 用户id
  */
     public function getUserInfo(){
         $domain=new Domain_User();
         $rs=$domain->getUserInfo($this->user_id);
+        $rs['user_id']=$this->user_id;
         return $rs;
     }
 
 /**
  *修改星球接口
  * @desc 修改星球的信息
- * @return int data 1代表成功修改 0代表没有改动
+ * @return int data 1代表成功修改，0代表没有改动
  */
     public function alterUserInfo(){
         $domain=new Domain_User();

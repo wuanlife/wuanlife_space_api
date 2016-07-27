@@ -187,7 +187,7 @@ class Api_Group extends PhalApi_Api
                 'g_introduction'    => array(
                     'name'    => 'g_introduction',
                     'type'    => 'string',
-                    'require' => true,
+                    'require' => false,
                     'min'     => '0',
                     'max'     => '200',
                     'desc'    => '星球简介',
@@ -195,7 +195,7 @@ class Api_Group extends PhalApi_Api
                 'g_image'=>array(
                     'name'=>'g_image',
                     'type'=>'string',
-                    'require'=>true,
+                    'require'=>false,
                     'desc'=>'星球图片',
                 ),
             ),
@@ -410,10 +410,10 @@ class Api_Group extends PhalApi_Api
  *获取星球详情
 * @desc 获取星球详情接口
  * @return object data 星球信息对象
- * @return int id 星球id
- * @return string name 星球名称
+ * @return int groupID 星球id
+ * @return string groupName 星球名称
  * @return string g_introduction 星球介绍
- * @return int cteate 判断是否为创建者 1为创建者
+ * @return string g_image 星球图片链接
  */
     public function getGroupInfo()
     {
@@ -439,7 +439,7 @@ class Api_Group extends PhalApi_Api
 /**
  *修改星球接口
 * @desc 修改星球详情
- * @return int data 2代表不是创建者 3代表星球不存在 1代表修改成功 0代表没有改动
+ * @return int data 2代表不是创建者,3代表星球不存在,1代表修改成功,0代表没有改动
  */
     public function alterGroupInfo(){
         $group_id=$this->group_id;

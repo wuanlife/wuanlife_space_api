@@ -141,7 +141,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 	}
 
 	public function getGroupInfo($group_id){
-		$re=DI()->notorm->group_base->select('id as groupID','name','g_introduction','g_image')->where('id=?',$group_id)->fetch();
+		$re=DI()->notorm->group_base->select('id as groupID','name as groupName','g_introduction','g_image')->where('id=?',$group_id)->fetch();
 		return $re;
 	}
 
