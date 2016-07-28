@@ -1,0 +1,52 @@
+1.API名称、描述
+User.GetUserInfo
+获取用户详情
+
+
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
+
+3.请求方式：
+GET
+
+4.参数说明：
+参数名字	类型	是否必须	默认值	其他	说明
+user_id	整型	必须			用户id
+
+
+
+5.返回值说明：
+
+返回字段	类型	说明
+userID	        整型	用户id
+Email	        字符串	用户Email
+nickname	字符串	用户名称
+sex	        整型	用户性别,0为未设，1为男，2为女
+year	        字符串	年
+month	        字符串	月
+day	        字符串	日
+mailChecked	字符串	是否验证邮箱，0为未验证邮箱，1为已验证邮箱
+
+
+6.示例：
+获取用户ID为1的用户信息
+http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
+
+JSON
+{
+    "ret": 200,
+    "data": {
+        "userID": "1",
+        "sex": "0",
+        "year": "1000",
+        "month": null,
+        "day": null,
+        "mailChecked": "0",
+        "Email": null,
+        "nickname": null
+    },
+    "msg": ""
+}
+
+

@@ -1,0 +1,41 @@
+1.API名称、描述
+User.AlterUserInfo
+修改用户的信息
+
+
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=User.alterUserInfo&user_id=1&sex=F&year=2000&month=1&day=4
+
+3.请求方式：
+GET
+
+4.参数说明：
+
+
+参数名字	类型	是否必须	默认值	其他	说明
+user_id	        整型	必须			        用户id
+sex	        整型	可选			        性别
+year	        字符串	可选			        年
+month	        字符串	可选			        月
+day	        字符串	可选			        日
+
+
+
+
+5.返回值说明：
+
+返回字段	类型	说明
+data	整型	1代表成功修改，0代表没有改动
+
+6.示例：
+修改用户ID为1的信息
+http://dev.wuanlife.com:800/?service=User.alterUserInfo&user_id=1&sex=F&year=2000&month=1&day=4
+JSON
+{
+    "ret": 200,
+    "data": 1,
+    "msg": ""
+}
+
+

@@ -1,0 +1,42 @@
+1.API名称、描述
+Group.GetGroupInfo
+获取星球详情
+
+
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=Group.GetGroupInfo&group_id=1&user_id=2
+
+3.请求方式：
+GET
+
+4.参数说明：
+参数名字	类型	是否必须	默认值	其他	说明
+group_id	整型	必须			        星球id
+user_id	        整型	必须			        用户id
+
+
+5.返回值说明：
+返回字段	类型	说明
+groupID	        整型	星球id
+groupName	字符串	星球名称
+g_introduction	字符串	星球介绍
+g_image	        字符串	星球图片链接
+
+6.示例：
+获取用户ID为1星球ID为1的星球信息
+http://dev.wuanlife.com:800/?service=Group.GetGroupInfo&group_id=1&user_id=2
+
+JSON
+{
+    "ret": 200,
+    "data": {
+        "groupID": "1",
+        "groupName": "装备2014中队",
+        "g_introduction": "1",
+        "g_image": "1"
+    },
+    "msg": ""
+}
+
+

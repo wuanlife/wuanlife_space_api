@@ -1,0 +1,38 @@
+1.API名称、描述
+Group.AlterGroupInfo
+修改星球详情
+
+
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction=1$g_image=1
+
+3.请求方式：
+GET
+
+4.参数说明：
+
+参数名字	类型	是否必须	默认值	其他	说明
+group_id	整型	必须			        星球id
+user_id	        整型	必须			        用户id
+g_introduction	字符串	可选		 最小：0 最大：200	星球简介
+g_image	字符串	可选			                 星球图片
+
+
+
+5.返回值说明：
+返回字段	类型	说明
+data	        整型	2代表不是创建者,3代表星球不存在,1代表修改成功,0代表没有改动
+
+6.示例：
+修改用户ID为1星球ID为1的星球信息
+http://dev.wuanlife.com:800/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction=1$g_image=1
+
+JSON
+{
+    "ret": 200,
+    "data": 1,
+    "msg": ""
+}
+
+
