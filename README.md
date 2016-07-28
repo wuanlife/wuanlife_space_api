@@ -11,6 +11,8 @@
 [登录](/wiki/User.Login.md)<br>
 [注销](/wiki/User.Logout.md)<br>
 [是否登陆](/wiki/Group.UStatus.md)<br>
+[获取用户信息](/wiki/User.GetUserInfo.md)<br>
+[修改用户信息](/wiki/User.AlterUserInfo.md)<br>
 
 ###星球相关
 [创建星球](/wiki/Group.Create.md)<br>
@@ -19,6 +21,8 @@
 [星球列表](/wiki/Group.Lists.md)<br>
 [获取用户创建星球](/wiki/Group.GetCreate.md)<br>
 [获取用户加入星球](/wiki/Group.GetJoined.md)<br>
+[获取用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
+[修改用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 
 ###帖子相关
 [发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
