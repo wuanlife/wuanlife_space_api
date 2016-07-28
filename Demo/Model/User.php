@@ -162,7 +162,7 @@ class Model_User extends PhalApi_Model_NotORM {
             //$token = md5($uid.$sql['nickname'].$sql['password']);
             //$url = "http://localhost/mail/reset.php?email=".$email."&token=".$token;
             $time = date('Y-m-d H:i');
-            require_once './init.php';
+            require_once '././init.php';
             DI()->loader->addDirs('Library');
             $mailer = new PHPMailer_Lite(true);
             $recipients = $email;
@@ -187,7 +187,11 @@ class Model_User extends PhalApi_Model_NotORM {
     }
     
     public function injectChk($sql_str) { //防止注入
-        $check = eregi('select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile', $sql_str);
+        /*php5.3起不再支持eregi()函数
+		相关链接http://www.t086.com/article/5086
+		*/
+		//$check = eregi('select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile', $sql_str);
+        $check = preg_match('/select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/i', $sql_str);
         if ($check) {
             echo('您的邮箱格式包含非法字符，请确认！');
             exit ();
