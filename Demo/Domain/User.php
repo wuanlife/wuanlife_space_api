@@ -62,6 +62,24 @@ class Domain_User {
         $rs=$model->alterUserInfo($user_id,$sex,$year,$month,$day);
         return $rs;
     }
+/*
+ * 发送邮件
+ */
+
+	public function SendMail($data){
+        $model = new Model_User();
+        $rs = $model->SendMail($data);
+        return $rs;
+    }	
+/*
+ * 校验验证码并修改密码
+ */
+
+	public function RePsw($data){
+        $model = new Model_User();
+        $rs = $model->RePsw($data);
+        return $rs;
+    }
 }
 
 

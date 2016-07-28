@@ -149,5 +149,105 @@ class Model_User extends PhalApi_Model_NotORM {
         }
         return $re;
     }
+    public function SendMail($data){
+        $email = stripslashes(trim($data['Email']));
+        $email = $this->injectChk($email);
+        $sql =DI()->notorm->user_base->select('id,nickname,password')->where('email = ?',$email)->fetch();
+        if(empty($sql)){//该邮箱尚未注册！
+            $this->code = 0;
+            $this->msg = '您输入的账号不存在！';  
+        }else{
+            $getpasstime = time();
+            $uid = $sql['id'];
+            //$token = md5($uid.$sql['nickname'].$sql['password']);
+            //$url = "http://localhost/mail/reset.php?email=".$email."&token=".$token;
+            $time = date('Y-m-d H:i');
+            require_once './init.php';
+            DI()->loader->addDirs('Library');
+            $mailer = new PHPMailer_Lite(true);
+            $recipients = $email;
+            $title = "午安网 - 密码找回";
+			$code = $this->code();
+            $body = "亲爱的".$email."：<br/>您在".$time."提交了找回密码请求。<br/>您的验证码为".$code."，有效期一小时！";
+			//请点击下面的链接重置密码（链接1小时内有效）。<br/><a href='".$url."' target='_blank'>".$url."</a>
+            $rs = $mailer->send("$recipients","$title","$body");
+                if($rs){
+                    $this->code = 1;
+                    $this->msg = '系统已向您的邮箱发送了一封邮件<br/>请登录到您的邮箱查看验证码！';
+                    //更新数据发送时间
+                    $data = array('getpasstime'=>$getpasstime);
+                    $sqla =DI()->notorm->user_base->where('id = ?',$uid)->update($data);
+                }
+                else{
+                    $this->code = 0;
+                    $this->msg='找回密码失败，请重试！';
+                }
+        }
+        return $this;
+    }
+    
+    public function injectChk($sql_str) { //防止注入
+        $check = eregi('select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile', $sql_str);
+        if ($check) {
+            echo('您的邮箱格式包含非法字符，请确认！');
+            exit ();
+        } else {
+            return $sql_str;
+        }
+    }
+	public function code() { //生成5位数字验证码
+		$char_len = 5;
+		$font = 6;
+		$char = array_merge(/*range('A','Z'),range('a','z'),*/range('0','9'));//生成随机码值数组，不需要0，避免与O冲突
+		$rand_keys = array_rand($char,$char_len);//随机生成$char_len个码值的键；
+		if($char_len == 1) {//判断码值长度为一时，将其放入数组中
+			$rand_keys = array($rand_keys);
+		}
+		shuffle($rand_keys);//打乱数组
+		$code = '';
+		foreach($rand_keys as $key) {
+			$code .= $char[$key];
+		}//拼接字符串
+		@session_start();
+		$_SESSION['captcha_code'] = $code;//将获得的码值字符保存到session中
+		return $code;
+	}
+	public function RePsw($data) {
+		$num = 0;
+		$code = $data['code'];
+		$password = $data['password'];
+		$psw = $data['psw'];
+		$Email = $data['Email'];
+		$row =DI()->notorm->user_base->select('getpasstime')->where('Email = ?',$Email)->fetch();
+		if(time()-$row['getpasstime']>1*60*60){
+			//$this->code = 1;
+			$this->msg = '验证码已过期！';
+		}else {
+			@session_start();
+			if(empty($_SESSION['captcha_code'])) {
+				$this->msg = '验证码已失效！';
+			}else {
+				if($code == $_SESSION['captcha_code']) {
+					if($password == $psw) {
+						$num = 1;
+						$data = array('password'=>md5($password));
+						$sql =DI()->notorm->user_base->where('Email = ?',$Email)->update($data);
+						unset($_SESSION['captcha_code']);
+					}else {
+						$this->msg = '两次密码不一致，请确认！';
+					}
+				}else {
+					$this->msg = '验证码输入错误!';
+				}
+			}
+		}
+		if($num) {
+			$this->code = 1;
+			$this->msg = '密码修改成功！';
+		}else {
+			$this->code = 0;
+		}
+		return $this;
+	}
 
 }
