@@ -21,8 +21,8 @@
 [星球列表](/wiki/Group.Lists.md)<br>
 [获取用户创建星球](/wiki/Group.GetCreate.md)<br>
 [获取用户加入星球](/wiki/Group.GetJoined.md)<br>
-[获取用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
-[修改用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
+[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
+[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 
 ###帖子相关
 [发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
