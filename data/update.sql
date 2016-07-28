@@ -52,3 +52,8 @@ ALTER TABLE `user_detail` ADD `month` varchar(2) COMMENT '月';
 ALTER TABLE `user_detail` ADD `day` varchar(2) COMMENT '日';
 -- add user testmail
 ALTER TABLE `user_detail` ADD `mailChecked` varchar(2) not null  DEFAULT '0' COMMENT '是否验证邮箱';
+
+-- 2016/07/28 18:24
+--add getpasstime and regtime
+ALTER TABLE  `user_base` ADD  `getpasstime` INT NULL ,
+ADD  `regtime` INT NULL
