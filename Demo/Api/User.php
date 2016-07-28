@@ -58,7 +58,7 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户id'
                 ),
             ),
-			'SendMail' => array(
+            'SendMail' => array(
                 'Email'    => array(
                     'name'    => 'Email',
                     'type'    => 'string',
@@ -66,16 +66,16 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户邮箱'
                 ),
-			),
-			'RePsw' => array(
-				'Email'    => array(
+            ),
+            'RePsw' => array(
+                'Email'    => array(
                     'name'    => 'Email',
                     'type'    => 'string',
                     'min'     => '1',
                     'require' => true,
                     'desc'    => '用户邮箱'
                 ),
-				
+
                 'code'    => array(
                     'name'    => 'code',
                     'type'    => 'string',
@@ -83,23 +83,23 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '验证码'
                 ),
-				
-				'password'    => array(
+
+                'password'    => array(
                     'name'    => 'password',
                     'type'    => 'string',
                     'min'     => '1',
                     'require' => true,
                     'desc'    => '用户密码'
                 ),
-				
-				'psw'    => array(
+
+                'psw'    => array(
                     'name'    => 'psw',
                     'type'    => 'string',
                     'min'     => '1',
                     'require' => true,
                     'desc'    => '用户二次确认密码'
                 ),
-			),
+            ),
 
         );
     }
@@ -180,18 +180,18 @@ class Api_User extends PhalApi_Api{
 
     }
 /**
- * 邮件发送接口
- * @desc 用于发送邮件找回密码
- * @return int code 操作码，1表示发送成功，0表示发送失败
+ * 重置密码接口
+ * @desc 用于通过邮箱验证码重置密码
+ * @return int code 操作码，1表示重置成功，0表示重置失败
  * @return string msg 提示信息
  *
  */
     public function RePsw(){
         $data = array(
             'code'    => $this->code,
-			'password'=> $this->password,
-			'psw'     => $this->psw,
-			'Email'   => $this->Email,
+            'password'=> $this->password,
+            'psw'     => $this->psw,
+            'Email'   => $this->Email,
             );
         $domain = new Domain_User();
         $rs = $domain->RePsw($data);
