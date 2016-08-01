@@ -15,4 +15,14 @@ return array(
      * 云上传引擎,支持local,oss,upyun
      */
     'UCloudEngine' => 'local',
+    'PHPMailer' => array(
+        'email' => array(
+            'host' => 'smtp.163.com',
+            'username' => 'wuanlife@163.com',
+            'password' => 'wuan1234',
+            'from' => 'wuanlife@163.com',
+            'fromName' => '午安网团队',
+            'sign' => '<br/><br/>请不要回复此邮件，谢谢！<br/><br/>-- 午安网团队敬上 ',
+        ),
+    ),
 );
