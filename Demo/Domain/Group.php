@@ -42,7 +42,7 @@ class Domain_Group {
         // $this->cookie['userID']   = DI()->cookie->get('userID');
         // $this->cookie['nickname'] = DI()->cookie->get('nickname');
 
-        $rs = $this->model->getUser($user_id);
+        $rs['nickname'] = $this->model->getUser($user_id);
         $this->cookie['userID'] = $user_id;
         $this->cookie['nickname'] = $rs['nickname'];
 
@@ -55,7 +55,7 @@ class Domain_Group {
             $this->msg = '用户已登录！';
         }
 
-        $rs = $this->model->getUser($user_id);
+        $rs['nickname'] = $this->model->getUser($user_id);
         $this->cookie['userID'] = $user_id;
         $this->cookie['nickname'] = $rs['nickname'];
     }
