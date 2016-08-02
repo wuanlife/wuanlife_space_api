@@ -413,6 +413,7 @@ class Api_Group extends PhalApi_Api
  * @return string groupName 星球名称
  * @return string g_introduction 星球介绍
  * @return string g_image 星球图片链接
+ * @return int creator 是否为创建者，1为创建者，0不是创建者
  */
     public function getGroupInfo()
     {
@@ -425,11 +426,11 @@ class Api_Group extends PhalApi_Api
         if($exist){
                 $group = new Domain_Group();
                 $rs=$group->getGroupInfo($group_id);
-/*            if($createor){
-               $rs['createor']=1;
+            if($createor){
+               $rs['creator']=1;
         }else{
-               $rs['createor']=0;
-        }*/
+               $rs['creator']=0;
+        }
         }else{
             $rs=0;
         }
