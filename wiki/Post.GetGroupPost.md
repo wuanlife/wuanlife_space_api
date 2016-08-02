@@ -24,6 +24,7 @@
 |posts.nickname|string	|发帖人|
 |posts.groupID|int	|星球ID|
 |posts.groupName	|string|	星球名称|
+|creatorID	|int|	星球创建者id|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
 
@@ -94,7 +95,8 @@ http://apilost/?service=Post.GetGroupPost&group_id=1&pn=1
             }
         ],
         "pageCount": 4,
-        "currentPage": 1
+        "currentPage": 1,
+        "creatorID":"1"
     },
     "msg": ""
     }
