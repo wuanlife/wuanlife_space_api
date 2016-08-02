@@ -67,6 +67,22 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户邮箱'
                 ),
             ),
+			'CheckMail' => array(
+                'Email'    => array(
+                    'name'    => 'Email',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户邮箱'
+                ),
+				'code'    => array(
+                    'name'    => 'code',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => false,
+                    'desc'    => '验证码'
+                ),
+			),
             'RePsw' => array(
                 'Email'    => array(
                     'name'    => 'Email',
@@ -173,6 +189,7 @@ class Api_User extends PhalApi_Api{
     public function SendMail(){
         $data = array(
             'Email'    => $this->Email,
+			'num'      => 0,
             );
         $domain = new Domain_User();
         $rs = $domain->SendMail($data);
@@ -180,9 +197,26 @@ class Api_User extends PhalApi_Api{
 
     }
 /**
- * 重置密码接口
- * @desc 用于通过邮箱验证码重置密码
- * @return int code 操作码，1表示重置成功，0表示重置失败
+ * 邮箱验证接口
+ * @desc 用于验证邮箱
+ * @return int code 操作码，1表示验证成功，0表示验证失败
+ * @return string msg 提示信息
+ *
+ */
+    public function CheckMail(){
+        $data = array(
+            'Email'    => $this->Email,
+			'num'      => 1,
+			'code'     => $this->code,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->CheckMail($data);
+        return $rs;
+    }
+/**
+ * 找回密码接口
+ * @desc 用于找回密码
+ * @return int code 操作码，1表示发送成功，0表示发送失败
  * @return string msg 提示信息
  *
  */

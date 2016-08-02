@@ -72,6 +72,14 @@ class Domain_User {
         return $rs;
     }	
 /*
+ * 验证邮箱
+ */
+	public function CheckMail($data){
+        $model = new Model_User();
+        $rs = $model->CheckMail($data);
+        return $rs;
+    }	
+/*
  * 校验验证码并修改密码
  */
 
