@@ -22,6 +22,7 @@
 |groupName|string|星球名称|
 |g_introduction|string|	星球介绍|
 |g_image|string|	星球图片链接|
+|creator|int|	|是否为创建者，1为创建者，0不是创建者|
 
 
 ##示例
@@ -38,7 +39,8 @@ JSON
         "groupID": "1",
         "groupName": "装备2014中队",
         "g_introduction": "1",
-        "g_image": "1"
-    },
+        "g_image": "1"，
+        "creator":0
+        },
     "msg": ""
 }
