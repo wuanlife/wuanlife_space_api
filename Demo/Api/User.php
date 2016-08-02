@@ -50,8 +50,6 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
-
-
             'getUserInfo'=>array(
                 'user_id' => array(
                     'name'    => 'user_id',
@@ -60,41 +58,48 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户id'
                 ),
             ),
-
-            'alterUserInfo'=>array(
-                'user_id'=>array(
-                    'name'=>'user_id',
-                    'type'=>'int',
-                    'require'=>true,
-                    'desc'=>'用户id'
-                    ),
-                'sex'=>array(
-                    'name'=>'sex',
-                    'type'=>'int',
-                    'require'=>false,
-                    'desc'=>'性别'
-                    ),
-                'year'    => array(
-                    'name'    => 'year',
+            'SendMail' => array(
+                'Email'    => array(
+                    'name'    => 'Email',
                     'type'    => 'string',
-                    'require' => false,
-                    'desc'    => '年',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户邮箱'
                 ),
-                'month'    => array(
-                    'name'    => 'month',
-                    'type'    => 'string',
-                    'require' => false,
-                    'desc'    => '月',
-                ),
-                'day'    => array(
-                    'name'    => 'day',
-                    'type'    => 'string',
-                    'require' => false,
-                    'desc'    => '日',
-                ),
-
             ),
+            'RePsw' => array(
+                'Email'    => array(
+                    'name'    => 'Email',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户邮箱'
+                ),
 
+                'code'    => array(
+                    'name'    => 'code',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '验证码'
+                ),
+
+                'password'    => array(
+                    'name'    => 'password',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户密码'
+                ),
+
+                'psw'    => array(
+                    'name'    => 'psw',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户二次确认密码'
+                ),
+            ),
 
         );
     }
@@ -158,6 +163,40 @@ class Api_User extends PhalApi_Api{
 
 
 
+/**
+ * 邮件发送接口
+ * @desc 用于发送邮件找回密码
+ * @return int code 操作码，1表示发送成功，0表示发送失败
+ * @return string msg 提示信息
+ *
+ */
+    public function SendMail(){
+        $data = array(
+            'Email'    => $this->Email,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->SendMail($data);
+        return $rs;
+
+    }
+/**
+ * 重置密码接口
+ * @desc 用于通过邮箱验证码重置密码
+ * @return int code 操作码，1表示重置成功，0表示重置失败
+ * @return string msg 提示信息
+ *
+ */
+    public function RePsw(){
+        $data = array(
+            'code'    => $this->code,
+            'password'=> $this->password,
+            'psw'     => $this->psw,
+            'Email'   => $this->Email,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->RePsw($data);
+        return $rs;
+    }
 /**
  *获取用户信息
  * @desc 用于获取用户的信息
