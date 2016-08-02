@@ -17,14 +17,15 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|posts.postID	|	int|	帖子ID|
-|posts.title	|string|	标题|
+|creatorID	|int|	星球创建者id|
+|groupID|int	|星球ID|
+|groupName	|string|	星球名称|
+|posts.digest	|	int|	是否加精|
 |posts.text	|string|	内容|
 |posts.createTime|	date|	发帖时间|
+|posts.id	|	int|	帖子ID|
 |posts.nickname|string	|发帖人|
-|posts.groupID|int	|星球ID|
-|posts.groupName	|string|	星球名称|
-|creatorID	|int|	星球创建者id|
+|posts.sticky	|string|	是否置顶|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
 
@@ -38,6 +39,9 @@ http://apilost/?service=Post.GetGroupPost&group_id=1&pn=1
     {
     "ret": 200,
     "data": {
+    "creatorID": "1",
+    "groupID": "1",
+    "groupName": "装备2014中队",
         "posts": [
             {
                 "postID": "40",
@@ -95,8 +99,7 @@ http://apilost/?service=Post.GetGroupPost&group_id=1&pn=1
             }
         ],
         "pageCount": 4,
-        "currentPage": 1,
-        "creatorID":"1"
+        "currentPage": 1
     },
     "msg": ""
     }
