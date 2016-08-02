@@ -25,6 +25,7 @@ posts.id             int       用户ID
 posts.nickname      string    发帖人
 pageCount            int      总页数
 currentPage          int      当前页
+creatorID            int       星球创建者id
 
 6.示例：
 显示星球ID为1的第1页帖子
@@ -86,7 +87,8 @@ JSON:
             }
         ],
         "pageCount": 5,
-        "currentPage": 1
+        "currentPage": 1，
+        "creatorID":1
     },
     "msg": ""
 }

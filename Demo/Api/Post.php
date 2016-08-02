@@ -134,6 +134,8 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
+        $id=$domain->getCreaterID($this->groupID);
+        $data['creatorID']=$id['user_base_id'];
 
         return $data;
     }
