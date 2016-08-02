@@ -113,15 +113,16 @@ class Api_Post extends PhalApi_Api{
     /**
      * 每个星球页面帖子显示
      * @desc 星球页面帖子显示
+     * @return  int  creatorID  星球创建者id
+     * @return int groupID 星球ID
+     * @return string groupName 星球名称
      * @return int post.digest 加精
-     * @return int posts.postID 帖子ID
      * @return string posts.title 标题
      * @return string posts.text 内容
      * @return date posts.createTime 发帖时间
+     * @return int posts.postID 帖子ID
      * @return string posts.nickname 发帖人
-     * @return int posts.groupID 星球ID
      * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
-     * @return string posts.groupName 星球名称
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
@@ -135,7 +136,8 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
         $id=$domain->getCreaterID($this->groupID);
-        $data['creatorID']=$id['user_base_id'];
+        $creatorID['creatorID']=$id['user_base_id'];
+        $data=array_merge($creatorID,$data);
 
         return $data;
     }
