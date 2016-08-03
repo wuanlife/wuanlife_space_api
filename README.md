@@ -10,6 +10,9 @@
 [注册](/wiki/User.Reg.md)<br>
 [登录](/wiki/User.Login.md)<br>
 [注销](/wiki/User.Logout.md)<br>
+[邮箱验证](/wiki/User.CheckMail.md)<br>
+[重置密码](/wiki/User.RePsw.md)<br>
+[发送邮件](/wiki/User.SendMail.md)<br>
 [是否登陆](/wiki/Group.UStatus.md)<br>
 [获取用户信息](/wiki/User.GetUserInfo.md)<br>
 [修改用户信息](/wiki/User.AlterUserInfo.md)<br>
