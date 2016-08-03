@@ -16,4 +16,4 @@ ALTER TABLE  `user_base` ADD  `getpasstime` INT NULL COMMENT '验证码时间戳
 ADD  `regtime` INT NULL COMMENT '注册时间';
 -- 2016/08/02 18:14
 -- add 
-ALTER TABLE `user_base`  ADD `verification` BOOLEAN NOT NULL COMMENT '邮箱验证';
+--ALTER TABLE `user_base`  ADD `verification` BOOLEAN NOT NULL COMMENT '邮箱验证';已有字段，无需添加
