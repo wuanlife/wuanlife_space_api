@@ -1,0 +1,34 @@
+1.API名称、描述
+User.CheckMail
+邮箱验证接口-用于验证邮箱
+
+2.接口URL：
+http://dev.wuanlife.com:800/?service=User.CheckMail
+
+3.请求方式：
+POST
+
+4.参数说明：
+参数名字    类型  是否必须    默认值    范围        说明
+Email       字符串 必须                最小：1    用户邮箱
+code        字符串 可选                最小：1   验证码
+
+
+5.返回值说明：
+返回字段        类型   说明
+msg             字符串 提示信息
+code            整型   操作码，1表示验证成功，0表示验证失败
+
+
+6.示例：
+发送验证码到邮箱
+http://dev.wuanlife.com:800/?service=User.CheckMail&Email=1195417752@qq.com&code=05629
+JSON:
+{
+    "ret": 200,
+    "data": {
+        "code": 1,
+        "msg": "您的邮箱验证成功！"
+    },
+    "msg": ""
+}

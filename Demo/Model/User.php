@@ -48,15 +48,16 @@ class Model_User extends PhalApi_Model_NotORM {
         }
         else{
                $sql =DI()->notorm->user_base->select('id')->where('nickname = ?',$data['nickname'])->fetch();
-               if(!empty($sql))
-               {
+				if(!empty($sql)) {
                $this->code = '0';
                $this->msg = '该昵称已注册！';
-               }
-                else
-                {
+               }else {
                 $data['password'] = md5($data['password']);
                 $rs=DI()->notorm->user_base->insert($data);
+					$data_detail = array(
+						'user_base_id'   =>$rs['id'],
+					);
+				    $sql=DI()->notorm->user_detail->insert($data_detail);
                 $this->info = array('userID' => $rs['id'], 'nickname' => $rs['nickname'], 'Email' => $rs['Email']);
                 $this->code ='1';
                 $this->msg = '注册成功，并自动登录！';
@@ -150,31 +151,38 @@ class Model_User extends PhalApi_Model_NotORM {
         return $re;
     }
 	public function CheckMail($data) {
+		@session_start();
 		if($data['code'] == '') {
+			if(empty($_SESSION['E_code'])) {
 			$data['Email'] = stripslashes(trim($data['Email']));
 			$info = $this->SendMail($data);
 			//$info = "未输入验证码";
+			}else {
+				$info = "请输入验证码";
+			}
 		}else {
-			$info = $this->verification($data);
+			$info = $this->mailChecked($data);
 		}
 		return $info;
 	}
-	public function verification($data) {
+	public function mailChecked($data) {
 		$num = 0;
 		$code = $data['code'];
 		$Email = $data['Email'];
-		$row =DI()->notorm->user_base->select('getpasstime')->where('Email = ?',$Email)->fetch();
-		if(time()-$row['getpasstime']>1*60*60){
+		$row =DI()->notorm->user_base->select('getpasstime','id')->where('Email = ?',$Email)->fetch();
+		if(time()-$row['getpasstime']>1*10*60){
 			//$this->code = 1;
 			$this->msg = '验证码已过期，请重新获取！';
+			@session_start();
+			unset($_SESSION['E_code']);
 		}else {
 			@session_start();
 			if(empty($_SESSION['E_code'])) {
 				$this->msg = '验证码已失效，请重新获取！';
 			}else {
 				if($code == $_SESSION['E_code']) {
-					$data = array('verification'=>1);
-					$sql =DI()->notorm->user_base->where('Email = ?',$Email)->update($data);
+					$data = array('mailChecked'=>1);
+					$sql =DI()->notorm->user_detail->where('user_base_id = ?',$row['id'])->update($data);
 					unset($_SESSION['E_code']);
 					$num = 1;
 					$this->code = 1;
@@ -218,7 +226,7 @@ class Model_User extends PhalApi_Model_NotORM {
 				@session_start();
 		        $_SESSION['P_code'] = $code;//将获得的码值字符保存到session中
 			}
-            $body = "亲爱的".$email."：<br/>您在".$time."提交了".$info."请求。<br/>您的验证码为  ".$code."，有效期一小时！";
+            $body = "亲爱的".$email."：<br/>您在".$time."提交了".$info."请求。<br/>您的验证码为  ".$code."，有效期十分钟！";
 			//请点击下面的链接重置密码（链接1小时内有效）。<br/><a href='".$url."' target='_blank'>".$url."</a>
             $rs = $mailer->send("$recipients","$title","$body");
                 if($rs){
@@ -273,9 +281,11 @@ class Model_User extends PhalApi_Model_NotORM {
 		$psw = $data['psw'];
 		$Email = $data['Email'];
 		$row =DI()->notorm->user_base->select('getpasstime')->where('Email = ?',$Email)->fetch();
-		if(time()-$row['getpasstime']>1*60*60){
+		if(time()-$row['getpasstime']>1*10*60){
 			//$this->code = 1;
 			$this->msg = '验证码已过期，请重新获取！';
+			@session_start();
+			unset($_SESSION['P_code']);
 		}else {
 			@session_start();
 			if(empty($_SESSION['P_code'])) {
@@ -287,6 +297,7 @@ class Model_User extends PhalApi_Model_NotORM {
 						$data = array('password'=>md5($password));
 						$sql =DI()->notorm->user_base->where('Email = ?',$Email)->update($data);
 						unset($_SESSION['P_code']);
+						$this->msg = '密码修改成功！';
 					}else {
 						$this->msg = '两次密码不一致，请确认！';
 					}
@@ -295,10 +306,7 @@ class Model_User extends PhalApi_Model_NotORM {
 				}
 			}
 		}
-		if($num) {
-			$this->code = 1;
-			$this->msg = '密码修改成功！';
-		}else {
+		if(!$num) {
 			$this->code = 0;
 		}
 		return $this;
