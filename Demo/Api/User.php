@@ -247,6 +247,7 @@ class Api_User extends PhalApi_Api{
         $domain=new Domain_User();
         $rs=$domain->getUserInfo($this->user_id);
         return $rs;
+
     }
 
 /**
