@@ -23,7 +23,7 @@
 |sex|int|	用户性别,0为未设，1为男，2为女|
 |year|string|年|
 |month|string|月|
-|day|字符串|	日|
+|day|string|	日|
 |mailChecked|	string|	是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
 
 
