@@ -50,6 +50,38 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
+			'alterUserInfo'=>array(
+                'user_id' => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id'
+                ),
+				'sex' => array(
+                    'name'    => 'sex',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户性别'
+                ),
+				'year' => array(
+                    'name'    => 'year',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '年份'
+                ),
+				'month' => array(
+                    'name'    => 'month',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '月份'
+                ),
+				'day' => array(
+                    'name'    => 'day',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '天数'
+                ),
+            ),
             'getUserInfo'=>array(
                 'user_id' => array(
                     'name'    => 'user_id',
