@@ -144,9 +144,11 @@ class Model_User extends PhalApi_Model_NotORM {
             'day'=>$day);
         $sql=DI()->notorm->user_detail->where('user_base_id=?',$user_id)->update($data);
         if(isset($sql)){
-            $re=1;
+            $re['data']=1;
+            $re['msg']='修改成功';
         }else{
-            $re=0;
+            $re['data']=0;
+            $re['msg']='修改失败';
         }
         return $re;
     }
