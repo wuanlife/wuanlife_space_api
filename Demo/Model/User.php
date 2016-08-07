@@ -312,4 +312,11 @@ class Model_User extends PhalApi_Model_NotORM {
 		return $this;
 	}
 
+    public function getMailChecked($user_id)
+    {
+        $sql =DI()->notorm->user_detail->select('user_base_id','mailChecked')->where('user_base_id = ?',$user_id)->fetch();
+        $data['userID'] = $sql['user_base_id'];
+        $data['mailChecked'] = $sql['mailChecked'];
+        return $data;
+    }
 }

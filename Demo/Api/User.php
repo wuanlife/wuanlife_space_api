@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * 登录注册服务类
  */
@@ -148,7 +148,14 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户二次确认密码'
                 ),
             ),
-
+            'getMailChecked' => array(
+                    'user_id' => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id'
+                ),
+            ),
         );
     }
 
@@ -293,4 +300,16 @@ class Api_User extends PhalApi_Api{
         return $rs;
     }
 
+/**
+ *验证用户邮箱是否已被验证
+ * @desc 用于获取用户的信息
+ * @return int userID 用户id
+ * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
+ */
+    public function getMailChecked(){
+        $domain=new Domain_User();
+        $rs=$domain->getMailChecked($this->user_id);
+        return $rs;
+
+    }
 }

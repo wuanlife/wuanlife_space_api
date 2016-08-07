@@ -88,7 +88,15 @@ class Domain_User {
         $rs = $model->RePsw($data);
         return $rs;
     }
+
+/*
+ * 验证用户邮箱是否已被验证
+ */
+
+    public function getMailChecked($user_id){
+        $model = new Model_User();
+        $rs = $model->getMailChecked($user_id);
+        return $rs;
+    }
 }
-
-
 
