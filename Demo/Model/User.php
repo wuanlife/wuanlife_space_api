@@ -219,7 +219,9 @@ class Model_User extends PhalApi_Model_NotORM {
             //$token = md5($uid.$sql['nickname'].$sql['password']);
             //$url = "http://localhost/mail/reset.php?email=".$email."&token=".$token;
             $time = date('Y-m-d H:i');
-            require_once '././init.php';
+			$RootDIR = dirname(__FILE__);
+			$path=$RootDIR."/../../Public/init.php";
+            require_once $path;
             DI()->loader->addDirs('Library');
             $mailer = new PHPMailer_Lite(true);
             $recipients = $email;
