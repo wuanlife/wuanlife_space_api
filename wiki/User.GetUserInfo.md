@@ -33,8 +33,8 @@
 
 http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
 
-JSON
-{
+    JSON
+    {
     "ret": 200,
     "data": {
         "userID": "1",
@@ -47,5 +47,5 @@ JSON
         "nickname": null
     },
     "msg": ""
-}
+    }
 
