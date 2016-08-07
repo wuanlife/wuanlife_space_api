@@ -17,3 +17,6 @@ ADD  `regtime` INT NULL COMMENT '注册时间';
 -- 2016/08/02 18:14
 -- add 
 --ALTER TABLE `user_base`  ADD `verification` BOOLEAN NOT NULL COMMENT '邮箱验证';已有字段，无需添加
+--2016/08/06 17:24
+--增加验证码字段
+ALTER TABLE `user_base`  ADD `p_code` INT(5) NULL DEFAULT NULL COMMENT '重置密码验证码',  ADD `e_code` INT(5) NULL DEFAULT NULL COMMENT '验证邮箱验证码'
