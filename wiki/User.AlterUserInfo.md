@@ -31,11 +31,11 @@
 http://dev.wuanlife.com:800/?service=User.alterUserInfo&user_id=1&sex=F&year=2000&month=1&day=4
 
      JSON:
-{
+    {
     "ret": 200,
     "data": {
         "data": 1,
         "msg": "修改成功"
     },
     "msg": ""
-}
+     }
