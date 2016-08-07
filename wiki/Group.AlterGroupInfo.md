@@ -20,7 +20,8 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|data	|	int	|2代表不是创建者,3代表星球不存在,1代表修改成功,0代表没有改动|
+|data	|	int	|1代表修改成功,0代表修改失败|
+|msg	|	string	|报错信息|
 
 
 ##示例
@@ -32,6 +33,9 @@ http://apihost/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction
      JSON:
      {
     "ret": 200,
-    "data": 1,
+    "data": {
+        "data": 1,
+        "msg": "修改成功"
+    },
     "msg": ""
-     }
+    }
