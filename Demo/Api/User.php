@@ -301,8 +301,8 @@ class Api_User extends PhalApi_Api{
     }
 
 /**
- *验证用户邮箱是否已被验证
- * @desc 用于获取用户的信息
+ *确认邮箱验证接口
+ * @desc 用于验证用户邮箱是否已被验证
  * @return int userID 用户id
  * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
  */
