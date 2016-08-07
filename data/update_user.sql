@@ -1,22 +1,6 @@
--- 2016/07/27
--- add user sex
-ALTER TABLE `user_detail` ADD `sex` int(1) not null  DEFAULT '0' COMMENT '性别';
--- add user year
-ALTER TABLE `user_detail` ADD `year` varchar(4) COMMENT '年';
--- add user month
-ALTER TABLE `user_detail` ADD `month` varchar(2) COMMENT '月';
--- add user day
-ALTER TABLE `user_detail` ADD `day` varchar(2) COMMENT '日';
--- add user testmail
-ALTER TABLE `user_detail` ADD `mailChecked` varchar(2) not null  DEFAULT '0' COMMENT '是否验证邮箱';
-
--- 2016/07/28 18:24
--- add getpasstime and regtime
-ALTER TABLE  `user_base` ADD  `getpasstime` INT NULL COMMENT '验证码时间戳',
-ADD  `regtime` INT NULL COMMENT '注册时间';
--- 2016/08/02 18:14
--- add 
---ALTER TABLE `user_base`  ADD `verification` BOOLEAN NOT NULL COMMENT '邮箱验证';已有字段，无需添加
---2016/08/06 17:24
---增加验证码字段
-ALTER TABLE `user_base`  ADD `p_code` INT(5) NULL DEFAULT NULL COMMENT '重置密码验证码',  ADD `e_code` INT(5) NULL DEFAULT NULL COMMENT '验证邮箱验证码'
+--2016/08/07
+--增加注册时间、验证码有效期、重置密码验证码、验证邮箱验证码
+ALTER TABLE `user_base`  ADD `regtime` INT NOT NULL COMMENT '注册时间',  
+ADD `getpasstime` INT NOT NULL COMMENT '验证码有效期',  
+ADD `p_code` INT(5) NOT NULL DEFAULT '1' COMMENT '重置密码验证码',  
+ADD `e_code` INT(5) NOT NULL DEFAULT '1' COMMENT '验证邮箱验证码';
