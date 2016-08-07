@@ -439,7 +439,8 @@ class Api_Group extends PhalApi_Api
 /**
  *修改星球接口
 * @desc 修改星球详情
- * @return int data 2代表不是创建者,3代表星球不存在,1代表修改成功,0代表没有改动
+ * @return int data 0代表修改失败,1代表修改成功
+ * @return string msg 提示错误信息
  */
     public function alterGroupInfo(){
         $group_id=$this->group_id;
@@ -460,7 +461,17 @@ class Api_Group extends PhalApi_Api
         }else{
             $rs=3;
         }
-        return $rs;
+        if($rs==1){
+            $re['data']=1;
+            $re['msg']='修改成功';
+        }else if($rs==2){
+            $re['data']=0;
+            $re['msg']='不是创建者';
+        }else if($rs==3){
+            $re['data']=0;
+            $re['msg']='星球不存在';
+        }
+        return $re;
     }
 
 

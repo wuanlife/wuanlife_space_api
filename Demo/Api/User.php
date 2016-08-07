@@ -292,7 +292,7 @@ class Api_User extends PhalApi_Api{
 /**
  *修改星球接口
  * @desc 修改星球的信息
- * @return int data 1代表成功修改，0代表没有改动
+ * @return int data 1代表成功修改，0代表修改失败
  */
     public function alterUserInfo(){
         $domain=new Domain_User();

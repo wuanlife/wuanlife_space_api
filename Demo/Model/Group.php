@@ -149,7 +149,12 @@ class Model_Group extends PhalApi_Model_NotORM{
 		$data=array('g_introduction'=>$g_introduction,
 			'g_image'=>$g_image);
 		$sql=DI()->notorm->group_base->where('id=?',$group_id)->update($data);
-		return $sql;
+		if(isset($sql)){
+			$re=1;
+		}else{
+			$re=0;
+		}
+		return $re;
 	}
 
 

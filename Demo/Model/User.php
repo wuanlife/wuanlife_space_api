@@ -143,7 +143,7 @@ class Model_User extends PhalApi_Model_NotORM {
             'month'=>$month,
             'day'=>$day);
         $sql=DI()->notorm->user_detail->where('user_base_id=?',$user_id)->update($data);
-        if($sql){
+        if(isset($sql)){
             $re=1;
         }else{
             $re=0;
