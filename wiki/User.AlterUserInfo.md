@@ -21,8 +21,8 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|data	|	int	|1代表成功修改，0代表没有改动|
-
+|data	|	int	|1代表成功修改，0代表修改失败|
+|msg	|	string	|报错信息|
 
 ##示例
 
@@ -31,8 +31,11 @@
 http://dev.wuanlife.com:800/?service=User.alterUserInfo&user_id=1&sex=F&year=2000&month=1&day=4
 
      JSON:
-     {
+{
     "ret": 200,
-    "data": 1,
+    "data": {
+        "data": 1,
+        "msg": "修改成功"
+    },
     "msg": ""
-     }
+}
