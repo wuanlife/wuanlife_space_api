@@ -65,19 +65,19 @@ class Api_User extends PhalApi_Api{
                 ),
 				'year' => array(
                     'name'    => 'year',
-                    'type'    => 'int',
+                    'type'    => 'string',
                     'require' => false,
                     'desc'    => '年份'
                 ),
 				'month' => array(
                     'name'    => 'month',
-                    'type'    => 'int',
+                    'type'    => 'string',
                     'require' => false,
                     'desc'    => '月份'
                 ),
 				'day' => array(
                     'name'    => 'day',
-                    'type'    => 'int',
+                    'type'    => 'string',
                     'require' => false,
                     'desc'    => '天数'
                 ),
