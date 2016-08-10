@@ -106,6 +106,7 @@ class Api_Group extends PhalApi_Api
                     'name' => 'title',
                     'type' => 'string',
                     'min' => '1',
+                    'max'=>'50',
                     'require' => true,
                     'desc' => '帖子标题',
                 ),
