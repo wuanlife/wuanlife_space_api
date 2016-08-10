@@ -1,6 +1,6 @@
 #User.SendMail
 
-邮件发送接口-用于发送邮件找回密码
+邮件发送接口-用于发送包含修改密码验证码的邮件
 
 ##接口调用请求说明
 
@@ -26,19 +26,14 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/?service=User.Login&Email=taotao@taotao.com&password=111111
+http://dev.wuanlife.com:800/?service=User.SendMail&Email=1195417752@qq.com
    
     JSON:
     {
     "ret": 200,
     "data": {
-        "msg": "登录成功！",
-        "code": "1",
-        "info": {
-            "userID": "26",
-            "nickname": "taotao",
-            "Email": "taotao@taotao.com"
-        }
+        "code": 1,
+        "msg": "系统已向您的邮箱发送了一封找回密码邮件，请登录到您的邮箱查看验证码！"
     },
     "msg": ""
     }

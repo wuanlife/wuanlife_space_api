@@ -1,6 +1,6 @@
 #User.RePsw
 
-重置密码接口-用于通过邮箱验证码重置密码
+重置密码接口-用于检验验证码的正确性并找回密码
 
 ##接口调用请求说明
 
@@ -34,7 +34,7 @@ http://dev.wuanlife.com:800/?service=User.RePsw&Email=1195417752@qq.com&code=207
     {
     "ret": 200,
     "data": {
-        "msg": "验证码已失效！",
+        "msg": "验证码不正确，请确认！",
         "code": 0
     },
     "msg": ""
