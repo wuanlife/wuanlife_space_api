@@ -158,16 +158,10 @@ class Model_User extends PhalApi_Model_NotORM {
 	public function CheckMail($data) {
         $data['Email'] = stripslashes(trim($data['Email']));
         $e_code=DI()->notorm->user_base->select('e_code')->where('email=?',$data['Email'])->fetch();
-		if($data['code'] == '') {
             $Boolean = (int)$e_code['e_code']<9999;
             if($Boolean) {
 			$info = $this->SendMail($data);
                 //$info = "验证码已经被初始化";
-			}else {
-				$info = "请输入验证码";
-			}
-		}else {
-			$info = $this->mailChecked($data);
 		}
 		return $info;
 	}
@@ -219,7 +213,9 @@ class Model_User extends PhalApi_Model_NotORM {
             //$token = md5($uid.$sql['nickname'].$sql['password']);
             //$url = "http://localhost/mail/reset.php?email=".$email."&token=".$token;
             $time = date('Y-m-d H:i');
-            require_once '././init.php';
+			$RootDIR = dirname(__FILE__);
+			$path=$RootDIR."/../../Public/init.php";
+            require_once $path;
             DI()->loader->addDirs('Library');
             $mailer = new PHPMailer_Lite(true);
             $recipients = $email;

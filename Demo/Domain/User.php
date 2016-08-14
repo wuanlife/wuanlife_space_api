@@ -63,7 +63,7 @@ class Domain_User {
         return $rs;
     }
 /*
- * 发送邮件
+ * 发送包含修改密码验证码的邮件
  */
 
 	public function SendMail($data){
@@ -72,7 +72,7 @@ class Domain_User {
         return $rs;
     }	
 /*
- * 验证邮箱
+ * 发送包含验证邮箱验证码的邮件
  */
 	public function CheckMail($data){
         $model = new Model_User();
@@ -86,6 +86,14 @@ class Domain_User {
 	public function RePsw($data){
         $model = new Model_User();
         $rs = $model->RePsw($data);
+        return $rs;
+    }
+/*
+ * 校验验证码并验证邮箱
+ */
+	public function mailChecked($data){
+        $model = new Model_User();
+        $rs = $model->mailChecked($data);
         return $rs;
     }
 

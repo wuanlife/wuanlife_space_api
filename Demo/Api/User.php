@@ -107,11 +107,20 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户邮箱'
                 ),
+			),
+			'mailChecked' => array(
+                'Email'    => array(
+                    'name'    => 'Email',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户邮箱'
+                ),
 				'code'    => array(
                     'name'    => 'code',
                     'type'    => 'string',
                     'min'     => '1',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '验证码'
                 ),
 			),
@@ -220,7 +229,7 @@ class Api_User extends PhalApi_Api{
 
 /**
  * 邮件发送接口
- * @desc 用于发送邮件找回密码
+ * @desc 用于发送包含修改密码验证码的邮件
  * @return int code 操作码，1表示发送成功，0表示发送失败
  * @return string msg 提示信息
  *
@@ -237,8 +246,8 @@ class Api_User extends PhalApi_Api{
     }
 /**
  * 邮箱验证接口
- * @desc 用于验证邮箱
- * @return int code 操作码，1表示验证成功，0表示验证失败
+ * @desc 用于发送包含验证邮箱验证码的邮件
+ * @return int code 操作码，1表示发送成功，0表示发送失败
  * @return string msg 提示信息
  *
  */
@@ -246,16 +255,31 @@ class Api_User extends PhalApi_Api{
         $data = array(
             'Email'    => $this->Email,
 			'num'      => 1,
-			'code'     => $this->code,
             );
         $domain = new Domain_User();
         $rs = $domain->CheckMail($data);
         return $rs;
     }
 /**
+ * 邮箱验证接口
+ * @desc 用于检验验证码的正确性并验证邮箱
+ * @return int code 操作码，1表示验证成功，0表示验证失败
+ * @return string msg 提示信息
+ *
+ */
+    public function mailChecked(){
+        $data = array(
+            'Email'    => $this->Email,
+			'code'     => $this->code,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->mailChecked($data);
+        return $rs;
+    }
+/**
  * 找回密码接口
- * @desc 用于找回密码
- * @return int code 操作码，1表示发送成功，0表示发送失败
+ * @desc 用于检验验证码的正确性并找回密码
+ * @return int code 操作码，1表示验证成功，0表示验证失败
  * @return string msg 提示信息
  *
  */
