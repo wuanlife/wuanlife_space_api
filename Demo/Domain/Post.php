@@ -200,7 +200,7 @@ class Domain_Post {
     public function postTextLimit($data){
         $rs=$data;
         for ($i=0; $i<count($rs['posts']); $i++) {
-        $rs['posts'][$i]['text'] = substr($rs['posts'][$i]['text'],0,99);
+        $rs['posts'][$i]['text'] = substr($rs['posts'][$i]['text'],0,299);
         }
         return $rs;
     }
