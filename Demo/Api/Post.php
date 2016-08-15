@@ -106,6 +106,7 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
+        $data = $domain->postTextLimit($data);
 
         return $data;
     }
@@ -138,6 +139,7 @@ class Api_Post extends PhalApi_Api{
         $id=$domain->getCreaterID($this->groupID);
         $creatorID['creatorID']=$id['user_base_id'];
         $data=array_merge($creatorID,$data);
+        $data = $domain->postTextLimit($data);
 
         return $data;
     }
@@ -165,6 +167,7 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
         $data = $domain->deleteHtmlPosts($data);
+        $data = $domain->postTextLimit($data);
 
         return $data;
     }

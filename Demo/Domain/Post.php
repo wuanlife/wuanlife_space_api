@@ -194,6 +194,17 @@ class Domain_Post {
         return $rs;
     }
 
+    /*
+    帖子预览文本限制100
+     */
+    public function postTextLimit($data){
+        $rs=$data;
+        for ($i=0; $i<count($rs['posts']); $i++) {
+        $rs['posts'][$i]['text'] = substr($rs['posts'][$i]['text'],0,99);
+        }
+        return $rs;
+    }
+
 
 
 }
