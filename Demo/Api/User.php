@@ -206,6 +206,7 @@ class Api_User extends PhalApi_Api{
             'nickname' => $this->nickname,
             'Email'    => $this->Email,
             'password' => $this->password,
+			'regtime'  => time(),
             );
         $domain = new Domain_User();
         $rs = $domain->reg($data);
@@ -257,7 +258,7 @@ class Api_User extends PhalApi_Api{
 			'num'      => 1,
             );
         $domain = new Domain_User();
-        $rs = $domain->CheckMail($data);
+        $rs = $domain->SendMail($data);
         return $rs;
     }
 /**
