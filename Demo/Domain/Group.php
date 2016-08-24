@@ -119,11 +119,16 @@ class Domain_Group {
                 );
                 $result2 = DI()->notorm->group_detail->insert($data2);
                 // $result2 = $this->model->add(group_detail,$data2);
-                $this->rs['info'] = $result2;
-                $this->rs['info']['name'] = $result['name'];
+                $this->rs['info'] = $data2;
+                $this->rs['info']['name'] = $data['name'];
                 $this->rs['info']['g_introduction'] = $result['g_introduction'];
 /*                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}*/
-                $this->rs['info']['URL'] = $data["g_image"];
+                if(empty($data["g_image"])){
+                    $this->rs['info']['URL'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                }else{
+                    $this->rs['info']['URL'] = $data["g_image"];
+                }
+
                 $this->rs['code'] = 1;
             }
             else{
@@ -186,6 +191,7 @@ class Domain_Group {
 
     public function lists($page,$pages){
         $this->model  = new Model_Group();
+        $domain = new Domain_Common();
         $all_num      = $this->model->getAllNum();              //总条
         $page_num     =empty($pages)?20:$pages;                 //每页条数
         $page_all_num =ceil($all_num/$page_num);                //总页数
@@ -198,7 +204,9 @@ class Domain_Group {
 
         $this->pages['pageCount'] = $page_all_num;
         $this->pages['currentPage'] = $page;
-        return $this->model->lists($limit_st, $page_num);
+        $lists = $this->model->lists($limit_st, $page_num);
+        $lists=$domain->judgeImageExist($lists);
+        return $lists;
     }
 
     public function posts($data){
@@ -246,6 +254,7 @@ class Domain_Group {
 
     public function getJoined($page,$pages,$user_id){
         $this->model  = new Model_Group();
+        $domain = new Domain_Common();
         $all_num      = $this->model->getAllGroupJoinednum($user_id);              //总条
         $page_num     =empty($pages)?20:$pages;                 //每页条数
         $page_all_num =ceil($all_num/$page_num);                //总页数
@@ -260,11 +269,14 @@ class Domain_Group {
         $this->pages['currentPage'] = $page;
         $this->pages['num']=$all_num;
         $this->pages['user_name']=$this->model->getUser($user_id);
-        return $this->model->getJoined($limit_st, $page_num,$user_id);
+        $groups=$this->model->getJoined($limit_st, $page_num,$user_id);
+        $groups=$domain->judgeImageExist($groups);
+        return $groups;
     }
 
     public function getCreate($page,$pages,$user_id){
         $this->model  = new Model_Group();
+        $domain = new Domain_Common();
         $all_num      = $this->model->getAllGroupCreatenum($user_id);          //总条
         $page_num     =empty($pages)?2:$pages;                 //每页条数
         $page_all_num =ceil($all_num/$page_num);                //总页数
@@ -279,7 +291,9 @@ class Domain_Group {
         $this->pages['currentPage'] = $page;
         $this->pages['num']=$all_num;
         $this->pages['user_name']=$this->model->getUser($user_id);
-        return $this->model->getCreate($limit_st, $page_num,$user_id);
+        $groups=$this->model->getCreate($limit_st, $page_num,$user_id);
+        $groups=$domain->judgeImageExist($groups);
+        return $groups;
     }
 
 

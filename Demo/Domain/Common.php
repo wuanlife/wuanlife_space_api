@@ -35,4 +35,16 @@ class Domain_Common
         $rs=$model->judgeGroupExist($group_id);
         return $rs;
     }
+
+    /*
+    判断星球是否有头像，若没有给默认头像
+     */
+    public function judgeImageExist($lists){
+        for($i=0;$i<count($lists);$i++){
+            if(empty($lists[$i]["g_image"])|$lists[$i]["g_image"]==null){
+                $lists[$i]["g_image"]='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            }
+        }
+        return $lists;
+    }
 }
