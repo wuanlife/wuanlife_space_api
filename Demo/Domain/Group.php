@@ -107,7 +107,11 @@ class Domain_Group {
                     if(empty($data['g_introduction'])) {
                         $data['g_introduction']=NULL;
                     }
-                $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction']) ;
+                    if(empty($data["g_image"])){
+                        $data = array('name' => $data['name'],'g_image'=>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100','g_introduction' => $data['g_introduction']) ;
+                    }else{
+                        $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction']) ;
+                    }
 
 
                 $result = DI()->notorm->group_base->insert($data);
@@ -123,11 +127,7 @@ class Domain_Group {
                 $this->rs['info']['name'] = $data['name'];
                 $this->rs['info']['g_introduction'] = $result['g_introduction'];
 /*                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}*/
-                if(empty($data["g_image"])){
-                    $this->rs['info']['URL'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-                }else{
-                    $this->rs['info']['URL'] = $data["g_image"];
-                }
+               $this->rs['info']['URL'] = $data["g_image"];
 
                 $this->rs['code'] = 1;
             }
