@@ -94,7 +94,7 @@ class Domain_User {
         $model = new Model_User();
         $sql = $model->SendMail($data);
 		$this->code = 0;
-        if(empty($sql)){//该邮箱尚未注册！
+        if(empty($sql)){
             $this->msg = '您输入的账号不存在！';
         }else{
             //$getpasstime = time();
@@ -109,15 +109,15 @@ class Domain_User {
             $mailer = new PHPMailer_Lite(true);
             $recipients = $data['Email'];
 			$code = $this->code();
-			if($data['num']) {
+            if($data['num'] == 2) {
 				$info = "验证邮箱";
 				$title = "午安网 - 验证邮箱";
-                $code_e = array('e_code' => $code);
+                $code_e = array('code' => $code,'difference' => 2,'getpasstime'=>time(),'used'=>0,);
                 $model->updatecode($code_e,$data);
 			}else {
 				$info = "找回密码";
 				$title = "午安网 - 密码找回";
-                $code_e = array('p_code' => $code);
+                $code_e = array('code' => $code,'difference' => 1,'getpasstime'=>time(),'used'=>0,);
                 $model->updatecode($code_e,$data);
 			}
             $body = "亲爱的".$data['Email']."：<br/>您在".$time."提交了".$info."请求。<br/>您的验证码为  ".$code."，有效期十分钟！";
@@ -126,8 +126,8 @@ class Domain_User {
                     $this->code = 1;
                     $this->msg = '系统已向您的邮箱发送了一封'.$info.'邮件，请登录到您的邮箱查看验证码！';
                     //更新验证码有效期
-                    $code_time = array('getpasstime'=>time());
-                    $model->updatecode($code_time,$data);
+                    //$code_time = array('getpasstime'=>time());
+                    //$model->updatecode($code_time,$data);
                 }
                 else{
                     $this->msg='发送邮件失败，请联系系统管理员！';
@@ -138,7 +138,7 @@ class Domain_User {
 /*
  * 发送包含验证邮箱验证码的邮件
  */
-	public function CheckMail($data){   //在api层直接调用Domain的SendMail类还是不行，会返回133行的提示信息
+    public function CheckMail($data){
 		//$data['Email'] = stripslashes(trim($data['Email']));
 		$info = $this->SendMail($data);
 		return $info;
@@ -150,35 +150,26 @@ class Domain_User {
 	public function RePsw($data){
         $model = new Model_User();
 		$this->code = 0;
-		$code = $data['code'];
-		$password = $data['password'];
-		$psw = $data['psw'];
-		$Email = $data['Email'];
 		$row =$model->userEmail($data);
 		if(!$row) {
 			$this->msg = '用户名不存在，请确认！';
 			return $this;
 			exit();
 		}
+        $row =$model->getcode($data);
         $Boolean = time()-$row['getpasstime']>1*10*60;
         if($Boolean) {
 			$this->msg = '验证码已过期，请重新获取！';
-            $code_p = array('p_code' => 1);
-            //$this->bug = 
-			$model->updatecode($code_p,$data);
 		}else {
-            $p_code=$model->userEmail($data);
-            $Boolean = (int)$p_code['p_code']<9999;
-            if($Boolean) {
+            if($row['used']==1) {
 				$this->msg = '验证码已失效，请重新获取！';
 			}else {
-                if($code == $p_code['p_code']) {
-					if($password == $psw) {
-						$code_p = array(
-									'password'=>md5($password),
-									'p_code' => 1,
-								);
-						$sql = $model->updatecode($code_p,$data);
+                if($data['code'] == $row['code']) {
+                    if($data['password'] == $data['psw']) {
+                        $psw = array('password'=>md5($data['password']));
+                        $code_p = array('used'=>1);
+                        $model->RePsw($psw,$data);
+                        $model->updatecode($code_p,$data);
                         $this->code = 1;
 						$this->msg = '密码修改成功！';
 					}else {
@@ -189,32 +180,32 @@ class Domain_User {
 				}
 			}
 		}
-        //$rs = $model->RePsw($data);
         return $this;
     }
 /*
  * 校验验证码并验证邮箱
  */
 	public function mailChecked($data){
-		$this->code = 0;
         $model = new Model_User();
+        $this->code = 0;
 		$row =$model->userEmail($data);
+        if(!$row) {
+            $this->msg = '用户名不存在，请确认！';
+            return $this;
+            exit();
+        }
+        $row =$model->getcode($data);
         $Boolean = time()-$row['getpasstime']>1*10*60;
         if($Boolean){
-			//$this->code = 1;
 			$this->msg = '验证码已过期，请重新获取！';
-            $code_e = array('e_code' => 1);
-            $model->updatecode($code_e,$data);
 		}else {
-            $e_code=$model->userEmail($data);
-            $Boolean = (int)$e_code['e_code']<9999;
-            if($Boolean) {
+            if($row['used']==1) {
 				$this->msg = '验证码已失效，请重新获取！';
 			}else {
-                if($data['code'] == $e_code['e_code']) {
+                if($data['code'] == $row['code']) {
 					$mailChecked = array('mailChecked'=>1);
 					$model->mailChecked($data,$mailChecked);
-                    $code_e = array('e_code' => 1);
+                    $code_e = array('used' => 1);
 					$model->updatecode($code_e,$data);
 					$this->code = 1;
 					$this->msg = '您的邮箱验证成功！';

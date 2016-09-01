@@ -230,7 +230,7 @@ class Api_User extends PhalApi_Api{
 
 /**
  * 邮件发送接口
- * @desc 用于发送包含修改密码验证码的邮件
+ * @desc 用于发送包含重置密码验证码的邮件
  * @return int code 操作码，1表示发送成功，0表示发送失败
  * @return string msg 提示信息
  *
@@ -238,7 +238,7 @@ class Api_User extends PhalApi_Api{
     public function SendMail(){
         $data = array(
             'Email'    => $this->Email,
-			'num'      => 0,
+			'num'      => 1,
             );
         $domain = new Domain_User();
         $rs = $domain->SendMail($data);
@@ -255,7 +255,7 @@ class Api_User extends PhalApi_Api{
     public function CheckMail(){
         $data = array(
             'Email'    => $this->Email,
-			'num'      => 1,
+			'num'      => 2,
             );
         $domain = new Domain_User();
         $rs = $domain->SendMail($data);
@@ -272,6 +272,7 @@ class Api_User extends PhalApi_Api{
         $data = array(
             'Email'    => $this->Email,
 			'code'     => $this->code,
+			'num'      => 2,
             );
         $domain = new Domain_User();
         $rs = $domain->mailChecked($data);
@@ -290,6 +291,7 @@ class Api_User extends PhalApi_Api{
             'password'=> $this->password,
             'psw'     => $this->psw,
             'Email'   => $this->Email,
+			'num'     => 1,
             );
         $domain = new Domain_User();
         $rs = $domain->RePsw($data);

@@ -108,7 +108,7 @@ class Model_User extends PhalApi_Model_NotORM {
 		$sql =DI()->notorm->user_detail->where('user_base_id = ?',$row['id'])->update($mailChecked);
 		return $row;
 	}
-    public function SendMail($data){
+    public function SendMail($data){ //发送邮件验证码
 		$data['Email'] = stripslashes(trim($data['Email']));
 		$domain = new Domain_User();
         $data['Email'] = $domain->injectChk($data['Email']);
@@ -117,10 +117,24 @@ class Model_User extends PhalApi_Model_NotORM {
     }
     
 
-	public function updatecode($code,$data){
+	public function updatecode($code,$data){ //更新验证码
 		$sql = $this->userEmail($data);
-		$row = DI()->notorm->user_base->where('id = ?',$sql['id'])->update($code);
-		return $sql;
+		$num = $this->getcode($data);
+		if($num['id']){
+			$row = DI()->notorm->user_code->where(array('id = ?'=>$sql['id'],'difference = ?'=>$data['num']))->update($code);
+		}else{
+			$code['id'] = $sql['id'];
+			$row = DI()->notorm->user_code->insert($code);
+		}
+	}
+	public function getcode($data) { //获取数据库保存的验证码
+		$sql = $this->userEmail($data);
+		$num = DI()->notorm->user_code->select('*')->where(array('id = ?'=>$sql['id'],'difference = ?'=>$data['num']))->fetch();
+		return $num;
+	}
+	public function RePsw($psw,$data){
+		$sql = $this->userEmail($data);
+		$sqla =DI()->notorm->user_base->where('id = ?',$sql['id'])->update($psw);
 	}
 
     public function getMailChecked($user_id)
