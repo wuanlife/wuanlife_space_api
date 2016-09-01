@@ -14,14 +14,15 @@ class Model_User extends PhalApi_Model_NotORM {
 
         return $rs;
     }
-    public function reg($data)
-    {
-                $data['password'] = md5($data['password']);
-                $rs=DI()->notorm->user_base->insert($data);
-					$data_detail = array(
-						'user_base_id'   =>$rs['id'],
-					);
-				    $sql=DI()->notorm->user_detail->insert($data_detail);
+	public function reg($data)
+	{
+		$data['password'] = md5($data['password']);
+        $rs=DI()->notorm->user_base->insert($data);
+		$data_detail = array(
+			'user_base_id'   =>$rs['id'],
+			'authorization'  =>'01',
+		);
+		$sql=DI()->notorm->user_detail->insert($data_detail);
         return $rs;
     }
     public function logout()
