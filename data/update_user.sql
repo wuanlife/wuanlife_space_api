@@ -10,5 +10,4 @@ CREATE TABLE IF NOT EXISTS `user_code` (
   `code` int(11) NOT NULL COMMENT '验证码',
   `difference` int(11) NOT NULL COMMENT '区别',
   `used` int(11) NOT NULL COMMENT '是否使用过',
-    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gbk;
