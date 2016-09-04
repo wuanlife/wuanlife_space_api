@@ -200,7 +200,7 @@ class Domain_Post {
     public function postTextLimit($data){
         $rs=$data;
         for ($i=0; $i<count($rs['posts']); $i++) {
-        $rs['posts'][$i]['text'] = substr($rs['posts'][$i]['text'],0,299);
+        $rs['posts'][$i]['text'] =mb_convert_encoding(substr($rs['posts'][$i]['text'],0,299), 'UTF-8','GB2312,UTF-8');
         }
         return $rs;
     }

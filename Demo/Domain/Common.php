@@ -41,7 +41,7 @@ class Domain_Common
      */
     public function judgeImageExist($lists){
         for($i=0;$i<count($lists);$i++){
-            if(empty($lists[$i]["g_image"])|$lists[$i]["g_image"]==null){
+            if(empty($lists[$i]["g_image"])||$lists[$i]["g_image"]==null){
                 $lists[$i]["g_image"]='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
             }
         }
