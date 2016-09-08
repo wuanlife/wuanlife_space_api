@@ -17,7 +17,7 @@ return array(
     'UCloudEngine' => 'local',
     'PHPMailer' => array(
         'email' => array(
-            'host' => 'ssl://smtp.163.com:465',
+            'host' => 'ssl://smtp.163.com',
 			//本地环境为  'host' => 'smtp.163.com',
             'username' => 'wuanlife@163.com',
             'password' => 'wuan1234',

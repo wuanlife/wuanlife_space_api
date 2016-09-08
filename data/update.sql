@@ -1,6 +1,6 @@
 -- 2016/05/29
 -- post.text + 5000
-ALTER TABLE  `post_detail` CHANGE  `text`  `text` VARCHAR( 5000 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT  '内容';
+ALTER TABLE  `post_detail` CHANGE  `text`  `text` VARCHAR( 5000 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT  'å†…å®¹';
 
 -- 2016/05/30
 
@@ -16,17 +16,17 @@ ALTER TABLE `group_detail` ADD PRIMARY KEY (group_base_id,user_base_id);
 ALTER TABLE  `user_detail` CHANGE  `authorization`  `authorization` VARCHAR( 2 ) NOT NULL COMMENT  '权限';
 ALTER TABLE  `group_detail` CHANGE  `authorization`  `authorization` VARCHAR( 2 ) NOT NULL COMMENT  '权限';
 --
--- 表的结构 `authorization`
+-- è¡¨çš„ç»“æž„ `authorization`
 --
 
 CREATE TABLE IF NOT EXISTS `authorization` (
-  `area_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限位置区分',
-  `aser_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT '权限区分',
-  `note` varchar(8) COLLATE utf8_bin NOT NULL COMMENT '说明'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限表';
+  `area_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT 'æƒé™ä½ç½®åŒºåˆ†',
+  `aser_dif` varchar(2) COLLATE utf8_bin NOT NULL COMMENT 'æƒé™åŒºåˆ†',
+  `note` varchar(8) COLLATE utf8_bin NOT NULL COMMENT 'è¯´æ˜Ž'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='æƒé™è¡¨';
 
 --
--- 转存表中的数据 `authorization`
+-- è½¬å­˜è¡¨ä¸­çš„æ•°æ® `authorization`
 --
 
 INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
@@ -37,23 +37,3 @@ INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
 ('02', '02', '星球-管理'),
 ('02', '03', '星球-成员');
 
--- 2016/07/10
--- set user admin
-UPDATE `user_detail` SET `authorization`='01' WHERE `user_base_id`='1'
-
--- 2016/07/27
--- add user sex
-ALTER TABLE `user_detail` ADD `sex` int(1) not null  DEFAULT '0' COMMENT '性别';
--- add user year
-ALTER TABLE `user_detail` ADD `year` varchar(4) COMMENT '年';
--- add user month
-ALTER TABLE `user_detail` ADD `month` varchar(2) COMMENT '月';
--- add user day
-ALTER TABLE `user_detail` ADD `day` varchar(2) COMMENT '日';
--- add user testmail
-ALTER TABLE `user_detail` ADD `mailChecked` varchar(2) not null  DEFAULT '0' COMMENT '是否验证邮箱';
-
--- 2016/07/28 18:24
--- add getpasstime and regtime
-ALTER TABLE  `user_base` ADD  `getpasstime` INT NULL ,
-ADD  `regtime` INT NULL
