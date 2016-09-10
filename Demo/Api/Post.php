@@ -139,11 +139,11 @@ class Api_Post extends PhalApi_Api{
         $common = new Domain_Common();
         $private=$common->judgeGroupPrivate($this->groupID);
         $rs=$common->judgeGroupUser($this->groupID,$this->userID);
-        if($private='1'){
-        if(!$rs){
+        if($private==1){
+        if(empty($rs)){
             $data=$common->getCreator($this->groupID);
-            print_r($data);
             return $data;
+
         }else{
         $data = $domain->getGroupPost($this->groupID,$this->page);
         $data = $domain->getImageUrl($data);
@@ -154,12 +154,10 @@ class Api_Post extends PhalApi_Api{
         $creatorID['creatorID']=$id['user_base_id'];
         $data=array_merge($creatorID,$data);
         $data = $domain->postTextLimit($data);
-        print_r($data);
         return $data;
     }
     }else{
         $data = $domain->getGroupPost($this->groupID,$this->page);
-        print_r($data);
         $data = $domain->getImageUrl($data);
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
@@ -171,7 +169,6 @@ class Api_Post extends PhalApi_Api{
         return $data;
     }
     }
-
 
 
     /**
