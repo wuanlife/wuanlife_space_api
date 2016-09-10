@@ -308,7 +308,8 @@ class Domain_Group {
         $this->rs=$this->model->alterGroupInfo($group_id,$g_introduction,$g_image);
         return $this->rs;
     }
-/*    public function doFileUpload($order, $base64String) {
+    /*
+    public function doFileUpload($order, $base64String) {
         $fileName = time() . "_" . $order;
         //echo "File " . $fileName . " upload....<br />";
         return $fileName;
@@ -342,6 +343,21 @@ class Domain_Group {
         //echo "Save " . $filepath . " success!<br />";
         return $pi;
     }*/
+/*
+ * 用于申请加入私密星球
+ */
+    public function PrivateGroup($data) {
+        $model = new Model_Group();
+        $rs = $model->PrivateGroup($data);
+        if($rs) {
+            $info['code'] = 1;
+            $info['msg'] = '申请成功！请等待创建者审核！';
+        }else {
+            $info['code'] = 0;
+            $info['msg'] = '申请失败！';
+        }
+        return $info;
+    }
 }
 
 

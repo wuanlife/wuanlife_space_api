@@ -50,32 +50,32 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户密码'
                 ),
             ),
-			'alterUserInfo'=>array(
+            'alterUserInfo'=>array(
                 'user_id' => array(
                     'name'    => 'user_id',
                     'type'    => 'int',
                     'require' => true,
                     'desc'    => '用户id'
                 ),
-				'sex' => array(
+                'sex' => array(
                     'name'    => 'sex',
                     'type'    => 'int',
                     'require' => false,
                     'desc'    => '用户性别'
                 ),
-				'year' => array(
+                'year' => array(
                     'name'    => 'year',
                     'type'    => 'string',
                     'require' => false,
                     'desc'    => '年份'
                 ),
-				'month' => array(
+                'month' => array(
                     'name'    => 'month',
                     'type'    => 'string',
                     'require' => false,
                     'desc'    => '月份'
                 ),
-				'day' => array(
+                'day' => array(
                     'name'    => 'day',
                     'type'    => 'string',
                     'require' => false,
@@ -99,7 +99,7 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户邮箱'
                 ),
             ),
-			'CheckMail' => array(
+            'CheckMail' => array(
                 'Email'    => array(
                     'name'    => 'Email',
                     'type'    => 'string',
@@ -107,8 +107,8 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户邮箱'
                 ),
-			),
-			'mailChecked' => array(
+            ),
+            'mailChecked' => array(
                 'Email'    => array(
                     'name'    => 'Email',
                     'type'    => 'string',
@@ -116,14 +116,14 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户邮箱'
                 ),
-				'code'    => array(
+                'code'    => array(
                     'name'    => 'code',
                     'type'    => 'string',
                     'min'     => '1',
                     'require' => true,
                     'desc'    => '验证码'
                 ),
-			),
+            ),
             'RePsw' => array(
                 'Email'    => array(
                     'name'    => 'Email',
@@ -164,6 +164,44 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户id'
                 ),
+            ),
+            'ProcessApp'     => array(
+                'user_id'    => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+                'group_id' => array(
+                    'name'    => 'group_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '星球ID'
+                ),
+                'applicant_id' =>array(
+                    'name'    => 'applicant_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '申请人ID'
+                ),
+                'mark'    => array(
+                    'name'    => 'mark',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '标识符，1为同意，0为拒绝'
+                ),
+            ),
+            'ShowMessage' =>array(
+                'user_id'   => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+            ),
             ),
         );
     }
@@ -206,7 +244,7 @@ class Api_User extends PhalApi_Api{
             'nickname' => $this->nickname,
             'Email'    => $this->Email,
             'password' => $this->password,
-			'regtime'  => time(),
+            'regtime'  => time(),
             );
         $domain = new Domain_User();
         $rs = $domain->reg($data);
@@ -238,7 +276,7 @@ class Api_User extends PhalApi_Api{
     public function SendMail(){
         $data = array(
             'Email'    => $this->Email,
-			'num'      => 1,
+            'num'      => 1,
             );
         $domain = new Domain_User();
         $rs = $domain->SendMail($data);
@@ -255,7 +293,7 @@ class Api_User extends PhalApi_Api{
     public function CheckMail(){
         $data = array(
             'Email'    => $this->Email,
-			'num'      => 2,
+            'num'      => 2,
             );
         $domain = new Domain_User();
         $rs = $domain->SendMail($data);
@@ -271,8 +309,8 @@ class Api_User extends PhalApi_Api{
     public function mailChecked(){
         $data = array(
             'Email'    => $this->Email,
-			'code'     => $this->code,
-			'num'      => 2,
+            'code'     => $this->code,
+            'num'      => 2,
             );
         $domain = new Domain_User();
         $rs = $domain->mailChecked($data);
@@ -291,7 +329,7 @@ class Api_User extends PhalApi_Api{
             'password'=> $this->password,
             'psw'     => $this->psw,
             'Email'   => $this->Email,
-			'num'     => 1,
+            'num'     => 1,
             );
         $domain = new Domain_User();
         $rs = $domain->RePsw($data);
@@ -338,5 +376,44 @@ class Api_User extends PhalApi_Api{
         $rs=$domain->getMailChecked($this->user_id);
         return $rs;
 
+    }
+/**
+ * 处理申请者加入私密星球的申请接口
+ * @desc 用于同意或者拒绝申请人加入私密星球
+ * @return int code 操作码，1表示操作成功，0表示操作失败
+ * @return string msg 提示信息
+ */
+    public function ProcessApp(){
+        $data = array(
+            'user_id'       => $this->user_id,
+            'group_id'      => $this->group_id,
+            'applicant_id'  => $this->applicant_id,
+            'mark'          => $this->mark,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->ProcessApp($data);
+        return $rs;
+    }
+/**
+ * 用户消息中心接口
+ * @desc 用于接收其他用户发送给用户消息
+ * @return int code 操作码，1表示接收成功，0表示没有新消息
+ * @return array info 用户消息列表详情
+ * @return string info.message_base_code 用户消息详情
+ * @return int info.user_base_id 本用户id
+ * @return int info.count 默认为1，前两个字段相同，则改为2
+ * @return int info.id_1 申请人或创建人id
+ * @return int info.id_2 星球id
+ * @return string info.createTime 创建时间
+ * @return int info.read 是否已读
+ * @return string msg 提示信息
+ */
+    public function ShowMessage(){
+        $data = array(
+            'user_id'       => $this->user_id,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->ShowMessage($data);
+        return $rs;
     }
 }

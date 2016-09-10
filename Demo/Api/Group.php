@@ -6,6 +6,24 @@ class Api_Group extends PhalApi_Api
 {
     public function getRules(){
         return array(
+            'PrivateGroup' => array(
+                'user_id'    => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+
+                'group_id' => array(
+                    'name'    => 'group_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '星球ID'
+                ),
+            ),
+
             'create' => array(
                 'user_id'    => array(
                     'name'    => 'user_id',
@@ -22,10 +40,10 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '星球名称',
                 ),
                 'g_image' => array(
-                    'name' => 'g_image',
-                    'type' => 'string',
-                    'require' => true,
-                    'desc'=>'星球图标',
+                    'name'      => 'g_image',
+                    'type'      => 'string',
+                    'require'   => true,
+                    'desc'      =>'星球图标',
                 ),
                 'g_introduction'    => array(
                     'name'    => 'g_introduction',
@@ -45,11 +63,11 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '用户id',
                 ),
                 'g_id' => array(
-                    'name' => 'group_base_id',
-                    'type' => 'int',
-                    'require' => true,
-                    'min' => '1',
-                    'desc' => '星球ID',
+                    'name'      => 'group_base_id',
+                    'type'      => 'int',
+                    'require'   => true,
+                    'min'       => '1',
+                    'desc'      => '星球ID',
                 ),
             ),
 
@@ -96,94 +114,94 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '用户id',
                 ),
                 'g_id' => array(
-                    'name' => 'group_base_id',
-                    'type' => 'int',
-                    'min' => '1',
-                    'require' => true,
-                    'desc' => '发帖星球',
+                    'name'          => 'group_base_id',
+                    'type'          => 'int',
+                    'min'           => '1',
+                    'require'       => true,
+                    'desc'          => '发帖星球',
                 ),
                 'title' => array(
-                    'name' => 'title',
-                    'type' => 'string',
-                    'min' => '1',
-                    'max'=>'150',
-                    'require' => true,
-                    'desc' => '帖子标题',
+                    'name'      => 'title',
+                    'type'      => 'string',
+                    'min'       => '1',
+                    'max'       =>'150',
+                    'require'   => true,
+                    'desc'      => '帖子标题',
                 ),
                 'text' => array(
-                    'name' => 'text',
-                    'type' => 'string',
-                    'min' => '1',
-                    'require' => true,
-                    'desc' => '帖子正文',
+                    'name'      => 'text',
+                    'type'      => 'string',
+                    'min'       => '1',
+                    'require'   => true,
+                    'desc'      => '帖子正文',
                 ),
                 'p_image' => array(
-                    'name' => 'p_image',
-                    'type' => 'array',
-                    'require' => false,
-                    'desc'=>'帖子图片',
+                    'name'      => 'p_image',
+                    'type'      => 'array',
+                    'require'   => false,
+                    'desc'      =>'帖子图片',
                 ),
             ),
 
             'getjoined' => array(
                 'page' => array(
-                    'name' => 'page',
-                    'type' => 'int',
-                    'require' => false,
-                    'default' => 1,
-                    'desc' => '当前页面',
+                    'name'      => 'page',
+                    'type'      => 'int',
+                    'require'   => false,
+                    'default'   => 1,
+                    'desc'      => '当前页面',
                 ),
                 'user_id' => array(
-                    'name' => 'user_id',
-                    'type' => 'int',
-                    'require' => true,
-                    'desc' => '用户id',
+                    'name'      => 'user_id',
+                    'type'      => 'int',
+                    'require'   => true,
+                    'desc'      => '用户id',
                 ),
             ),
 
             'getcreate' => array(
                 'page' => array(
-                    'name' => 'page',
-                    'type' => 'int',
-                    'require' => false,
-                    'default' => 1,
-                    'desc' => '当前页面',
+                    'name'      => 'page',
+                    'type'      => 'int',
+                    'require'   => false,
+                    'default'   => 1,
+                    'desc'      => '当前页面',
                 ),
                 'user_id' => array(
-                    'name' => 'user_id',
-                    'type' => 'int',
-                    'require' => true,
-                    'desc' => '用户id',
+                    'name'      => 'user_id',
+                    'type'      => 'int',
+                    'require'   => true,
+                    'desc'      => '用户id',
                 ),
             ),
 
             'getGroupInfo' =>array(
                 'group_id' =>array(
-                    'name' =>'group_id',
-                    'type' =>'int',
-                    'require' =>true,
-                    'desc'=>'星球id',
+                    'name'      =>'group_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'星球id',
                 ),
                 'user_id'=>array(
-                    'name'=>'user_id',
-                    'type'=>'int',
-                    'require'=>true,
-                    'desc'=>'用户id',
+                    'name'      =>'user_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'用户id',
                     ),
             ),
 
             'alterGroupInfo'=>array(
                 'group_id'=>array(
-                    'name'=>'group_id',
-                    'type'=>'int',
-                    'require'=>true,
-                    'desc'=>'星球id'
+                    'name'      =>'group_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'星球id'
                     ),
                 'user_id'=>array(
-                    'name'=>'user_id',
-                    'type'=>'int',
-                    'require'=>true,
-                    'desc'=>'用户id'
+                    'name'      =>'user_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'用户id'
                     ),
                 'g_introduction'    => array(
                     'name'    => 'g_introduction',
@@ -194,10 +212,10 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '星球简介',
                 ),
                 'g_image'=>array(
-                    'name'=>'g_image',
-                    'type'=>'string',
-                    'require'=>false,
-                    'desc'=>'星球图片',
+                    'name'      =>'g_image',
+                    'type'      =>'string',
+                    'require'   =>false,
+                    'desc'      =>'星球图片',
                 ),
             ),
         );
@@ -475,15 +493,20 @@ class Api_Group extends PhalApi_Api
         return $re;
     }
 
-
-
-
-
-
+/**
+ * 私密星球申请加入接口
+ * @desc 用于申请者加入私密星球
+ * @return int code 操作码，1表示申请成功，0表示申请失败
+ * @return string msg 提示信息
+ */
+    public function PrivateGroup(){
+        $data = array(
+            'user_id'    => $this->user_id,
+            'group_id' => $this->group_id,
+            );
+        $domain = new Domain_Group();
+        $rs = $domain->PrivateGroup($data);
+        return $rs;
+    }
 }
-
-
-
-
-
  ?>
