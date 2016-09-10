@@ -47,4 +47,23 @@ class Domain_Common
         }
         return $lists;
     }
+
+    /*
+    判断用户是否为星球成员
+     */
+    public function judgeGroupUser($group_id,$user_id){
+        $model=new Model_Group();
+        $re=$model->judgeGroupUser($group_id,$user_id);
+        return $re;
+    }
+
+    /*
+    通过星球id返回星球创建者姓名
+     */
+    public function getCreator($group_id){
+        $model=new Model_Group($group_id){
+            $re=$model->getCreator($group_id);
+        }
+        return $re;
+    }
 }

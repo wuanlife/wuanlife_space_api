@@ -86,6 +86,7 @@ class Model_Group extends PhalApi_Model_NotORM{
         return $re;
     }
 
+
     public function getAllGroupCreatenum($user_id)
     {
         $group_detail = DI()->notorm->group_detail;
@@ -99,6 +100,16 @@ class Model_Group extends PhalApi_Model_NotORM{
         }
     }
 
+	public function judgeGroupUser($group_id,$user_id){
+		$sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->fetch();
+		return $sql;
+	}
+
+	public function getCreator($group_id){
+		$sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id=?',$group_id)->where('authorization=?',01);
+		$sqla=>DI()->notorm->
+	}
+	
     public function getCreate($limit_st, $page_num,$user_id){
         $group_detail=DI()->notorm->group_detail;
         $rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','01')->fetchRows();
