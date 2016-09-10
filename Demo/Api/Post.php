@@ -12,6 +12,11 @@ class Api_Post extends PhalApi_Api{
                 'groupID' => array('name' => 'group_id', 'type' => 'int', 'require' => true, 'desc' => '小组ID'),
                 'page' =>array('name' => 'pn', 'type' => 'int',  'desc' => '第几页', 'default' => '1'),
             ),
+             'getPrivateGroupPost' => array(
+                'groupID' => array('name' => 'group_id', 'type' => 'int', 'require' => true, 'desc' => '小组ID'),
+                'userID' => array('name' => 'user_id', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
+                'page' =>array('name' => 'pn', 'type' => 'int',  'desc' => '第几页', 'default' => '1'),
+            ),
             'getMyGroupPost' => array(
                 'userID' => array('name' => 'id', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
                 'page' =>array('name' => 'pn', 'type' => 'int',  'desc' => '第几页', 'default' => '1'),
@@ -143,6 +148,43 @@ class Api_Post extends PhalApi_Api{
 
         return $data;
     }
+
+    /**
+     * 私密星球页面帖子显示
+     * @desc 私密星球页面帖子显示
+     * @return int creatorID 星球创建者名称
+     * @return int groupID 星球ID
+     * @return string groupName 星球名称
+     * @return int post.digest 加精
+     * @return string posts.title 标题
+     * @return string posts.text 内容
+     * @return date posts.createTime 发帖时间
+     * @return int posts.postID 帖子ID
+     * @return string posts.nickname 发帖人
+     * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function getPrivateGroupPost(){
+        $data   = array();
+        $domain = new Domain_Post();
+        $common = new Domain_Common();
+        $rs=$common->judgeGroupUser($this->groupID,$this->userID);
+        if(!$rs){
+            $data=$domain->
+        }
+        $data = $domain->getGroupPost($this->groupID,$this->page);
+        $data = $domain->getImageUrl($data);
+        $data = $domain->deleteImageGif($data);
+        $data = $domain->postImageLimit($data);
+        $data = $domain->deleteHtmlPosts($data);
+        $id=$domain->getCreaterID($this->groupID);
+        $creatorID['creatorID']=$id['user_base_id'];
+        $data=array_merge($creatorID,$data);
+        $data = $domain->postTextLimit($data);
+        return $data;
+    }
+
 
     /**
      * 我的星球

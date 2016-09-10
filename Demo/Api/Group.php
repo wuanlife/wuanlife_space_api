@@ -36,6 +36,36 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '星球简介',
                 ),
             ),
+            'createPrivate' => array(
+                'user_id'    => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id',
+                ),
+                'g_name'    => array(
+                    'name'    => 'name',
+                    'type'    => 'string',
+                    'require' => true,
+                    'min'     => '0',
+                    'max'     => '80',
+                    'desc'    => '星球名称',
+                ),
+                'g_image' => array(
+                    'name' => 'g_image',
+                    'type' => 'string',
+                    'require' => true,
+                    'desc'=>'星球图标',
+                ),
+                'g_introduction'    => array(
+                    'name'    => 'g_introduction',
+                    'type'    => 'string',
+                    'require' => false,
+                    'min'     => '0',
+                    'max'     => '200',
+                    'desc'    => '星球简介',
+                ),
+            ),
 
             'join' => array(
                 'user_id'    => array(
@@ -218,15 +248,44 @@ class Api_Group extends PhalApi_Api
         $rs = array();
 
         $data = array(
-            'user_id' => $this->user_id,
-            'name'    => $this->g_name,
-            'g_image'    => $this->g_image,
+            'user_id'        => $this->user_id,
+            'name'           => $this->g_name,
+            'g_image'        => $this->g_image,
             'g_introduction' => $this->g_introduction,
+            'private'        => 0,
         );
         $domain = new Domain_Group();
         $rs = $domain->create($data);
         return $rs;
     }
+
+    /**
+     * 私密星球创建接口
+     * @desc 用于创建私密星球
+     * @return int code 操作码，1表示创建成功，0表示创建失败
+     * @return object info 星球信息对象
+     * @return int info.group_base_id 星球ID
+     * @return string info.user_base_id 创建者ID
+     * @return string info.authorization 权限，01表示创建者
+     * @return string info.name 星球名称
+     * @return string msg 提示信息
+     */
+    public function createPrivate(){
+        $rs = array();
+
+        $data = array(
+            'user_id'        => $this->user_id,
+            'name'           => $this->g_name,
+            'g_image'        => $this->g_image,
+            'g_introduction' => $this->g_introduction,
+            'private'        => 1,
+        );
+
+        $domain = new Domain_Group();
+        $rs = $domain->create($data);
+        return $rs;
+    }
+
     /**
      * 加入星球接口
      * @desc 用户加入星球

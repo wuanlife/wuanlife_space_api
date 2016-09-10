@@ -8,7 +8,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs   = array();
         $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' "
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
              . 'ORDER BY MAX(pd.createTime) DESC '
              . 'LIMIT :start,:num ';

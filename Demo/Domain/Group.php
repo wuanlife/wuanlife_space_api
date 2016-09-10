@@ -104,16 +104,16 @@ class Domain_Group {
                 else{
                     $data["g_image"]=NULL;
                 }*/
+
                     if(empty($data['g_introduction'])) {
                         $data['g_introduction']=NULL;
                     }
                     if(empty($data["g_image"])){
-                        $data = array('name' => $data['name'],'g_image'=>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100','g_introduction' => $data['g_introduction']) ;
-                    }else{
-                        $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction']) ;
+                        $data = array('name' => $data['name'],'g_image'=>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100','g_introduction' => $data['g_introduction'],'private'=>$data['private']) ;
                     }
-
-
+                    else{
+                        $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction'],'private'=>$data['private']);
+                    }
                 $result = DI()->notorm->group_base->insert($data);
                 // $result = $this->model->add(group_base,$data);
                 $data2 = array(
@@ -136,6 +136,8 @@ class Domain_Group {
             }
             return $this->rs;
     }
+
+
 
     public function join($data){
         $this->model = new Model_Group();
