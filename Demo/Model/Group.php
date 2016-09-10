@@ -163,8 +163,15 @@ class Model_Group extends PhalApi_Model_NotORM{
 	}
 
 	public function getCreator($group_id){
-		$sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id=?',$group_id)->where('authorization=?',01);
-		$sqla=>DI()->notorm->
+		$sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id=?',$group_id)->where('authorization=?',01)->fetch();
+		$sqla=DI()->notorm->user_base->select('nickname')->where('id=?',$sql['user_base_id'])->fetch();
+		$sqlb=$sqla['nickname'];
+		return $sqlb;
+	}
+
+	public function judgeGroupPrivate($group_id){
+		$sql=DI()->notorm->group_base->select('private')->where('id=?',$group_id)->fetch();
+		return $sql;
 	}
 
 

@@ -61,9 +61,18 @@ class Domain_Common
     通过星球id返回星球创建者姓名
      */
     public function getCreator($group_id){
-        $model=new Model_Group($group_id){
-            $re=$model->getCreator($group_id);
-        }
+        $model=new Model_Group();
+        $re=$model->getCreator($group_id);
+
+        return $re;
+    }
+
+    /*
+    判断星球是否为私密星球
+     */
+    public function judgeGroupPrivate($group_id){
+        $model=new Model_Group();
+        $re =$model->judgeGroupPrivate($group_id);
         return $re;
     }
 }
