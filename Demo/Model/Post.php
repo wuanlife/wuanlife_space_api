@@ -6,7 +6,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         $num=30;
         $rs   = array();
-        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
@@ -41,7 +41,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['groupID'] = $groupData['0']['groupID'];
         $rs['groupName'] = $groupData['0']['groupName'];
 
-        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky '
+        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky,pb.lock '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
              . 'GROUP BY pb.id '
@@ -69,7 +69,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         $num=30;
         $rs   = array();
-        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
              . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'

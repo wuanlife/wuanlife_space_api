@@ -141,8 +141,17 @@ class Api_Post extends PhalApi_Api{
         $rs=$common->judgeGroupUser($this->groupID,$this->userID);
         if($private==1){
         if(empty($rs)){
-            $data=$common->getCreator($this->groupID);
-            return $data;
+            $data = $domain->getGroupPost($this->groupID,$this->page);
+            $data = $domain->getImageUrl($data);
+            $data = $domain->deleteImageGif($data);
+            $data = $domain->postImageLimit($data);
+            $data = $domain->deleteHtmlPosts($data);
+            $id=$domain->getCreaterID($this->groupID);
+            $creatorID['creatorID']=$id['user_base_id'];
+            $data=array_merge($creatorID,$data);
+            $data = $domain->postTextLimit($data);
+            $data['posts']=NULL;
+        return $data;
 
         }else{
         $data = $domain->getGroupPost($this->groupID,$this->page);
