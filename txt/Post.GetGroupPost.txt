@@ -11,6 +11,7 @@ GET
 4.参数说明：
 参数名字    类型  是否必须    默认值    范围      说明
 group_id    整型    必须                         小组ID
+user_id     整型    可选                         用户ID
 pn          整型    可选        1                第几页
 
 5.返回值说明：
@@ -25,7 +26,7 @@ posts.id             int       用户ID
 posts.nickname      string    发帖人
 pageCount            int      总页数
 currentPage          int      当前页
-creatorID            int       星球创建者id
+creatorID            int       星球创建者id/星球名称
 
 6.示例：
 显示星球ID为1的第1页帖子

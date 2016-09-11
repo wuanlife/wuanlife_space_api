@@ -120,7 +120,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 每个星球页面帖子显示
      * @desc 星球页面帖子显示
-     * @return int creatorID 星球创建者id
+     * @return int creatorID 星球创建者id/星球创建者名称
      * @return int groupID 星球ID
      * @return string groupName 星球名称
      * @return int post.digest 加精

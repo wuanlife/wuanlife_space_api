@@ -54,10 +54,10 @@ class Api_Group extends PhalApi_Api
                     'desc'    => '星球简介',
                 ),
                 'private'=>array(
-                    'name'=>'name',
+                    'name'=>'private',
                     'type'=>'int',
                     'require'=>false,
-                    'desc'=>'私密')
+                    'desc'=>'私密'),
             ),
             'join' => array(
                 'user_id'    => array(
