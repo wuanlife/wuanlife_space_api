@@ -355,8 +355,8 @@ class Api_User extends PhalApi_Api{
     }
 
 /**
- *修改星球接口
- * @desc 修改星球的信息
+ *修改用户信息接口
+ * @desc 修改用户的信息
  * @return int data 1代表成功修改，0代表修改失败
  */
     public function alterUserInfo(){

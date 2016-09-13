@@ -184,31 +184,7 @@ class Model_User extends PhalApi_Model_NotORM {
 /*
  * 用于处理加入私密星球的申请，修改数据库中有关的字段
  */
-    public function ProcessApp($data) {
-        $model = new Model_Group();
-        $founder_id = $model->getCreatorId($data); //通过星球id查找创建者id
-        $Boolean = ($data['user_id'] == $founder_id); //判断是否为创建者
-        if($Boolean){
-            if($data['mark'] == 1) {
-                $message_base_code = '0002';
-                $field = array(
-                    'group_base_id'   =>$data['group_id'],
-                    'user_base_id'    =>$data['applicant_id'],
-                    'authorization'   =>03,
-                );
-                $sql = DI()->notorm->group_detail->insert($field);
-            }else{
-                $message_base_code = '0003';
-            }
-            $maxcount = $model->getMaxCount($message_base_code,$data['applicant_id']);
-            $field = array(
-                    'message_base_code' =>$message_base_code,
-                    'user_base_id'      =>$data['applicant_id'],
-                    'count'             =>$maxcount+1,
-                    'id_1'              =>$data['user_id'],
-                    'id_2'              =>$data['group_id'],
-                    'createTime'        =>time(),
-            );
+	public function processAppInfo($field){
             $sql = DI()->notorm->message_detail->insert($field);
             if($sql){
                 $rs = 1;
@@ -222,20 +198,17 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
 /*
- * 从数据库中查找用户的消息并返回
+ * 从数据库中查找用户的消息列表并返回
  */
     public function ShowMessage($data) {
         $sql = DI()->notorm->message_detail->select('*')->where('user_base_id = ?',$data['user_id'])->fetchAll();
-        foreach($sql as $keys => $value){
-            $sql_1 = DI()->notorm->message_base->select('content')->where('code = ?',$value['message_base_code'])->fetch();
-            $group_name = $this->getGroupName($value['id_2']);
-            $user_name = $this->getUserName($value['id_1']);
-            $OldCharacter = array("{0}","{1}");
-            $NewCharacter = array("$user_name","$group_name");
-            $sql_1['content'] = str_replace($OldCharacter,$NewCharacter,$sql_1['content']);
-            $sql[$keys]['message_base_code'] = $sql_1['content'];
-            $sql[$keys]['createTime'] = date('Y-m-d H:i',$sql[$keys]['createTime']);
+        return $sql;
         }
+/*
+ * 找出对应的消息类型并返回
+ */
+	public function getCorrespondInfo($message_base_code) {
+		$sql = DI()->notorm->message_base->select('content')->where('code = ?',$message_base_code)->fetch();
         return $sql;
     }
 
