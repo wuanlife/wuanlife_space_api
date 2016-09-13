@@ -151,7 +151,7 @@ class Domain_Group {
                 'authorization' => "03",
             );
 
-            $result = DI()->notorm->group_detail->insert($data);
+            $result = $this->model->join($data);
             $this->rs['info'] = $result;
             $this->rs['code'] = 1;
         }else{

@@ -99,6 +99,9 @@ class Model_Group extends PhalApi_Model_NotORM{
             return $groupnum;
         }
     }
+	public function join($data){
+		$result = DI()->notorm->group_detail->insert($data);
+	}
 
 	public function judgeGroupUser($group_id,$user_id){
 		$sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->fetch();
