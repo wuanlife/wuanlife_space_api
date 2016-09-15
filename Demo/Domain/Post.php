@@ -205,6 +205,11 @@ class Domain_Post {
         return $rs;
     }
 
+    public function lockPost($post_id){
+        $model=new Model_Post();
+        $rs=$model->lockPost($post_id);
+        return $rs;
+    }
 
 
 }

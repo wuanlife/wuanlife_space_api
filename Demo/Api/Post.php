@@ -128,7 +128,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 每个星球页面帖子显示
      * @desc 星球页面帖子显示
-     * @return int creatorID 星球创建者id/星球创建者名称
+     * @return int creatorID 星球创建者名称
      * @return int groupID 星球ID
      * @return string groupName 星球名称
      * @return int post.digest 加精
@@ -140,53 +140,42 @@ class Api_Post extends PhalApi_Api{
      * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
      * @return int pageCount 总页数
      * @return int currentPage 当前页
+     * @return int identity 用户身份(01为创建者，02为成员，03非成员)
+     * @return int private 是否私密(0为否，1为私密)
      */
     public function getGroupPost(){
         $data   = array();
         $domain = new Domain_Post();
         $common = new Domain_Common();
+        $creatorName=$common->getCreator($this->groupID);
         $private=$common->judgeGroupPrivate($this->groupID);
         $user=$common->judgeGroupUser($this->groupID,$this->userID);
         $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
+        $data = $domain->getGroupPost($this->groupID,$this->page);
+        $data = $domain->getImageUrl($data);
+        $data = $domain->deleteImageGif($data);
+        $data = $domain->postImageLimit($data);
+        $data = $domain->deleteHtmlPosts($data);
+        $id=$domain->getCreaterID($this->groupID);
+        $creatorID['creatorID']=$creatorName;
+        $data=array_merge($creatorID,$data);
+        $data = $domain->postTextLimit($data);
+        $data['private']=0;
         if($private==1){
-        if(empty($user||$creator)){
-            $data = $domain->getGroupPost($this->groupID,$this->page);
-            $data = $domain->getImageUrl($data);
-            $data = $domain->deleteImageGif($data);
-            $data = $domain->postImageLimit($data);
-            $data = $domain->deleteHtmlPosts($data);
-            $id=$domain->getCreaterID($this->groupID);
-            $creatorID['creatorID']=$id['user_base_id'];
-            $data=array_merge($creatorID,$data);
-            $data = $domain->postTextLimit($data);
-            $data['posts']=NULL;
+            $data['private']=1;
+            if(empty($user)&&empty($creator)){
+                $data['posts']=NULL;
+                $data['identity']='03';
+            }elseif (!empty($user)) {
+                $data['identity']='02';
+            }elseif (!empty($creator)) {
+                $data['identity']='01';
+            }
+        }
+
+
         return $data;
 
-        }else{
-            if(empty($))
-        $data = $domain->getGroupPost($this->groupID,$this->page);
-        $data = $domain->getImageUrl($data);
-        $data = $domain->deleteImageGif($data);
-        $data = $domain->postImageLimit($data);
-        $data = $domain->deleteHtmlPosts($data);
-        $id=$domain->getCreaterID($this->groupID);
-        $creatorID['creatorID']=$id['user_base_id'];
-        $data=array_merge($creatorID,$data);
-        $data = $domain->postTextLimit($data);
-        return $data;
-    }
-    }else{
-        $data = $domain->getGroupPost($this->groupID,$this->page);
-        $data = $domain->getImageUrl($data);
-        $data = $domain->deleteImageGif($data);
-        $data = $domain->postImageLimit($data);
-        $data = $domain->deleteHtmlPosts($data);
-        $id=$domain->getCreaterID($this->groupID);
-        $creatorID['creatorID']=$id['user_base_id'];
-        $data=array_merge($creatorID,$data);
-        $data = $domain->postTextLimit($data);
-        return $data;
-    }
     }
 
 
@@ -399,8 +388,17 @@ class Api_Post extends PhalApi_Api{
     	return $rs;
     }
 
+    /**
+     * 锁定帖子
+     * @desc 锁定帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function lockPost(){
+        $domain=new Domain_Post();
+        $rs=$domain->lockPost($this->post_id);
+        return $rs;
+    }
 
-    public function postLock({
 
-    })
 }
