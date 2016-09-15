@@ -88,6 +88,12 @@ class Api_Post extends PhalApi_Api{
         			),
         	),
             'lockPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
                 'post_id'=>array(
                     'name'=>'post_id',
                     'type'=>'int',
@@ -96,6 +102,12 @@ class Api_Post extends PhalApi_Api{
                     ),
                 ),
             'unlockPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
                 'post_id'=>array(
                     'name'=>'post_id',
                     'type'=>'int',
@@ -399,24 +411,22 @@ class Api_Post extends PhalApi_Api{
     /**
      * 锁定帖子
      * @desc 锁定帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
+     * @return int data 操作码，1表示操作成功，0表示操作失败
      */
     public function lockPost(){
         $domain=new Domain_Post();
-        $rs=$domain->lockPost($this->post_id);
+        $rs=$domain->lockPost($this->user_id,$this->post_id);
         return $rs;
     }
 
     /**
      * 解锁帖子
      * @desc 解锁帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
+     * @return int data 操作码，1表示操作成功，0表示操作失败
      */
     public function unlockPost(){
         $domain=new Domain_Post();
-        $rs=$domain->unlockPost($this->post_id);
+        $rs=$domain->unlockPost($this->user_id,$this->post_id);
         return $rs;
     }
 

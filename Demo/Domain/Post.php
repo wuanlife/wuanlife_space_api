@@ -205,9 +205,19 @@ class Domain_Post {
         return $rs;
     }
 
-    public function lockPost($post_id){
-        $model=new Model_Post();
-        $rs=$model->lockPost($post_id);
+    public function lockPost($user_id,$post_id){
+        $domain = new Domain_Post();
+        $domain1 = new Domain_User();
+        $sqla = $domain->getGroupId($post_id);
+        $sqlb = $domain1->judgeCreate($user_id,$sqla);
+        if($sqlb) {
+            $model=new Model_Post();
+            $rs=$model->lockPost($post_id);
+
+        }else{
+            $rs['code']=0;
+            $rs['re']="仅星球创建者能取消锁定帖子!";
+        }
         return $rs;
     }
     public function unlockPost($post_id){
