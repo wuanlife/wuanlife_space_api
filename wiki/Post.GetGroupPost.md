@@ -13,6 +13,7 @@
 |参数|类型|是否必须|默认值|说明|
 |:--|:--|:--|:--:|:--|
 |group_id|int|必须|-|星球ID|
+|user_id|int|必须|-|用户ID|
 |pn|int|不必须|1|第几页|
 ##返回说明
 |参数|类型|说明|
@@ -28,6 +29,8 @@
 |posts.sticky	|string|	是否置顶|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
+|identity    |int    |01创建者 02成员 03非成员|
+|private    |int    |0否 1私密|
 
 ##示例
 

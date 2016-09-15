@@ -41,3 +41,5 @@
 [帖子删除](/wiki/Post.DeletePost.md)<br>
 [帖子置顶](/wiki/Post.StickyPost.md)<br>
 [帖子置顶取消](/wiki/Post.UnStickyPost.md)<br>
+[帖子锁定](/wiki/Post.LockPost.md)<br>
+[帖子解锁](/wiki/Post.UnlockPost.md)<br>
