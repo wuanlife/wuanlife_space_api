@@ -60,81 +60,38 @@ class Domain_Group {
         $this->cookie['nickname'] = $rs['nickname'];
     }
 
-/*    public function save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash ) {
-        $splited = explode(',', substr( $base64_image_string , 5 ) , 2);
-        $mime=$splited[0];
-        $data=$splited[1];
-        $mime_split_without_base64=explode(';', $mime,2);
-        $mime_split=explode('/', $mime_split_without_base64[0],2);
-        if(count($mime_split)==2) {
-            $extension=$mime_split[1];
-            if($extension=='jpeg')$extension='jpg';
-            $output_file_with_extentnion=$output_file_without_extentnion.'.'.$extension;
-        }
-        file_put_contents( $path_with_end_slash . $output_file_with_extentnion, base64_decode($data) );
-        return $path_with_end_slash . $output_file_with_extentnion;
-    }*/
 
     public function create($data) {
-            $this->model = new Model_Group();
-            $this->checkStatus($data['user_id']);
-            $this->checkN($data['name']);
- /*           //上传路径
-        $date=date("Y/m/d");
-            $RootDIR = dirname(__FILE__);
-            $path=$RootDIR."/../../Public/demo/upload/group/$date/";
-            $base64_image_string = $data["g_image"];
-            $output_file_without_extentnion = time();
-            $path_with_end_slash = "$path";*/
-            if ($this->u_status == '1' && $this->g_status =='1') {
-/*                if(!empty($data["g_image"])) {
-                    //创建上传路径
-                    if(!is_readable($path)) {
-                        is_file($path) or mkdir($path,0777,true);
-                    }
-                    //调用接口保存base64字符串为图片
-                    $filepath = $this->save_base64_image($base64_image_string, $output_file_without_extentnion, $path_with_end_slash );
-                    $size = getimagesize ($filepath);
-                    if($size[0]>94&&$size[1]>94){
-                        include "../../Library/resizeimage.php";
-                        $imageresize = new ResizeImage($filepath, 94, 94,1, $filepath);//裁剪图片
-                    }
-                        $data["g_image"] = substr($filepath,-39);
-                }
-                else{
-                    $data["g_image"]=NULL;
-                }*/
-
-                    if(empty($data['g_introduction'])) {
-                        $data['g_introduction']=NULL;
-                    }
-                    if(empty($data["g_image"])){
-                        $data = array('name' => $data['name'],'g_image'=>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100','g_introduction' => $data['g_introduction'],'private'=>$data['private']) ;
-                    }
-                    else{
-                        $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction'],'private'=>$data['private']);
-                    }
-                $result = DI()->notorm->group_base->insert($data);
-                // $result = $this->model->add(group_base,$data);
-                $data2 = array(
-                'group_base_id' => $result['id'],
-                'user_base_id'  => $this->cookie['userID'],
-                'authorization'=>"01",
-                );
-                $result2 = DI()->notorm->group_detail->insert($data2);
-                // $result2 = $this->model->add(group_detail,$data2);
-                $this->rs['info'] = $data2;
-                $this->rs['info']['name'] = $data['name'];
-                $this->rs['info']['g_introduction'] = $result['g_introduction'];
-/*                if(!empty($data["g_image"])) {$data["g_image"] = "http://".$_SERVER['HTTP_HOST'].substr($filepath,-39);}*/
-               $this->rs['info']['URL'] = $data["g_image"];
-
-                $this->rs['code'] = 1;
+        $this->model = new Model_Group();
+        $this->checkStatus($data['user_id']);
+        $this->checkN($data['name']);
+        if ($this->u_status == '1' && $this->g_status =='1') {
+            if(empty($data['g_introduction'])) {
+                $data['g_introduction']=NULL;
+            }
+            if(empty($data["g_image"])){
+                $data = array('name' => $data['name'],'g_image'=>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100','g_introduction' => $data['g_introduction'],'private'=>$data['private']) ;
             }
             else{
-                $this->rs['msg'] = $this->msg;
+                $data = array('name' => $data['name'],'g_image'=>$data["g_image"],'g_introduction' => $data['g_introduction'],'private'=>$data['private']);
             }
-            return $this->rs;
+            $result = DI()->notorm->group_base->insert($data);
+            $data2 = array(
+            'group_base_id' => $result['id'],
+            'user_base_id'  => $this->cookie['userID'],
+            'authorization'=>"01",
+            );
+            $result2 = DI()->notorm->group_detail->insert($data2);
+            $this->rs['info'] = $data2;
+            $this->rs['info']['name'] = $data['name'];
+            $this->rs['info']['g_introduction'] = $result['g_introduction'];
+            $this->rs['info']['URL'] = $data["g_image"];
+            $this->rs['code'] = 1;
+        }
+        else{
+            $this->rs['msg'] = $this->msg;
+        }
+        return $this->rs;
     }
 
 
