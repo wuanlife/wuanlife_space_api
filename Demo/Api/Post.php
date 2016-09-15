@@ -24,7 +24,7 @@ class Api_Post extends PhalApi_Api{
             ),
             'getPostBase' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
-                'userID' => array('name' => 'id', 'type' => 'int', 'desc' => '用户ID'),
+                'userID' => array('name' => 'user_id', 'type' => 'int', 'require' => false,'desc' => '用户ID'),
             ),
             'getPostReply' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
@@ -243,6 +243,7 @@ class Api_Post extends PhalApi_Api{
      * @return boolean editRight 编辑权限(0为无权限，1有)
      * @return boolean deleteRight 删除权限(0为无权限，1有)
      * @return boolean stickyRight 置顶权限(0为无权限，1有)
+     * @return boolean lockRight 锁帖权限(0为无权限，1有)
      */
     public function getPostBase(){
 
@@ -254,7 +255,7 @@ class Api_Post extends PhalApi_Api{
         $data[0]['editRight']=0;
         $data[0]['deleteRight']=0;
         $data[0]['stickyRight']=0;
-
+        $data[0]['lockRight']=0;
         if ($this->userID !=null){
             $userID=$this->userID;
             $groupID=$domain->getGroupId($this->postID);
@@ -269,10 +270,12 @@ class Api_Post extends PhalApi_Api{
             if($creater){
                 $data[0]['deleteRight']=1;
                 $data[0]['stickyRight']=1;
+                $data[0]['lockRight']=1;
             }
             if($admin){
                 $data[0]['deleteRight']=1;
                 $data[0]['stickyRight']=1;
+                $data[0]['lockRight']=1;
             }
         }
         return $data[0];

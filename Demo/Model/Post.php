@@ -298,7 +298,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             ->select('group_base_id')
             ->where('id=?',$post_id)
             ->fetchone();
-        return $sqla;
+        return $sqla['group_base_id'];
     }
 
     public function judgePoster($user_id,$post_id){
