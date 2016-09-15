@@ -195,10 +195,6 @@ class Api_Post extends PhalApi_Api{
           $data = $domain->postImageLimit($data);
           $data = $domain->deleteHtmlPosts($data);
          $data = $domain->postTextLimit($data);
-         return $data;
-        }
-
-
         return $data;
 
     }
