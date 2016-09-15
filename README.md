@@ -18,6 +18,8 @@
 [是否登陆](/wiki/Group.UStatus.md)<br>
 [获取用户信息](/wiki/User.GetUserInfo.md)<br>
 [修改用户信息](/wiki/User.AlterUserInfo.md)<br>
+[用户消息列表](/wiki/User.ShowMessage.md)<br>
+[处理申请信息](/wiki/User.ProcessApp.md)<br>
 
 ###星球相关
 [创建星球](/wiki/Group.Create.md)<br>
@@ -28,6 +30,7 @@
 [获取用户加入星球](/wiki/Group.GetJoined.md)<br>
 [获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 [修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
+[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
 
 ###帖子相关
 [发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
