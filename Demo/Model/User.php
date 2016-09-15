@@ -192,7 +192,8 @@ class Model_User extends PhalApi_Model_NotORM {
                 $rs = 0;
             }
         }else{
-            return 2;exit;
+            return 2;
+            exit;
         }
         return $rs;
     }

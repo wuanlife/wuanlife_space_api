@@ -88,6 +88,12 @@ class Api_Post extends PhalApi_Api{
         			),
         	),
             'lockPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
                 'post_id'=>array(
                     'name'=>'post_id',
                     'type'=>'int',
@@ -96,6 +102,12 @@ class Api_Post extends PhalApi_Api{
                     ),
                 ),
             'unlockPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
                 'post_id'=>array(
                     'name'=>'post_id',
                     'type'=>'int',
@@ -403,7 +415,7 @@ class Api_Post extends PhalApi_Api{
      */
     public function lockPost(){
         $domain=new Domain_Post();
-        $rs=$domain->lockPost($this->post_id);
+        $rs=$domain->lockPost($this->user_id,$this->post_id);
         return $rs;
     }
 
@@ -414,7 +426,7 @@ class Api_Post extends PhalApi_Api{
      */
     public function unlockPost(){
         $domain=new Domain_Post();
-        $rs=$domain->unlockPost($this->post_id);
+        $rs=$domain->unlockPost($this->user_id,$this->post_id);
         return $rs;
     }
 
