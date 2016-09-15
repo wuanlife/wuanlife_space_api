@@ -24,7 +24,7 @@ class Api_Post extends PhalApi_Api{
             ),
             'getPostBase' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
-                'userID' => array('name' => 'user_id', 'type' => 'int', 'require' => false,'desc' => '用户ID'),
+                'userID' => array('name' => 'id', 'type' => 'int', 'require' => false,'desc' => '用户ID'),
             ),
             'getPostReply' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
