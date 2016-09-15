@@ -323,9 +323,16 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
 
     public function lockPost($post_id){
-        $lock=1;
         $data = array(
             '`lock`' => '1',
+        );
+        $sql=DI()->notorm->post_base->where('id',$post_id)->update($data);
+        return $sql;
+    }
+
+    public function unlockPost($post_id){
+        $data = array(
+            '`lock`' => '0',
         );
         $sql=DI()->notorm->post_base->where('id',$post_id)->update($data);
         return $sql;

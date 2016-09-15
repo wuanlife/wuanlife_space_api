@@ -95,6 +95,14 @@ class Api_Post extends PhalApi_Api{
                     'desc'=>'帖子ID',
                     ),
                 ),
+            'unlockPost'=>array(
+                'post_id'=>array(
+                    'name'=>'post_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'帖子ID',
+                    ),
+                ),
         );
     }
 
@@ -397,6 +405,18 @@ class Api_Post extends PhalApi_Api{
     public function lockPost(){
         $domain=new Domain_Post();
         $rs=$domain->lockPost($this->post_id);
+        return $rs;
+    }
+
+    /**
+     * 解锁帖子
+     * @desc 解锁帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function unlockPost(){
+        $domain=new Domain_Post();
+        $rs=$domain->unlockPost($this->post_id);
         return $rs;
     }
 

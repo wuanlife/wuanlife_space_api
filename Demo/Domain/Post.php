@@ -210,6 +210,10 @@ class Domain_Post {
         $rs=$model->lockPost($post_id);
         return $rs;
     }
-
+    public function unlockPost($post_id){
+        $model=new Model_Post();
+        $rs=$model->unlockPost($post_id);
+        return $rs;
+    }
 
 }
