@@ -182,7 +182,7 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
 /*
- * 用于处理加入私密星球的申请，修改数据库中有关的字段
+ * 将处理加入私密星球的申请的结果保存到数据库
  */
 	public function processAppInfo($field){
             $sql = DI()->notorm->message_detail->insert($field);
@@ -190,9 +190,6 @@ class Model_User extends PhalApi_Model_NotORM {
                 $rs = 1;
             }else{
                 $rs = 0;
-            }
-        }else{
-            return 2;exit;
         }
         return $rs;
     }
