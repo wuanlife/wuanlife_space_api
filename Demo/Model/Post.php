@@ -16,7 +16,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
-             . "FROM post_base WHERE post_base.delete=0";
+             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0'";
 
         $params = array(':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
@@ -95,11 +95,11 @@ class Model_Post extends PhalApi_Model_NotORM {
 
     public function getPostBase($postID) {
         $rs   = array();
-        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky '
+        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky,pb.lock '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.delete=0 AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.id=:post_id AND pd.floor=1' ;
         $params = array(':post_id' =>$postID );
-        $rs = DI()->notorm->post_base->queryAll($sql, $params);	    
+        $rs = DI()->notorm->post_base->queryAll($sql, $params);
 		if (empty($rs)) {
             throw new PhalApi_Exception_BadRequest('帖子不存在！');
 			//$rs[0]['msg']="帖子不存在";
@@ -112,17 +112,17 @@ class Model_Post extends PhalApi_Model_NotORM {
 				->where('post_base_id =?', $postID)
 				->AND('post_image.delete=?','0');
 				// ->fetchall();
-				
+
 			foreach ($results as $key => $row) {
 				$p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
 			}
 			$rs[0]['p_image']=$p_image;
 			if(empty($p_image)){
 				$rs[0]['p_image']=NULL;
-			}			
-		}        
+			}
+		}
 		return $rs;
-        
+
     }
 
     public function getPostReply($postID,$page) {

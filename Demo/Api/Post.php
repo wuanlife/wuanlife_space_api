@@ -238,6 +238,7 @@ class Api_Post extends PhalApi_Api{
      * @return string nickname 发帖人
      * @return date createTime 发帖时间
      * @return int sticky 是否置顶（0为未置顶，1置顶）
+     * @return int lock 是否锁定（0为未锁定，1锁定）
      * @return boolean editRight 编辑权限(0为无权限，1有)
      * @return boolean deleteRight 删除权限(0为无权限，1有)
      * @return boolean stickyRight 置顶权限(0为无权限，1有)
