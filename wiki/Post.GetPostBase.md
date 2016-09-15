@@ -30,6 +30,7 @@
 |editRight|	boolean	|	编辑权限(0为无权限，1有)|
 |deleteRight|	boolean	|	删除权限(0为无权限，1有)|
 |stickyRight|	boolean	|	置顶权限(0为无权限，1有)|
+|lockRight|	boolean	|	suot权限(0为无权限，1有)|
 
 ##示例
 
