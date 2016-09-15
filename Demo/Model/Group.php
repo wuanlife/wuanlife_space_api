@@ -100,8 +100,18 @@ class Model_Group extends PhalApi_Model_NotORM{
         }
     }
 
+    public function judgeGroupCreator($group_id,$user_id){
+        $sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->where('authorization=?',01)->fetch();
+        if(empty($sql)){
+            $re=NULL;
+        }else{
+            $re=1;
+        }
+        return $re;
+    }
+
 	public function judgeGroupUser($group_id,$user_id){
-		$sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->fetch();
+		$sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->where('authorization=?',03)->fetch();
 		if(empty($sql)){
 			$re=NULL;
 		}else{

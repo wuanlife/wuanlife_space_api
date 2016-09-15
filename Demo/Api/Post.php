@@ -87,6 +87,14 @@ class Api_Post extends PhalApi_Api{
         					'desc'    => '帖子id',
         			),
         	),
+            'lockPost'=>array(
+                'post_id'=>array(
+                    'name'=>'post_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'帖子ID',
+                    ),
+                ),
         );
     }
 
@@ -138,9 +146,10 @@ class Api_Post extends PhalApi_Api{
         $domain = new Domain_Post();
         $common = new Domain_Common();
         $private=$common->judgeGroupPrivate($this->groupID);
-        $rs=$common->judgeGroupUser($this->groupID,$this->userID);
+        $user=$common->judgeGroupUser($this->groupID,$this->userID);
+        $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
         if($private==1){
-        if(empty($rs)){
+        if(empty($user||$creator)){
             $data = $domain->getGroupPost($this->groupID,$this->page);
             $data = $domain->getImageUrl($data);
             $data = $domain->deleteImageGif($data);
@@ -154,6 +163,7 @@ class Api_Post extends PhalApi_Api{
         return $data;
 
         }else{
+            if(empty($))
         $data = $domain->getGroupPost($this->groupID,$this->page);
         $data = $domain->getImageUrl($data);
         $data = $domain->deleteImageGif($data);
@@ -388,4 +398,9 @@ class Api_Post extends PhalApi_Api{
 
     	return $rs;
     }
+
+
+    public function postLock({
+
+    })
 }

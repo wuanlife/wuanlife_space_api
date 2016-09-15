@@ -57,7 +57,9 @@ class Api_Group extends PhalApi_Api
                     'name'=>'private',
                     'type'=>'int',
                     'require'=>false,
-                    'desc'=>'私密'),
+                    'desc'=>'私密/私密为1',
+                    'default'=>0,
+                    ),
             ),
             'join' => array(
                 'user_id'    => array(

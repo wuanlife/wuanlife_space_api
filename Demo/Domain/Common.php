@@ -49,6 +49,15 @@ class Domain_Common
     }
 
     /*
+    判断用户是否为星球创建者
+     */
+    public function judgeGroupCreator($group_id,$user_id){
+        $model=new Model_Group();
+        $re=$model->judgeGroupCreator($group_id,$user_id);
+        return $re;
+    }
+
+    /*
     判断用户是否为星球成员
      */
     public function judgeGroupUser($group_id,$user_id){
