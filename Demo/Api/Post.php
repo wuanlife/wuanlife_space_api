@@ -399,8 +399,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 锁定帖子
      * @desc 锁定帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
+     * @return int data 操作码，1表示操作成功，0表示操作失败
      */
     public function lockPost(){
         $domain=new Domain_Post();
@@ -411,8 +410,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 解锁帖子
      * @desc 解锁帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
+     * @return int data 操作码，1表示操作成功，0表示操作失败
      */
     public function unlockPost(){
         $domain=new Domain_Post();
