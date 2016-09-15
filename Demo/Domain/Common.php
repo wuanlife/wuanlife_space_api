@@ -84,4 +84,10 @@ class Domain_Common
         $re =$model->judgeGroupPrivate($group_id);
         return $re;
     }
+
+    public function getGroupName($group_id){
+        $model=new Model_Group();
+        $re=$model->getGroupName($group_id);
+        return $re;
+     }
 }

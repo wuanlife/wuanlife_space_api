@@ -148,7 +148,8 @@ class Api_Post extends PhalApi_Api{
     /**
      * 每个星球页面帖子显示
      * @desc 星球页面帖子显示
-     * @return int creatorID 星球创建者名称
+     * @return int creatorID 星球创建者ID
+     * @return string creatorName 星球创建者名称
      * @return int groupID 星球ID
      * @return string groupName 星球名称
      * @return int post.digest 加精
@@ -164,33 +165,37 @@ class Api_Post extends PhalApi_Api{
      * @return int private 是否私密(0为否，1为私密)
      */
     public function getGroupPost(){
-        $data   = array();
-        $domain = new Domain_Post();
-        $common = new Domain_Common();
-        $creatorName=$common->getCreator($this->groupID);
-        $private=$common->judgeGroupPrivate($this->groupID);
-        $user=$common->judgeGroupUser($this->groupID,$this->userID);
-        $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
-        $data = $domain->getGroupPost($this->groupID,$this->page);
-        $data = $domain->getImageUrl($data);
-        $data = $domain->deleteImageGif($data);
-        $data = $domain->postImageLimit($data);
-        $data = $domain->deleteHtmlPosts($data);
-        $id=$domain->getCreaterID($this->groupID);
-        $creatorID['creatorID']=$creatorName;
-        $data=array_merge($creatorID,$data);
-        $data = $domain->postTextLimit($data);
-        $data['private']=0;
-        if($private==1){
-            $data['private']=1;
-            if(empty($user)&&empty($creator)){
+          $data   = array();
+          $domain = new Domain_Post();
+          $common = new Domain_Common();
+          $data['creatorID']=$domain->getCreaterID($this->groupID)['user_base_id'];
+          $creatorName=$common->getCreator($this->groupID);
+          $data['creatorName']=$creatorName;
+          $data['groupID']=$this->groupID;
+          $data['groupName']=$common->getGroupName($this->groupID);
+          $private=$common->judgeGroupPrivate($this->groupID);
+          $data['private']=$private;
+          $user=$common->judgeGroupUser($this->groupID,$this->userID);
+          $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
+        if(empty($user)&&empty($creator)){
+            $data['identity']='03';
+           $data['posts']=NULL;
+            if($private==1){
                 $data['posts']=NULL;
-                $data['identity']='03';
-            }elseif (!empty($user)) {
-                $data['identity']='02';
-            }elseif (!empty($creator)) {
-                $data['identity']='01';
-            }
+                return $data;
+           }
+        }elseif (!empty($user)) {
+            $data['identity']='02';
+        }elseif (!empty($creator)) {
+            $data['identity']='01';
+         }
+         $data =array_merge($data,$domain->getGroupPost($this->groupID,$this->page));
+          $data = $domain->getImageUrl($data);
+          $data = $domain->deleteImageGif($data);
+          $data = $domain->postImageLimit($data);
+          $data = $domain->deleteHtmlPosts($data);
+         $data = $domain->postTextLimit($data);
+         return $data;
         }
 
 

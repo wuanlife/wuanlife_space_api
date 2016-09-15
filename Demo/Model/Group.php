@@ -235,7 +235,13 @@ class Model_Group extends PhalApi_Model_NotORM{
         ->fetch();
         return $sql['max(count)'];
     }
+
+    public function getGroupName($group_id){
+        $sql=DI()->notorm->group_base->select('name')->where('id=?',$group_id)->fetch();
+        return $sql['name'];
+    }
 }
+
 
 
 
