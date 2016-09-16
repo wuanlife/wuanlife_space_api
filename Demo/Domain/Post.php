@@ -214,8 +214,8 @@ class Domain_Post {
         $sqlc=$common->judgePostUser($user_id,$post_id);
         if($sqlb||$sqlc) {
             $model=new Model_Post();
-            $rs=$model->lockPost($post_id);
-
+            $rs['code']=$model->lockPost($post_id);
+            $rs['re']="操作成功";
         }else{
             $rs['code']=0;
             $rs['re']="权限不足";
@@ -231,7 +231,8 @@ class Domain_Post {
         $sqlc=$common->judgePostUser($user_id,$post_id);
         if($sqlb||$sqlc) {
             $model=new Model_Post();
-            $rs=$model->unlockPost($post_id);
+            $rs['code']=$model->unlockPost($post_id);
+            $rs['re']="操作成功";
 
         }else{
            $rs['code']=0;
