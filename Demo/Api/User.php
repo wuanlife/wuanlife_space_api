@@ -392,6 +392,22 @@ class Api_User extends PhalApi_Api{
             );
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
+
+        $data1 = array ('user_id' => $data['user_id']);
+        $data1 = http_build_query($data1);
+        $opts = array (
+        'http' => array (
+            'method' => 'POST',
+            'header'=> "Content-type: application/x-www-form-urlencodedrn" .
+            "Content-Length:" . strlen($data1) . "rn",
+            'content' => $data1
+        )
+        );
+
+        $context = stream_context_create($opts);
+        $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
+
+        echo $html;
         return $rs;
     }
 /**
