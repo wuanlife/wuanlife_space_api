@@ -208,30 +208,34 @@ class Domain_Post {
     public function lockPost($user_id,$post_id){
         $domain = new Domain_Post();
         $domain1 = new Domain_User();
+        $common=new Domain_Common();
         $sqla = $domain->getGroupId($post_id);
         $sqlb = $domain1->judgeCreate($user_id,$sqla);
-        if($sqlb) {
+        $sqlc=$common->judgePostUser($user_id,$post_id);
+        if($sqlb||$sqlc) {
             $model=new Model_Post();
             $rs=$model->lockPost($post_id);
 
         }else{
             $rs['code']=0;
-            $rs['re']="仅星球创建者能锁定帖子!";
+            $rs['re']="权限不足";
         }
         return $rs;
     }
     public function unlockPost($user_id,$post_id){
         $domain = new Domain_Post();
         $domain1 = new Domain_User();
+        $common=new Domain_Common();
         $sqla = $domain->getGroupId($post_id);
         $sqlb = $domain1->judgeCreate($user_id,$sqla);
-        if($sqlb) {
+        $sqlc=$common->judgePostUser($user_id,$post_id);
+        if($sqlb||$sqlc) {
             $model=new Model_Post();
             $rs=$model->unlockPost($post_id);
 
         }else{
            $rs['code']=0;
-            $rs['re']="仅星球创建者能取消锁定帖子!";
+            $rs['re']="权限不足";
        }
           return $rs;
       }

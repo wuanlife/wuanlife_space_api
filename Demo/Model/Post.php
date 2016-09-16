@@ -106,6 +106,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 			//die('出错了！');
         }else {
 			$rs[0]['sticky']=(int)$rs[0]['sticky'];
+            $rs[0]['lock']=(int)$rs[0]['lock'];
 			$p_image = array();
 			$results = DI()->notorm->post_image
 				->select('p_image,post_image_id')
@@ -335,6 +336,11 @@ class Model_Post extends PhalApi_Model_NotORM {
             '`lock`' => '0',
         );
         $sql=DI()->notorm->post_base->where('id',$post_id)->update($data);
+        return $sql;
+    }
+
+    public function judgePostUser($user_id,$post_id){
+        $sql=DI()->notorm->post_base->where('id',$post_id)->where('user_base_id',$user_id)->fetch();
         return $sql;
     }
 }

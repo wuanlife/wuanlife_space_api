@@ -85,9 +85,21 @@ class Domain_Common
         return $re;
     }
 
+    /*
+    获取星球名称
+     */
     public function getGroupName($group_id){
         $model=new Model_Group();
         $re=$model->getGroupName($group_id);
         return $re;
      }
+
+    /*
+    判断用户是否为发帖者
+     */
+    public function judgePostUser($user_id,$post_id){
+        $model=new Model_Post();
+        $re=$model->judgePostUser($user_id,$post_id);
+        return $re;
+    }
 }
