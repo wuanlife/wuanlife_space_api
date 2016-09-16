@@ -28,7 +28,10 @@ http://dev.wuanlife.com:800/?service=Post.LockPost&post_id=1
 
     JSON:
     {
-    "ret": 200,
-    "data": 1,
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1,
+            "re": "操作成功"
+        },
+        "msg": ""
     }
