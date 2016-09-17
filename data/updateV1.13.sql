@@ -45,7 +45,7 @@ IF NOT EXISTS `message_detail` (
 	`id_1` INT (5) NOT NULL COMMENT '申请人或创建人id',
 	`id_2` INT (5) NOT NULL COMMENT '星球id',
 	`createTime` INT (10) NOT NULL COMMENT '创建时间',
-	`read` INT (1) NOT NULL DEFAULT '0' COMMENT '是否已读',
+	`saw` INT (1) NOT NULL DEFAULT '0' COMMENT '是否已读',
 	PRIMARY KEY (
 		`message_base_code`,
 		`user_base_id`,

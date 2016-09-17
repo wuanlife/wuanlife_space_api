@@ -380,7 +380,7 @@ class Api_User extends PhalApi_Api{
 /**
  * 处理申请者加入私密星球的申请接口
  * @desc 用于同意或者拒绝申请人加入私密星球
- * @return int code 操作码，1表示操作成功，0表示操作失败
+ * @return int code 操作码，1表示操作成功，0表示操作失败,2表示调用函数失败
  * @return string msg 提示信息
  */
     public function ProcessApp(){
@@ -392,22 +392,11 @@ class Api_User extends PhalApi_Api{
             );
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
-
-        $data1 = array ('user_id' => $data['user_id']);
-        $data1 = http_build_query($data1);
-        $opts = array (
-        'http' => array (
-            'method' => 'POST',
-            'header'=> "Content-type: application/x-www-form-urlencodedrn" .
-            "Content-Length:" . strlen($data1) . "rn",
-            'content' => $data1
-        )
-        );
-
-        $context = stream_context_create($opts);
-        $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
-
-        echo $html;
+        $common=new Domain_Common();
+        $re=$common->judgeUserOnline($data['user_id']);
+        if(empty($re)){
+            $rs['code']=2;
+        }
         return $rs;
     }
 /**

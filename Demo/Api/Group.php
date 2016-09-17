@@ -520,22 +520,12 @@ class Api_Group extends PhalApi_Api
             );
         $domain = new Domain_Group();
         $rs = $domain->PrivateGroup($data);
+        $common=new Domain_Common();
+        $re=$common->judgeUserOnline($data['user_id']);
+        if(empty($re)){
+            $rs['code']=2;
+        }
 
-        $data1 = array ('user_id' => $data['user_id']);
-        $data1 = http_build_query($data1);
-        $opts = array (
-        'http' => array (
-            'method' => 'POST',
-            'header'=> "Content-type: application/x-www-form-urlencodedrn" .
-            "Content-Length:" . strlen($data1) . "rn",
-            'content' => $data1
-        )
-        );
-
-        $context = stream_context_create($opts);
-        $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
-
-        echo $html;
         return $rs;
     }
 }

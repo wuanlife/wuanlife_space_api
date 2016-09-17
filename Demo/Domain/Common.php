@@ -102,4 +102,22 @@ class Domain_Common
         $re=$model->judgePostUser($user_id,$post_id);
         return $re;
     }
+
+
+    public function judgeUserOnline($user_id){
+        $data1 = array ('user_id' => $user_id);
+        $data1 = http_build_query($data1);
+        $opts = array (
+        'http' => array (
+            'method' => 'POST',
+            'header'=> "Content-type: application/x-www-form-urlencodedrn" .
+            "Content-Length:" . strlen($data1) . "rn",
+            'content' => $data1
+        )
+        );
+
+        $context = stream_context_create($opts);
+        $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
+        return $html;
+    }
 }
