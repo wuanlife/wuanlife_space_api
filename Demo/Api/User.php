@@ -459,4 +459,5 @@ class Api_User extends PhalApi_Api{
         $domain = new Domain_User();
         $rs = $domain->alterRead($data);
         return $rs;
+	}
 }
