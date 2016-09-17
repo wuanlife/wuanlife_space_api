@@ -103,7 +103,9 @@ class Domain_Common
         return $re;
     }
 
-
+    /*
+    判断用户是否在线
+     */
     public function judgeUserOnline($user_id){
         $data1 = array ('user_id' => $user_id);
         $data1 = http_build_query($data1);
@@ -119,5 +121,14 @@ class Domain_Common
         $context = stream_context_create($opts);
         $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
         return $html;
+    }
+
+    /*
+    通过星球id获取星球创建者id
+     */
+    public function getGroupCreate($group_id){
+        $model=new Model_Group();
+        $re=$model->getGroupCreate($group_id);
+        return $re;
     }
 }

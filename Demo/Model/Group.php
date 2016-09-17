@@ -240,6 +240,11 @@ class Model_Group extends PhalApi_Model_NotORM{
         $sql=DI()->notorm->group_base->select('name')->where('id=?',$group_id)->fetch();
         return $sql['name'];
     }
+
+    public function getGroupCreate($group_id){
+        $sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id',$group_id)->where('authorization','01')->fetch();
+        return $sql['user_base_id'];
+    }
 }
 
 
