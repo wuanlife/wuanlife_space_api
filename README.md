@@ -20,6 +20,7 @@
 [修改用户信息](/wiki/User.AlterUserInfo.md)<br>
 [用户消息列表](/wiki/User.ShowMessage.md)<br>
 [处理申请信息](/wiki/User.ProcessApp.md)<br>
+[将未读信息标记为已读](/wiki/User.AlterRead.md)<br>
 
 ###星球相关
 [创建星球](/wiki/Group.Create.md)<br>
