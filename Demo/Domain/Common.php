@@ -110,7 +110,7 @@ class Domain_Common
         $opts = array (
         'http' => array (
             'method' => 'POST',
-            'header'=> "Content-type: application/x-www-form-urlencodedrn" .
+            'header'=> "Content-type: application/x-www-form-urlencoded" .
             "Content-Length:" . strlen($data1) . "rn",
             'content' => $data1
         )
