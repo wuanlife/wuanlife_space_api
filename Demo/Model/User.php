@@ -184,7 +184,7 @@ class Model_User extends PhalApi_Model_NotORM {
 /*
  * 将处理加入私密星球的申请的结果保存到数据库
  */
-	public function processAppInfo($field){
+    public function processAppInfo($field){
             $sql = DI()->notorm->message_detail->insert($field);
             if($sql){
                 $rs = 1;
@@ -204,8 +204,8 @@ class Model_User extends PhalApi_Model_NotORM {
 /*
  * 找出对应的消息类型并返回
  */
-	public function getCorrespondInfo($message_base_code) {
-		$sql = DI()->notorm->message_base->select('content')->where('code = ?',$message_base_code)->fetch();
+    public function getCorrespondInfo($message_base_code) {
+        $sql = DI()->notorm->message_base->select('content')->where('code = ?',$message_base_code)->fetch();
         return $sql;
     }
 
@@ -222,5 +222,15 @@ class Model_User extends PhalApi_Model_NotORM {
     public function getUserName($id) {
         $sql = DI()->notorm->user_base->select('nickname')->where('id = ?',$id)->fetch();
         return $sql['nickname'];
+    }
+/*
+ * 用于将未读消息标记为已读
+ */
+    public function alterRead($data) {
+        $saw['saw'] = 1;
+        $rs = DI()->notorm->message_detail
+        ->where('user_base_id = ? AND message_base_code = ? AND count = ?',$data['user_id'],$data['message_code'],$data['countnum'])
+        ->update($saw);
+        return $rs;
     }
 }
