@@ -415,7 +415,8 @@ class Api_User extends PhalApi_Api{
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
         $common=new Domain_Common();
-        $re=$common->judgeUserOnline($data['user_id']);
+        $userID=$common->getGroupCreate($data['group_id']);
+        $re=$common->judgeUserOnline($userID);
         if(empty($re)){
             $rs['code']=2;
         }
