@@ -24,7 +24,7 @@
 
 ##示例：
 
-将帖子id为1的帖子锁定
+将帖子id为1的帖子解锁
 
 http://dev.wuanlife.com:800/?service=Post.UnlockPost&post_id=1&user_id=1
 
