@@ -240,12 +240,8 @@ class Api_Group extends PhalApi_Api
      */
     public function create(){
         $rs = array();
-        if(empty($this->private)){
-            $private=0;
-        }else{
-            $private=1;
-        }
-
+        $common=new Domain_Common();
+        $private=$common->judgePrivate($this->private);
         $data = array(
             'user_id'        => $this->user_id,
             'name'           => $this->g_name,

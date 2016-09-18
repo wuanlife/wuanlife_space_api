@@ -131,4 +131,16 @@ class Domain_Common
         $re=$model->getGroupCreate($group_id);
         return $re;
     }
+
+    /*
+    通过星球id获取星球创建者id
+     */
+    public function judgePrivate($private){
+        if($private===1){
+            $private=1;
+        }else{
+            $private=0;
+        }
+        return $private;
+    }
 }
