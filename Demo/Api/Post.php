@@ -179,9 +179,9 @@ class Api_Post extends PhalApi_Api{
           $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
         if(empty($user)&&empty($creator)){
             $data['identity']='03';
-           $data['posts']=NULL;
+           $data['posts']=array();
             if($private==1){
-                $data['posts']=NULL;
+                $data['posts']=array();
                 return $data;
            }
         }elseif (!empty($user)) {
