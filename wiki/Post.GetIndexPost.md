@@ -23,6 +23,7 @@
 |posts.createTime|	date|	发帖时间|
 |posts.nickname|	string	|发帖人|
 |posts.groupID|	int	|星球ID|
+|posts.lock|	int	|是否|
 |posts.groupName|	string|	星球名称|
 |pageCount	|int|	总页数|
 |currentPage|	int	|当前页|
