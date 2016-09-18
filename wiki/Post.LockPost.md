@@ -26,7 +26,7 @@
 
 将帖子id为1的帖子锁定
 
-http://dev.wuanlife.com:800/?service=Post.LockPost&post_id=1
+http://dev.wuanlife.com:800/?service=Post.LockPost&post_id=1&user_id=1
 
     JSON:
     {
