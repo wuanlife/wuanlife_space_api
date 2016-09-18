@@ -266,34 +266,34 @@ class Domain_User {
  */
     public function ProcessApp($data){
         $this->code = 0;
-		$model_g = new Model_Group();
-		$founder_id = $model_g->getCreatorId($data); //通过星球id查找创建者id
-		$Boolean = ($data['user_id'] == $founder_id); //判断是否为创建者
-		if($Boolean){
-			$Boolean = $model_g->checkGroup($data['applicant_id'],$data['group_id']);//判断用户是否已经加入私密星球
-			if(empty($Boolean)){
-			if($data['mark'] == 1) {
-				$field = array(
+        $model_g = new Model_Group();
+        $founder_id = $model_g->getCreatorId($data); //通过星球id查找创建者id
+        $Boolean = ($data['user_id'] == $founder_id); //判断是否为创建者
+        if($Boolean){
+            $Boolean = $model_g->checkGroup($data['applicant_id'],$data['group_id']);//判断用户是否已经加入私密星球
+            if(empty($Boolean)){
+            if($data['mark'] == 1) {
+                $field = array(
                 'group_base_id' => $data['group_id'],
                 'user_base_id'  => $data['applicant_id'],
                 'authorization' => "03",
                 );
-				$message_base_code = '0002';
+                $message_base_code = '0002';
                 $sql = $model_g->join($field);//将用户id加入对应的私密星球
-			}else{
-				$message_base_code = '0003';
-			}
-				$rs = $this->processAppInfo($message_base_code,$data);
+            }else{
+                $message_base_code = '0003';
+            }
+                $rs = $this->processAppInfo($message_base_code,$data);
             $this->code = 1;
             if($data['mark'] == 1) {
                 $this->msg = '操作成功！您已同意该成员的申请！';
             }else {
                 $this->msg = '操作成功！您已拒绝该成员的申请！';
             }
-			}else{
-				$this->msg = '操作失败！该用户已加入此星球！';
-			}
-		}else{
+            }else{
+                $this->msg = '操作失败！该用户已加入此星球！';
+            }
+        }else{
             $this->msg = '您不是创建者，没有权限！';
         }
         return $this;
@@ -301,10 +301,10 @@ class Domain_User {
 /*
  * 将处理加入私密星球的申请的结果
  */
-	public function processAppInfo($message_base_code,$data){
-		$model_u = new Model_User();
-		$model_g = new Model_Group();
-		$maxcount = $model_g->getMaxCount($message_base_code,$data['applicant_id']);//获得消息列表最大count
+    public function processAppInfo($message_base_code,$data){
+        $model_u = new Model_User();
+        $model_g = new Model_Group();
+        $maxcount = $model_g->getMaxCount($message_base_code,$data['applicant_id']);//获得消息列表最大count
         $field = array(
             'message_base_code' =>$message_base_code,
             'user_base_id'      =>$data['applicant_id'],
@@ -314,33 +314,33 @@ class Domain_User {
             'createTime'        =>time(),
         );
         $sql = $model_u->processAppInfo($field);
-		return $sql;
-	}
+        return $sql;
+    }
 /*
  * 组合用户的消息
  */
-	public function ComposeInfo($group_name,$user_name,$content){
-		$OldCharacter = array("{0}","{1}");
+    public function ComposeInfo($group_name,$user_name,$content){
+        $OldCharacter = array("{0}","{1}");
         $NewCharacter = array("$user_name","$group_name");
-		$content = str_replace($OldCharacter,$NewCharacter,$content);
-		return $content;
-	}
+        $content = str_replace($OldCharacter,$NewCharacter,$content);
+        return $content;
+    }
 /*
  * 用于显示用户的消息列表
  */
     public function ShowMessage($data){
         $model = new Model_User();
         $rs = $model->ShowMessage($data);
-		foreach($rs as $keys => $value){
-			$sql = $model->getCorrespondInfo($value['message_base_code']);
+        foreach($rs as $keys => $value){
+            $sql = $model->getCorrespondInfo($value['message_base_code']);
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
             $user_name = $model->getUserName($value['id_1']);//通过用户id查找用户名字
             $sql['content'] = $this->ComposeInfo($group_name,$user_name,$sql['content']);
-			$rs[$keys] = array(
-				'information'   =>$sql['content'],
-				'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-				'read'          =>$value['read'],
-			);
+            $rs[$keys] = array(
+                'information'   =>$sql['content'],
+                'createTime'    =>date('Y-m-d H:i',$value['createTime']),
+                'read'          =>$value['saw'],
+            );
         }
         if($rs) {
             $this->code = 1;
@@ -349,6 +349,23 @@ class Domain_User {
         }else{
             $this->code = 0;
             $this->msg  = '您暂时没有新消息！';
+        }
+        return $this;
+    }
+/*
+ * 用于将未读消息标记为已读
+ */
+    public function alterRead($data){
+        $model = new Model_User();
+        $rs = $model->alterRead($data);
+        if($rs){
+            $this->code = 1;
+            //$this->info = $rs;
+            $this->msg = '操作成功！';
+        }else{
+            $this->code = 0;
+            //$this->info = $rs;
+            $this->msg = '操作失败！';
         }
         return $this;
     }

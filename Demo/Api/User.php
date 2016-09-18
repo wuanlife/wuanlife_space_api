@@ -201,7 +201,29 @@ class Api_User extends PhalApi_Api{
                     'min'     => '1',
                     'require' => true,
                     'desc'    => '用户ID'
+                ),
             ),
+            'alterRead'=>array(
+                'message_code'   => array(
+                    'name'    => 'message_code',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '消息类型，0001、0002、0003分别代表申请，同意，拒绝'
+                ),
+                'user_id'   => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+                'countnum'   => array(
+                    'name'    => 'countnum',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '计数参数，用于区分同一类型的消息'
+                ),
             ),
         );
     }
@@ -422,4 +444,20 @@ class Api_User extends PhalApi_Api{
         $rs = $domain->ShowMessage($data);
         return $rs;
     }
+/**
+ * 已读接口
+ * @desc 用于将未读消息标记为已读
+ * @return int code 操作码，1表示操作成功，0表示操作失败
+ * @return string msg 提示信息
+ */
+    public function alterRead(){
+        $data = array(
+            'message_code'  => $this->message_code,
+            'user_id'       => $this->user_id,
+            'countnum'         => $this->countnum,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->alterRead($data);
+        return $rs;
+	}
 }
