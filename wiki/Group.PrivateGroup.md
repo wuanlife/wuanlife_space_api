@@ -26,7 +26,7 @@
 
 ##示例
 
-发送验证码到邮箱
+申请加入私密星球
 
 http://dev.wuanlife.com:800/?service=Group.PrivateGroup&user_id=5&group_id=22
 
