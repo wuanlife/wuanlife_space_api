@@ -30,6 +30,7 @@
 |posts.id	|	int|	帖子ID|
 |posts.nickname|string	|发帖人|
 |posts.sticky	|string|	是否置顶|
+|posts.lock	|int|	是否锁定 1为锁|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
 
