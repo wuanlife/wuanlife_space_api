@@ -24,7 +24,7 @@
 |title	|string|	标题|
 |text	|string|	内容|
 |id|	int	|用户ID|
-|lock|    int |是否锁定|0为未锁定，1为锁定|
+|lock|    int |是否锁定(0为未锁定，1为锁定)|
 |nickName	|string|	发帖人|
 |createTime|	date|	发帖时间|
 |editRight|	boolean	|	编辑权限(0为无权限，1有)|
