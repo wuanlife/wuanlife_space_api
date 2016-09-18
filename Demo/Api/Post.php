@@ -182,6 +182,8 @@ class Api_Post extends PhalApi_Api{
            $data['posts']=array();
             if($private==1){
                 $data['posts']=array();
+                $data['pageCount']=1;
+                $data['currentPage']=1;
                 return $data;
            }
         }elseif (!empty($user)) {
