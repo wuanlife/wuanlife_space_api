@@ -247,7 +247,8 @@ class Model_Group extends PhalApi_Model_NotORM{
     }
 
     public function judgeUserApplication($user_id,$group_id){
-        $sql=DI()->notorm->message_detail->where('saw',array(0,1))->where('message_base_code','0001')->where('id_1',$user_id)->where('id_2',$group_id)->fetch();
+        $sql=DI()->notorm->message_detail->where('saw',array(0,1))->where('message_base_code','0001')->AND('id_1',$user_id)->AND('id_2',$group_id)->fetch();
+        return $sql;
     }
 }
 
