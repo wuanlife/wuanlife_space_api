@@ -22,14 +22,14 @@
 |creatorName  |string|   星球创建者名称|
 |groupID|int	|星球ID|
 |groupName	|string|	星球名称|
-|identity    |int    |01创建者 02成员 03非成员 04申请中|
+|identity    |int    |01创建者 02成员 03非成员未申请 04非成员申请中|
 |private    |int    |0否 1私密|
-|posts.digest	|	int|	是否加精|
+|posts.digest	|	int|	是否加精 1为加|
 |posts.text	|string|	内容|
 |posts.createTime|	date|	发帖时间|
 |posts.id	|	int|	帖子ID|
 |posts.nickname|string	|发帖人|
-|posts.sticky	|string|	是否置顶|
+|posts.sticky	|string|	是否置顶 1为置顶|
 |posts.lock	|int|	是否锁定 1为锁|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
