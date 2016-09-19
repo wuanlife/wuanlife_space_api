@@ -22,7 +22,7 @@
 |creatorName  |string|   星球创建者名称|
 |groupID|int	|星球ID|
 |groupName	|string|	星球名称|
-|identity    |int    |01创建者 02成员 03非成员|
+|identity    |int    |01创建者 02成员 03非成员 04申请中|
 |private    |int    |0否 1私密|
 |posts.digest	|	int|	是否加精|
 |posts.text	|string|	内容|
