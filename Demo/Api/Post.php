@@ -177,10 +177,14 @@ class Api_Post extends PhalApi_Api{
           $data['private']=$private;
           $user=$common->judgeGroupUser($this->groupID,$this->userID);
           $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
+          $applicate=$common->judgeUserApplication($this->userID,$this->groupID);
         if(empty($user)&&empty($creator)){
             $data['identity']='03';
            $data['posts']=array();
             if($private==1){
+                if(!empty($applicate)){
+                     $data['identity']='04';
+                }
                 $data['posts']=array();
                 $data['pageCount']=1;
                 $data['currentPage']=1;

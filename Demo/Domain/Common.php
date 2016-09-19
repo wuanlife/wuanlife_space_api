@@ -143,4 +143,13 @@ class Domain_Common
         }
         return $private;
     }
+
+    /*
+    判断用户是否在申请加入私有星球
+     */
+    public function judgeUserApplication($user_id,$group_id){
+        $model=new Model_Group();
+        $re=$model->judgeUserApplication($user_id,$group_id);
+        return $re;
+    }
 }
