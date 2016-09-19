@@ -24,13 +24,13 @@
 |groupName	|string|	星球名称|
 |identity    |int    |01创建者 02成员 03非成员未申请 04非成员申请中|
 |private    |int    |0否 1私密|
-|posts.digest	|	int|	是否加精 1为加|
+|posts.digest	|	int|	是否加精 1为加 0为不加|
 |posts.text	|string|	内容|
 |posts.createTime|	date|	发帖时间|
 |posts.id	|	int|	帖子ID|
 |posts.nickname|string	|发帖人|
-|posts.sticky	|string|	是否置顶 1为置顶|
-|posts.lock	|int|	是否锁定 1为锁|
+|posts.sticky	|string|	是否置顶 1为置顶 0为不置顶|
+|posts.lock	|int|	是否锁定 1为锁定 0为不锁定|
 |pageCount	|int	|总页数|
 |currentPage	|int	|当前页|
 
