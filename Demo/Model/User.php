@@ -227,7 +227,7 @@ class Model_User extends PhalApi_Model_NotORM {
  * 用于将未读消息标记为已读
  */
     public function alterRead($data) {
-        $saw['saw'] = 1;
+        $saw['status'] = 1;
         $rs = DI()->notorm->message_detail
         ->where('user_base_id = ? AND message_base_code = ? AND count = ?',$data['user_id'],$data['message_code'],$data['countnum'])
         ->update($saw);

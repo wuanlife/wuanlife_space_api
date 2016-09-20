@@ -339,7 +339,7 @@ class Domain_User {
             $rs[$keys] = array(
                 'information'   =>$sql['content'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-                'read'          =>$value['saw'],
+                'read'          =>$value['status'],
             );
         }
         if($rs) {
