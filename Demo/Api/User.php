@@ -429,7 +429,7 @@ class Api_User extends PhalApi_Api{
         $userID=$common->getGroupCreate($data['group_id']);
         $re=$common->judgeUserOnline($userID);
         if(empty($re)){
-            $rs['code']=2;
+            $rs->code=2;
         }
         return $rs;
     }
