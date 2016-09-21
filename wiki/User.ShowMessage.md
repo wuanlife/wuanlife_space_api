@@ -22,16 +22,15 @@
 |info   | 数组  |用户消息列表详情|
 |num|字符型|未读消息数|
 |info.information | 字符串| 用户消息详情|
-|info.id_1| 整型| 用户id，申请者，创建者等|
-|info.id_2 | 整型| 星球id|
 |info.createTime |字符串 |创建时间|
-|info.read  | 整型  |是否已读，0表示未读，1表示已读|
+|info.status |字符串 |0未读 1已读 2已同意 3已拒绝|
+|info.messagetype  | 字符串  |0001：申请消息 0002：同意消息 0003：拒绝消息|
 |msg |字符串 |提示信息|
 
 
 ##示例
 
-发送验证码到邮箱
+显示用户id=1的消息列表
 
 http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=1
 
