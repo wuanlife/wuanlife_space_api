@@ -21,6 +21,7 @@
 |reply.text|string	|内容|
 |reply.nickname	|string|	发帖人|
 |reply.createTime|	date|	发帖时间|
+|reply.floor|  int|   帖子楼层|
 |postID|		int	|帖子ID|
 |replyCount	|int|回帖数|
 |pageCount	|int	|总页数|
