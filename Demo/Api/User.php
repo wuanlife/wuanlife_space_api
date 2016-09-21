@@ -203,6 +203,7 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户ID'
                 ),
             ),
+			/*和消息列表接口合并，不再单独给接口。2016/09/20
             'alterRead'=>array(
                 'message_code'   => array(
                     'name'    => 'message_code',
