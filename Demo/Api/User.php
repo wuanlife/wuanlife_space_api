@@ -225,6 +225,16 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '计数参数，用于区分同一类型的消息'
                 ),
             ),
+			*/
+			'unRead'=>array(
+				'user_id'   => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+            ),
         );
     }
 
@@ -427,13 +437,10 @@ class Api_User extends PhalApi_Api{
  * @desc 用于接收其他用户发送给用户消息
  * @return int code 操作码，1表示接收成功，0表示没有新消息
  * @return array info 用户消息列表详情
- * @return string info.message_base_code 用户消息详情
- * @return int info.user_base_id 本用户id
- * @return int info.count 默认为1，前两个字段相同，则改为2
- * @return int info.id_1 申请人或创建人id
- * @return int info.id_2 星球id
+ * @return string info.information 用户消息详情
  * @return string info.createTime 创建时间
- * @return int info.read 是否已读
+ * @return string info.status 消息状态 0未读 1已读 2已同意 3已拒绝
+ * @return string info.messagetype 消息类型
  * @return string msg 提示信息
  */
     public function ShowMessage(){
@@ -450,6 +457,7 @@ class Api_User extends PhalApi_Api{
  * @return int code 操作码，1表示操作成功，0表示操作失败
  * @return string msg 提示信息
  */
+	/*和消息列表接口合并，不再单独给接口。2016/09/20
     public function alterRead(){
         $data = array(
             'message_code'  => $this->message_code,
@@ -460,4 +468,19 @@ class Api_User extends PhalApi_Api{
         $rs = $domain->alterRead($data);
         return $rs;
 	}
+	*/
+/**
+ * 未读信息条数接口
+ * @desc 用于返回未读消息条数
+ * @return int num 未读信息条数
+ * 
+ */
+	public function getUnRead(){
+        $data = array(
+            'user_id'       => $this->user_id,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->getUnRead($data);
+        return $rs;
+    }
 }

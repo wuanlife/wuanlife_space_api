@@ -299,7 +299,7 @@ class Domain_User {
         return $this;
     }
 /*
- * 将处理加入私密星球的申请的结果
+ * 加入私密星球的申请的结果返回给申请者
  */
     public function processAppInfo($message_base_code,$data){
         $model_u = new Model_User();
@@ -339,8 +339,11 @@ class Domain_User {
             $rs[$keys] = array(
                 'information'   =>$sql['content'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-                'read'          =>$value['status'],
+                'status'          =>$value['status'],
+                'messagetype'   =>$value['message_base_code'],
             );
+			$status = 1;//消息已读
+            $saw = $model->alterStatus($value,$status);//将消息列表转化为已读或者其他标记
         }
         if($rs) {
             $this->code = 1;
@@ -353,11 +356,11 @@ class Domain_User {
         return $this;
     }
 /*
- * 用于将未读消息标记为已读
+ * 用于将未读消息标记为已读或者其他标记
  */
-    public function alterRead($data){
+    public function alterStatus($data,$status){
         $model = new Model_User();
-        $rs = $model->alterRead($data);
+        $rs = $model->alterStatus($data,$status);
         if($rs){
             $this->code = 1;
             //$this->info = $rs;
@@ -366,6 +369,21 @@ class Domain_User {
             $this->code = 0;
             //$this->info = $rs;
             $this->msg = '操作失败！';
+        }
+        return $this;
+    }
+/*
+ * 返回用户是否有未读信息
+ */
+    public function getUnRead($data) {
+        $model = new Model_User();
+        $user_id = $data['user_id'];
+        $rs = $model->getUnRead($user_id);
+        if($rs) {
+            $rs = count($rs);
+            $this->num = $rs;
+        }else{
+            $this->num = 0;
         }
         return $this;
     }
