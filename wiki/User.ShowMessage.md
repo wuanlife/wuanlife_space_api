@@ -39,28 +39,12 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=1
     "ret": 200,
     "data": {
         "code": 1,
-        "num": 3,
         "info": [
             {
-                "id_1": "2",
-                "id_2": "66",
-                "information": "69694469897申请加入26name星球。",
-                "createTime": "1970-01-01 08:00",
-                "read": "0"
-            },
-            {
-                "id_1": "5",
-                "id_2": "22",
-                "information": "奇奇申请加入wervfvvd8星球。",
-                "createTime": "2016-09-15 11:21",
-                "read": "0"
-            },
-            {
-                "id_1": "6",
-                "id_2": "9",
-                "information": "azusa同意你加入好无聊9999q星球。",
-                "createTime": "2031-11-16 10:07",
-                "read": "0"
+                "information": "ccc申请加入装备2014中队星球。",
+                "createTime": "2016-09-18 08:42",
+                "status": "1",
+                "messagetype": "0001"
             }
         ],
         "msg": "接收成功"
