@@ -10,7 +10,7 @@ class Model_Post extends PhalApi_Model_NotORM {
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
-             . 'ORDER BY MAX(pd.createTime) DESC '
+             . 'ORDER BY MIN(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
         $params = array(':start' =>($page-1)*$num , ':num' =>$num);
         $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
