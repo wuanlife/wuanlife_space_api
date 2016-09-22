@@ -15,6 +15,7 @@
 |user_id    |整型 |必须 ||   最小：1   |用户ID|
 |group_id|  整型  |必须||        最小：1|  星球ID|
 |applicant_id   |整型 |必须     || 最小：1|    申请人ID|
+|count|整型|必须||最小：1|消息的序列号，在消息列表接口中会返回该值|
 |mark   |整型 |必须 |   |   标识符，1为同意，0为拒绝|
 
 
@@ -29,7 +30,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/?service=User.ProcessApp&user_id=1&group_id=56&applicant_id=2&mark=1
+http://dev.wuanlife.com:800/?service=User.ProcessApp&user_id=1&group_id=56&applicant_id=2&mark=1&count=1
 
     JSON:
     {
