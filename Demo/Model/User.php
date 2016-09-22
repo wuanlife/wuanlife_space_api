@@ -198,7 +198,12 @@ class Model_User extends PhalApi_Model_NotORM {
  * 从数据库中查找用户的消息列表并返回
  */
     public function ShowMessage($data) {
-        $sql = DI()->notorm->message_detail->select('*')->where('user_base_id = ?',$data['user_id'])->fetchAll();
+        $sql = DI()->notorm->message_detail
+		->select('*')
+		->where('user_base_id = ?',$data['user_id'])
+		->order('createTime DESC')
+		->limit(($data['pn']-1)*6,6)
+		->fetchAll();
         return $sql;
         }
 /*
@@ -224,12 +229,12 @@ class Model_User extends PhalApi_Model_NotORM {
         return $sql['nickname'];
     }
 /*
- * 用于将未读消息标记为已读(通过message_detail的主键)
+ * 用于将未读消息标记为已读(通过message_detail数据表的主键)
  */
     public function alterStatus($data,$status) {
         $field['status'] = $status;
         $rs = DI()->notorm->message_detail
-        ->where('user_base_id = ? AND message_base_code = ? AND count = ?',$data['user_base_id'],$data['message_base_code'],$data['count'])
+        ->where('user_base_id = ? AND message_base_code = ? AND count = ? AND status =?',$data['user_base_id'],$data['message_base_code'],$data['count'],$data['status'])
         ->update($field);
         return $rs;
     }

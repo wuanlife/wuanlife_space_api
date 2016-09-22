@@ -283,13 +283,22 @@ class Domain_User {
             }else{
                 $message_base_code = '0003';
             }
-                $rs = $this->processAppInfo($message_base_code,$data);
+					$rs = $this->processAppInfo($message_base_code,$data);//加入私密星球的申请的结果返回给申请者
             $this->code = 1;
             if($data['mark'] == 1) {
                 $this->msg = '操作成功！您已同意该成员的申请！';
+					$status = 2;
             }else {
                 $this->msg = '操作成功！您已拒绝该成员的申请！';
+					$status = 3;
             }
+				$field = array(
+					'user_base_id'			=>$data['user_id'],
+					'message_base_code'     =>'0001',
+					'count'					=>$data['count'],
+					'status'                =>1,
+				);
+				$this->alterStatus($field,$status);
             }else{
                 $this->msg = '操作失败！该用户已加入此星球！';
             }
@@ -339,9 +348,19 @@ class Domain_User {
             $rs[$keys] = array(
                 'information'   =>$sql['content'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-                'status'          =>$value['status'],
-                'messagetype'   =>$value['message_base_code'],
+                'messagetype'   =>'02',
             );
+			if($value['message_base_code'] == '0001'){
+				$rs[$keys] = array(
+					'information'   =>$sql['content'],
+					'createTime'    =>date('Y-m-d H:i',$value['createTime']),
+					'count'         =>$value['count'],
+					'status'   		=>$value['status'],
+					'messagetype'   =>'01'
+				);
+				
+			}
+			$value['status'] = 0;
 			$status = 1;//消息已读
             $saw = $model->alterStatus($value,$status);//将消息列表转化为已读或者其他标记
         }
@@ -361,6 +380,7 @@ class Domain_User {
     public function alterStatus($data,$status){
         $model = new Model_User();
         $rs = $model->alterStatus($data,$status);
+		/*
         if($rs){
             $this->code = 1;
             //$this->info = $rs;
@@ -371,6 +391,7 @@ class Domain_User {
             $this->msg = '操作失败！';
         }
         return $this;
+		*/
     }
 /*
  * 返回用户是否有未读信息

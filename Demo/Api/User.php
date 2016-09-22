@@ -187,6 +187,13 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '申请人ID'
                 ),
+				'count' =>array(
+                    'name'    => 'count',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '消息的序列号'
+                ),
                 'mark'    => array(
                     'name'    => 'mark',
                     'type'    => 'int',
@@ -199,6 +206,13 @@ class Api_User extends PhalApi_Api{
                     'name'    => 'user_id',
                     'type'    => 'int',
                     'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+				'pn'   => array(
+                    'name'    => 'pn',
+                    'type'    => 'int',
+					'default' => '1',
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
@@ -227,6 +241,7 @@ class Api_User extends PhalApi_Api{
                 ),
             ),
 			*/
+			/* 暂时不使用此接口
 			'unRead'=>array(
 				'user_id'   => array(
                     'name'    => 'user_id',
@@ -236,6 +251,7 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户ID'
                 ),
             ),
+			*/
         );
     }
 
@@ -421,10 +437,12 @@ class Api_User extends PhalApi_Api{
             'user_id'       => $this->user_id,
             'group_id'      => $this->group_id,
             'applicant_id'  => $this->applicant_id,
+			'count'         => $this->count,
             'mark'          => $this->mark,
             );
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
+		
         $common=new Domain_Common();
         $userID=$common->getGroupCreate($data['group_id']);
         $re=$common->judgeUserOnline($userID);
@@ -447,6 +465,7 @@ class Api_User extends PhalApi_Api{
     public function ShowMessage(){
         $data = array(
             'user_id'       => $this->user_id,
+			'pn'            => $this->pn
             );
         $domain = new Domain_User();
         $rs = $domain->ShowMessage($data);
@@ -474,8 +493,8 @@ class Api_User extends PhalApi_Api{
  * 未读信息条数接口
  * @desc 用于返回未读消息条数
  * @return int num 未读信息条数
- * 
- */
+ * 暂时不使用此接口
+ 
 	public function getUnRead(){
         $data = array(
             'user_id'       => $this->user_id,
@@ -484,4 +503,5 @@ class Api_User extends PhalApi_Api{
         $rs = $domain->getUnRead($data);
         return $rs;
     }
+ */
 }
