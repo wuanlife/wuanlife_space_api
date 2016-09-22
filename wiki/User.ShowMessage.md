@@ -44,11 +44,42 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=1
         "code": 1,
         "info": [
             {
+                "information": "汪汪汪同意你加入星球。",
+                "createTime": "2016-10-09 15:59",
+                "messagetype": "02"
+            },
+            {
+                "information": "汪汪汪同意你加入星球。",
+                "createTime": "2016-10-09 15:59",
+                "messagetype": "02"
+            },
+            {
+                "information": "你申请加入星球已被汪汪汪拒绝。",
+                "createTime": "2016-10-09 15:59",
+                "messagetype": "02"
+            },
+            {
+                "information": "你申请加入星球已被汪汪汪拒绝。",
+                "createTime": "2016-10-09 15:59",
+                "messagetype": "02"
+            },
+            {
+                "information": "ccc申请加入午安网星球。",
+                "createTime": "2016-09-23 10:16",
+                "count": "2",
+                "status": "1",
+                "messagetype": "01"
+            },
+            {
                 "information": "ccc申请加入装备2014中队星球。",
                 "createTime": "2016-09-18 08:42",
-                "messagetype": "0001"
+                "count": "1",
+                "status": "1",
+                "messagetype": "01"
             }
         ],
+        "pageCount": 2,
+        "currentPage": 1,
         "msg": "接收成功"
     },
     "msg": ""
