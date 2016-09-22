@@ -340,6 +340,7 @@ class Domain_User {
     public function ShowMessage($data){
         $model = new Model_User();
         $rs = $model->ShowMessage($data);
+		$num = $model->getAllMessage($data['user_id']);
         foreach($rs as $keys => $value){
             $sql = $model->getCorrespondInfo($value['message_base_code']);
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
@@ -367,6 +368,8 @@ class Domain_User {
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
+			$this->pageCount  = ceil(count($num)/6);
+			$this->currentPage  = $data['pn'];
             $this->msg  = '接收成功';
         }else{
             $this->code = 0;

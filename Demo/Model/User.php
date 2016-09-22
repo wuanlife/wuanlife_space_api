@@ -207,6 +207,16 @@ class Model_User extends PhalApi_Model_NotORM {
         return $sql;
         }
 /*
+ * 通过用户id查找所有的消息
+ */
+    public function	getAllMessage($user_id){
+		$sql = DI()->notorm->message_detail
+		->select('*')
+		->where('user_base_id = ?',$user_id)
+		->fetchAll();
+		return $sql;
+	}
+/*
  * 找出对应的消息类型并返回
  */
     public function getCorrespondInfo($message_base_code) {
