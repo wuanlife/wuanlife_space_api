@@ -21,9 +21,9 @@
 |:--|:--|:--|
 |code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
 |info   | 数组  |用户消息列表详情,按时间降序排列|
+|info.id | 整型| 消息ID|
 |info.information | 字符串| 用户消息详情|
 |info.createTime |字符串 |创建时间|
-|info.count|整型|排序区分同一类消息|
 |info.status|整型|0未读 1已读 2已同意 3已拒绝 （只有消息类型为01时，才有此字段返回）
 |info.messagetype  | 字符串  |消息类型01=>申请消息 02=>其他消息|
 |pageCount|整型|总页码
@@ -35,7 +35,7 @@
 
 显示用户id=1的消息列表
 
-http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=1
+http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92
 
     JSON：
     {
@@ -44,11 +44,26 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=1
         "code": 1,
         "info": [
             {
-                "information": "ccc申请加入装备2014中队星球。",
-                "createTime": "2016-09-18 08:42",
-                "messagetype": "0001"
+                "id": "2",
+                "information": "taotao申请加入测试私密申请2星球。",
+                "createTime": "2016-09-24 15:03",
+                "id_1": "1",
+                "id_2": "276",
+                "status": "1",
+                "messagetype": "01"
+            },
+            {
+                "id": "1",
+                "information": "taotao申请加入测试私密申请2星球。",
+                "createTime": "2016-09-24 15:03",
+                "id_1": "1",
+                "id_2": "276",
+                "status": "1",
+                "messagetype": "01"
             }
         ],
+        "pageCount": 1,
+        "currentPage": 1,
         "msg": "接收成功"
     },
     "msg": ""
