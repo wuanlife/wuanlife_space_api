@@ -20,19 +20,22 @@ IF NOT EXISTS `message_base` (
 --
 -- 转存表中的数据 `message_base`
 --
-INSERT INTO `message_base` (`code`, `content`)
+INSERT INTO `message_base` (`code`, `content`, `type`)
 VALUES
 	(
 		'0001',
-		'{0}申请加入{1}星球。'
+		'{0}申请加入{1}星球。',
+		'01'
 	),
 	(
 		'0002',
-		'{0}同意你加入{1}星球。'
+		'{0}同意你加入{1}星球。',
+		'02'
 	),
 	(
 		'0003',
-		'你申请加入{1}星球已被{0}拒绝。'
+		'你申请加入{1}星球已被{0}拒绝。',
+		'03'
 	);
 
 -- 2016/09/08  13:18
@@ -40,7 +43,7 @@ VALUES
 -- user:小超
 CREATE TABLE
 IF NOT EXISTS `message_detail` (
-	`message_id` INT (5) NOT NULL COMMENT '消息id',
+	`message_id` INT (5) NOT NULL COMMENT '消息id' AUTO_INCREMENT,
 	`message_base_code` VARCHAR (4) NOT NULL COMMENT '消息码' REFERENCES `message_base`(`code`),
 	`user_base_id` INT (5) NOT NULL COMMENT '用户id' REFERENCES `user_base`(`id`),
 	`id_1` INT (5) NOT NULL COMMENT '申请人或创建人id',
