@@ -12,6 +12,7 @@ ALTER TABLE `group_base`  ADD `private` INT(1) NOT NULL DEFAULT '0' COMMENT '私
 CREATE TABLE
 IF NOT EXISTS `message_base` (
 	`code` VARCHAR (4) NOT NULL COMMENT '消息码',
+	`type` INT (2) NOT NULL COMMENT '消息类型',
 	`content` VARCHAR (30) NOT NULL COMMENT '消息内容',
 	PRIMARY KEY (`code`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '消息模板表';
@@ -39,17 +40,15 @@ VALUES
 -- user:小超
 CREATE TABLE
 IF NOT EXISTS `message_detail` (
+	`message_id` INT (5) NOT NULL COMMENT '消息id',
 	`message_base_code` VARCHAR (4) NOT NULL COMMENT '消息码' REFERENCES `message_base`(`code`),
 	`user_base_id` INT (5) NOT NULL COMMENT '用户id' REFERENCES `user_base`(`id`),
-	`count` INT (5) NOT NULL COMMENT '前两个字段相同，则改为2',
 	`id_1` INT (5) NOT NULL COMMENT '申请人或创建人id',
 	`id_2` INT (5) NOT NULL COMMENT '星球id',
 	`createTime` INT (10) NOT NULL COMMENT '创建时间',
 	`saw` INT (1) NOT NULL DEFAULT '0' COMMENT '是否已读',
 	PRIMARY KEY (
-		`message_base_code`,
-		`user_base_id`,
-		`count`
-	)
+		`message_id`,
+	),
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '用户消息表';
 
