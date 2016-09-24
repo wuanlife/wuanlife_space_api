@@ -250,11 +250,12 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 /*
  * 通过用户id查找用户的未读信息条数
-    public function getUnRead($id) {
-        $sql = DI()->notorm->message_detail->select('status')->where('user_base_id = ? AND saw = ?',$id,0)->fetchAll();
+ */
+    public function CheckNewInfo($id) {
+        $sql = DI()->notorm->message_detail->select('status')->where('user_base_id = ? AND status = ?',$id,0)->fetchAll();
         return $sql;
     }
- */
+ 
 /*
  * 通过消息id查找消息详情
  */

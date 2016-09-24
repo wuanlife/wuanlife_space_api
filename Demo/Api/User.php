@@ -243,8 +243,7 @@ class Api_User extends PhalApi_Api{
                 ),
             ),
 			*/
-			/* 暂时不使用此接口
-			'unRead'=>array(
+			'CheckNewInfo'=>array(
 				'user_id'   => array(
                     'name'    => 'user_id',
                     'type'    => 'int',
@@ -253,7 +252,6 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户ID'
                 ),
             ),
-			*/
         );
     }
 
@@ -497,16 +495,15 @@ class Api_User extends PhalApi_Api{
 /**
  * 未读信息条数接口
  * @desc 用于返回未读消息条数
- * @return int num 未读信息条数
- * 暂时不使用此接口
- 
-	public function getUnRead(){
+ * @return int num 1代表有新信息，0代表没有
+ */ 
+	public function CheckNewInfo(){
         $data = array(
             'user_id'       => $this->user_id,
             );
         $domain = new Domain_User();
-        $rs = $domain->getUnRead($data);
+        $rs = $domain->CheckNewInfo($data);
         return $rs;
     }
- */
+ 
 }

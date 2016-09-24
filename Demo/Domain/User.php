@@ -414,13 +414,12 @@ class Domain_User {
 /*
  * 返回用户是否有未读信息
  */
-    public function getUnRead($data) {
+    public function CheckNewInfo($data) {
         $model = new Model_User();
         $user_id = $data['user_id'];
-        $rs = $model->getUnRead($user_id);
+        $rs = $model->CheckNewInfo($user_id);
         if($rs) {
-            $rs = count($rs);
-            $this->num = $rs;
+            $this->num = 1;
         }else{
             $this->num = 0;
         }
