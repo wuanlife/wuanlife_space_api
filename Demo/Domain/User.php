@@ -378,10 +378,7 @@ class Domain_User {
 					'messagetype'   =>'01'
 				);
 			}
-			}
-		if($data['pn'] >ceil(count($num)/6)){
-			throw new PhalApi_Exception_BadRequest('页面不存在！');
-        }
+		}
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
@@ -391,6 +388,9 @@ class Domain_User {
         }else{
             $this->code = 0;
             $this->msg  = '您暂时没有新消息！';
+			if(ceil(count($num)/6) !=0 && $data['pn'] >ceil(count($num)/6)){
+					throw new PhalApi_Exception_BadRequest('页面不存在！');
+			}
         }
         return $this;
     }
