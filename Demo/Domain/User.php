@@ -365,17 +365,15 @@ class Domain_User {
 				'id'			=>$value['message_id'],
                 'information'   =>$sql['content'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-                'messagetype'   =>'02',
+                'messagetype'   =>$sql['type'],
             );
-			if($value['message_base_code'] == '0001'){
+			if($sql['type'] == '1'){
 				$rs[$keys] = array(
 					'id'			=>$value['message_id'],
 					'information'   =>$sql['content'],
 					'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-					'id_1'			=>$value['id_1'],
-					'id_2'			=>$value['id_2'],
 					'status'   		=>$value['status'],
-					'messagetype'   =>'01'
+					'messagetype'   =>$sql['type']
 				);
 			}
 		}
