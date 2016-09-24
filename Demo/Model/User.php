@@ -220,7 +220,7 @@ class Model_User extends PhalApi_Model_NotORM {
  * 找出对应的消息类型并返回
  */
     public function getCorrespondInfo($message_base_code) {
-        $sql = DI()->notorm->message_base->select('content')->where('code = ?',$message_base_code)->fetch();
+        $sql = DI()->notorm->message_base->select('content,type')->where('code = ?',$message_base_code)->fetch();
         return $sql;
     }
 
