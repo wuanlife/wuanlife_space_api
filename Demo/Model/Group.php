@@ -196,11 +196,13 @@ class Model_Group extends PhalApi_Model_NotORM{
     public function PrivateGroup($data) {
         $founder_id = $this->getCreatorId($data); //通过星球id查找创建者id
         $message_base_code = '0001';
-        $maxcount = $this->getMaxCount($message_base_code,$founder_id);
+        //$maxcount = $this->getMaxCount($message_base_code,$founder_id);
         $field = array(
                     'message_base_code' =>$message_base_code,
                     'user_base_id'      =>$founder_id,
+					/*
                     'count'             =>$maxcount+1,
+					*/
                     'id_1'              =>$data['user_id'],
                     'id_2'              =>$data['group_id'],
                     'createTime'        =>time(),
@@ -226,7 +228,7 @@ class Model_Group extends PhalApi_Model_NotORM{
     }
 /*
  * 查找消息列表中count的最大值
- */
+ 
     public function getMaxCount($message_base_code,$id) {
         $sql = DI()->notorm->message_detail
         ->select('max(count)')
@@ -235,7 +237,8 @@ class Model_Group extends PhalApi_Model_NotORM{
         ->fetch();
         return $sql['max(count)'];
     }
-
+	数据库结构改变，此处注释不再使用
+ */
     public function getGroupName($group_id){
         $sql=DI()->notorm->group_base->select('name')->where('id=?',$group_id)->fetch();
         return $sql['name'];
