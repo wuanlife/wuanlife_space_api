@@ -173,6 +173,7 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
+				/*
                 'group_id' => array(
                     'name'    => 'group_id',
                     'type'    => 'int',
@@ -187,12 +188,13 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '申请人ID'
                 ),
-				'count' =>array(
-                    'name'    => 'count',
+				*/
+				'message_id' =>array(
+                    'name'    => 'message_id',
                     'type'    => 'int',
                     'min'     => '1',
                     'require' => true,
-                    'desc'    => '消息的序列号'
+                    'desc'    => '消息ID'
                 ),
                 'mark'    => array(
                     'name'    => 'mark',
@@ -435,16 +437,19 @@ class Api_User extends PhalApi_Api{
     public function ProcessApp(){
         $data = array(
             'user_id'       => $this->user_id,
+			/*
             'group_id'      => $this->group_id,
             'applicant_id'  => $this->applicant_id,
 			'count'         => $this->count,
+			*/
+			'message_id'      => $this->message_id,
             'mark'          => $this->mark,
             );
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
-		
+		$g_id = $domain->getMessageInfo($data['message_id']);
         $common=new Domain_Common();
-        $userID=$common->getGroupCreate($data['group_id']);
+        $userID=$common->getGroupCreate($g_id['id_2']);
         $re=$common->judgeUserOnline($userID);
         if(empty($re)){
             $rs->code=2;

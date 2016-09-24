@@ -239,20 +239,27 @@ class Model_User extends PhalApi_Model_NotORM {
         return $sql['nickname'];
     }
 /*
- * 用于将未读消息标记为已读(通过message_detail数据表的主键)
+ * 用于将所有未读消息标记为已读
  */
     public function alterStatus($data,$status) {
         $field['status'] = $status;
         $rs = DI()->notorm->message_detail
-        ->where('user_base_id = ? AND message_base_code = ? AND count = ? AND status =?',$data['user_base_id'],$data['message_base_code'],$data['count'],$data['status'])
+        ->where('message_id = ?',$data['message_id'])
         ->update($field);
         return $rs;
     }
 /*
  * 通过用户id查找用户的未读信息条数
- */
     public function getUnRead($id) {
-        $sql = DI()->notorm->message_detail->select('saw')->where('user_base_id = ? AND saw = ?',$id,0)->fetchAll();
+        $sql = DI()->notorm->message_detail->select('status')->where('user_base_id = ? AND saw = ?',$id,0)->fetchAll();
+        return $sql;
+    }
+ */
+/*
+ * 通过消息id查找消息详情
+ */
+    public function getMessageInfo($message_id){
+		$sql = DI()->notorm->message_detail->select('*')->where('message_id = ?',$message_id)->fetchone();
         return $sql;
     }
 }
