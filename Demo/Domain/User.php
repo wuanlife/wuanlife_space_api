@@ -304,6 +304,7 @@ class Domain_User {
 					$status = 3;
             }
 				$field['message_id'] = $data['message_id'];
+				$field['status'] = 1;
 				$this->alterStatus($field,$status);
             }else{
                 $this->msg = '操作失败！该用户已加入此星球！';

@@ -244,7 +244,7 @@ class Model_User extends PhalApi_Model_NotORM {
     public function alterStatus($data,$status) {
         $field['status'] = $status;
         $rs = DI()->notorm->message_detail
-        ->where('message_id = ?',$data['message_id'])
+        ->where('message_id = ? AND status = ?',$data['message_id'],$data['status'])
         ->update($field);
         return $rs;
     }
