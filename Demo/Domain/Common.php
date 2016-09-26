@@ -8,6 +8,12 @@
  */
 class Domain_Common
 {
+
+    /*
+    测试地址的接口
+     */
+    const url='http://dev.wuanlife.com/news';
+
     /*
      * 判断用户是否存在
      */
@@ -15,7 +21,6 @@ class Domain_Common
         $model=new Model_User();
         $rs=$model->judgeUserExist($user_id);
         return $rs;
-
     }
 
     /*
@@ -107,7 +112,7 @@ class Domain_Common
     判断用户是否在线
      */
     public function judgeUserOnline($user_id){
-        $data1 = array ('user_id' => $user_id);
+        $data1 = array ('userid' => $user_id);
         $data1 = http_build_query($data1);
         $opts = array (
         'http' => array (
@@ -116,9 +121,8 @@ class Domain_Common
             'content' => $data1
         )
         );
-
         $context = stream_context_create($opts);
-        $html = file_get_contents('http://dev.wuanlife.com/news', false, $context);
+        $html = file_get_contents(self::url, false, $context);
         return $html;
     }
 
