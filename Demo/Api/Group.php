@@ -519,7 +519,6 @@ class Api_Group extends PhalApi_Api
         $common=new Domain_Common();
         $userID=$common->getGroupCreate($data['group_id']);
         $re=$common->judgeUserOnline($userID);
-        print_r($re);
         if(empty($re)){
             $rs['code']=2;
         }
