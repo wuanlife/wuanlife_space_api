@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Group.Create
+接口URL：http://apihost/news
 
 请求方式：POST
 
@@ -12,45 +12,25 @@
 
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--|:--|
-|user_id|整型|必须|-|用户id|
-|name|字符串|必须|最小：1 最大：80|星球名称|
-|g_image|字符串  | 可选 ||  星球图片base64编码|
-|g_introduction|字符串|可选||星球简介|
-|private|整型|可选||私密，1为私密0为不私密|
+|userid|字符串|必须|-|用户id|
 
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|code|整型|操作码，1表示创建成功，0表示创建失败|
-|info                 |对象   |星球信息对象|
-|info.group_base_id   |整型   |星球ID|
-|info.user_base_id    |字符串 |创建者ID|
-|info.name            |字符串 |星球名称|
-|info.g_introduction   |字符串  | 星球简介|
-|info.g_image        |字符串|星球图片路径|
-|msg                  |字符串 |提示信息|
-|info.authorization   |字符串 |权限，01表示创建者，02表示管理员，03表示会员|
+|code|整型|操作码，1表示用户在线消息提醒成功，0用户不在线|
 
 ##示例
 
-创建名为“鬼扯1”的星球
+向用户实时推送消息提醒
 
-http://apihost/?service=Group.Create
+http://apihost/news
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "code": 1,
-            "msg": "",
-            "info": {
-                "group_base_id": "48",
-                "user_base_id": "15",
-                "authorization": "01",
-                "name": "鬼扯1",
-                "g_introduction": "照片裁剪",
-                "URL": "../upload/group/2016/05/28/apic14052.jpg"
-            }
+            "code": 0,
+            "msg": "该用户不在线",
         },
         "msg": ""
     }
