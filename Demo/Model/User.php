@@ -199,23 +199,23 @@ class Model_User extends PhalApi_Model_NotORM {
  */
     public function ShowMessage($data) {
         $sql = DI()->notorm->message_detail
-		->select('*')
-		->where('user_base_id = ?',$data['user_id'])
-		->order('createTime DESC')
-		->limit(($data['pn']-1)*6,6)
-		->fetchAll();
+        ->select('*')
+        ->where('user_base_id = ?',$data['user_id'])
+        ->order('createTime DESC')
+        ->limit(($data['pn']-1)*6,6)
+        ->fetchAll();
         return $sql;
         }
 /*
  * 通过用户id查找所有的消息
  */
-    public function	getAllMessage($user_id){
-		$sql = DI()->notorm->message_detail
-		->select('*')
-		->where('user_base_id = ?',$user_id)
-		->fetchAll();
-		return $sql;
-	}
+    public function getAllMessage($user_id){
+        $sql = DI()->notorm->message_detail
+        ->select('*')
+        ->where('user_base_id = ?',$user_id)
+        ->fetchAll();
+        return $sql;
+    }
 /*
  * 找出对应的消息类型并返回
  */
@@ -243,9 +243,15 @@ class Model_User extends PhalApi_Model_NotORM {
  */
     public function alterStatus($data,$status) {
         $field['status'] = $status;
+        if(empty($data['message_id'])){
         $rs = DI()->notorm->message_detail
-        ->where('message_id = ? AND status = ?',$data['message_id'],$data['status'])
+            ->where('user_base_id = ? AND status = ?',$data['user_base_id'],$data['status'])
         ->update($field);
+        }else{
+            $rs = DI()->notorm->message_detail
+            ->where('message_id = ? AND user_base_id = ? AND status = ?',$data['message_id'],$data['user_base_id'],$data['status'])
+            ->update($field);
+        }
         return $rs;
     }
 /*
@@ -255,12 +261,12 @@ class Model_User extends PhalApi_Model_NotORM {
         $sql = DI()->notorm->message_detail->select('status')->where('user_base_id = ? AND status = ?',$id,0)->fetchAll();
         return $sql;
     }
- 
+
 /*
  * 通过消息id查找消息详情
  */
     public function getMessageInfo($message_id){
-		$sql = DI()->notorm->message_detail->select('*')->where('message_id = ?',$message_id)->fetchone();
+        $sql = DI()->notorm->message_detail->select('*')->where('message_id = ?',$message_id)->fetchone();
         return $sql;
     }
 }

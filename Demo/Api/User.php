@@ -173,7 +173,7 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
-				/*
+                /*
                 'group_id' => array(
                     'name'    => 'group_id',
                     'type'    => 'int',
@@ -188,8 +188,8 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '申请人ID'
                 ),
-				*/
-				'message_id' =>array(
+                */
+                'message_id' =>array(
                     'name'    => 'message_id',
                     'type'    => 'int',
                     'min'     => '1',
@@ -211,15 +211,15 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
-				'pn'   => array(
+                'pn'   => array(
                     'name'    => 'pn',
                     'type'    => 'int',
-					'default' => '1',
+                    'default' => '1',
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
             ),
-			/*和消息列表接口合并，不再单独给接口。2016/09/20
+            /*和消息列表接口合并，不再单独给接口。2016/09/20
             'alterRead'=>array(
                 'message_code'   => array(
                     'name'    => 'message_code',
@@ -242,9 +242,9 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '计数参数，用于区分同一类型的消息'
                 ),
             ),
-			*/
-			'CheckNewInfo'=>array(
-				'user_id'   => array(
+            */
+            'CheckNewInfo'=>array(
+                'user_id'   => array(
                     'name'    => 'user_id',
                     'type'    => 'int',
                     'min'     => '1',
@@ -435,20 +435,19 @@ class Api_User extends PhalApi_Api{
     public function ProcessApp(){
         $data = array(
             'user_id'       => $this->user_id,
-			/*
+            /*
             'group_id'      => $this->group_id,
             'applicant_id'  => $this->applicant_id,
-			'count'         => $this->count,
-			*/
-			'message_id'      => $this->message_id,
+            'count'         => $this->count,
+            */
+            'message_id'      => $this->message_id,
             'mark'          => $this->mark,
             );
         $domain = new Domain_User();
         $rs = $domain->ProcessApp($data);
-		$g_id = $domain->getMessageInfo($data['message_id']);
+        $u_id = $domain->getMessageInfo($data['message_id']);
         $common=new Domain_Common();
-        $userID=$common->getGroupCreate($g_id['id_2']);
-        $re=$common->judgeUserOnline($userID);
+        $re=$common->judgeUserOnline($u_id['id_1']);
         if(empty($re)){
             $rs->code=2;
         }
@@ -468,7 +467,7 @@ class Api_User extends PhalApi_Api{
     public function ShowMessage(){
         $data = array(
             'user_id'       => $this->user_id,
-			'pn'            => $this->pn
+            'pn'            => $this->pn
             );
         $domain = new Domain_User();
         $rs = $domain->ShowMessage($data);
@@ -480,7 +479,7 @@ class Api_User extends PhalApi_Api{
  * @return int code 操作码，1表示操作成功，0表示操作失败
  * @return string msg 提示信息
  */
-	/*和消息列表接口合并，不再单独给接口。2016/09/20
+    /*和消息列表接口合并，不再单独给接口。2016/09/20
     public function alterRead(){
         $data = array(
             'message_code'  => $this->message_code,
@@ -490,14 +489,14 @@ class Api_User extends PhalApi_Api{
         $domain = new Domain_User();
         $rs = $domain->alterRead($data);
         return $rs;
-	}
-	*/
+    }
+    */
 /**
  * 未读信息条数接口
  * @desc 用于返回未读消息条数
  * @return int num 1代表有新信息，0代表没有
- */ 
-	public function CheckNewInfo(){
+ */
+    public function CheckNewInfo(){
         $data = array(
             'user_id'       => $this->user_id,
             );
@@ -505,5 +504,5 @@ class Api_User extends PhalApi_Api{
         $rs = $domain->CheckNewInfo($data);
         return $rs;
     }
- 
+
 }

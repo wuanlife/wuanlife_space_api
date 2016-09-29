@@ -265,19 +265,19 @@ class Domain_User {
  * 通过消息id查找消息详情
  */
     public function getMessageInfo($message_id){
-		$model_u = new Model_User;
-		$rs = $model_u->getMessageInfo($message_id);
-		return $rs;
-	}
+        $model_u = new Model_User;
+        $rs = $model_u->getMessageInfo($message_id);
+        return $rs;
+    }
 /*
  * 用于处理加入私密星球的申请
  */
     public function ProcessApp($data){
         $this->code = 0;
-		$info = $this->getMessageInfo($data['message_id']);
+        $info = $this->getMessageInfo($data['message_id']);
         $model_g = new Model_Group();
-		$data['group_id'] = $info['id_2'];
-		$data['applicant_id'] = $info['id_1'];
+        $data['group_id'] = $info['id_2'];
+        $data['applicant_id'] = $info['id_1'];
         $founder_id = $model_g->getCreatorId($data); //通过星球id查找创建者id
         $Boolean = ($data['user_id'] == $founder_id); //判断是否为创建者
         if($Boolean){
@@ -294,18 +294,19 @@ class Domain_User {
             }else{
                 $message_base_code = '0003';
             }
-					$rs = $this->processAppInfo($message_base_code,$data);//加入私密星球的申请的结果返回给申请者
+                    $rs = $this->processAppInfo($message_base_code,$data);//加入私密星球的申请的结果返回给申请者
             $this->code = 1;
             if($data['mark'] == 1) {
                 $this->msg = '操作成功！您已同意该成员的申请！';
-					$status = 2;
+                    $status = 2;
             }else {
                 $this->msg = '操作成功！您已拒绝该成员的申请！';
-					$status = 3;
+                    $status = 3;
             }
-				$field['message_id'] = $data['message_id'];
-				$field['status'] = 1;
-				$this->alterStatus($field,$status);
+                $field['message_id'] = $data['message_id'];
+                $field['user_base_id'] = $info['user_base_id'];
+                $field['status'] = 1;
+                $this->alterStatus($field,$status);//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
             }else{
                 $this->msg = '操作失败！该用户已加入此星球！';
             }
@@ -319,16 +320,16 @@ class Domain_User {
  */
     public function processAppInfo($message_base_code,$data){
         $model_u = new Model_User();
-		/*
+        /*
         $model_g = new Model_Group();
         $maxcount = $model_g->getMaxCount($message_base_code,$data['applicant_id']);//获得消息列表最大count
         */
         $field = array(
             'message_base_code' =>$message_base_code,
             'user_base_id'      =>$data['applicant_id'],
-			/*
+            /*
             'count'             =>$maxcount+1,
-			*/
+            */
             'id_1'              =>$data['user_id'],
             'id_2'              =>$data['group_id'],
             'createTime'        =>time(),
@@ -350,46 +351,45 @@ class Domain_User {
  */
     public function ShowMessage($data){
         $model = new Model_User();
-		$num = $model->getAllMessage($data['user_id']);
-		foreach($num as $keys => $value){
-			$value['status'] = 0;
-			$status = 1;//消息已读
-            $saw = $this->alterStatus($value,$status);//将消息列表转化为已读或者其他标记
-		}
-		$rs = $model->ShowMessage($data);
+        $num = $model->getAllMessage($data['user_id']);
+            $value['status'] = 0;
+        $value['user_base_id'] = $data['user_id'];
+            $status = 1;//消息已读
+        $this->alterStatus($value,$status);//将消息列表转化为已读
+        $rs = $model->ShowMessage($data);
         foreach($rs as $keys => $value){
             $sql = $model->getCorrespondInfo($value['message_base_code']);
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
             $user_name = $model->getUserName($value['id_1']);//通过用户id查找用户名字
             $sql['content'] = $this->ComposeInfo($group_name,$user_name,$sql['content']);
             $rs[$keys] = array(
-				'id'			=>$value['message_id'],
+                'id'            =>$value['message_id'],
                 'information'   =>$sql['content'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                 'messagetype'   =>$sql['type'],
             );
-			if($sql['type'] == '1'){
-				$rs[$keys] = array(
-					'id'			=>$value['message_id'],
-					'information'   =>$sql['content'],
-					'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-					'status'   		=>$value['status'],
-					'messagetype'   =>$sql['type']
-				);
-			}
-		}
+            if($sql['type'] == '1'){
+                $rs[$keys] = array(
+                    'id'            =>$value['message_id'],
+                    'information'   =>$sql['content'],
+                    'createTime'    =>date('Y-m-d H:i',$value['createTime']),
+                    'status'        =>$value['status'],
+                    'messagetype'   =>$sql['type']
+                );
+            }
+        }
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
-			$this->pageCount  = ceil(count($num)/6);
-			$this->currentPage  = $data['pn'];
+            $this->pageCount  = ceil(count($num)/6);
+            $this->currentPage  = $data['pn'];
             $this->msg  = '接收成功';
         }else{
             $this->code = 0;
             $this->msg  = '您暂时没有新消息！';
-			if(ceil(count($num)/6) !=0 && $data['pn'] >ceil(count($num)/6)){
-					throw new PhalApi_Exception_BadRequest('页面不存在！');
-			}
+            if(ceil(count($num)/6) !=0 && $data['pn'] >ceil(count($num)/6)){
+                    throw new PhalApi_Exception_BadRequest('页面不存在！');
+            }
         }
         return $this;
     }
@@ -399,7 +399,7 @@ class Domain_User {
     public function alterStatus($data,$status){
         $model = new Model_User();
         $rs = $model->alterStatus($data,$status);
-		/*
+        /*
         if($rs){
             $this->code = 1;
             //$this->info = $rs;
@@ -410,7 +410,7 @@ class Domain_User {
             $this->msg = '操作失败！';
         }
         return $this;
-		*/
+        */
     }
 /*
  * 返回用户是否有未读信息
