@@ -110,7 +110,7 @@ class Domain_Common
     }
 
     /*
-    通过星球id获取星球创建者id
+    判断是否为私密
      */
     public function judgePrivate($private){
         if($private===1){
