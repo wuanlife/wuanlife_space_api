@@ -10,9 +10,9 @@ class Domain_Common
 {
 
     //测试地址的接口
-    const url='http://dev.wuanlife.com/news';
+    //const url='http://dev.wuanlife.com/news';
     //正式地址的接口
-    //const url='http://wuanla.com/news';
+    const url='http://wuanla.com/news';
 
     /*
      * 判断用户是否存在
