@@ -67,6 +67,15 @@ class Domain_User {
     }
 
 /*
+ * 通过消息id查找消息详情
+ */
+    public function getMessageInfo($message_id){
+        $model_u = new Model_User;
+        $rs = $model_u->getMessageInfo($message_id);
+        return $rs;
+    }
+
+/*
  * 判断用户是否为星球创建者
  */
     public function judgeCreate($user_id,$group_id){
@@ -261,14 +270,7 @@ class Domain_User {
 
         return $code;
     }
-/*
- * 通过消息id查找消息详情
- */
-    public function getMessageInfo($message_id){
-        $model_u = new Model_User;
-        $rs = $model_u->getMessageInfo($message_id);
-        return $rs;
-    }
+
 /*
  * 用于处理加入私密星球的申请
  */
