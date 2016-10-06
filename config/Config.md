@@ -90,7 +90,6 @@
     mongod --dbpath db
     
 ####4.配置node.js
-    cd wuanlife
     npm install
     set DEBUG=myapp & npm start
 ctrl+c退出
