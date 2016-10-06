@@ -1,6 +1,8 @@
 #午安网代码部署
 ###一、准备工作
-####1.更新系统
+####1.安装第三方源&更新系统
+    wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+    rpm -ivh epel-release-7-8.noarch.rpm
     yum -y update
 ####2.关闭防火墙
     systemctl stop firewalld.service
@@ -57,19 +59,8 @@
 ####2.下载前端代码
     cd /home/www/html/
     git clone https://github.com/wuanlife/wuanlife.git
-####3.配置node.js
-    cd wuanlife
-    npm install
-    set DEBUG=myapp & npm start
-ctrl+c退出
 
-    npm install forever -g
-    export PORT=80
-    PORT=80 node app.js
-    forever start --uid wuanlife bin/www
-    echo "forever start -a --uid wuanlife /home/www/html/wuanlife/bin/www" >>/etc/rc.d/rc.local
-访问下http://YourIP，应该可以访问了。
-####4.配置MongoDB
+####3.配置MongoDB
 追加yum源
 
     vim /etc/yum.repos.d/mongodb.repo
@@ -96,6 +87,19 @@ ctrl+c退出
     cd /home/www/html/wuanlife
     mkdir db
     mongod --dbpath db
+    
+####4.配置node.js
+    cd wuanlife
+    npm install
+    set DEBUG=myapp & npm start
+ctrl+c退出
+
+    npm install forever -g
+    export PORT=80
+    PORT=80 node app.js
+    forever start --uid wuanlife bin/www
+    echo "forever start -a --uid wuanlife /home/www/html/wuanlife/bin/www" >>/etc/rc.d/rc.local
+访问下http://YourIP，应该可以访问了。
     
 ###四、修改配置
 其中，API代码需修改数据库配置，前端代码需修改接口地址，修改后重启node。
