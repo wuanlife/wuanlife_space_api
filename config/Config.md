@@ -1,4 +1,5 @@
 #午安网代码部署
+本文档仅适用于全新安装，并只适用于CentOS7系统。
 ###一、准备工作
 ####1.安装第三方源&更新系统
     wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
