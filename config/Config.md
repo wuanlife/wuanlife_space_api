@@ -41,9 +41,9 @@
     cp /usr/share/nginx/html /home/www/html -rf
     cd /home/www/html
     git clone https://github.com/wuanlife/wuanlife_api.git
-    wget https://files.phpmyadmin.net/phpMyAdmin/4.4.15.6/phpMyAdmin-4.4.15.6-all-languages.zip
-    unzip phpMyAdmin-4.4.15.6-all-languages.zip
-    mv phpMyAdmin-4.4.15.6-all-languages phpmyadmin
+    wget https://files.phpmyadmin.net/phpMyAdmin/4.4.15.8/phpMyAdmin-4.4.15.8-all-languages.zip
+    unzip phpMyAdmin-4.4.15.8-all-languages.zip
+    mv phpMyAdmin-4.4.15.8-all-languages phpmyadmin
     chown -R root:nginx /home/www
     chmod 775 /home/www
 ####8.修改nginx配置
