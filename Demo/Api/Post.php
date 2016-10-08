@@ -257,14 +257,31 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $domain2 = new Domain_User();
+		$domain3 = new Domain_Common();
         $data = $domain->getPostBase($this->postID);
+		$groupID=$domain->getGroupId($this->postID);
+		$privategroup = $domain3->judgeGroupPrivate($groupID);
         $data[0]['editRight']=0;
         $data[0]['deleteRight']=0;
         $data[0]['stickyRight']=0;
         $data[0]['lockRight']=0;
+		if($privategroup){
+			if($this->userID !=null){
+				$groupuser = $domain3->judgeGroupUser($groupID,$this->userID);
+				$groupcreator = $domain3->judgeGroupCreator($groupID,$this->userID);
+				if(empty($groupcreator)){
+					if(empty($groupuser)){
+						unset($data);
+						$data[0] = "未加入，不可查看私密帖子！";
+					}
+				}
+			}else{
+				unset($data);
+				$data[0] = "未登录，不可查看私密帖子！";
+			}
+		}
         if ($this->userID !=null){
             $userID=$this->userID;
-            $groupID=$domain->getGroupId($this->postID);
             $creater= $domain2->judgeCreate($userID,$groupID);
             $poster = $domain->judgePoster($userID,$this->postID);
             $admin = $domain2->judgeAdmin($userID);
