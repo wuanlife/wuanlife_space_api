@@ -18,6 +18,8 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
+|code|int|操作码，帖子显示失败为0. 成功时不提供|
+|msg|string|提示帖子显示失败的原因|
 |postID	|	int	|帖子ID|
 |groupID	|	int	|星球ID|
 |groupName|	string	|星球名称|
