@@ -265,6 +265,7 @@ class Api_Post extends PhalApi_Api{
         $data[0]['deleteRight']=0;
         $data[0]['stickyRight']=0;
         $data[0]['lockRight']=0;
+        $data[0]['code'] = 1;
 		if($privategroup){
 			if($this->userID !=null){
 				$groupuser = $domain3->judgeGroupUser($groupID,$this->userID);
