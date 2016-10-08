@@ -91,7 +91,7 @@ class Domain_Common
     }
 
     /*
-    通过星球id返回星球创建者姓名
+    通过星球id返回星球创建者昵称
      */
     public function getCreator($group_id){
         $model=new Model_Group();
