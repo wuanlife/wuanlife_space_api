@@ -274,12 +274,14 @@ class Api_Post extends PhalApi_Api{
 					if(empty($groupuser)){
 						unset($data);
                         $data[0]['code'] = 0;
+                        $data[0]['groupID'] = $groupID;
                         $data[0]['msg'] = "未加入，不可查看私密帖子！";
 					}
 				}
 			}else{
 				unset($data);
                 $data[0]['code'] = 0;
+                $data[0]['groupID'] = $groupID;
                 $data[0]['msg'] = "未登录，不可查看私密帖子！";
 			}
 		}
