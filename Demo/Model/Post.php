@@ -37,7 +37,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->select('id as groupID,name as groupName')
         ->where('id =?',$groupID)
         ->fetchAll();
-
+        if(empty($groupData)){
+             throw new PhalApi_Exception_BadRequest('星球不存在！');
+        }
         $rs['groupID'] = $groupData['0']['groupID'];
         $rs['groupName'] = $groupData['0']['groupName'];
 
