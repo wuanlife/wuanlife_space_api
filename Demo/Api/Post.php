@@ -350,7 +350,8 @@ class Api_Post extends PhalApi_Api{
         $domain1 = new Domain_Common();
         $domain = new Domain_Post();
         $judge =$domain1->judgePostExist($this->post_base_id);
-        if($judge) {
+        $lock=$domain1->judgePostLock($this->post_base_id);
+        if($judge&&!$lock) {
             $rs = $domain->PostReply($data);
         }else{
             $rs=null;

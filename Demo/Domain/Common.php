@@ -157,4 +157,13 @@ class Domain_Common
         return $html;
     }
 
+    /*
+    通过帖子id判断帖子是否锁定
+     */
+    public function judgePostLock($post_id){
+        $model=new Model_Post();
+        $re =$model->judgePostLock($post_id);
+        return $re;
+    }
+
 }

@@ -343,5 +343,10 @@ class Model_Post extends PhalApi_Model_NotORM {
         $sql=DI()->notorm->post_base->where('id',$post_id)->where('user_base_id',$user_id)->fetch();
         return $sql;
     }
+
+    public function judgePostLock($post_id){
+        $sql=DI()->notorm->post_base->where('id=?',$post_id)->fetch();
+        return $sql['lock'];
+    }
 }
 
