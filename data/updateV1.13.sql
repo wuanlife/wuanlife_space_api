@@ -54,4 +54,8 @@ IF NOT EXISTS `message_detail` (
 		`message_id`
 	)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '用户消息表';
-
+-- 2016/10/09 14:58
+-- 将星球名字字段长度改为21
+-- user:小超
+ALTER TABLE `group_base` CHANGE `name` `name` VARCHAR(21) CHARACTER 
+SET gbk COLLATE gbk_chinese_ci NOT NULL COMMENT '组名';
