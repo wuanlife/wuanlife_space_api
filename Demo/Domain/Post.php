@@ -155,7 +155,7 @@ class Domain_Post {
         $rs = $model->editPost($data);
         return $rs;
     }
-
+/*
     public function stickyPost($data){
     	$rs = array();
     	$domain = new Domain_Post();
@@ -168,11 +168,38 @@ class Domain_Post {
 
         }else{
             $rs['code']=0;
-            $rs['re']="仅星球创建者能取消置顶帖子!";
+            $rs['re']="仅星球创建者能置顶帖子!";
         }
         return $rs;
     }
-
+*/	
+	public function stickyPost($data){
+    	$rs = array();
+    	$model=new Model_Post();
+        $rs = $model->stickyPost($data);
+        if($rs) {
+            $rs['code']=1;
+            $rs['re']="置顶帖子成功!";
+        }else{
+            $rs['code']=0;
+            $rs['re']="操作过于频繁!";
+        }
+        return $rs;
+    }
+	public function unstickyPost($data){
+    	$rs = array();
+    	$model=new Model_Post();
+        $rs = $model->unstickyPost($data);
+        if($rs) {
+            $rs['code']=1;
+            $rs['re']="取消置顶帖子成功!";
+        }else{
+            $rs['code']=0;
+            $rs['re']="操作过于频繁!";
+        }
+        return $rs;
+    }
+/*
     public function unStickyPost($data){
         $rs = array();
         $domain = new Domain_Post();
@@ -190,7 +217,7 @@ class Domain_Post {
         }
         return $rs;
     }
-
+*/
     public function deletePost($data){
         $rs = array();
         $domain = new Domain_Post();
@@ -208,7 +235,7 @@ class Domain_Post {
         }
     	return $rs;
     }
-
+/*
     public function lockPost($user_id,$post_id){
         $domain = new Domain_Post();
         $domain1 = new Domain_User();
@@ -226,7 +253,32 @@ class Domain_Post {
         }
         return $rs;
     }
-
+*/
+	public function lockPost($user_id,$post_id){
+        $model = new Model_Post();
+        $rs = $model->lockPost($post_id);
+        if($rs) {
+            $info['code']=1;
+            $info['re']="锁帖成功！";
+        }else{
+            $info['code']=0;
+            $info['re']="操作过于频繁！";
+        }
+        return $info;
+    }
+	public function unlockPost($user_id,$post_id){
+        $model = new Model_Post();
+        $rs = $model->unlockPost($post_id);
+        if($rs) {
+            $info['code']=1;
+            $info['re']="锁帖成功！";
+        }else{
+            $info['code']=0;
+            $info['re']="操作过于频繁！";
+        }
+        return $info;
+    }
+/*	
     public function unlockPost($user_id,$post_id){
         $domain = new Domain_Post();
         $domain1 = new Domain_User();
@@ -245,5 +297,5 @@ class Domain_Post {
        }
           return $rs;
       }
-
+*/
 }

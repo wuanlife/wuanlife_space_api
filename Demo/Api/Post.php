@@ -43,50 +43,50 @@ class Api_Post extends PhalApi_Api{
                 'p_image' => array('name' => 'p_image','type' => 'array','require' => false,'desc'=>'帖子图片',),
                 'post_image_id'  => array('name' => 'post_image_id','type' => 'int','require' => false,'desc'=>'帖子图片id'),
             ),
-	    	'stickyPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
+            'stickyPost' => array(
+                    'user_id'    => array(
+                            'name'    => 'user_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '用户id',
+                    ),
+                    'post_id'    => array(
+                            'name'    => 'post_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '帖子id',
+                    ),
+            ),
 
-        	'unStickyPost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
+            'unStickyPost' => array(
+                    'user_id'    => array(
+                            'name'    => 'user_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '用户id',
+                    ),
+                    'post_id'    => array(
+                            'name'    => 'post_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '帖子id',
+                    ),
+            ),
 
-        	'deletePost' => array(
-        			'user_id'    => array(
-        					'name'    => 'user_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '用户id',
-        			),
-        			'post_id'    => array(
-        					'name'    => 'post_id',
-        					'type'    => 'int',
-        					'require' => true,
-        					'desc'    => '帖子id',
-        			),
-        	),
+            'deletePost' => array(
+                    'user_id'    => array(
+                            'name'    => 'user_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '用户id',
+                    ),
+                    'post_id'    => array(
+                            'name'    => 'post_id',
+                            'type'    => 'int',
+                            'require' => true,
+                            'desc'    => '帖子id',
+                    ),
+            ),
             'lockPost'=>array(
                 'user_id'    => array(
                         'name'    => 'user_id',
@@ -257,34 +257,34 @@ class Api_Post extends PhalApi_Api{
 
         $domain = new Domain_Post();
         $domain2 = new Domain_User();
-		$domain3 = new Domain_Common();
+        $domain3 = new Domain_Common();
         $data = $domain->getPostBase($this->postID);
-		$groupID=$domain->getGroupId($this->postID);
-		$privategroup = $domain3->judgeGroupPrivate($groupID);
+        $groupID=$domain->getGroupId($this->postID);
+        $privategroup = $domain3->judgeGroupPrivate($groupID);
         $data[0]['editRight']=0;
         $data[0]['deleteRight']=0;
         $data[0]['stickyRight']=0;
         $data[0]['lockRight']=0;
         $data[0]['code'] = 1;
-		if($privategroup){
-			if($this->userID !=null){
-				$groupuser = $domain3->judgeGroupUser($groupID,$this->userID);
-				$groupcreator = $domain3->judgeGroupCreator($groupID,$this->userID);
-				if(empty($groupcreator)){
-					if(empty($groupuser)){
-						unset($data);
+        if($privategroup){
+            if($this->userID !=null){
+                $groupuser = $domain3->judgeGroupUser($groupID,$this->userID);
+                $groupcreator = $domain3->judgeGroupCreator($groupID,$this->userID);
+                if(empty($groupcreator)){
+                    if(empty($groupuser)){
+                        unset($data);
                         $data[0]['code'] = 0;
                         $data[0]['groupID'] = $groupID;
                         $data[0]['msg'] = "未加入，不可查看私密帖子！";
-					}
-				}
-			}else{
-				unset($data);
+                    }
+                }
+            }else{
+                unset($data);
                 $data[0]['code'] = 0;
                 $data[0]['groupID'] = $groupID;
                 $data[0]['msg'] = "未登录，不可查看私密帖子！";
-			}
-		}
+            }
+        }
         if ($this->userID !=null){
             $userID=$this->userID;
             $creater= $domain2->judgeCreate($userID,$groupID);
@@ -294,6 +294,7 @@ class Api_Post extends PhalApi_Api{
             {
                 $data[0]['editRight']=1;
                 $data[0]['deleteRight']=1;
+                $data[0]['lockRight']=1;
             }
             if($creater){
                 $data[0]['deleteRight']=1;
@@ -307,7 +308,7 @@ class Api_Post extends PhalApi_Api{
             }
         }
         return $data[0];
-	}
+    }
 
     /**
      * 帖子的回复
@@ -392,16 +393,16 @@ class Api_Post extends PhalApi_Api{
      * @return string re 提示信息
      */
     public function stickyPost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
+        $rs = array();
+        $data = array(
+                'user_id'       => $this->user_id,
+                'post_id'       => $this->post_id,
+        );
 
-    	$domain = new Domain_Post();
-    	$rs = $domain->stickyPost($data);
+        $domain = new Domain_Post();
+        $rs = $domain->stickyPost($data);
 
-    	return $rs;
+        return $rs;
     }
 
     /**
@@ -411,16 +412,16 @@ class Api_Post extends PhalApi_Api{
      * @return string re 提示信息
      */
     public function unStickyPost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
+        $rs = array();
+        $data = array(
+                'user_id'       => $this->user_id,
+                'post_id'       => $this->post_id,
+        );
 
-    	$domain = new Domain_Post();
-    	$rs = $domain->unStickyPost($data);
+        $domain = new Domain_Post();
+        $rs = $domain->unStickyPost($data);
 
-    	return $rs;
+        return $rs;
     }
 
     /**
@@ -430,16 +431,16 @@ class Api_Post extends PhalApi_Api{
      * @return string re 提示信息
      */
     public function deletePost(){
-    	$rs = array();
-    	$data = array(
-    			'user_id'       => $this->user_id,
-    			'post_id'       => $this->post_id,
-    	);
+        $rs = array();
+        $data = array(
+                'user_id'       => $this->user_id,
+                'post_id'       => $this->post_id,
+        );
 
-    	$domain = new Domain_Post();
-    	$rs = $domain->deletePost($data);
+        $domain = new Domain_Post();
+        $rs = $domain->deletePost($data);
 
-    	return $rs;
+        return $rs;
     }
 
     /**
