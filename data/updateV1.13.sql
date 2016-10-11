@@ -59,3 +59,8 @@ IF NOT EXISTS `message_detail` (
 -- user:小超
 ALTER TABLE `group_base` CHANGE `name` `name` VARCHAR(21) CHARACTER 
 SET gbk COLLATE gbk_chinese_ci NOT NULL COMMENT '组名';
+-- 2016/10/10 20:00
+-- 将帖子标题字段长度改为61
+-- user:小超
+ALTER TABLE `post_base` CHANGE `title` `title` VARCHAR (61) CHARACTER
+SET gbk COLLATE gbk_chinese_ci NOT NULL COMMENT '标题';
