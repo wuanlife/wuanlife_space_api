@@ -1,9 +1,7 @@
 #午安网代码部署
 本文档仅适用于全新安装，并只适用于CentOS7系统。
 ###一、准备工作
-####1.安装第三方源&更新系统
-    wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
-    rpm -ivh epel-release-7-8.noarch.rpm
+####1.更新系统
     yum -y update
 ####2.关闭防火墙
     systemctl stop firewalld.service
@@ -17,6 +15,9 @@
     yum -y install php-fpm php-cli php-mysql php-gd php-ldap php-odbc php-pdo php-pecl-memcache php-pear php-mbstring php-xml php-xmlrpc php-mbstring php-snmp php-soap php-devel
 ####3.安装nginx
     yum -y install nginx
+如果提示nginx不存在，执行下列命令安装第三方源
+    wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+    rpm -ivh epel-release-7-8.noarch.rpm
 ####4.启动环境并设置自启
     systemctl enable mariadb.service
     systemctl start mariadb.service
