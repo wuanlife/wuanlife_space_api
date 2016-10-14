@@ -102,29 +102,32 @@ class Model_Post extends PhalApi_Model_NotORM {
              . 'WHERE pb.id=pd.post_base_id AND pb.delete=0 AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.id=:post_id AND pd.floor=1' ;
         $params = array(':post_id' =>$postID );
         $rs = DI()->notorm->post_base->queryAll($sql, $params);
-		if (empty($rs)) {
+        if (empty($rs)) {
             throw new PhalApi_Exception_BadRequest('帖子不存在！');
-			//$rs[0]['msg']="帖子不存在";
-			//die('出错了！');
+            //$rs[0]['msg']="帖子不存在";
+            //die('出错了！');
         }else {
-			$rs[0]['sticky']=(int)$rs[0]['sticky'];
+            $rs[0]['sticky']=(int)$rs[0]['sticky'];
             $rs[0]['lock']=(int)$rs[0]['lock'];
-			$p_image = array();
-			$results = DI()->notorm->post_image
-				->select('p_image,post_image_id')
-				->where('post_base_id =?', $postID)
-				->AND('post_image.delete=?','0');
-				// ->fetchall();
+            preg_match_all("(http://[-a-zA-Z0-9@:%_\+.~#?&//=]+[.jpg.gif.png])",$rs[0]['text'],$rs[0]['p_image']);
+            /*
+            $p_image = array();
+            $results = DI()->notorm->post_image
+                ->select('p_image,post_image_id')
+                ->where('post_base_id =?', $postID)
+                ->AND('post_image.delete=?','0');
+                // ->fetchall();
 
-			foreach ($results as $key => $row) {
-				$p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
-			}
-			$rs[0]['p_image']=$p_image;
-			if(empty($p_image)){
-				$rs[0]['p_image']=NULL;
-			}
-		}
-		return $rs;
+            foreach ($results as $key => $row) {
+                $p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
+            }
+            $rs[0]['p_image']=$p_image;
+            if(empty($p_image)){
+                $rs[0]['p_image']=NULL;
+            }
+            */
+        }
+        return $rs;
 
     }
 
@@ -190,43 +193,43 @@ class Model_Post extends PhalApi_Model_NotORM {
             ->where('post_base_id =?', $data['post_base_id'])
             ->AND('post_detail.floor = ?','1')
             ->update($d_data);
-			if(!empty($data['post_image_id'])){
-				$delimage = DI()->notorm->post_image
-				->where('post_image_id =?', $data['post_image_id'])
-				->AND('post_image.post_base_id = ?',$data['post_base_id'])
-				->update(array('`delete`'=>'1'));
-			}
-/*			$domain = new Domain_Group();
-			$pei = array("id"=>$data['post_base_id']);
+            if(!empty($data['post_image_id'])){
+                $delimage = DI()->notorm->post_image
+                ->where('post_image_id =?', $data['post_image_id'])
+                ->AND('post_image.post_base_id = ?',$data['post_base_id'])
+                ->update(array('`delete`'=>'1'));
+            }
+/*          $domain = new Domain_Group();
+            $pei = array("id"=>$data['post_base_id']);
             foreach ($data['p_image'] as $key => $value) {
-				if(!empty($value)) {
-					$fileName = $domain->doFileUpload($key,$value);
-					$pi = $domain->saveData($fileName,$value,$pei);
-				}
-				else {
-					$pi = NULL;
-				}
-			}*/
+                if(!empty($value)) {
+                    $fileName = $domain->doFileUpload($key,$value);
+                    $pi = $domain->saveData($fileName,$value,$pei);
+                }
+                else {
+                    $pi = NULL;
+                }
+            }*/
             $rs['code']=1;
             $rs['info']['post_base_id']=$data['post_base_id'];
             $rs['info']['user_base_id']=$data['user_id'];
             $rs['info']['title']=$data['title'];
             $rs['info']['text']=$data['text'];
-			$p_image = array();
-			$results = DI()->notorm->post_image
+            $p_image = array();
+            $results = DI()->notorm->post_image
             ->select('p_image,post_image_id')
             ->where('post_base_id =?', $data['post_base_id'])
             ->AND('post_image.delete=?','0');
             // ->fetchall();
-			/*不需要返回URL值
-			foreach ($results as $key => $row) {
-				$p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
-			}
-			if(empty($p_image)){
-				$p_image=NULL;
-			}
-			$rs['info']['URL']=$p_image;
-			*/
+            /*不需要返回URL值
+            foreach ($results as $key => $row) {
+                $p_image[$key] = array("id"=>(int)$row['post_image_id'],"URL"=>"http://".$_SERVER['HTTP_HOST'].$row['p_image']);
+            }
+            if(empty($p_image)){
+                $p_image=NULL;
+            }
+            $rs['info']['URL']=$p_image;
+            */
             $rs['info']['floor']=1;
             $rs['info']['createTime']=$time;
         }else{
@@ -255,36 +258,36 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
 
     public function unStickyPost($data){
-    	$rs = array();
+        $rs = array();
 
-    	$s_data = array(
-    			'sticky' => '0',
-    	);
-    		$s = DI()->notorm->post_base
-    		->where('id =?', $data['post_id'])
-    		->update($s_data);
-    		$rs['code']=1;
-    		$rs['re']="操作成功";
+        $s_data = array(
+                'sticky' => '0',
+        );
+            $s = DI()->notorm->post_base
+            ->where('id =?', $data['post_id'])
+            ->update($s_data);
+            $rs['code']=1;
+            $rs['re']="操作成功";
 
-    	return $rs;
+        return $rs;
     }
 
     public function deletePost($data){
-    	$rs = array();
+        $rs = array();
 
-    	$d_data = array(
-    			'`delete`' => '1',
-    	);
+        $d_data = array(
+                '`delete`' => '1',
+        );
 
-    		$sa = DI()->notorm->post_base
-    		->where('id =?', $data['post_id'])
-    		->update($d_data);
-    		/*$sb = DI()->notorm->post_detail
-    		->where('post_base_id=?', $data['post_id'])
-    		->update($d_data);*/
-    		$rs['code']=1;
-    		$rs['re']="操作成功";
-    	return $rs;
+            $sa = DI()->notorm->post_base
+            ->where('id =?', $data['post_id'])
+            ->update($d_data);
+            /*$sb = DI()->notorm->post_detail
+            ->where('post_base_id=?', $data['post_id'])
+            ->update($d_data);*/
+            $rs['code']=1;
+            $rs['re']="操作成功";
+        return $rs;
     }
 
     public function getCreaterId($groupID){
