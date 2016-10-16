@@ -99,9 +99,9 @@ class Model_Group extends PhalApi_Model_NotORM{
             return $groupnum;
         }
     }
-	public function join($data){
-		$result = DI()->notorm->group_detail->insert($data);
-	}
+    public function join($data){
+        $result = DI()->notorm->group_detail->insert($data);
+    }
 
     public function judgeGroupCreator($group_id,$user_id){
         $sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->where('authorization=?',01)->fetch();
@@ -113,27 +113,27 @@ class Model_Group extends PhalApi_Model_NotORM{
         return $re;
     }
 
-	public function judgeGroupUser($group_id,$user_id){
-		$sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->where('authorization=?',03)->fetch();
-		if(empty($sql)){
-			$re=NULL;
-		}else{
-			$re=1;
-		}
-		return $re;
-	}
+    public function judgeGroupUser($group_id,$user_id){
+        $sql=DI()->notorm->group_detail->where('group_base_id=?',$group_id)->where('user_base_id=?',$user_id)->where('authorization=?',03)->fetch();
+        if(empty($sql)){
+            $re=NULL;
+        }else{
+            $re=1;
+        }
+        return $re;
+    }
 
-	public function getCreator($group_id){
-		$sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id=?',$group_id)->where('authorization=?',01)->fetch();
-		$sqla=DI()->notorm->user_base->select('nickname')->where('id=?',$sql['user_base_id'])->fetch();
-		$sqlb=$sqla['nickname'];
-		return $sqlb;
-	}
+    public function getCreator($group_id){
+        $sql=DI()->notorm->group_detail->select('user_base_id')->where('group_base_id=?',$group_id)->where('authorization=?',01)->fetch();
+        $sqla=DI()->notorm->user_base->select('nickname')->where('id=?',$sql['user_base_id'])->fetch();
+        $sqlb=$sqla['nickname'];
+        return $sqlb;
+    }
 
-	public function judgeGroupPrivate($group_id){
-		$sql=DI()->notorm->group_base->select('private')->where('id=?',$group_id)->fetch();
-		return $sql['private'];
-	}
+    public function judgeGroupPrivate($group_id){
+        $sql=DI()->notorm->group_base->select('private')->where('id=?',$group_id)->fetch();
+        return $sql['private'];
+    }
 
     public function getCreate($limit_st, $page_num,$user_id){
         $group_detail=DI()->notorm->group_detail;
@@ -200,9 +200,9 @@ class Model_Group extends PhalApi_Model_NotORM{
         $field = array(
                     'message_base_code' =>$message_base_code,
                     'user_base_id'      =>$founder_id,
-					/*
+                    /*
                     'count'             =>$maxcount+1,
-					*/
+                    */
                     'id_1'              =>$data['user_id'],
                     'id_2'              =>$data['group_id'],
                     'createTime'        =>time(),
@@ -210,6 +210,11 @@ class Model_Group extends PhalApi_Model_NotORM{
         $sql = DI()->notorm->message_detail->insert($field);
         if($sql){
             $rs = 1;
+            $field = array(
+                        'message_detail_id' =>$sql['id'],
+                        'text'              =>$data['text'],
+            );
+            DI()->notorm->message_text->insert($field);
         }else{
             $rs = 0;
         }
@@ -228,7 +233,7 @@ class Model_Group extends PhalApi_Model_NotORM{
     }
 /*
  * 查找消息列表中count的最大值
- 
+
     public function getMaxCount($message_base_code,$id) {
         $sql = DI()->notorm->message_detail
         ->select('max(count)')
@@ -237,7 +242,7 @@ class Model_Group extends PhalApi_Model_NotORM{
         ->fetch();
         return $sql['max(count)'];
     }
-	数据库结构改变，此处注释不再使用
+    数据库结构改变，此处注释不再使用
  */
     public function getGroupName($group_id){
         $sql=DI()->notorm->group_base->select('name')->where('id=?',$group_id)->fetch();
@@ -252,6 +257,20 @@ class Model_Group extends PhalApi_Model_NotORM{
     public function judgeUserApplication($user_id,$group_id){
         $sql=DI()->notorm->message_detail->where('status',array(0,1))->where('message_base_code','0001')->AND('id_1',$user_id)->AND('id_2',$group_id)->fetch();
         return $sql;
+    }
+/*
+ * 用于显示加入星球的用户，方便管理
+ */
+    public function UserManage($data){
+        $rs=DI()->notorm->group_detail->where('group_base_id',$data['group_id'])->where('authorization','03')->fetchAll();
+        return $rs;
+    }
+/*
+ * 用于删除加入星球的用户
+ */
+    public function deleteGroupMember($data){
+        $rs=DI()->notorm->group_detail->where('group_base_id',$data['group_id'])->where('user_base_id',$data['member_id'])->where('authorization','03')->delete();
+        return $rs;
     }
 }
 

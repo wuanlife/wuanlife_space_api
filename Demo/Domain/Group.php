@@ -317,6 +317,44 @@ class Domain_Group {
         }
         return $info;
     }
+/*
+ * 用于显示加入星球的用户，方便管理
+ */
+    public function UserManage($data){
+        $model = new Model_Group();
+        $rs = $model->UserManage($data);
+        foreach($rs as $keys => $value){
+            $rs[$keys] = array(
+                'user_id'           =>$value['user_base_id'],
+                'user_name'         =>$model->getUser($value['user_base_id']),
+            );
+        }
+        if($rs) {
+            $info['info'] = $rs;
+            $info['code'] = 1;
+            $info['msg'] = '显示成功！';
+        }else {
+            $info['code'] = 0;
+            $info['msg'] = '该星球没有其他成员！';
+        }
+        return $info;
+    }
+/*
+ * 用于删除加入星球的用户
+ */
+    public function deleteGroupMember($data){
+        $model = new Model_Group();
+        $rs = $model->deleteGroupMember($data);
+        if($rs) {
+            //$info['info'] = $rs;
+            $info['code'] = 1;
+            $info['msg'] = '操作成功！';
+        }else {
+            $info['code'] = 0;
+            $info['msg'] = '操作失败！';
+        }
+        return $info;
+    }
 }
 
 

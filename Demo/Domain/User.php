@@ -305,6 +305,7 @@ class Domain_User {
                 $this->msg = '操作成功！您已拒绝该成员的申请！';
                     $status = 3;
             }
+                $field['message_base_code'] = '0001';
                 $field['message_id'] = $data['message_id'];
                 $field['user_base_id'] = $info['user_base_id'];
                 $field['status'] = 1;
@@ -353,12 +354,13 @@ class Domain_User {
  */
     public function ShowMessage($data){
         $model = new Model_User();
-        $num = $model->getAllMessage($data['user_id']);
+        $num = $model->getAllMessage($data['user_id'],$data['status']);
             $value['status'] = 0;
         $value['user_base_id'] = $data['user_id'];
             $status = 1;//消息已读
         $this->alterStatus($value,$status);//将消息列表转化为已读
-        $rs = $model->ShowMessage($data);
+        $page_num = 20;
+        $rs = $model->ShowMessage($data,$page_num);
         foreach($rs as $keys => $value){
             $sql = $model->getCorrespondInfo($value['message_base_code']);
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
@@ -370,26 +372,39 @@ class Domain_User {
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                 'messagetype'   =>$sql['type'],
             );
+            if($data['status']==3){
+                $value['status'] = 1;
+                $value['user_base_id'] = $data['user_id'];
+                $status = 4;//消息已读
+                $value['message_base_code'] = '0002';
+                $this->alterStatus($value,$status);//将消息列表转化为已读
+                $value['message_base_code'] = '0003';
+                $this->alterStatus($value,$status);//将消息列表转化为已读
+            }
             if($sql['type'] == '1'){
+                $text = $model->getMessageText($value['message_id']);
                 $rs[$keys] = array(
                     'id'            =>$value['message_id'],
-                    'information'   =>$sql['content'],
+                    'nickname'      =>$user_name,
+                    'information'   =>'申请加入'.$group_name,
+                    'group_id'      =>$value['id_2'],
                     'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                     'status'        =>$value['status'],
-                    'messagetype'   =>$sql['type']
+                    'messagetype'   =>$sql['type'],
+                    'text'          =>$text,
                 );
             }
         }
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
-            $this->pageCount  = ceil(count($num)/6);
+            $this->pageCount  = ceil(count($num)/$page_num);
             $this->currentPage  = $data['pn'];
             $this->msg  = '接收成功';
         }else{
             $this->code = 0;
-            $this->msg  = '您暂时没有新消息！';
-            if(ceil(count($num)/6) !=0 && $data['pn'] >ceil(count($num)/6)){
+            $this->msg  = '您暂时没有消息！';
+            if(ceil(count($num)/$page_num) !=0 && $data['pn'] >ceil(count($num)/$page_num)){
                     throw new PhalApi_Exception_BadRequest('页面不存在！');
             }
         }

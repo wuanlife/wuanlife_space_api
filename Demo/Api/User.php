@@ -218,6 +218,13 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户ID'
                 ),
+                'status'   => array(
+                    'name'    => 'status',
+                    'type'    => 'int',
+                    'default' => '1',
+                    'require' => true,
+                    'desc'    => '是否已读'
+                ),
             ),
             /*和消息列表接口合并，不再单独给接口。2016/09/20
             'alterRead'=>array(
@@ -467,7 +474,8 @@ class Api_User extends PhalApi_Api{
     public function ShowMessage(){
         $data = array(
             'user_id'       => $this->user_id,
-            'pn'            => $this->pn
+            'pn'            => $this->pn,
+            'status'        => $this->status,
             );
         $domain = new Domain_User();
         $rs = $domain->ShowMessage($data);

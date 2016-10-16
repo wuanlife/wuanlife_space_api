@@ -22,6 +22,14 @@ class Api_Group extends PhalApi_Api
                     'require' => true,
                     'desc'    => '星球ID'
                 ),
+                'text' => array(
+                    'name'    => 'text',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'max'     => '200',
+                    'require' => true,
+                    'desc'    => '申请信息'
+                ),
             ),
 
             'create' => array(
@@ -193,6 +201,40 @@ class Api_Group extends PhalApi_Api
                     'type'      =>'int',
                     'require'   =>true,
                     'desc'      =>'用户id',
+                    ),
+            ),
+            'UserManage' =>array(
+                'group_id' =>array(
+                    'name'      =>'group_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'星球id',
+                ),
+                'user_id'=>array(
+                    'name'      =>'user_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'用户id',
+                    ),
+            ),
+            'deleteGroupMember' =>array(
+                'group_id' =>array(
+                    'name'      =>'group_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'星球id',
+                ),
+                'user_id'=>array(
+                    'name'      =>'user_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'用户id',
+                    ),
+                'member_id'=>array(
+                    'name'      =>'member_id',
+                    'type'      =>'int',
+                    'require'   =>true,
+                    'desc'      =>'星球成员id',
                     ),
             ),
 
@@ -513,6 +555,7 @@ class Api_Group extends PhalApi_Api
         $data = array(
             'user_id'    => $this->user_id,
             'group_id' => $this->group_id,
+            'text' => $this->text,
             );
         $domain = new Domain_Group();
         $rs = $domain->PrivateGroup($data);
@@ -523,6 +566,56 @@ class Api_Group extends PhalApi_Api
             $rs['code']=2;
         }
 
+        return $rs;
+    }
+/**
+ * 星球用户管理接口
+ * @desc 用于显示加入星球的用户，方便管理
+ * @return int code 操作码，1表示成功，0表示失败
+ * @return string msg 提示信息
+ * @return array info 用户ID用户昵称
+ */
+    public function UserManage(){
+        $data = array(
+            'user_id'    => $this->user_id,
+            'group_id'   => $this->group_id,
+            );
+        $domain_c = new Domain_Common();
+        $create = $domain_c->judgeGroupCreator($data['group_id'],$data['user_id']);
+        if($create){
+            $domain = new Domain_Group();
+            $rs = $domain->UserManage($data);
+        }else{
+            $rs =array(
+                    'code' =>0,
+                    'msg'  =>'您不是星球创建者，没有权限！',
+            );
+        }
+        return $rs;
+    }
+/**
+ * 星球用户删除接口
+ * @desc 用于删除加入星球的用户
+ * @return int code 操作码，1表示成功，0表示失败
+ * @return string msg 提示信息
+ */
+    public function deleteGroupMember(){
+        $data = array(
+            'user_id'    => $this->user_id,
+            'group_id'   => $this->group_id,
+            'member_id'  => $this->member_id,
+            );
+        $domain_c = new Domain_Common();
+        $create = $domain_c->judgeGroupCreator($data['group_id'],$data['user_id']);
+        if($create){
+            $domain = new Domain_Group();
+            $rs = $domain->deleteGroupMember($data);
+        }else{
+            $rs =array(
+                    'code' =>0,
+                    'msg'  =>'您不是星球创建者，没有权限！',
+            );
+        }
         return $rs;
     }
 }

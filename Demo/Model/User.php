@@ -197,22 +197,38 @@ class Model_User extends PhalApi_Model_NotORM {
 /*
  * 从数据库中查找用户的消息列表并返回
  */
-    public function ShowMessage($data) {
+    public function ShowMessage($data,$page_num) {
+        if($data['status']==1){
+            $status=array(0,1,2,3,4);
+        }elseif($data['status']==2){
+            $status=array(2,3,4);
+        }else{
+            $status=array(0,1);
+        }
         $sql = DI()->notorm->message_detail
         ->select('*')
         ->where('user_base_id = ?',$data['user_id'])
+        ->where('status',$status)
         ->order('createTime DESC')
-        ->limit(($data['pn']-1)*6,6)
+        ->limit(($data['pn']-1)*$page_num,$page_num)
         ->fetchAll();
         return $sql;
         }
 /*
- * 通过用户id查找所有的消息
+ * 通过用户id查找所有的消息(为了得到消息的个数)
  */
-    public function getAllMessage($user_id){
+    public function getAllMessage($user_id,$status){
+        if($status==1){
+            $status=array(0,1,2,3,4);
+        }elseif($status==2){
+            $status=array(2,3,4);
+        }else{
+            $status=array(0,1);
+        }
         $sql = DI()->notorm->message_detail
         ->select('*')
         ->where('user_base_id = ?',$user_id)
+        ->where('status',$status)
         ->fetchAll();
         return $sql;
     }
@@ -249,7 +265,8 @@ class Model_User extends PhalApi_Model_NotORM {
         ->update($field);
         }else{
             $rs = DI()->notorm->message_detail
-            ->where('message_id = ? AND user_base_id = ? AND status = ?',$data['message_id'],$data['user_base_id'],$data['status'])
+            ->where('message_id = ? AND user_base_id = ? AND status = ? AND message_base_code = ?',
+            $data['message_id'],$data['user_base_id'],$data['status'],$data['message_base_code'])
             ->update($field);
         }
         return $rs;
@@ -268,5 +285,12 @@ class Model_User extends PhalApi_Model_NotORM {
     public function getMessageInfo($message_id){
         $sql = DI()->notorm->message_detail->select('*')->where('message_id = ?',$message_id)->fetchone();
         return $sql;
+    }
+/*
+ * 通过消息id查找申请信息
+ */
+    public function getMessageText($message_id){
+        $sql = DI()->notorm->message_text->select('text')->where('message_detail_id = ?',$message_id)->fetchone();
+        return $sql['text'];
     }
 }
