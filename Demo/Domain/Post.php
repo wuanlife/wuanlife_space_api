@@ -298,4 +298,10 @@ class Domain_Post {
           return $rs;
       }
 */
+
+    public function searchPosts($text,$pn){
+        $model=new Model_Post();
+        $posts=$model->searchPosts($text,$pn);
+        return $posts;
+    }
 }

@@ -272,6 +272,21 @@ class Model_Group extends PhalApi_Model_NotORM{
         $rs=DI()->notorm->group_detail->where('group_base_id',$data['group_id'])->where('user_base_id',$data['member_id'])->where('authorization','03')->delete();
         return $rs;
     }
+
+    public function searchGroup($text,$gn){
+        if(empty($gn)){
+            $gn=1;
+        }
+        $num=$gn*3;
+        $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
+            .'where gb.id = gd.group_base_id '
+            ."AND gb.name LIKE '%$text%' "
+            .'GROUP BY gd.group_base_id HAVING COUNT(gd.user_base_id)>=1 '
+            .'ORDER BY COUNT(gd.user_base_id) DESC '
+            ."LIMIT 0,$num";
+        $re['group'] = $this->getORM()->queryAll($sql);
+        return $re;
+    }
 }
 
 
