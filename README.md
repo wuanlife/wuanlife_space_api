@@ -35,9 +35,9 @@
 7.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 8.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 9.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
-9.[搜索接口](/wiki/Group.Search.md)<br>
-10.[星球成员管理](/wiki/Group.UserManage.md)<br>
-11.[删除星球成员](/wiki/Group.DeleteGroupMember.md)<br>
+10[搜索接口](/wiki/Group.Search.md)<br>
+11.[星球成员管理](/wiki/Group.UserManage.md)<br>
+12.[删除星球成员](/wiki/Group.DeleteGroupMember.md)<br>
 
 ###C.帖子相关
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
