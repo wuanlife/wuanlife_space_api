@@ -375,6 +375,7 @@ class Domain_User {
             $rs[$keys] = array(
                 'id'            =>$value['message_id'],
                 'nickname'      =>$user_name,
+                'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
                 'information'   =>'已'.$a.'你的加入',
 				'group_name'    =>'《'.$group_name.'》',
 				'group_id'      =>$value['id_2'],
@@ -395,6 +396,7 @@ class Domain_User {
                 $rs[$keys] = array(
                     'id'            =>$value['message_id'],
                     'nickname'      =>$user_name,
+                    'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
                     'information'   =>'申请加入',
 					'group_name'    =>'《'.$group_name.'》',
                     'group_id'      =>$value['id_2'],
