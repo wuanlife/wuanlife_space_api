@@ -573,7 +573,9 @@ class Api_Group extends PhalApi_Api
  * @desc 用于显示加入星球的用户，方便管理
  * @return int code 操作码，1表示成功，0表示失败
  * @return string msg 提示信息
- * @return array info 用户ID用户昵称
+ * @return array info 用户信息详情
+ * @return string info.user_id 用户id
+ * @return string info.user_name 用户昵称
  */
     public function UserManage(){
         $data = array(
