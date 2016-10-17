@@ -38,7 +38,7 @@
 
 ##示例
 
-修改用户ID为1星球ID为1的星球信息
+搜索text为8的相关内容
 
 http://apihost/?service=Group.Search&text=8
      JSON:
