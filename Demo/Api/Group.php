@@ -646,7 +646,7 @@ class Api_Group extends PhalApi_Api
  * @return int group.id 星球ID
  * @return string group.g_image 星球图片链接
  * @return string group.g_introduction 星球介绍
- * @return int num 星球成员数
+ * @return int group.num 星球成员数
  * @return int posts.postID 帖子ID
  * @return string posts.title 标题
  * @return string posts.text 内容
