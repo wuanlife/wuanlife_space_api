@@ -648,6 +648,7 @@ class Api_Group extends PhalApi_Api
  * @return string group.g_image 星球图片链接
  * @return string group.g_introduction 星球介绍
  * @return int group.num 星球成员数
+ * @return int groupPage 星球总页数
  * @return int posts.postID 帖子ID
  * @return string posts.title 标题
  * @return string posts.text 内容
@@ -655,6 +656,7 @@ class Api_Group extends PhalApi_Api
  * @return string posts.nickname 发帖人
  * @return int posts.groupID 星球ID
  * @return string posts.groupName 星球名称
+ * @return int psotsPage 帖子总页数
  */
     public function search(){
         $domainGroup=new Domain_Group();
