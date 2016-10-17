@@ -42,7 +42,7 @@
 
 http://apihost/?service=Group.Search&text=8
      JSON:
-{
+    {
     "ret": 200,
     "data": {
         "group": [
@@ -82,4 +82,4 @@ http://apihost/?service=Group.Search&text=8
         ]
     },
     "msg": ""
-}
+    }
