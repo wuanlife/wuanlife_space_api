@@ -23,6 +23,7 @@
 |info   | 数组  |用户信息详情|
 |info.user_id | 整型| 用户ID|
 |info.user_name | 字符串| 用户昵称|
+|info.user_image|字符串|用户默认头像，都一样的|
 |msg |字符串 |提示信息|
 
 
