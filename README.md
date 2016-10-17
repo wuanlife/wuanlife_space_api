@@ -22,7 +22,8 @@
 13.[处理申请信息](/wiki/User.ProcessApp.md)<br>
 14.[检查未读信息](/wiki/User.CheckNewInfo.md)<br>
 <!--
-14.[将未读信息标记为已读](/wiki/User.AlterRead.md)<br>-->
+14.[将未读信息标记为已读](/wiki/User.AlterRead.md)<br>
+-->
 
 ###B.星球相关
 1.[创建星球](/wiki/Group.Create.md)<br>
@@ -35,6 +36,7 @@
 8.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 9.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
 9.[搜索接口](/wiki/Group.Search.md)<br>
+10.[星球用户管理](/wiki/Group.UserManage.md)<br>
 
 ###C.帖子相关
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
