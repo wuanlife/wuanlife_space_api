@@ -34,6 +34,7 @@
 7.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 8.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 9.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
+9.[搜索接口](/wiki/Group.Search.md)<br>
 
 ###C.帖子相关
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
