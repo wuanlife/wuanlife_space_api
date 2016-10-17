@@ -265,6 +265,26 @@ class Api_Group extends PhalApi_Api
                     'desc'      =>'星球图片',
                 ),
             ),
+            'search' =>array(
+                'text' =>array(
+                    'name'      =>'text',
+                    'type'      =>'string',
+                    'require'   =>true,
+                    'desc'      =>'搜索内容',
+                ),
+                'gn' =>array(
+                    'name'      =>'gn',
+                    'type'      =>'int',
+                    'require'   =>false,
+                    'desc'      =>'星球页数',
+                ),
+                'pn' =>array(
+                    'name'      =>'pn',
+                    'type'      =>'int',
+                    'require'   =>false,
+                    'desc'      =>'帖子页数',
+                ),
+            ),
         );
     }
 
@@ -618,6 +638,31 @@ class Api_Group extends PhalApi_Api
             );
         }
         return $rs;
+    }
+
+/**
+ *搜索接口
+* @desc 搜索接口
+ * @return string group.name 星球名称
+ * @return int group.id 星球ID
+ * @return string group.g_image 星球图片链接
+ * @return string group.g_introduction 星球介绍
+ * @return int group.num 星球成员数
+ * @return int posts.postID 帖子ID
+ * @return string posts.title 标题
+ * @return string posts.text 内容
+ * @return date posts.createTime 发帖时间
+ * @return string posts.nickname 发帖人
+ * @return int posts.groupID 星球ID
+ * @return string posts.groupName 星球名称
+ */
+    public function search(){
+        $domainGroup=new Domain_Group();
+        $domainPosts=new Domain_post();
+        $group=$domainGroup->searchGroup($this->text,$this->gn);
+        $posts=$domainPosts->searchPosts($this->text,$this->pn);
+        $data=array_merge($group,$posts);
+        return $data;
     }
 }
  ?>

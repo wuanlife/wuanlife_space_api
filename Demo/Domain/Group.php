@@ -356,6 +356,12 @@ class Domain_Group {
         }
         return $info;
     }
+
+    public function searchGroup($text,$gn){
+        $model=new Model_Group();
+        $re=$model->searchGroup($text,$gn);
+        return $re;
+    }
 }
 
 

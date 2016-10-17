@@ -353,5 +353,21 @@ class Model_Post extends PhalApi_Model_NotORM {
         $sql=DI()->notorm->post_base->where('id=?',$post_id)->fetch();
         return $sql['lock'];
     }
+    public function searchPosts($text,$pn){
+        if(empty($pn)){
+            $pn=1;
+        }
+        $num=$pn*20;
+        $rs   = array();
+        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
+             . "AND pb.title LIKE '%$text%' "
+             . 'GROUP BY pb.id '
+             . 'ORDER BY COUNT(pd.post_base_id) DESC '
+             . "LIMIT 0,$num";
+        $rs['posts'] = DI()->notorm->user_base->queryAll($sql);
+        return $rs;
+    }
 }
 
