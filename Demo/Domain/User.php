@@ -366,9 +366,18 @@ class Domain_User {
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
             $user_name = $model->getUserName($value['id_1']);//通过用户id查找用户名字
             $sql['content'] = $this->ComposeInfo($group_name,$user_name,$sql['content']);
+			$a=null;
+			if($value['message_base_code']=='0002'){
+				$a='同意';
+			}elseif($value['message_base_code']=='0003'){
+				$a='拒绝';
+			}
             $rs[$keys] = array(
                 'id'            =>$value['message_id'],
-                'information'   =>$sql['content'],
+                'nickname'      =>$user_name,
+                'information'   =>'已'.$a.'你的加入',
+				'group_name'    =>'《'.$group_name.'》',
+				'group_id'      =>$value['id_2'],
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                 'messagetype'   =>$sql['type'],
             );
@@ -386,7 +395,8 @@ class Domain_User {
                 $rs[$keys] = array(
                     'id'            =>$value['message_id'],
                     'nickname'      =>$user_name,
-                    'information'   =>'申请加入'.$group_name,
+                    'information'   =>'申请加入',
+					'group_name'    =>'《'.$group_name.'》',
                     'group_id'      =>$value['id_2'],
                     'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                     'status'        =>$value['status'],
