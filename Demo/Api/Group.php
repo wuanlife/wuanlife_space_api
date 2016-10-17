@@ -25,9 +25,8 @@ class Api_Group extends PhalApi_Api
                 'text' => array(
                     'name'    => 'text',
                     'type'    => 'string',
-                    'min'     => '1',
                     'max'     => '200',
-                    'require' => true,
+                    'require' => false,
                     'desc'    => '申请信息'
                 ),
             ),
