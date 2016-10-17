@@ -360,6 +360,13 @@ class Domain_Group {
     public function searchGroup($text,$gn){
         $model=new Model_Group();
         $re=$model->searchGroup($text,$gn);
+        $page_num=3;
+        $all_num=$model->searchGroupNum($text);
+        $page_all_num =ceil($all_num/$page_num);                //总页数
+        if ($page_all_num == 0){
+            $page_all_num =1;
+        }
+        $re['GroupPage']=$page_all_num;
         return $re;
     }
 }

@@ -275,7 +275,8 @@ class Model_Group extends PhalApi_Model_NotORM{
 
     public function searchGroup($text,$gn){
         if(empty($gn)){
-            $gn=1;
+            $re['group'] = array();
+            return $re;
         }
         $num=$gn*3;
         $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
@@ -286,6 +287,13 @@ class Model_Group extends PhalApi_Model_NotORM{
             ."LIMIT 0,$num";
         $re['group'] = $this->getORM()->queryAll($sql);
         return $re;
+    }
+
+    public function searchGroupNum($text){
+        $sql='SELECT COUNT(group_base.id) AS num FROM group_base '
+            ."where group_base.name LIKE '%$text%' ";
+        $re = $this->getORM()->queryAll($sql);
+        return $re[0]['num'];
     }
 }
 
