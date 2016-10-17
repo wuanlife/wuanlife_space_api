@@ -658,7 +658,7 @@ class Api_Group extends PhalApi_Api
  */
     public function search(){
         $domainGroup=new Domain_Group();
-        $domainPosts=new Domain_post();
+        $domainPosts=new Domain_Post();
         $group=$domainGroup->searchGroup($this->text,$this->gn);
         $posts=$domainPosts->searchPosts($this->text,$this->pn);
         $data=array_merge($group,$posts);
