@@ -13,7 +13,9 @@
 |参数|类型|是否必须|说明|
 |:--|:--|:--|:--|
 |text|string|必须|搜索内容|
+|pnum|int|可选|帖子每页数量|
 |pn|int|可选|帖子页数|
+|gnum|int|可选|星球每页数量|
 |gn|int|可选|星球页数|
 
 
@@ -42,7 +44,7 @@
 
 修改用户ID为1星球ID为1的星球信息
 
-http://apihost/?service=Group.Search&text=8
+http://apihost/?service=Group.Search&text=1&pnum=1&pn=31&gnum=1&gn=60
     
 	JSON:
     {
@@ -50,41 +52,27 @@ http://apihost/?service=Group.Search&text=8
         "data": {
             "group": [
                 {
-                    "name": "cs48",
-                    "id": "48",
-                    "g_image": null,
-                    "g_introduction": "cs48",
-                    "num": "2"
-                },
-                {
-                    "name": "789",
-                    "id": "20",
-                    "g_image": null,
-                    "g_introduction": "测试20",
-                    "num": "2"
-                },
-                {
-                    "name": "789789",
-                    "id": "60",
-                    "g_image": "/home/www/html/wuanlife_api/Demo/Domain/../upload/group/2016/06/01/125809file.jpg",
-                    "g_introduction": "上传测试",
-                    "num": "2"
+                    "name": "jinjin111",
+                    "id": "242",
+                    "g_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                    "g_introduction": null,
+                    "num": "1"
                 }
             ],
-            "GroupPage": 4,
+            "GroupPage": 60,
             "posts": [
                 {
-                    "postID": "2",
-                    "title": "午安煎饼计划Android组第48周周报",
-                    "text": "<p>hello，我是午安熊，大家上午好！</p>",
+                    "postID": "246",
+                    "title": "100000",
+                    "text": "皮下赛季",
                     "lock": "0",
-                    "createTime": "2016-05-20 20:02:51",
-                    "nickname": "午安网",
-                    "groupID": "2",
-                    "groupName": "午安网啊阿萨阿萨安师大"
+                    "createTime": "2016-09-02 10:25:05",
+                    "nickname": "12222",
+                    "groupID": "1",
+                    "groupName": "装备2014中队和是加"
                 }
             ],
-            "PostsPage": 1
+            "PostsPage": 31
         },
         "msg": ""
     }
