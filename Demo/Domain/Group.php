@@ -157,6 +157,9 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
+		if($page > $page_all_num){
+			$page = $page_all_num;
+		}
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换
         $limit_st     =($page-1)*$page_num;                     //起始数
@@ -220,6 +223,9 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
+		if($page > $page_all_num){
+			$page = $page_all_num;
+		}
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换
         $limit_st     =($page-1)*$page_num;                     //起始数
@@ -241,6 +247,9 @@ class Domain_Group {
         $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
             $page_all_num =1;
+        }
+		if($page > $page_all_num){
+			$page = $page_all_num;
         }
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换

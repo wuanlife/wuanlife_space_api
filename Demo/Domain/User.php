@@ -360,6 +360,10 @@ class Domain_User {
             $status = 1;//消息已读
         $this->alterStatus($value,$status);//将消息列表转化为已读
         $page_num = 20;
+		$pageCount  = ceil(count($num)/$page_num);
+		if($data['pn'] > $pageCount){
+			$data['pn'] = $pageCount;
+		}
         $rs = $model->ShowMessage($data,$page_num);
         foreach($rs as $keys => $value){
             $sql = $model->getCorrespondInfo($value['message_base_code']);
@@ -410,15 +414,17 @@ class Domain_User {
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
-            $this->pageCount  = ceil(count($num)/$page_num);
+            $this->pageCount  = $pageCount;
             $this->currentPage  = $data['pn'];
             $this->msg  = '接收成功';
         }else{
             $this->code = 0;
             $this->msg  = '您暂时没有消息！';
+			/*
             if(ceil(count($num)/$page_num) !=0 && $data['pn'] >ceil(count($num)/$page_num)){
                     throw new PhalApi_Exception_BadRequest('页面不存在！');
             }
+			*/
         }
         return $this;
     }

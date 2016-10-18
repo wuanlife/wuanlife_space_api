@@ -6,14 +6,6 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         $num=30;
         $rs   = array();
-        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
-             . 'GROUP BY pb.id '
-             . 'ORDER BY MIN(pd.createTime) DESC '
-             . 'LIMIT :start,:num ';
-        $params = array(':start' =>($page-1)*$num , ':num' =>$num);
-        $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
              . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0'";
@@ -24,7 +16,18 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
+		if($page > $rs['pageCount']){
+			$page = $rs['pageCount'];
+		}
         $rs['currentPage'] = $page;
+        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
+             . 'GROUP BY pb.id '
+             . 'ORDER BY MIN(pd.createTime) DESC '
+             . 'LIMIT :start,:num ';
+        $params = array(':start' =>($page-1)*$num , ':num' =>$num);
+        $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
 
         return $rs;
     }
@@ -43,15 +46,6 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['groupID'] = $groupData['0']['groupID'];
         $rs['groupName'] = $groupData['0']['groupName'];
 
-        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky,pb.lock '
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
-             . 'GROUP BY pb.id '
-             . 'ORDER BY pb.sticky DESC, '
-             . 'MAX(pd.createTime) DESC '
-             . 'LIMIT :start,:num ';
-        $params = array(':group_id' =>$groupID,':start' =>($page-1)*$num , ':num' =>$num);
-        $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
              . 'FROM post_base pb,group_base gb '
@@ -63,7 +57,19 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
+		if($page > $rs['pageCount']){
+			$page = $rs['pageCount'];
+		}
         $rs['currentPage'] = $page;
+        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky,pb.lock '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=:group_id AND pb.delete=0 '
+             . 'GROUP BY pb.id '
+             . 'ORDER BY pb.sticky DESC, '
+             . 'MAX(pd.createTime) DESC '
+             . 'LIMIT :start,:num ';
+        $params = array(':group_id' =>$groupID,':start' =>($page-1)*$num , ':num' =>$num);
+        $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
         return $rs;
     }
 
@@ -71,15 +77,6 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         $num=30;
         $rs   = array();
-        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
-             . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'
-             . 'GROUP BY pb.id '
-             . 'ORDER BY MAX(pd.createTime) DESC '
-              . 'LIMIT :start,:num ';
-        $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
-        $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
              . 'FROM post_base pb,group_base gb,group_detail gd '
@@ -91,7 +88,19 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
+		if($page > $rs['pageCount']){
+			$page = $rs['pageCount'];
+		}
         $rs['currentPage'] = $page;
+        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
+             . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'
+             . 'GROUP BY pb.id '
+             . 'ORDER BY MAX(pd.createTime) DESC '
+              . 'LIMIT :start,:num ';
+        $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
+        $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
         return $rs;
     }
 
@@ -135,13 +144,6 @@ class Model_Post extends PhalApi_Model_NotORM {
 
         $num=30;
         $rs   = array();
-        $rs['reply']= DI()->notorm->post_detail
-        ->SELECT('post_detail.text,user_base.nickname,post_detail.createTime,post_detail.floor')
-        ->WHERE('post_detail.post_base_id = ?',$postID)
-        ->AND('post_detail.floor > ?','1')
-        ->order('post_detail.floor ASC')
-        ->limit(($page-1)*$num,$num)
-        ->fetchALL();
 
         $rs['postID']=$postID;
         $sql = 'SELECT ceil(count(pd.post_base_id)/:num) AS pageCount,count(*) AS replyCount '
@@ -155,7 +157,17 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
+		if($page > $rs['pageCount']){
+			$page = $rs['pageCount'];
+		}
         $rs['currentPage'] = $page;
+		$rs['reply']= DI()->notorm->post_detail
+        ->SELECT('post_detail.text,user_base.nickname,post_detail.createTime,post_detail.floor')
+        ->WHERE('post_detail.post_base_id = ?',$postID)
+        ->AND('post_detail.floor > ?','1')
+        ->order('post_detail.floor ASC')
+        ->limit(($page-1)*$num,$num)
+        ->fetchALL();
         return $rs;
     }
     public function PostReply($data) {
