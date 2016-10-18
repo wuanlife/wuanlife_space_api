@@ -302,6 +302,13 @@ class Domain_Post {
     public function searchPosts($text,$pn){
         $model=new Model_Post();
         $posts=$model->searchPosts($text,$pn);
+        $page_num=20;
+        $all_num=$model->searchPostsNum($text);
+        $page_all_num =ceil($all_num/$page_num);                //总页数
+        if ($page_all_num == 0){
+            $page_all_num =1;
+        }
+        $posts['PostsPage']=$page_all_num;
         return $posts;
     }
 }

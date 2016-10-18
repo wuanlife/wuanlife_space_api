@@ -367,7 +367,8 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
     public function searchPosts($text,$pn){
         if(empty($pn)){
-            $pn=1;
+            $rs['posts'] = array();
+            return $rs;
         }
         $num=$pn*20;
         $rs   = array();
@@ -380,6 +381,13 @@ class Model_Post extends PhalApi_Model_NotORM {
              . "LIMIT 0,$num";
         $rs['posts'] = DI()->notorm->user_base->queryAll($sql);
         return $rs;
+    }
+
+    public function searchPostsNum($text){
+        $sql='SELECT COUNT(post_base.id) AS num FROM post_base '
+            ."where post_base.title LIKE '%$text%' ";
+        $re = $this->getORM()->queryAll($sql);
+        return $re[0]['num'];
     }
 }
 
