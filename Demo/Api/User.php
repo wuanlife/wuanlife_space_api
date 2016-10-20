@@ -215,14 +215,14 @@ class Api_User extends PhalApi_Api{
                     'name'    => 'pn',
                     'type'    => 'int',
                     'default' => '1',
-                    'require' => true,
+                    'require' => false,
                     'desc'    => '用户ID'
                 ),
                 'status'   => array(
                     'name'    => 'status',
                     'type'    => 'int',
                     'default' => '1',
-                    'require' => true,
+                    'require' => false,
                     'desc'    => '是否已读'
                 ),
             ),
