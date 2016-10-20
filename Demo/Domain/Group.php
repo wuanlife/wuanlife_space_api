@@ -366,15 +366,17 @@ class Domain_Group {
         return $info;
     }
 
-    public function searchGroup($text,$gn){
+    public function searchGroup($text,$gnum,$gn){
         $model=new Model_Group();
-        $re=$model->searchGroup($text,$gn);
-        $page_num=3;
+        $domain = new Domain_Common();
+        $re=$model->searchGroup($text,$gnum,$gn);
+        $page_num=$gnum;
         $all_num=$model->searchGroupNum($text);
         $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
             $page_all_num =1;
         }
+        $re['group']=$domain->judgeImageExist($re['group']);
         $re['GroupPage']=$page_all_num;
         return $re;
     }

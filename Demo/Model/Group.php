@@ -273,18 +273,18 @@ class Model_Group extends PhalApi_Model_NotORM{
         return $rs;
     }
 
-    public function searchGroup($text,$gn){
+    public function searchGroup($text,$gnum,$gn){
         if(empty($gn)){
             $re['group'] = array();
             return $re;
         }
-        $num=$gn*3;
+        $num=($gn-1)*$gnum;
         $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
             .'where gb.id = gd.group_base_id '
             ."AND gb.name LIKE '%$text%' "
             .'GROUP BY gd.group_base_id HAVING COUNT(gd.user_base_id)>=1 '
             .'ORDER BY COUNT(gd.user_base_id) DESC '
-            ."LIMIT 0,$num";
+            ."LIMIT $num,$gnum";
         $re['group'] = $this->getORM()->queryAll($sql);
         return $re;
     }

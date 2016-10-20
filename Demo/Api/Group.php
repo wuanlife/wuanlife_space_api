@@ -272,17 +272,29 @@ class Api_Group extends PhalApi_Api
                     'require'   =>true,
                     'desc'      =>'搜索内容',
                 ),
+                'gnum' =>array(
+                    'name'      =>'gnum',
+                    'type'      =>'int',
+                    'require'   =>false,
+                    'desc'      =>'星球每页数量',
+                ),
                 'gn' =>array(
                     'name'      =>'gn',
                     'type'      =>'int',
                     'require'   =>false,
                     'desc'      =>'星球页数',
                 ),
+                'pnum' =>array(
+                    'name'      =>'pnum',
+                    'type'      =>'int',
+                    'require'   =>false,
+                    'desc'      =>'帖子每页数量',
+                ),
                 'pn' =>array(
                     'name'      =>'pn',
                     'type'      =>'int',
                     'require'   =>false,
-                    'desc'      =>'帖子页数',
+                    'desc'      =>'星球页数',
                 ),
             ),
         );
@@ -656,19 +668,23 @@ class Api_Group extends PhalApi_Api
  * @return string posts.nickname 发帖人
  * @return int posts.groupID 星球ID
  * @return string posts.groupName 星球名称
- * @return int psotsPage 帖子总页数
+ * @return int postsPage 帖子总页数
  */
     public function search(){
         $domainGroup=new Domain_Group();
         $domainPosts=new Domain_Post();
         $text=$this->text;
+        $gnum=$this->gnum;
+        $pnum=$this->pnum;
         $gn=$this->gn;
         $pn=$this->pn;
-        if(empty($gn)&&empty($pn)){
-            $data=null;
+        if(empty($gn)&&empty($gnum)){
+            $data=$domainPosts->searchPosts($text,$pnum,$pn);
+        }elseif(empty($pn)&&empty($pnum)){
+            $data=$domainGroup->searchGroup($text,$gnum,$gn);
         }else{
-            $group=$domainGroup->searchGroup($text,$gn);
-            $posts=$domainPosts->searchPosts($text,$pn);
+            $group=$domainGroup->searchGroup($text,$gnum,$gn);
+            $posts=$domainPosts->searchPosts($text,$pnum,$pn);
             $data=array_merge($group,$posts);
         }
         return $data;
