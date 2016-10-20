@@ -23,10 +23,10 @@
 |code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
 |info   | 数组  |用户消息列表详情,按时间降序排列|
 |info.id | 整型| 消息ID|
+|info.user_image|字符型|用户默认头像|
 |info.nickname|字符型|用户昵称|
 |info.messagetype  | 字符串  |消息类型1申请消息 2其他消息|
 |info.messageInfo|数组|消息详情|
-|info.messageInfo.user_image|字符型|用户默认头像|
 |info.messageInfo.information | 字符串| 用户消息详情|
 |info.messageInfo.group_name|字符型|星球名称|
 |info.messageInfo.group_id|整型|星球ID|
@@ -66,10 +66,10 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92
             },
             {
                 "id": "3",
+				"user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                 "nickname": "梁王test",
                 "messagetype": "2",
                 "messageInfo": {
-                    "user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                     "information": "已同意你的加入",
                     "group_name": "《测试私密申请2》",
                     "group_id": "276"
@@ -78,10 +78,10 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92
             },
             {
                 "id": "22",
+				"user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                 "nickname": "ccc",
                 "messagetype": "2",
                 "messageInfo": {
-                    "user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                     "information": "已同意你的加入",
                     "group_name": "《测试私密申请2》",
                     "group_id": "276"
