@@ -379,12 +379,15 @@ class Domain_User {
             $rs[$keys] = array(
                 'id'            =>$value['message_id'],
                 'nickname'      =>$user_name,
+                'messagetype'   =>$sql['type'],
+                'messageInfo'   =>array(
                 'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
                 'information'   =>'已'.$a.'你的加入',
 				'group_name'    =>'《'.$group_name.'》',
 				'group_id'      =>$value['id_2'],
+                ),
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
-                'messagetype'   =>$sql['type'],
+
             );
             if($data['status']==3){
                 $value['status'] = 1;
@@ -400,14 +403,16 @@ class Domain_User {
                 $rs[$keys] = array(
                     'id'            =>$value['message_id'],
                     'nickname'      =>$user_name,
+                    'messagetype'   =>$sql['type'],
+                    'messageInfo'   =>array(
                     'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
                     'information'   =>'申请加入',
 					'group_name'    =>'《'.$group_name.'》',
                     'group_id'      =>$value['id_2'],
-                    'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                     'status'        =>$value['status'],
-                    'messagetype'   =>$sql['type'],
                     'text'          =>$text,
+                    ),
+                    'createTime'    =>date('Y-m-d H:i',$value['createTime']),
                 );
             }
         }
