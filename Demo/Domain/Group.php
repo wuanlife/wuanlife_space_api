@@ -368,6 +368,7 @@ class Domain_Group {
 
     public function searchGroup($text,$gnum,$gn){
         $model=new Model_Group();
+        $domain = new Domain_Common();
         $re=$model->searchGroup($text,$gnum,$gn);
         $page_num=$gnum;
         $all_num=$model->searchGroupNum($text);
@@ -375,6 +376,7 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
+        $re['group']=$domain->judgeImageExist($re['group']);
         $re['GroupPage']=$page_all_num;
         return $re;
     }
