@@ -16,6 +16,7 @@
 ####3.安装nginx
     yum -y install nginx
 如果提示nginx不存在，执行下列命令安装第三方源
+
     wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
     rpm -ivh epel-release-7-8.noarch.rpm
 ####4.启动环境并设置自启
