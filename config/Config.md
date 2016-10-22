@@ -6,8 +6,8 @@
 ####2.关闭防火墙
     systemctl stop firewalld.service
     systemctl disable firewalld.service
-####3.安装git、vim、unzip
-    yum -y install git vim unzip
+####3.安装git、vim、unzip等必要组件
+    yum -y install git vim unzip wget
 ###二、安装PHP环境
 ####1.安装MariaDB
     yum -y install mariadb mariadb-server net-tools
