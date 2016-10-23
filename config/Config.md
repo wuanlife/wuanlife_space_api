@@ -7,8 +7,10 @@
     systemctl stop firewalld.service
     systemctl disable firewalld.service
 ps如果防火墙全部关闭后仍然无法访问某些端口，可能是SELinux为enable状态，需要关闭
+
     vim /etc/selinux/config
 更改其内容为：
+
     #SELINUX=enforcing  
     SELINUX=disabled
     
