@@ -680,13 +680,16 @@ class Api_Group extends PhalApi_Api
         $pn=$this->pn;
         if(empty($gn)&&empty($gnum)){
             $data=$domainPosts->searchPosts($text,$pnum,$pn);
+            $data['group']=array();
         }elseif(empty($pn)&&empty($pnum)){
             $data=$domainGroup->searchGroup($text,$gnum,$gn);
+            $data['posts']=array();
         }else{
             $group=$domainGroup->searchGroup($text,$gnum,$gn);
             $posts=$domainPosts->searchPosts($text,$pnum,$pn);
             $data=array_merge($group,$posts);
         }
+        $data = $domainPosts->deleteHtmlPosts($data);
         return $data;
     }
 }
