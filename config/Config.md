@@ -6,6 +6,12 @@
 ####2.关闭防火墙
     systemctl stop firewalld.service
     systemctl disable firewalld.service
+ps如果防火墙全部关闭后仍然无法访问某些端口，可能是SELinux为enable状态，需要关闭
+    vim /etc/selinux/config
+更改其内容为：
+    #SELINUX=enforcing  
+    SELINUX=disabled
+    
 ####3.安装git、vim、unzip等必要组件
     yum -y install git vim unzip wget
 ###二、安装PHP环境
