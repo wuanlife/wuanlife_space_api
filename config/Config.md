@@ -6,8 +6,16 @@
 ####2.关闭防火墙
     systemctl stop firewalld.service
     systemctl disable firewalld.service
-####3.安装git、vim、unzip
-    yum -y install git vim unzip
+ps如果防火墙全部关闭后仍然无法访问某些端口，可能是SELinux为enable状态，需要关闭
+
+    vim /etc/selinux/config
+更改其内容为：
+
+    #SELINUX=enforcing  
+    SELINUX=disabled
+    
+####3.安装git、vim、unzip等必要组件
+    yum -y install git vim unzip wget
 ###二、安装PHP环境
 ####1.安装MariaDB
     yum -y install mariadb mariadb-server net-tools
@@ -16,8 +24,8 @@
 ####3.安装nginx
     yum -y install nginx
 如果提示nginx不存在，执行下列命令安装第三方源
-    wget https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
-    rpm -ivh epel-release-7-8.noarch.rpm
+
+    yum -y install epel-release
 ####4.启动环境并设置自启
     systemctl enable mariadb.service
     systemctl start mariadb.service
