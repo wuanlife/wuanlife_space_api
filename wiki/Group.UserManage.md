@@ -19,7 +19,7 @@
 ##返回说明
 |参数|        类型|   说明|
 |:--|:--|:--|
-|code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
+|code  |  整型  |操作码，0表示没有权限或者成员数为零|
 |info   | 数组  |用户信息详情|
 |info.user_id | 整型| 用户ID|
 |info.user_name | 字符串| 用户昵称|
@@ -29,7 +29,7 @@
 
 ##示例
 
-显示用户id=1的消息列表
+显示星球id=1的用户列表
 
 http://dev.wuanlife.com:800/?service=Group.UserManage&group_id=1&user_id=2
 
