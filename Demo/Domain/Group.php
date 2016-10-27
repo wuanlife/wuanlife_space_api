@@ -157,9 +157,9 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
-		if($page > $page_all_num){
-			$page = $page_all_num;
-		}
+        if($page > $page_all_num){
+            $page = $page_all_num;
+        }
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换
         $limit_st     =($page-1)*$page_num;                     //起始数
@@ -223,9 +223,9 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
-		if($page > $page_all_num){
-			$page = $page_all_num;
-		}
+        if($page > $page_all_num){
+            $page = $page_all_num;
+        }
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换
         $limit_st     =($page-1)*$page_num;                     //起始数
@@ -248,8 +248,8 @@ class Domain_Group {
         if ($page_all_num == 0){
             $page_all_num =1;
         }
-		if($page > $page_all_num){
-			$page = $page_all_num;
+        if($page > $page_all_num){
+            $page = $page_all_num;
         }
         $page         =empty($page)?1:$page;                    //当前页数
         $page         =(int)$page;                              //安全强制转换
@@ -340,6 +340,7 @@ class Domain_Group {
             );
         }
         if($rs) {
+            $info['group_id'] = $data['group_id'];
             $info['info'] = $rs;
             $info['code'] = 1;
             $info['msg'] = '显示成功！';
