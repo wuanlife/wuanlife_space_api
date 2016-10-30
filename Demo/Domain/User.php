@@ -364,6 +364,8 @@ class Domain_User {
 		if($data['pn'] > $pageCount){
 			$data['pn'] = $pageCount;
 		}
+		$rs = array();
+		if($data['pn'] !=0){
         $rs = $model->ShowMessage($data,$page_num);
         foreach($rs as $keys => $value){
             $sql = $model->getCorrespondInfo($value['message_base_code']);
@@ -416,6 +418,7 @@ class Domain_User {
                 );
             }
         }
+		}
         if($rs) {
             $this->code = 1;
             $this->info = $rs;
