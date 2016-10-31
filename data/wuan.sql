@@ -54,12 +54,12 @@ INSERT INTO `authorization` (`area_dif`, `aser_dif`, `note`) VALUES
 
 CREATE TABLE IF NOT EXISTS `group_base` (
   `id` int(4) unsigned NOT NULL COMMENT '组id',
-  `name` varchar(11) CHARACTER SET utf8_bin NOT NULL COMMENT '组名',
+  `name` varchar(21) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '组名',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
-  `g_image` varchar(255) CHARACTER SET utf8_bin DEFAULT NULL COMMENT '组图片',
-  `g_introduction` varchar(50) CHARACTER SET utf8_bin DEFAULT NULL COMMENT '组介绍',
+  `g_image` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '组图片',
+  `g_introduction` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '组介绍',
   `private` int(1) NOT NULL DEFAULT '0' COMMENT '私密星球'
-) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='组表';
 
 --
 -- 表的结构 `group_detail`
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `message_detail` (
   `id_2` int(5) NOT NULL COMMENT '星球id',
   `createTime` int(10) NOT NULL COMMENT '创建时间',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '消息的状态'
-) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户消息表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户消息表';
 
 --
 -- 表的结构 `post_base`
@@ -123,12 +123,12 @@ CREATE TABLE IF NOT EXISTS `post_base` (
   `id` int(9) unsigned NOT NULL COMMENT '帖子id',
   `user_base_id` int(5) unsigned NOT NULL COMMENT '发帖人id',
   `group_base_id` int(4) unsigned NOT NULL COMMENT '组id',
-  `title` varchar(30) CHARACTER SET utf8_bin NOT NULL COMMENT '标题',
+  `title` varchar(61) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '标题',
   `digest` int(1) NOT NULL DEFAULT '0' COMMENT '精华',
   `sticky` int(1) NOT NULL DEFAULT '0' COMMENT '置顶',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '删除',
   `lock` int(1) NOT NULL DEFAULT '0' COMMENT '锁定帖子'
-) ENGINE=InnoDB AUTO_INCREMENT=371 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='主帖';
 
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `post_image` (
   `post_image_id` int(11) NOT NULL COMMENT '图片id',
   `p_image` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '帖子图片',
   `delete` int(11) NOT NULL DEFAULT '0' COMMENT '删除'
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='?ظ?????ͼƬ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='?ظ?????ͼƬ';
 
 --
 -- 表的结构 `user_base`
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `user_base` (
   `nickname` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '昵称',
   `Email` varchar(30) COLLATE utf8_bin NOT NULL COMMENT '邮箱',
   `regtime` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表基本';
 
 
 --
@@ -280,24 +280,24 @@ ALTER TABLE `user_detail`
 -- AUTO_INCREMENT for table `group_base`
 --
 ALTER TABLE `group_base`
-  MODIFY `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '组id',AUTO_INCREMENT=295;
+  MODIFY `id` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '组id',AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `message_detail`
 --
 ALTER TABLE `message_detail`
-  MODIFY `message_id` int(5) NOT NULL AUTO_INCREMENT COMMENT '消息id',AUTO_INCREMENT=122;
+  MODIFY `message_id` int(5) NOT NULL AUTO_INCREMENT COMMENT '消息id',AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `post_base`
 --
 ALTER TABLE `post_base`
-  MODIFY `id` int(9) unsigned NOT NULL AUTO_INCREMENT COMMENT '帖子id',AUTO_INCREMENT=371;
+  MODIFY `id` int(9) unsigned NOT NULL AUTO_INCREMENT COMMENT '帖子id',AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `post_image`
 --
 ALTER TABLE `post_image`
-  MODIFY `post_image_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '图片id',AUTO_INCREMENT=100;
+  MODIFY `post_image_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '图片id',AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT for table `user_base`
 --
 ALTER TABLE `user_base`
-  MODIFY `id` int(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户id',AUTO_INCREMENT=113;
+  MODIFY `id` int(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户id',AUTO_INCREMENT=1;
