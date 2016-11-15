@@ -6,7 +6,6 @@ IF NOT EXISTS `user_collection` (
 	`id` INT (11) NOT NULL AUTO_INCREMENT COMMENT '收藏id',
 	`post_base_id` INT (11) NOT NULL COMMENT '帖子id',
 	`group_base_id` INT (11) NOT NULL COMMENT '星球id',
-	`collected` TINYINT (1) NOT NULL COMMENT '是否收藏',
 	`time` INT (10) NOT NULL COMMENT '收藏时间',
 	`delete` TINYINT (1) NOT NULL COMMENT '是否删除',
 	PRIMARY KEY (`id`)
