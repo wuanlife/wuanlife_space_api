@@ -391,5 +391,49 @@ class Model_Post extends PhalApi_Model_NotORM {
         $re = $this->getORM()->queryAll($sql);
         return $re[0]['num'];
     }
+
+    public function collectPost($user_id,$post_id){
+        $data = array(
+            'post_base_id' => $post_id,
+            'user_base_id'=>$user_id,
+            'createTime'=>time()
+        );
+        $sql=DI()->notorm->user_collection->insert($data);
+        return $sql;
+    }
+
+
+    public function getCollectPost($userID,$page) {
+
+        $num=20;
+        $rs   = array();
+
+        $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
+             . 'FROM user_collection '
+             . 'WHERE user_collection.user_base_id=:user_id AND user_collection.delete=0 ';
+
+        $params = array(':user_id' =>$userID,':num' =>$num);
+        $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
+        $rs['pageCount'] = (int)$pageCount[0]['pageCount'];
+        if ($rs['pageCount'] == 0 ){
+            $rs['pageCount']=1;
+        }
+        if($page > $rs['pageCount']){
+            $page = $rs['pageCount'];
+        }
+        $rs['currentPage'] = $page;
+        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
+             . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'
+             . 'GROUP BY pb.id '
+             . 'ORDER BY MAX(pd.createTime) DESC '
+              . 'LIMIT :start,:num ';
+        $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
+        $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
+        return $rs;
+    }
+
+
 }
 

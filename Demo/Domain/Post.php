@@ -311,5 +311,28 @@ class Domain_Post {
         return $re;
     }
 
+    public function collectPost($user_id,$post_id){
+        $model = new Model_Post();
+        $rs = $model->collectPost($user_id,$post_id);
+        if($rs) {
+            $info['code']=1;
+            $info['re']="收藏成功！";
+        }else{
+            $info['code']=0;
+            $info['re']="操作过于频繁！";
+        }
+        return $info;
+    }
+
+    public function getCollectPost($user_id,$page) {
+        $rs = array();
+        $model = new Model_Post();
+        $model1 = new Model_Group();
+        $rs = $model->getCollectPost($user_id,$page);
+        $rs['user_name'] = $model1->getUser($user_id);
+        return $rs;
+    }
+
+
 
 }

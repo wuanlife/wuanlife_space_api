@@ -115,6 +115,35 @@ class Api_Post extends PhalApi_Api{
                     'desc'=>'帖子ID',
                     ),
                 ),
+            'collectPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
+                'post_id'=>array(
+                    'name'=>'post_id',
+                    'type'=>'int',
+                    'require'=>true,
+                    'desc'=>'帖子ID',
+                    ),
+                ),
+            'getCollectPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                    ),
+                'page' =>array(
+                    'name' => 'pn',
+                    'type' => 'int',
+                    'desc' => '第几页',
+                    'default' => '1'
+                    ),
+                ),
+
         );
     }
 
@@ -465,6 +494,32 @@ class Api_Post extends PhalApi_Api{
         $domain=new Domain_Post();
         $rs=$domain->unlockPost($this->user_id,$this->post_id);
         return $rs;
+    }
+    /**
+     * 收藏帖子
+     * @desc 收藏帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function collectPost(){
+        $domain=new Domain_Post();
+        $rs=$domain->collectPost($this->user_id,$this->post_id);
+        return $rs;
+    }
+
+    /**
+     * 获取收藏的帖子
+     * @desc 获取收藏的帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function getCollectPost(){
+        $data   = array();
+
+        $domain = new Domain_Post();
+        $data = $domain->getCollectPost($this->user_id,$this->page);
+        $data = $domain->postTextLimit($data);
+        return $data;
     }
 
 

@@ -5,9 +5,9 @@ CREATE TABLE
 IF NOT EXISTS `user_collection` (
 	`id` INT (11) NOT NULL AUTO_INCREMENT COMMENT '收藏id',
 	`post_base_id` INT (11) NOT NULL COMMENT '帖子id',
-	`group_base_id` INT (11) NOT NULL COMMENT '星球id',
-	`time` INT (10) NOT NULL COMMENT '收藏时间',
-	`delete` TINYINT (1) NOT NULL COMMENT '是否删除',
+    `user_base_id` INT (11) NOT NULL COMMENT '帖子id',
+	`createTime` INT (10) NOT NULL COMMENT '收藏时间',
+	`delete` TINYINT (1) NOT NULL DEFAULT '0'  COMMENT '是否删除',
 	PRIMARY KEY (`id`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COLLATE = utf8_bin COMMENT = '用户收藏表' AUTO_INCREMENT = 1;
 -- 2016/11/15   17:29
