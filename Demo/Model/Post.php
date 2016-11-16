@@ -521,7 +521,6 @@ class Model_Post extends PhalApi_Model_NotORM {
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
              . 'FROM user_collection '
              . 'WHERE user_collection.user_base_id=:user_id AND user_collection.delete=0 ';
-
         $params = array(':user_id' =>$userID,':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
         $rs['pageCount'] = (int)$pageCount[0]['pageCount'];
@@ -532,12 +531,9 @@ class Model_Post extends PhalApi_Model_NotORM {
             $page = $rs['pageCount'];
         }
         $rs['currentPage'] = $page;
-        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 '
-             . 'AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =:user_id )'
-             . 'GROUP BY pb.id '
-             . 'ORDER BY MAX(pd.createTime) DESC '
+        $sql = 'SELECT uc.createTime,pb.title AS post_name,gb.id,gb.name AS groupName,ub.nickname '
+             . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub '
+             . 'WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=:user_id AND uc.delete=0 AND pb.user_base_id=ub.id '
               . 'LIMIT :start,:num ';
         $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
         $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);

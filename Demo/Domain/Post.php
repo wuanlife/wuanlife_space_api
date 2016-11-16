@@ -329,7 +329,6 @@ class Domain_Post {
         $model = new Model_Post();
         $model1 = new Model_Group();
         $rs = $model->getCollectPost($user_id,$page);
-        $rs['user_name'] = $model1->getUser($user_id);
         return $rs;
     }
 

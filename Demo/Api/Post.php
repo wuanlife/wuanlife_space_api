@@ -522,10 +522,8 @@ class Api_Post extends PhalApi_Api{
      */
     public function getCollectPost(){
         $data   = array();
-
         $domain = new Domain_Post();
         $data = $domain->getCollectPost($this->user_id,$this->page);
-        $data = $domain->postTextLimit($data);
         return $data;
     }
 
