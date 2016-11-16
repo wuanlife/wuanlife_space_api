@@ -34,7 +34,6 @@ http://apihost/?service=Group.Join&group_base_id=11
     "data": {
         "code": 1,
         "msg": "退出成功！并通知星球创建者",
-        "info": []
     },
     "msg": ""
 	}
