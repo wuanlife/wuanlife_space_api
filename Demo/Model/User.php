@@ -95,26 +95,52 @@ class Model_User extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 通过用户id查找用户所有的信息
+ */
     public function getUserInfo($user_id){
-        $sql=DI()->notorm->user_detail->select('user_base_id as userID','sex','year','month','day','mailChecked')->where('user_base_id=?',$user_id)->fetch();
+        $sql=DI()->notorm->user_detail->select('user_base_id as userID','sex','year','month','day','mailChecked','profile_picture')->where('user_base_id=?',$user_id)->fetch();
         $sqlb=DI()->notorm->user_base->select('Email','nickname')->where('id=?',$user_id)->fetch();
+        if(empty($sql['profile_picture'])){
+                $sql['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                //给无头像的用户加上默认头像
+        }
         $sql['Email']=$sqlb['Email'];
         $sql['nickname']=$sqlb['nickname'];
         return $sql;
     }
 
-    public function alterUserInfo($user_id,$sex,$year,$month,$day){
-        $data=array('sex'=>$sex,
-            'year'=>$year,
-            'month'=>$month,
-            'day'=>$day);
-        $sql=DI()->notorm->user_detail->where('user_base_id=?',$user_id)->update($data);
+    public function alterUserInfo($id,$data){
+        $field=array(
+            'profile_picture'=>$data['profile_picture'],
+            'sex'=>$data['sex'],
+            'year'=>$data['year'],
+            'month'=>$data['month'],
+            'day'=>$data['day']);
+        $sql=DI()->notorm->user_detail->where('user_base_id=?',$id)->update($field);
+        if(!empty($data['nickname'])){
+            $field=array('nickname'=>$data['nickname']);
+            $user = $this->usernickname($field);
+            if(empty($user)){
+                $re['code_2']=1;
+                $re['msg_2']='用户名修改成功！';
+                $sqla=DI()->notorm->user_base->where('id=?',$id)->update($field);
+            }else{
+                if($user['id']==$id){
+                    $re['msg_2']='用户名未变化！';
+                    $re['code_2']=1;
+                }else{
+                    $re['code_2']=0;
+                    $re['msg_2']='用户名被占用！';
+                }
+            }
+        }
         if(isset($sql)){
-            $re['data']=1;
-            $re['msg']='修改成功';
+            $re['code_1']=1;
+            $re['msg_1']='其他资料修改成功!';
         }else{
-            $re['data']=0;
-            $re['msg']='修改失败';
+            $re['code_1']=0;
+            $re['msg_1']='其他资料修改失败!';
         }
         return $re;
     }
@@ -195,14 +221,14 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
 /*
- * 从数据库中查找用户的消息列表并返回
+ * 从数据库中查找用户的消息列表并返回“私密星球申请”消息类型
  */
     public function ShowMessage($data,$page_num) {
         if($data['status']==1){
             $status=array(0,1,2,3,4);
         }elseif($data['status']==2){
             $status=array(2,3,4);
-        }else{
+        }elseif($data['status']==3){
             $status=array(0,1);
         }
         $sql = DI()->notorm->message_detail
@@ -215,14 +241,61 @@ class Model_User extends PhalApi_Model_NotORM {
         return $sql;
         }
 /*
- * 通过用户id查找所有的消息(为了得到消息的个数)
+ * 从数据库中查找用户的消息列表并返回“回复我的”消息类型
+ */
+    public function ShowReplyMessage($data,$page_num) {
+        $sql='SELECT ub.id AS userID,ub.nickname,pd.text AS replytext,pd.createTime,pb.title AS posttitle,pb.id AS postID ,gb.id AS groupID ,gb.name AS groupname FROM user_base ub,post_detail pd,post_base pb,group_base gb,message_detail md,message_text mt '
+            ."WHERE md.user_base_id = :user_id AND md.message_base_code = '0007' AND md.id_1 =ub.id AND md.message_id =mt.message_detail_id AND pd.post_base_id = md.id_2 AND pd.floor =mt.text AND pd.post_base_id = pb.id AND gb.id = pb.group_base_id "
+            .'ORDER BY pd.createTime DESC '
+            .'LIMIT :limit_st,:page_num';
+        $params = array(':user_id' => $data['user_id'], ':limit_st' => ($data['pn']-1)*$page_num, ':page_num' => $page_num);
+        $re=DI()->notorm->message_detail->queryAll($sql, $params);
+        return $re;
+    }
+/*
+ * 从数据库中查找用户的消息列表并返回“私密星球申请”消息类型
+ */
+    public function showAnotherMessage($data,$page_num) {
+        $sql = DI()->notorm->message_detail
+        ->select('*')
+        ->where('user_base_id = ?',$data['user_id'])
+        ->where('message_base_code',array('0004','0005','0006'))
+        ->order('createTime DESC')
+        ->limit(($data['pn']-1)*$page_num,$page_num)
+        ->fetchAll();
+        return $sql;
+    }
+/*
+ * 通过用户id查找所有的消息“回复我的”消息类型(为了得到消息的个数)
+ */
+    public function getAllReplyMessage($user_id){
+        $sql = DI()->notorm->message_detail
+        ->select('*')
+        ->where('user_base_id = ?',$user_id)
+        ->where('message_base_code','0007')
+        ->fetchAll();
+        return $sql;
+    }
+/*
+ * 通过用户id查找所有的消息“其他通知”消息类型(为了得到消息的个数)
+ */
+    public function getAllAnotherMessage($user_id){
+        $sql = DI()->notorm->message_detail
+        ->select('*')
+        ->where('user_base_id = ?',$user_id)
+        ->where('message_base_code',array('0004','0005','0006'))
+        ->fetchAll();
+        return $sql;
+    }
+/*
+ * 通过用户id查找所有的消息“私密星球申请”消息类型(为了得到消息的个数)
  */
     public function getAllMessage($user_id,$status){
         if($status==1){
             $status=array(0,1,2,3,4);
         }elseif($status==2){
             $status=array(2,3,4);
-        }else{
+        }elseif($status==3){
             $status=array(0,1);
         }
         $sql = DI()->notorm->message_detail

@@ -99,8 +99,57 @@ class Model_Group extends PhalApi_Model_NotORM{
             return $groupnum;
         }
     }
+/*
+ * 加入星球
+ */
     public function join($data){
         $result = DI()->notorm->group_detail->insert($data);
+    }
+/*
+ * 告知星球创建者已加入星球
+ */
+    public function joinMessage($data){
+        $data['group_id'] = $data['group_base_id'];
+        $creator = $this->getCreatorId($data);
+        $field=array(
+                    'message_base_code'=>'0006',
+                    'user_base_id'=>$creator,
+                    'id_1'    =>$data['user_base_id'],
+                    'id_2'    =>$data['group_id'],
+                    'createTime'=>time(),
+        );
+        $sql = DI()->notorm->message_detail->insert($field);
+        if($sql){
+            return true;
+        }else{
+            return false;
+        }
+    }
+/*
+ * 退出星球
+ */
+    public function quit($data){
+        $result = DI()->notorm->group_detail->where('group_base_id=?',$data['group_base_id'])->where('user_base_id=?',$data['user_base_id'])->where('authorization=?',03)->delete();
+    }
+/*
+ * 告知星球创建者已退出星球
+ */
+    public function quitMessage($data){
+        $data['group_id'] = $data['group_base_id'];
+        $creator = $this->getCreatorId($data);
+        $field=array(
+                    'message_base_code'=>'0005',
+                    'user_base_id'=>$creator,
+                    'id_1'    =>$data['user_base_id'],
+                    'id_2'    =>$data['group_id'],
+                    'createTime'=>time(),
+        );
+        $sql = DI()->notorm->message_detail->insert($field);
+        if($sql){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function judgeGroupCreator($group_id,$user_id){
@@ -273,6 +322,24 @@ class Model_Group extends PhalApi_Model_NotORM{
         return $rs;
     }
 
+/*
+ * 告知被星球创建者删除的用户
+ */
+    public function dgmMessage($data){
+        $field=array(
+                    'message_base_code'=>'0004',
+                    'user_base_id'=>$data['member_id'],
+                    'id_1'    =>$data['user_id'],
+                    'id_2'    =>$data['group_id'],
+                    'createTime'=>time(),
+        );
+        $sql = DI()->notorm->message_detail->insert($field);
+        if($sql){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public function searchGroup($text,$gnum,$gn){
         if(empty($gn)){
             $re['group'] = array();

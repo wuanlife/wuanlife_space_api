@@ -84,6 +84,21 @@ class Api_Group extends PhalApi_Api
                 ),
             ),
 
+            'quit' => array(
+                'user_id'    => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'require' => true,
+                    'desc'    => '用户id',
+                ),
+                'g_id' => array(
+                    'name'      => 'group_base_id',
+                    'type'      => 'int',
+                    'require'   => true,
+                    'min'       => '1',
+                    'desc'      => '星球ID',
+                ),
+            ),
             'gStatus' => array(
                 'user_id'    => array(
                     'name'    => 'user_id',
@@ -350,6 +365,22 @@ class Api_Group extends PhalApi_Api
         return $rs;
     }
 
+    /**
+     * 退出星球接口
+     * @desc 用户退出星球
+     * @return int code 操作码，1表示退出成功，0表示退出失败
+     * @return string msg 提示信息
+     */
+    public function quit(){
+        $rs = array();
+        $data = array(
+            'user_id' => $this->user_id,
+            'g_id'    => $this->g_id,
+        );
+        $domain = new Domain_Group();
+        $rs = $domain->quit($data);
+        return $rs;
+    }
     /**
      * 判断用户登陆状态
      * @desc 判断是否登录

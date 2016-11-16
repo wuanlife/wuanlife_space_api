@@ -57,6 +57,18 @@ class Api_User extends PhalApi_Api{
                     'require' => true,
                     'desc'    => '用户id'
                 ),
+                'user_name' => array(
+                    'name'    => 'user_name',
+                    'type'    => 'string',
+                    'require' => false,
+                    'desc'    => '用户昵称'
+                ),
+                'profile_picture' => array(
+                    'name'    => 'profile_picture',
+                    'type'    => 'string',
+                    'require' => false,
+                    'desc'    => '用户头像'
+                ),
                 'sex' => array(
                     'name'    => 'sex',
                     'type'    => 'int',
@@ -224,6 +236,13 @@ class Api_User extends PhalApi_Api{
                     'default' => '1',
                     'require' => false,
                     'desc'    => '是否已读'
+                ),
+                'messageType'   => array(
+                    'name'    => 'messageType',
+                    'type'    => 'int',
+                    'default' => '1',
+                    'require' => false,
+                    'desc'    => '消息中心分类'
                 ),
             ),
             /*和消息列表接口合并，不再单独给接口。2016/09/20
@@ -417,7 +436,15 @@ class Api_User extends PhalApi_Api{
  */
     public function alterUserInfo(){
         $domain=new Domain_User();
-        $rs=$domain->alterUserInfo($this->user_id,$this->sex,$this->year,$this->month,$this->day);
+        $data = array(
+                    'nickname'      =>$this->user_name,
+                    'profile_picture'   =>$this->profile_picture,
+                    'sex'           =>$this->sex,
+                    'year'          =>$this->year,
+                    'month'         =>$this->month,
+                    'day'           =>$this->day,
+        );
+        $rs=$domain->alterUserInfo($this->user_id,$data);
         return $rs;
     }
 
@@ -476,6 +503,7 @@ class Api_User extends PhalApi_Api{
             'user_id'       => $this->user_id,
             'pn'            => $this->pn,
             'status'        => $this->status,
+            'messageType'   => $this->messageType,
             );
         $domain = new Domain_User();
         $rs = $domain->ShowMessage($data);

@@ -90,9 +90,9 @@ class Domain_User {
         return $rs;
     }
 
-    public function alterUserInfo($user_id,$sex,$year,$month,$day){
+    public function alterUserInfo($id,$data){
         $model=new Model_User();
-        $rs=$model->alterUserInfo($user_id,$sex,$year,$month,$day);
+        $rs=$model->alterUserInfo($id,$data);
         return $rs;
     }
 /*
@@ -350,9 +350,84 @@ class Domain_User {
         return $content;
     }
 /*
- * 用于显示用户的消息列表
+ * 用于显示用户的消息列表的“回复我的”消息类型
+ */
+    public function getReplyMessage($data){
+        $model = new Model_User();
+        $model_p = new Model_Post();
+        $num = $model->getAllReplyMessage($data['user_id']);
+        $page_num = 20;
+        $pageCount  = ceil(count($num)/$page_num);
+        if($data['pn'] > $pageCount){
+            $data['pn'] = $pageCount;
+        }
+        $rs = array();
+        if($data['pn'] !=0){
+            $rs = $model->ShowReplyMessage($data,$page_num);
+        }
+        if($rs){
+            $this->code = 1;
+            $this->info = $rs;
+            $this->pageCount  = $pageCount;
+            $this->currentPage  = $data['pn'];
+            $this->msg  = '接收成功';
+        }else{
+            $this->code = 0;
+            $this->msg  = '您暂时没有消息！';
+        }
+        return $this;
+    }
+/*
+ * 用于显示用户的消息列表的“其他通知”消息类型
+ */
+    public function getAnotherMessage($data){
+        $model = new Model_User();
+        $model_p = new Model_Post();
+        $num = $model->getAllAnotherMessage($data['user_id']);
+        $page_num = 20;
+        $pageCount  = ceil(count($num)/$page_num);
+        if($data['pn'] > $pageCount){
+            $data['pn'] = $pageCount;
+        }
+        $rs = array();
+        if($data['pn'] !=0){
+            $rs = $model->showAnotherMessage($data,$page_num);
+            foreach($rs as $keys => $value){
+                $sql = $model->getCorrespondInfo($value['message_base_code']);
+                $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
+                $user_name = $model->getUserName($value['id_1']);//通过用户id查找用户名字
+                $sql['content'] = $this->ComposeInfo($group_name,$user_name,$sql['content']);
+                $rs[$keys] = array(
+                                'id'            =>$value['message_id'],
+                                'nickname'      =>$user_name,
+                                'messagetype'   =>$sql['type'],
+                                'messageInfo'   =>$sql['content'],
+                                'group_id'      =>$value['id_2'],
+                                'createTime'    =>date('Y-m-d H:i',$value['createTime']),
+                );
+            }
+        }
+        if($rs){
+            $this->code = 1;
+            $this->info = $rs;
+            $this->pageCount  = $pageCount;
+            $this->currentPage  = $data['pn'];
+            $this->msg  = '接收成功';
+        }else{
+            $this->code = 0;
+            $this->msg  = '您暂时没有消息！';
+        }
+        return $this;
+    }
+/*
+ * 用于显示用户的消息列表的“私密星球申请”消息类型
  */
     public function ShowMessage($data){
+    if($data['messageType']==1){
+        return $this->getReplyMessage($data);
+    }elseif($data['messageType']==2){
+        return $this->getAnotherMessage($data);
+    }elseif($data['messageType']==3){
         $model = new Model_User();
         $num = $model->getAllMessage($data['user_id'],$data['status']);
             $value['status'] = 0;
@@ -371,6 +446,7 @@ class Domain_User {
             $sql = $model->getCorrespondInfo($value['message_base_code']);
             $group_name = $model->getGroupName($value['id_2']);//通过星球id查找星球名字
             $user_name = $model->getUserName($value['id_1']);//通过用户id查找用户名字
+            $user = $model->getUserInfo($value['id_1']);//通过用户id查找用户资料（用户头像）
             $sql['content'] = $this->ComposeInfo($group_name,$user_name,$sql['content']);
 			$a=null;
 			if($value['message_base_code']=='0002'){
@@ -380,7 +456,7 @@ class Domain_User {
 			}
             $rs[$keys] = array(
                 'id'            =>$value['message_id'],
-                'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
+                'user_image'    =>$user['profile_picture'],
                 'nickname'      =>$user_name,
                 'messagetype'   =>$sql['type'],
                 'messageInfo'   =>array(
@@ -404,7 +480,7 @@ class Domain_User {
                 $text = $model->getMessageText($value['message_id']);
                 $rs[$keys] = array(
                     'id'            =>$value['message_id'],
-                    'user_image'    =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
+                    'user_image'    =>$user['profile_picture'],
                     'nickname'      =>$user_name,
                     'messagetype'   =>$sql['type'],
                     'messageInfo'   =>array(
@@ -435,6 +511,7 @@ class Domain_User {
 			*/
         }
         return $this;
+    }
     }
 /*
  * 用于将未读消息标记为已读或者其他标记

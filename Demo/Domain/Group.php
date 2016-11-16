@@ -109,7 +109,26 @@ class Domain_Group {
             );
 
             $result = $this->model->join($data);
-            $this->rs['info'] = $result;
+            $this->model->joinMessage($data);
+            $this->rs['msg'] = '加入成功！并通知星球创建者';
+            $this->rs['code'] = 1;
+        }else{
+            $this->rs['msg'] = $this->msg;
+        }
+        return $this->rs;
+    }
+    public function quit($data){
+        $this->model = new Model_Group();
+        $this->checkStatus($data['user_id']);
+        $this->checkG($data['g_id']);
+        if ($this->u_status == '1' && $this->g_status == '1') {
+            $data = array(
+                'group_base_id' => $data['g_id'],
+                'user_base_id'  => $this->cookie['userID'],
+            );
+            $result = $this->model->quit($data);
+            $this->model->quitMessage($data);
+            $this->rs['msg'] = '退出成功！并通知星球创建者';
             $this->rs['code'] = 1;
         }else{
             $this->rs['msg'] = $this->msg;
@@ -359,7 +378,8 @@ class Domain_Group {
         if($rs) {
             //$info['info'] = $rs;
             $info['code'] = 1;
-            $info['msg'] = '操作成功！';
+            $info['msg'] = '操作成功！并通知被删除的成员';
+            $rs = $model->dgmMessage($data);
         }else {
             $info['code'] = 0;
             $info['msg'] = '操作失败！';

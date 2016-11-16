@@ -181,7 +181,43 @@ class Model_Post extends PhalApi_Model_NotORM {
         $data['createTime'] = $time;
         $data['floor'] = ($sql['max(floor)'])+1;
         $rs = DI()->notorm->post_detail->insert($data);
+        $this->addReplyMessage($rs);
         return $rs;
+    }
+    public function getPostReplyInfo($p_id,$floor){
+        $sql=DI()->notorm->post_detail
+        ->select('*')
+        ->where('post_base_id =?',$p_id)
+        ->where('floor =?',$floor)
+        ->fetchone();
+    }
+/*
+ * 通过帖子id查找帖子主人id
+ */
+    public function getPostCreator($p_id){
+        $sql=DI()->notorm->post_base->select('user_base_id')->where('id',$p_id)->fetch();
+        return $sql;
+    }
+/*
+ *将回复情况发送给帖子主人
+ */
+    public function addReplyMessage($rs){
+        $postc=$this->getPostCreator($rs['post_base_id']);
+        $field=array(
+                    'message_base_code'=>'0007',
+                    'user_base_id'=>$postc['user_base_id'],
+                    'id_1'    =>$rs['user_base_id'],
+                    'id_2'    =>$rs['post_base_id'],
+                    'createTime'=>time(),
+        );
+        $sql = DI()->notorm->message_detail->insert($field);
+        if($sql){
+            $field = array(
+                        'message_detail_id' =>$sql['id'],
+                        'text'              =>$rs['floor'],
+            );
+            DI()->notorm->message_text->insert($field);
+        }
     }
     public function editPost($data) {
         $rs = array();
