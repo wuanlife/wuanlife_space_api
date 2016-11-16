@@ -28,16 +28,17 @@
 ###B.星球相关
 1.[创建星球](/wiki/Group.Create.md)<br>
 2.[加入星球](/wiki/Group.Join.md)<br>
-3.[是否加入星球](/wiki/Group.GStatus.md)<br>
-4.[星球列表](/wiki/Group.Lists.md)<br>
-5.[获取用户创建星球](/wiki/Group.GetCreate.md)<br>
-6.[获取用户加入星球](/wiki/Group.GetJoined.md)<br>
-7.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
-8.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
-9.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
-10[搜索接口](/wiki/Group.Search.md)<br>
-11.[星球成员管理](/wiki/Group.UserManage.md)<br>
-12.[删除星球成员](/wiki/Group.DeleteGroupMember.md)<br>
+3.[退出星球](/wiki/Group.Quit.md)<br>
+4.[是否加入星球](/wiki/Group.GStatus.md)<br>
+5.[星球列表](/wiki/Group.Lists.md)<br>
+6.[获取用户创建星球](/wiki/Group.GetCreate.md)<br>
+7.[获取用户加入星球](/wiki/Group.GetJoined.md)<br>
+8.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
+9.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
+10.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
+11[搜索接口](/wiki/Group.Search.md)<br>
+12.[星球成员管理](/wiki/Group.UserManage.md)<br>
+13.[删除星球成员](/wiki/Group.DeleteGroupMember.md)<br>
 
 ###C.帖子相关
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
