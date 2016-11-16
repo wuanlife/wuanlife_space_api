@@ -81,7 +81,7 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
 |currentPage|整型|当前页码
 |msg |字符串 |提示信息|
 
-##示例——1
+##示例——2
 
 显示用户id=3的消息列表“其他通知”
 
