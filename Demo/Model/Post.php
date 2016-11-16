@@ -2,6 +2,9 @@
 
 class Model_Post extends PhalApi_Model_NotORM {
 
+/*
+ * 主页帖子展示
+ */
     public function getIndexPost($page) {
 
         $num=30;
@@ -32,6 +35,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 单个星球的帖子展示
+ */
     public function getGroupPost($groupID,$page) {
 
         $num=30;
@@ -73,6 +79,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 我的星球帖子展示
+ */
     public function getMyGroupPost($userID,$page) {
 
         $num=30;
@@ -104,6 +113,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 单个帖子展示
+ */
     public function getPostBase($postID) {
         $rs   = array();
         $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky,pb.lock '
@@ -140,6 +152,9 @@ class Model_Post extends PhalApi_Model_NotORM {
 
     }
 
+/*
+ * 单个帖子的回复展示
+ */
     public function getPostReply($postID,$page) {
 
         $num=30;
@@ -170,6 +185,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchALL();
         return $rs;
     }
+/*
+ * 帖子回复操作
+ */
     public function PostReply($data) {
         $rs = array();
         $time = date('Y-m-d H:i:s',time());
@@ -184,6 +202,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         $this->addReplyMessage($rs);
         return $rs;
     }
+/*
+ * 获得帖子回复的位置楼层的回复详情
+ */
     public function getPostReplyInfo($p_id,$floor){
         $sql=DI()->notorm->post_detail
         ->select('*')
@@ -219,6 +240,9 @@ class Model_Post extends PhalApi_Model_NotORM {
             DI()->notorm->message_text->insert($field);
         }
     }
+/*
+ * 编辑帖子
+ */
     public function editPost($data) {
         $rs = array();
         $time = date('Y-m-d H:i:s',time());
@@ -290,6 +314,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return 'user';
     }
 
+/*
+ * 置顶帖子
+ */
     public function stickyPost($data){
         $rs = array();
 
@@ -305,6 +332,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 取消置顶帖子
+ */
     public function unStickyPost($data){
         $rs = array();
 
@@ -320,6 +350,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 逻辑删除帖子
+ */
     public function deletePost($data){
         $rs = array();
 
@@ -338,6 +371,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 通过星球id查找创建者id
+ */
     public function getCreaterId($groupID){
         $createrId=DI()->notorm->group_detail
         ->select('user_base_id')
@@ -347,6 +383,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $createrId;
         }
 
+/*
+ * 通过帖子id查找星球id
+ */
     public function getGroupId($post_id){
         $sqla=DI()->notorm->post_base
             ->select('group_base_id')
@@ -355,6 +394,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $sqla['group_base_id'];
     }
 
+/*
+ * 判断用户是否是帖子主人
+ */
     public function judgePoster($user_id,$post_id){
         $sql=DI()->notorm->post_detail->select('floor')->where('user_base_id=?',$user_id)->where('post_base_id=?',$post_id)->fetch();
         if($sql['floor']==1){
@@ -365,9 +407,16 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
-
+/*
+ * 判断帖子是否存在
+ */
     public function judgePostExist($post_id){
-        $sql=DI()->notorm->post_detail->select('post_base_id')->where('post_base_id= ?',$post_id)->fetch();
+		$g_id = $this->getGroupId($post_id);
+		$model=new Model_Group();
+        $rs=$model->judgeGroupExist($g_id);
+		if($rs){
+			$sql=DI()->notorm->post_base->select('id')->where(array('id'=>$post_id,'`delete`'=>'0'))->fetch();
+		}
         if(!empty($sql)){
             $rs=1;
         }else{
@@ -376,6 +425,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 锁定帖子
+ */
     public function lockPost($post_id){
         $data = array(
             '`lock`' => '1',
@@ -384,6 +436,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $sql;
     }
 
+/*
+ * 解除锁定帖子
+ */
     public function unlockPost($post_id){
         $data = array(
             '`lock`' => '0',
@@ -392,15 +447,24 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $sql;
     }
 
+/*
+ * 判断用户是否是帖子主人
+ */
     public function judgePostUser($user_id,$post_id){
         $sql=DI()->notorm->post_base->where('id',$post_id)->where('user_base_id',$user_id)->fetch();
         return $sql;
     }
 
+/*
+ * 判断帖子是否被锁定
+ */
     public function judgePostLock($post_id){
         $sql=DI()->notorm->post_base->where('id=?',$post_id)->fetch();
         return $sql['lock'];
     }
+/*
+ * 查询帖子
+ */
     public function searchPosts($text,$pnum,$pn){
         if(empty($pn)){
             $rs['posts'] = array();
@@ -421,6 +485,9 @@ class Model_Post extends PhalApi_Model_NotORM {
 
     }
 
+/*
+ * 查询帖子（数量）
+ */
     public function searchPostsNum($text){
         $text = strtolower($text);
         $sql = 'SELECT count(*) AS num '
@@ -430,6 +497,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $re[0]['num'];
     }
 
+/*
+ * 收藏帖子
+ */
     public function collectPost($user_id,$post_id){
         $data = array(
             'post_base_id' => $post_id,
@@ -440,7 +510,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $sql;
     }
 
-
+/*
+ * 获取收藏帖子详情
+ */
     public function getCollectPost($userID,$page) {
 
         $num=20;

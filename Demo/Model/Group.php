@@ -214,7 +214,7 @@ class Model_Group extends PhalApi_Model_NotORM{
     }
 
     public function judgeGroupExist($group_id){
-        $sql=DI()->notorm->group_detail->select('group_base_id')->where('group_base_id= ?',$group_id)->fetch();
+        $sql=DI()->notorm->group_base->select('id')->where(array('id'=>$group_id,'`delete`'=>'0'))->fetch();
         if(!empty($sql)){
             $rs=1;
         }else{
