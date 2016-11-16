@@ -201,12 +201,19 @@ class Api_Post extends PhalApi_Api{
           $creatorName=$common->getCreator($this->groupID);
           $data['creatorName']=$creatorName;
           $data['groupID']=$this->groupID;
+          $rs = $common->judgeGroupExist($data['groupID']);
           $data['groupName']=$common->getGroupName($this->groupID);
           $private=$common->judgeGroupPrivate($this->groupID);
           $data['private']=$private;
           $user=$common->judgeGroupUser($this->groupID,$this->userID);
           $creator=$common->judgeGroupCreator($this->groupID,$this->userID);
           $applicate=$common->judgeUserApplication($this->userID,$this->groupID);
+          if(empty($rs)){
+                $data['posts']='星球已关闭，不显示帖子';
+                $data['pageCount']=1;
+                $data['currentPage']=1;
+                return $data;
+          }
         if(empty($user)&&empty($creator)){
             $data['identity']='03';
            $data['posts']=array();
