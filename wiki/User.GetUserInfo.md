@@ -19,13 +19,13 @@
 |:--|:--|:--|
 |userID|int|用户id|
 |Email|string|用户Email|
-|nickname|string|用户名称|
+|nickname|string|用户呢称|
 |sex|int|	用户性别,0为未设，1为男，2为女|
 |year|string|年|
 |month|string|月|
 |day|string|	日|
 |mailChecked|	string|	是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
-
+|profile_picture|string|用户头像|
 
 ##示例
 
@@ -43,8 +43,9 @@ http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
         "month": null,
         "day": null,
         "mailChecked": "0",
+		"profile_picture": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
         "Email": null,
-        "nickname": null
+        "nickname": "taotao"
     },
     "msg": ""
     }
