@@ -487,7 +487,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function searchPostsNum($text){
         $text = strtolower($text);
         $sql = 'SELECT count(*) AS num '
-             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0'"
+             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0' AND gb.delete='0'"
              . "AND lower(pb.title) LIKE '%$text%'";
         $re = $this->getORM()->queryAll($sql);
         return $re[0]['num'];

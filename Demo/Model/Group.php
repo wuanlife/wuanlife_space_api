@@ -348,7 +348,7 @@ class Model_Group extends PhalApi_Model_NotORM{
         $text = strtolower($text);
         $num=($gn-1)*$gnum;
         $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
-            .'where gb.id = gd.group_base_id '
+            .'where gb.id = gd.group_base_id AND gb.delete=0 '
             ."AND lower(gb.name) LIKE '%$text%' "
             .'GROUP BY gd.group_base_id HAVING COUNT(gd.user_base_id)>=1 '
             .'ORDER BY COUNT(gd.user_base_id) DESC '
@@ -360,7 +360,7 @@ class Model_Group extends PhalApi_Model_NotORM{
     public function searchGroupNum($text){
         $text = strtolower($text);
         $sql='SELECT COUNT(group_base.id) AS num FROM group_base '
-            ."where lower(group_base.name) LIKE '%$text%' ";
+            ."where lower(group_base.name) LIKE '%$text%' AND gb.delete='0' ";
         $re = $this->getORM()->queryAll($sql);
         return $re[0]['num'];
     }
