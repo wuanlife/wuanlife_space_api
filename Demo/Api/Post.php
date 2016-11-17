@@ -302,6 +302,19 @@ class Api_Post extends PhalApi_Api{
         $data[0]['stickyRight']=0;
         $data[0]['lockRight']=0;
         $data[0]['code'] = 1;
+        $re = $domain3->judgeGroupExist($groupID);
+        $rs = $domain3->judgePostExist($this->postID);
+        if(!$rs){
+            $data[0]['postID'] = $this->postID;
+            $data[0]['code'] = 0;
+            $data[0]['groupID'] = $groupID;
+            if($re){
+                $data[0]['msg'] = "帖子已被删除，不可查看！";
+            }else{
+                $data[0]['msg'] = "帖子所属星球已关闭，不可查看！";
+            }
+            return $data[0];
+        }
         if($privategroup){
             if($this->userID !=null){
                 $groupuser = $domain3->judgeGroupUser($groupID,$this->userID);

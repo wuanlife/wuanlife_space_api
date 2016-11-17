@@ -27,7 +27,7 @@ class Model_Group extends PhalApi_Model_NotORM{
 
     public function lists($limit_st, $page_num){
         $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
-            .'where gb.id = gd.group_base_id '
+            .'where gb.id = gd.group_base_id AND gb.delete=0 '
             .'GROUP BY gd.group_base_id HAVING COUNT(gd.user_base_id)>=1 '
             .'ORDER BY COUNT(gd.user_base_id) DESC '
             .'LIMIT :limit_st,:page_num';
@@ -68,7 +68,7 @@ class Model_Group extends PhalApi_Model_NotORM{
         $groupnum=count($row);
         $arr_string = join(',', $row);
         $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction FROM group_base gb "
-            ."WHERE gb.id IN($arr_string)"
+            ."WHERE gb.delete=0 AND gb.id IN($arr_string)"
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
             .'ORDER BY COUNT(gb.id) DESC '
             .'LIMIT :limit_st,:page_num';
@@ -194,7 +194,7 @@ class Model_Group extends PhalApi_Model_NotORM{
         $groupnum=count($row);
         $arr_string = join(',', $row);
         $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction FROM group_base gb "
-            ."WHERE gb.id IN($arr_string)"
+            ."WHERE gb.delete=0 AND gb.id IN($arr_string)"
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
             .'ORDER BY COUNT(gb.id) DESC '
             .'LIMIT :limit_st,:page_num';
