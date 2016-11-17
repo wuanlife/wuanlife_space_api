@@ -49,28 +49,20 @@ class Model_Group extends PhalApi_Model_NotORM{
     {
         $group_detail = DI()->notorm->group_detail;
         $rows = $group_detail->where('user_base_id=?', $user_id)->where('authorization=?', '03')->fetchRows();
-        if (!empty($rows)) {
-            foreach ($rows as $key => $value) {
-                $row[] = $value["group_base_id"];
-            }
-            $groupnum = count($row);
-            return $groupnum;
-        }
+        return $rows;
     }
 
     public function getJoined($limit_st, $page_num,$user_id){
-        $group_detail=DI()->notorm->group_detail;
-        $rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','03')->fetchRows();
+        $rows = $this->getAllGroupJoinednum($user_id);
         if (!empty($rows)) {
         foreach ($rows as $key=>$value){
             $row[]=$value["group_base_id"];
         }
-        $groupnum=count($row);
         $arr_string = join(',', $row);
-        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction FROM group_base gb "
-            ."WHERE gb.delete=0 AND gb.id IN($arr_string)"
+        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
+            ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-            .'ORDER BY COUNT(gb.id) DESC '
+            .'ORDER BY COUNT(gd.group_base_id) DESC '
             .'LIMIT :limit_st,:page_num';
         $params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
         $re=$this->getORM()->queryAll($sql, $params);
@@ -91,14 +83,9 @@ class Model_Group extends PhalApi_Model_NotORM{
     {
         $group_detail = DI()->notorm->group_detail;
         $rows = $group_detail->where('user_base_id=?', $user_id)->where('authorization=?', '01')->fetchRows();
-        if (!empty($rows)) {
-            foreach ($rows as $key => $value) {
-                $row[] = $value["group_base_id"];
-            }
-            $groupnum = count($row);
-            return $groupnum;
+        return $rows;
         }
-    }
+
 /*
  * 加入星球
  */
@@ -185,18 +172,16 @@ class Model_Group extends PhalApi_Model_NotORM{
     }
 
     public function getCreate($limit_st, $page_num,$user_id){
-        $group_detail=DI()->notorm->group_detail;
-        $rows = $group_detail->where('user_base_id=?',$user_id)->where('authorization=?','01')->fetchRows();
+        $rows = $this->getAllGroupCreatenum($user_id);
         if (!empty($rows)) {
         foreach ($rows as $key=>$value){
             $row[]=$value["group_base_id"];
         }
-        $groupnum=count($row);
         $arr_string = join(',', $row);
-        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction FROM group_base gb "
-            ."WHERE gb.delete=0 AND gb.id IN($arr_string)"
+        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
+            ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-            .'ORDER BY COUNT(gb.id) DESC '
+            .'ORDER BY COUNT(gd.group_base_id) DESC '
             .'LIMIT :limit_st,:page_num';
         $params = array(':limit_st' => $limit_st, ':page_num' => $page_num);
 
