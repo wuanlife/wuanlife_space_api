@@ -360,7 +360,8 @@ class Model_Group extends PhalApi_Model_NotORM{
     public function searchGroupNum($text){
         $text = strtolower($text);
         $sql='SELECT COUNT(group_base.id) AS num FROM group_base '
-            ."where lower(group_base.name) LIKE '%$text%' AND gb.delete='0' ";
+            .'WHERE group_base.delete=0 '
+            ."AND lower(group_base.name) LIKE '%$text%' ";
         $re = $this->getORM()->queryAll($sql);
         return $re[0]['num'];
     }
