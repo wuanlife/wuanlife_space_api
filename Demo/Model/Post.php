@@ -11,7 +11,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs   = array();
 
         $sql = 'SELECT ceil(count(*)/:num) AS pageCount '
-             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0'";
+             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0' AND gb.delete='0'";
 
         $params = array(':num' =>$num);
         $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
@@ -25,7 +25,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['currentPage'] = $page;
         $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
              . 'ORDER BY MIN(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
@@ -470,7 +470,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $num=($pn-1)*$pnum;
         $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.private='0' "
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
              . "AND lower(pb.title) LIKE '%$text%' "
              . 'GROUP BY pb.id '
              . 'ORDER BY COUNT(pd.post_base_id) DESC '
