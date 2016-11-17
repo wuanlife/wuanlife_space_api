@@ -209,6 +209,22 @@ CREATE TABLE IF NOT EXISTS `user_detail` (
   `mailChecked` varchar(2) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT '是否验证邮箱'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户详情';
 
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `message_text`
+--
+-- 创建时间： 2016/10/17  17:29
+--
+-- user:小超
+
+CREATE TABLE `wuan`.`message_text` (
+    `message_detail_id` INT (11) NOT NULL COMMENT '消息ID',
+    `text` VARCHAR (65) CHARACTER
+SET utf8 COLLATE utf8_bin NOT NULL COMMENT '申请信息'
+) ENGINE = INNODB CHARACTER
+SET utf8 COLLATE utf8_bin COMMENT = '消息内容表';
+
 --
 -- Indexes for dumped tables
 --
