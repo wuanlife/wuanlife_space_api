@@ -184,7 +184,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 /*
  * 帖子回复操作
  */
-    public function PostReply($data) {
+    public function PostReply($data,$replyfloor) {
         $rs = array();
         $time = date('Y-m-d H:i:s',time());
         //查询最大楼层
@@ -194,7 +194,10 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->fetchone();
         $data['createTime'] = $time;
         $data['floor'] = ($sql['max(floor)'])+1;
+        $replyid=DI()->notorm->post_detail->select('user_base_id')->where('post_base_id =?',$data['post_base_id'])->where('floor =?',$replyfloor)->fetchone();
+        $data['replyid']=$replyid['user_base_id'];
         $rs = DI()->notorm->post_detail->insert($data);
+        $rs['reply_user_name']=DI()->notorm->user_base->select('nickname')->where('id =?',$data['replyid'])->fetchone()['nickname'];
         $this->addReplyMessage($rs);
         return $rs;
     }
@@ -527,7 +530,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             $page = $rs['pageCount'];
         }
         $rs['currentPage'] = $page;
-        $sql = 'SELECT uc.createTime,pb.title AS post_name,gb.id,gb.name AS groupName,ub.nickname '
+        $sql = 'SELECT uc.createTime,pb.title AS post_name,gb.id,gb.name AS groupName,ub.nickname,pb.delete '
              . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub '
              . 'WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=:user_id AND uc.delete=0 AND pb.user_base_id=ub.id '
               . 'LIMIT :start,:num ';
@@ -536,6 +539,12 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+
+    public function deletePostReply($user_id,$post_base_id,$floor){
+        $data=array('`delete`' => '1');
+        $sql=DI()->notorm->post_detail->where('post_base_id =?',$post_base_id)->where('floor =?',$floor)->update($data);
+        return $sql;
+    }
 
 }
 
