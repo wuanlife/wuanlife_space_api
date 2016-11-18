@@ -423,11 +423,11 @@ class Domain_User {
  * 用于显示用户的消息列表的“私密星球申请”消息类型
  */
     public function ShowMessage($data){
-    if($data['messageType']==1){
+    if($data['messageType']==3){
         return $this->getReplyMessage($data);
     }elseif($data['messageType']==2){
         return $this->getAnotherMessage($data);
-    }elseif($data['messageType']==3){
+    }elseif($data['messageType']==1){
         $model = new Model_User();
         $num = $model->getAllMessage($data['user_id'],$data['status']);
             $value['status'] = 0;
