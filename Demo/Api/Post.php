@@ -33,7 +33,8 @@ class Api_Post extends PhalApi_Api{
             'PostReply' => array(
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'text'   => array('name' => 'text', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '回复内容'),
-                'user_id' => array('name' => 'user_id', 'type' => 'string', 'require' => true, 'desc' => '回复人ID')
+                'user_id' => array('name' => 'user_id', 'type' => 'string', 'require' => true, 'desc' => '回复人ID'),
+                'replyfloor' => array('name' => 'replyfloor', 'type' => 'int', 'require' => false, 'desc' => '回复帖楼层')
             ),
             'editPost'  => array(
                 'user_id' => array('name' => 'user_id', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
@@ -143,7 +144,26 @@ class Api_Post extends PhalApi_Api{
                     'default' => '1'
                     ),
                 ),
-
+            'deletePostReply'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                    ),
+                'post_base_id'    => array(
+                        'name'    => 'post_base_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '帖子id',
+                    ),
+                'floor'    => array(
+                        'name'    => 'floor',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '楼层',
+                    ),
+                ),
         );
     }
 
@@ -404,7 +424,7 @@ class Api_Post extends PhalApi_Api{
         $judge =$domain1->judgePostExist($this->post_base_id);
         $lock=$domain1->judgePostLock($this->post_base_id);
         if($judge&&!$lock) {
-            $rs = $domain->PostReply($data);
+            $rs = $domain->PostReply($data,$this->replyfloor);
         }else{
             $rs=null;
         }
@@ -540,5 +560,16 @@ class Api_Post extends PhalApi_Api{
         return $data;
     }
 
-
+    /**
+     * 删除回复的帖子
+     * @desc 删除回复的帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function deletePostReply(){
+        $data   = array();
+        $domain = new Domain_Post();
+        $data = $domain->deletePostReply($this->user_id,$this->post_base_id,$this->floor);
+        return $data;
+    }
 }

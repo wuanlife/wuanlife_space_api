@@ -142,10 +142,10 @@ class Domain_Post {
         return $rs;
     }
 
-    public function PostReply($data) {
+    public function PostReply($data,$replyfloor) {
         $rs = array();
         $model = new Model_Post();
-        $rs = $model->PostReply($data);
+        $rs = $model->PostReply($data,$replyfloor);
         return $rs;
     }
 
@@ -331,7 +331,17 @@ class Domain_Post {
         $rs = $model->getCollectPost($user_id,$page);
         return $rs;
     }
-
+    public function deletePostReply($user_id,$post_base_id,$floor){
+        $model=new Model_Post();
+        $common=new Domain_Common();
+        $poster=$common->judgePostUser($user_id,$post_base_id);
+        if($poster){
+            $re=$model->deletePostReply($user_id,$post_base_id,$floor);
+        }else{
+            $re['code']="0";
+        }
+        return $re;
+    }
 
 
 }
