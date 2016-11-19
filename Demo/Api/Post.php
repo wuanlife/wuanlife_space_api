@@ -128,6 +128,7 @@ class Api_Post extends PhalApi_Api{
                     'type'=>'int',
                     'require'=>true,
                     'desc'=>'帖子ID',
+                    'min'=>'1',
                     ),
                 ),
             'getCollectPost'=>array(
@@ -561,8 +562,8 @@ class Api_Post extends PhalApi_Api{
     }
 
     /**
-     * 删除回复的帖子
-     * @desc 删除回复的帖子
+     * 删除帖子回复
+     * @desc 删除帖子回复
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string re 提示信息
      */

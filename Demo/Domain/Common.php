@@ -166,4 +166,13 @@ class Domain_Common
         return $re;
     }
 
+    /*
+    判断帖子是否已收藏但被删除
+     */
+    public function ifExistCollectPost($post_id,$user_id){
+        $model=new Model_Post();
+        $re=$model->ifExistCollectPost($post_id,$user_id);
+        return $re;
+    }
+
 }

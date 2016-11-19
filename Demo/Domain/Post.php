@@ -313,6 +313,12 @@ class Domain_Post {
 
     public function collectPost($user_id,$post_id){
         $model = new Model_Post();
+        $common=new Domain_Common();
+        $delete=$common->ifExistCollectPost($post_id,$user_id);
+        if($delete){
+            $rs=$model->existCollectPost($user_id,$post_id);
+            return $rs;
+        }else{
         $rs = $model->collectPost($user_id,$post_id);
         if($rs) {
             $info['code']=1;
@@ -322,6 +328,7 @@ class Domain_Post {
             $info['re']="操作过于频繁！";
         }
         return $info;
+    }
     }
 
     public function getCollectPost($user_id,$page) {
@@ -335,6 +342,7 @@ class Domain_Post {
         $model=new Model_Post();
         $common=new Domain_Common();
         $poster=$common->judgePostUser($user_id,$post_base_id);
+        $creator=$common->judgeGroupCreator();
         if($poster){
             $re=$model->deletePostReply($user_id,$post_base_id,$floor);
         }else{
