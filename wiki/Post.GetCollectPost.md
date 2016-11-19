@@ -23,7 +23,7 @@
 |posts.post_name           |     string   |      帖子标题|
 |posts.gbID    |      int   |   帖子所属星球id|
 |posts.groupName |   string   |   帖子所属星球名称|
-|posts.user_name        |       string     |    回复人名称|
+|posts.user_name        |       string     |    发帖者|
 |posts.delete        |       int     |    帖子是否被删除|
 |pageCount           |     int     |    总页数|
 |currentPage        |      int   |      当前页|
@@ -42,7 +42,7 @@ http://dev.wuanlife.com:800/?service=Post.GetCollectPost&user_id=14
             "currentPage": 1,
             "posts": [
                 {
-                    "createTime": "1479478175",
+                    "createTime": "1479563292",
                     "post_name": "午安煎饼计划Android组第48周周报",
                     "gbID": "2",
                     "groupName": "午安网啊阿萨阿萨安师大",
@@ -50,27 +50,11 @@ http://dev.wuanlife.com:800/?service=Post.GetCollectPost&user_id=14
                     "delete": "0"
                 },
                 {
-                    "createTime": "1479478228",
-                    "post_name": "午安煎饼计划Android组第48周周报",
-                    "gbID": "2",
-                    "groupName": "午安网啊阿萨阿萨安师大",
+                    "createTime": "1479560765",
+                    "post_name": "hello world",
+                    "gbID": "1",
+                    "groupName": "装备2014中队和是加",
                     "user_name": "午安网",
-                    "delete": "0"
-                },
-                {
-                    "createTime": "1479478236",
-                    "post_name": "午安煎饼计划Android组第48周周报",
-                    "gbID": "2",
-                    "groupName": "午安网啊阿萨阿萨安师大",
-                    "user_name": "午安网",
-                    "delete": "0"
-                },
-                {
-                    "createTime": "1479478245",
-                    "post_name": "我是人",
-                    "gbID": "2",
-                    "groupName": "午安网啊阿萨阿萨安师大",
-                    "user_name": "我是刷",
                     "delete": "0"
                 }
             ]
