@@ -13,12 +13,12 @@
 |参数|类型|是否必须|说明|
 |:--|:--|:--|:--|
 |user_id|int|必须|用户ID|
-|user_name|string|可选|用户昵称|
-|profile_picture|string|可选|用户头像|
-|sex|int|可选|性别|
-|year|string|可选|年|
-|month|string|可选|月|
-|day|string|可选|日|
+|user_name|string|必须|用户昵称|
+|profile_picture|string|必须|用户头像|
+|sex|int|必须|性别|
+|year|string|必须|年|
+|month|string|必须|月|
+|day|string|必须|日|
 
 ##返回说明
 |参数|类型|说明|
