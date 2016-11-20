@@ -339,16 +339,22 @@ class Domain_Post {
         return $rs;
     }
     public function deletePostReply($user_id,$post_base_id,$floor){
-        $model=new Model_Post();
+        $rs = array();
+        $domain = new Domain_Post();
+        $domain1 = new Domain_User();
         $common=new Domain_Common();
-        $poster=$common->judgePostUser($user_id,$post_base_id);
-        $creator=$common->judgeGroupCreator();
-        if($poster){
-            $re=$model->deletePostReply($user_id,$post_base_id,$floor);
+        $sqla = $domain->getGroupId($post_base_id);
+        $sqlb = $domain1->judgeCreate($user_id,$sqla);
+        $sqlc = $common->judgePostReplyUser($user_id,$post_base_id,$floor);
+        $sqld = $domain1->judgeAdmin($user_id);
+        if($sqlb||$sqlc||$sqld){
+            $model = new Model_Post();
+            $rs=$model->deletePostReply($user_id,$post_base_id,$floor);
         }else{
-            $re['code']="0";
+            $rs['code']=0;
+            $rs['re']="仅星球创建者和发帖者和管理员能删除帖子!";
         }
-        return $re;
+        return $rs;
     }
 
 

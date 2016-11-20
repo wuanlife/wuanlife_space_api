@@ -175,4 +175,14 @@ class Domain_Common
         return $re;
     }
 
+    /*
+    判断是否为发布帖子回复的用户
+     */
+    public function judgePostReplyUser($user_id,$post_id,$floor){
+        $model=new Model_Post();
+        $re=$model->judgePostReplyUser($user_id,$post_id,$floor);
+        return $re;
+    }
+
+
 }

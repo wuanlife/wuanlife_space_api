@@ -563,6 +563,13 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 判断用户是否是帖子回复的主人
+ */
+    public function judgePostReplyUser($user_id,$post_id,$floor){
+        $sql=DI()->notorm->post_detail->where('post_base_id',$post_id)->where('user_base_id',$user_id)->where('floor',$floor)->fetch();
+        return $sql;
+    }
 
 }
 
