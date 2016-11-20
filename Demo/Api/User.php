@@ -60,37 +60,37 @@ class Api_User extends PhalApi_Api{
                 'user_name' => array(
                     'name'    => 'user_name',
                     'type'    => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '用户昵称'
                 ),
                 'profile_picture' => array(
                     'name'    => 'profile_picture',
                     'type'    => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '用户头像'
                 ),
                 'sex' => array(
                     'name'    => 'sex',
                     'type'    => 'int',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '用户性别'
                 ),
                 'year' => array(
                     'name'    => 'year',
                     'type'    => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '年份'
                 ),
                 'month' => array(
                     'name'    => 'month',
                     'type'    => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '月份'
                 ),
                 'day' => array(
                     'name'    => 'day',
                     'type'    => 'string',
-                    'require' => false,
+                    'require' => true,
                     'desc'    => '天数'
                 ),
             ),
