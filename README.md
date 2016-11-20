@@ -54,3 +54,5 @@
 11.[帖子置顶取消](/wiki/Post.UnStickyPost.md)<br>
 12.[帖子锁定](/wiki/Post.LockPost.md)<br>
 13.[帖子解锁](/wiki/Post.UnlockPost.md)<br>
+14.[帖子收藏](/wiki/Post.CollectPost.md)<br>
+15.[我的收藏帖子显示](/wiki/Post.GetCollectPost.md)<br>
