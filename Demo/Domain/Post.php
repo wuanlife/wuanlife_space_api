@@ -145,7 +145,9 @@ class Domain_Post {
     public function PostReply($data,$replyfloor) {
         $rs = array();
         $model = new Model_Post();
+        $replyPage=$model->getPostReplyPage($data['post_base_id'],$replyfloor);
         $rs = $model->PostReply($data,$replyfloor);
+        $rs['replyPage']=$replyPage;
         return $rs;
     }
 
