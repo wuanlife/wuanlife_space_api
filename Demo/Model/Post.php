@@ -530,7 +530,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             $page = $rs['pageCount'];
         }
         $rs['currentPage'] = $page;
-        $sql = 'SELECT uc.createTime,pb.title AS post_name,gb.id AS gbID,gb.name AS groupName,ub.nickname AS user_name,pb.delete '
+        $sql = 'SELECT pb.id AS postID,uc.createTime,pb.title AS post_name,gb.id AS gbID,gb.name AS groupName,ub.nickname AS user_name,pb.delete '
              . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub '
              . 'WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=:user_id AND uc.delete=0 AND pb.user_base_id=ub.id '
               . 'LIMIT :start,:num ';
@@ -569,6 +569,18 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function judgePostReplyUser($user_id,$post_id,$floor){
         $sql=DI()->notorm->post_detail->where('post_base_id',$post_id)->where('user_base_id',$user_id)->where('floor',$floor)->fetch();
         return $sql;
+    }
+
+
+    public function deleteCollectPost($user_id,$post_id){
+        $sql=DI()->notorm->user_collection->where('post_base_id',$post_id)->where('user_base_id',$user_id)->delete();
+        if($sql){
+        $rs['code']=1;
+        $rs['re']="操作成功";}else{
+        $rs['code']=0;
+        $rs['re']="操作失败";
+        }
+        return $rs;
     }
 
 }

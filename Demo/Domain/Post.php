@@ -357,5 +357,13 @@ class Domain_Post {
         return $rs;
     }
 
+    public function deleteCollectPost($user_id,$post_id){
+        $rs = array();
+            $model = new Model_Post();
+            $rs = $model->deleteCollectPost($user_id,$post_id);
+        return $rs;
+    }
+
+
 
 }

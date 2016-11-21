@@ -145,6 +145,20 @@ class Api_Post extends PhalApi_Api{
                     'default' => '1'
                     ),
                 ),
+            'deleteCollectPost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                    ),
+                'post_id' =>array(
+                    'name' => 'post_id',
+                    'type' => 'int',
+                    'require'=>true,
+                    'desc' => '帖子ID'
+                    ),
+                ),
             'deletePostReply'=>array(
                 'user_id'    => array(
                         'name'    => 'user_id',
@@ -573,4 +587,18 @@ class Api_Post extends PhalApi_Api{
         $data = $domain->deletePostReply($this->user_id,$this->post_base_id,$this->floor);
         return $data;
     }
+
+    /**
+     * 删除收藏帖子
+     * @desc 删除收藏帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function deleteCollectPost(){
+        $data   = array();
+        $domain = new Domain_Post();
+        $data = $domain->deleteCollectPost($this->user_id,$this->post_id);
+        return $data;
+    }
+
 }
