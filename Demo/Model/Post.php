@@ -159,7 +159,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['postID']=$postID;
         $sql = 'SELECT ceil(count(pd.post_base_id)/:num) AS pageCount,count(*) AS replyCount '
          . 'FROM post_detail as pd '
-         . 'WHERE pd.post_base_id=:post_id AND pd.floor>1 ';
+         . 'WHERE pd.post_base_id=:post_id AND pd.floor>1 AND pd.delete=0 ';
 
         $params = array(':post_id' =>$postID,':num' =>$num);
         $count = DI()->notorm->user_base->queryAll($sql, $params);
@@ -175,6 +175,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 		$rs['reply']= DI()->notorm->post_detail
         ->SELECT('post_detail.text,user_base.nickname,post_detail.createTime,post_detail.floor')
         ->WHERE('post_detail.post_base_id = ?',$postID)
+        ->AND('post_detail.delete = ?',0)
         ->AND('post_detail.floor > ?','1')
         ->order('post_detail.floor ASC')
         ->limit(($page-1)*$num,$num)
@@ -583,5 +584,30 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $rs;
     }
 
+/*
+ * 查询帖子回复所在的页数
+ */
+    public function getPostReplyPage($p_id,$floor){
+        $num=30;
+        $sql = 'SELECT ceil(count(pd.post_base_id)/:num) AS pageCount,count(*) AS replyCount '
+         . 'FROM post_detail as pd '
+         . 'WHERE pd.post_base_id=:post_id AND pd.floor>1 AND pd.delete=0 ';
+        $params = array(':post_id' =>$p_id,':num' =>$num);
+        $count = DI()->notorm->post_detail->queryAll($sql, $params);
+        for($i=1;$i<=$count[0]['pageCount'];$i++){
+            $floors = DI()->notorm->post_detail
+            ->SELECT('floor')
+            ->WHERE('post_detail.post_base_id = ?',$p_id)
+            ->AND('post_detail.delete = ?',0)
+            ->limit(($i-1)*$num,$num)
+            ->fetchAll();
+            foreach($floors as $key =>$value){
+                if($value['floor'] == $floor){
+                    return $i;
+                }
+            }
+        }
+        return false;
+    }
 }
 

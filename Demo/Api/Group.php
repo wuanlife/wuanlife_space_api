@@ -377,6 +377,13 @@ class Api_Group extends PhalApi_Api
             'user_id' => $this->user_id,
             'g_id'    => $this->g_id,
         );
+		$domain_c = new Domain_Common();
+        $create = $domain_c->judgeGroupCreator($data['g_id'],$data['user_id']);
+		if($create){
+			$rs['code'] = 0;
+			$rs['msg'] = '您是星球创建者，无法退出';
+			return $rs;
+		}
         $domain = new Domain_Group();
         $rs = $domain->quit($data);
         return $rs;

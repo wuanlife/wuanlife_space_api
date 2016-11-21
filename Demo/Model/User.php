@@ -244,12 +244,17 @@ class Model_User extends PhalApi_Model_NotORM {
  * 从数据库中查找用户的消息列表并返回“回复我的”消息类型
  */
     public function ShowReplyMessage($data,$page_num) {
-        $sql='SELECT ub.id AS userID,ub.nickname,pd.text AS replytext,pd.createTime,pb.title AS posttitle,pb.id AS postID ,gb.id AS groupID ,gb.name AS groupname FROM user_base ub,post_detail pd,post_base pb,group_base gb,message_detail md,message_text mt '
+        $sql='SELECT ub.id AS userID,mt.text AS replyfloor,ub.nickname,pd.text AS replytext,pd.createTime,pb.title AS posttitle,pb.id AS postID ,gb.id AS groupID ,gb.name AS groupname FROM user_base ub,post_detail pd,post_base pb,group_base gb,message_detail md,message_text mt '
             ."WHERE md.user_base_id = :user_id AND md.message_base_code = '0007' AND md.id_1 =ub.id AND md.message_id =mt.message_detail_id AND pd.post_base_id = md.id_2 AND pd.floor =mt.text AND pd.post_base_id = pb.id AND gb.id = pb.group_base_id "
             .'ORDER BY pd.createTime DESC '
             .'LIMIT :limit_st,:page_num';
         $params = array(':user_id' => $data['user_id'], ':limit_st' => ($data['pn']-1)*$page_num, ':page_num' => $page_num);
         $re=DI()->notorm->message_detail->queryAll($sql, $params);
+		foreach($re as $key=>$value){
+			$model_p = new Model_Post();
+			$value['page'] = $model_p->getPostReplyPage($value['postID'],$value['replyfloor']);
+			$re[$key] = $value;
+		}
         return $re;
     }
 /*
@@ -360,7 +365,7 @@ class Model_User extends PhalApi_Model_NotORM {
         return $sql;
     }
 /*
- * 通过消息id查找申请信息
+ * 通过消息id查找申请信息、回复楼层
  */
     public function getMessageText($message_id){
         $sql = DI()->notorm->message_text->select('text')->where('message_detail_id = ?',$message_id)->fetchone();
