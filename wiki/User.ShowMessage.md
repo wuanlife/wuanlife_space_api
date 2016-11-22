@@ -34,8 +34,8 @@
 |info.groupID |整型|回复帖子所属星球的ID|
 |info.groupname|字符型|回复帖子所属星球名称|
 |info.page|整型|回复内容所在的页码|
-|pageCount|整型|总页码
-|currentPage|整型|当前页码
+|pageCount|整型|总页码|
+|currentPage|整型|当前页码|
 |msg |字符串 |提示信息|
 
 ##示例——1
