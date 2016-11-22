@@ -25,13 +25,15 @@
 |code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
 |info   | 数组  |用户消息列表详情,按时间降序排列|
 |info.userID | 整型| 回复人ID|
+|info.replyfloor|字符型|回复人楼层|
 |info.nickname|字符型|回复人昵称|
 |info.replytext|字符型|回复内容|
 |info.createTime |字符串 |创建时间|
 |info.posttitle  | 字符串  |回复帖子的标题|
 |info.postID|整型|回复帖子的ID|
 |info.groupID |整型|回复帖子所属星球的ID|
-|info.group_name|字符型|回复帖子所属星球名称|
+|info.groupname|字符型|回复帖子所属星球名称|
+|info.page|整型|回复内容所在的页码|
 |pageCount|整型|总页码
 |currentPage|整型|当前页码
 |msg |字符串 |提示信息|
@@ -42,21 +44,23 @@
 
 http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
 
-	JSON:
-	{
+    JSON:
+    {
     "ret": 200,
     "data": {
         "code": 1,
         "info": [
             {
                 "userID": "1",
+                "replyfloor": "36",
                 "nickname": "taotao",
                 "replytext": "接口测试",
                 "createTime": "2016-11-16 15:28:58",
                 "posttitle": "我是午安熊",
                 "postID": "2",
                 "groupID": "2",
-                "groupname": "午安网"
+                "groupname": "午安网",
+                "page"："2"
             }
         ],
         "pageCount": 1,
@@ -64,8 +68,8 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
         "msg": "接收成功"
     },
     "msg": ""
-	}
-	
+    }
+
 ##返回说明——2
 |参数|        类型|   说明|
 |:--|:--|:--|
@@ -87,8 +91,8 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
 
 http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&messageType=2
 
-	JSON:
-	{
+    JSON:
+    {
     "ret": 200,
     "data": {
         "code": 1,
@@ -123,7 +127,7 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&messageType
         "msg": "接收成功"
     },
     "msg": ""
-	}
+    }
 
 ##返回说明——3
 |参数|        类型|   说明|
@@ -172,7 +176,7 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92&messageType=3
             },
             {
                 "id": "3",
-				"user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                "user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                 "nickname": "梁王test",
                 "messagetype": "2",
                 "messageInfo": {
@@ -184,7 +188,7 @@ http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92&messageType=3
             },
             {
                 "id": "22",
-				"user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                "user_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                 "nickname": "ccc",
                 "messagetype": "2",
                 "messageInfo": {
