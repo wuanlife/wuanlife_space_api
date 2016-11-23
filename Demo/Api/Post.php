@@ -29,6 +29,12 @@ class Api_Post extends PhalApi_Api{
             'getPostReply' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'page' =>array('name' => 'pn', 'type' => 'int',  'desc' => '当前回帖的页码', 'default' => '1'),
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                ),
             ),
             'PostReply' => array(
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
@@ -410,7 +416,7 @@ class Api_Post extends PhalApi_Api{
         $data   = array();
 
         $domain = new Domain_Post();
-        $data = $domain->getPostReply($this->postID,$this->page);
+        $data = $domain->getPostReply($this->postID,$this->page,$this->user_id);
         $data = $domain->deleteHtmlReply($data);
         return $data;
     }

@@ -135,10 +135,31 @@ class Domain_Post {
         return $rs;
     }
 
-    public function getPostReply($postID,$page) {
+    public function getPostReply($postID,$page,$userID) {
         $rs = array();
+        $domain = new Domain_Post();
+        $domain1 = new Domain_User();
+        $common=new Domain_Common();
         $model = new Model_Post();
         $rs = $model->getPostReply($postID,$page);
+        foreach ($rs['reply'] as $key => $value) {
+            $sqlc = $common->judgePostReplyUser($userID,$postID,$value['floor']);
+            if ($sqlc) {
+                $rs['reply']["$key"]['deleteRight']=1;
+            }else{
+                $rs['reply']["$key"]['deleteRight']=0;
+            }
+        }
+        $sqla = $domain->getGroupId($postID);
+        $sqlb = $domain1->judgeCreate($userID,$sqla);
+        $sqld = $domain1->judgeAdmin($userID);
+        $sqle = $domain->judgePoster($userID,$postID,$sqla);
+
+        if($sqlb||$sqld||$sqle){
+            $rs['deleteRight']=1;
+        }else{
+            $rs['deleteRight']=0;
+        }
         return $rs;
     }
 
