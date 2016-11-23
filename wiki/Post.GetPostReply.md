@@ -23,71 +23,56 @@
 |reply.nickname	|string|	发帖人|
 |reply.createTime|	date|	发帖时间|
 |reply.floor|  int|   帖子楼层|
-|reply.deleteRight|  int|   删除权限|
+|reply.deleteRight|  int|   删除权限（1为有此权限）|
 |postID|		int	|帖子ID|
 |replyCount	|int|回帖数|
 |pageCount	|int	|总页数|
 |currentPage	|int|	当前页|
-|deleteRight    |int|   删除权限（有此权限可忽略reply.deleteRight，1为有此权限）|
+
 ##示例
 
-显示帖子ID为1的第1页回复
+显示帖子ID为5用户id为2的第1页回复
 
-http://apihost/?service=Post.GetPostReply&post_id=1&pn=1
+http://apihost/?service=Post.GetPostReply&post_id=5&pn=1&user_id=2
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "postID": 1,
-            "replyCount": 36,
-            "pageCount": 2,
+            "postID": 5,
+            "replyCount": 4,
+            "pageCount": 1,
             "currentPage": 1,
             "reply": [
                 {
-                    "text": "666666",
+                    "text": "真有道理，哈哈哈哈哈哈",
                     "nickname": "123",
-                    "createTime": "2016-05-30 14:26:54",
+                    "createTime": "2016-05-25 23:22:27",
+                    "floor": "2",
+                    "deleteRight": 0
+                },
+                {
+                    "text": "额哦",
+                    "nickname": "123",
+                    "createTime": "2016-06-06 19:38:00",
+                    "floor": "3",
+                    "deleteRight": 0
+                },
+                {
+                    "text": "啦啦啦啦",
+                    "nickname": "123",
+                    "createTime": "2016-06-06 19:54:17",
                     "floor": "4",
                     "deleteRight": 0
                 },
                 {
-                    "text": "12:37",
-                    "nickname": "12222",
-                    "createTime": "2016-06-15 12:40:01",
-                    "floor": "28",
-                    "deleteRight": 1
-                },
-                {
-                    "text": "12:37",
-                    "nickname": "12222",
-                    "createTime": "2016-06-15 12:40:02",
-                    "floor": "29",
-                    "deleteRight": 1
-                },
-                {
-                    "text": "12:37",
-                    "nickname": "12222",
-                    "createTime": "2016-06-15 12:40:05",
-                    "floor": "33",
-                    "deleteRight": 1
-                },
-                {
-                    "text": "12:37",
-                    "nickname": "12222",
-                    "createTime": "2016-06-15 12:40:06",
-                    "floor": "34",
-                    "deleteRight": 1
-                },
-                {
-                    "text": "12:37",
-                    "nickname": "12222",
-                    "createTime": "2016-06-15 12:40:07",
-                    "floor": "35",
-                    "deleteRight": 1
+                    "text": "去",
+                    "nickname": "123",
+                    "createTime": "2016-06-07 12:21:45",
+                    "floor": "5",
+                    "deleteRight": 0
                 }
-            ],
-            "deleteRight": 1
+            ]
         },
         "msg": ""
     }
