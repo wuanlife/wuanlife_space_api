@@ -19,9 +19,12 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|reply.text|string	|内容|
-|reply.nickname	|string|	发帖人|
-|reply.createTime|	date|	发帖时间|
+|reply.text|string	|回复内容|
+|reply.user_id	|int|	回帖人ID|
+|reply.nickname	|string|	回帖人昵称|
+|reply.replyid	|int|	被回帖人ID，为NULL代表回复楼主|
+|reply.replynickname	|string|被回帖人昵称，为NULL代表回复楼主|
+|reply.createTime|	date|	回帖时间|
 |reply.floor|  int|   帖子楼层|
 |reply.deleteRight|  int|   删除权限（1为有此权限）|
 |postID|		int	|帖子ID|
