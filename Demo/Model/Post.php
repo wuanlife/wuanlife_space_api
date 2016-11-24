@@ -173,7 +173,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 		}
         $rs['currentPage'] = $page;
 		$rs['reply']= DI()->notorm->post_detail
-        ->SELECT('post_detail.text,user_base.nickname,post_detail.createTime,post_detail.floor')
+        ->SELECT('post_detail.text,user_base.id AS user_id,user_base.nickname,post_detail.replyid,(SELECT nickname FROM user_base WHERE user_base.id =post_detail.replyid ) AS replynickname,post_detail.createTime,post_detail.floor')
         ->WHERE('post_detail.post_base_id = ?',$postID)
         ->AND('post_detail.delete = ?',0)
         ->AND('post_detail.floor > ?','1')
