@@ -33,7 +33,7 @@
 |info.postID|整型|回复帖子的ID|
 |info.groupID |整型|回复帖子所属星球的ID|
 |info.groupname|字符型|回复帖子所属星球名称|
-|info.page|整型|回复内容所在的页码|
+|info.page|整型|回复内容所在的页码，返回false代表该回复被删除|
 |pageCount|整型|总页码|
 |currentPage|整型|当前页码|
 |msg |字符串 |提示信息|
