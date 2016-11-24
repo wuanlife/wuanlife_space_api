@@ -197,7 +197,10 @@ class Model_Post extends PhalApi_Model_NotORM {
         $data['floor'] = ($sql['max(floor)'])+1;
         $replyid=DI()->notorm->post_detail->select('user_base_id')->where('post_base_id =?',$data['post_base_id'])->where('floor =?',$replyfloor)->fetchone();
         $data['replyid']=$replyid['user_base_id'];
+        $a=DI()->notorm->user_base->select('nickname')->where('id',$data['user_base_id'])->fetchone();
+
         $rs = DI()->notorm->post_detail->insert($data);
+        $rs['user_base_name']=$a['nickname'];
         $rs['reply_user_name']=DI()->notorm->user_base->select('nickname')->where('id =?',$data['replyid'])->fetchone()['nickname'];
         $this->addReplyMessage($rs);
         return $rs;
