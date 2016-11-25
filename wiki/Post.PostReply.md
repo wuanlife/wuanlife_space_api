@@ -21,13 +21,14 @@
 
 |返回字段         |   类型      |  说明|
 |:--|:--|:--|
-|post_base_id    |    整型       |帖子ID|
-|user_base_id     |   整型   |    回帖人ID|
-|replyid        |     整型|       帖子内回复的人的id|
+|postID    |    整型       |帖子ID|
+|user_id     |   整型   |    回帖人ID|
+|replyid        |     整型|被回帖人ID，为NULL代表回复楼主|
 |text            |    字符串    | 回复内容|
 |floor      |         整型     |  自己的回复所在的楼层|
 |createTime     |     日期  |     回帖时间|
-|reply_user_name     |     字符串  |     帖子内回复的人的名称|
+|nickname   |string|    回帖人昵称|
+|replynickname     |     字符串  |被回帖人昵称，为NULL代表回复楼主|
 |reply_Page    |     整型  |     帖子内回复的人的帖子所在的页数|
 
 ##示例
