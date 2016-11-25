@@ -15,7 +15,7 @@
 |post_id|   整型  |  必须     |       |      |        帖子ID|
 |text      |  字符串|  必须     |      |   |          回复内容|
 |user_id    | 整型 | 必须     |         |  |        回帖人ID|
-|replyfloor    | 整型 | 可选     |         |  |        帖子内回复的人的楼层|
+|replyfloor    | 整型 | 可选     |         |  |        帖子内被回复的人的楼层|
 
 ##返回说明
 
@@ -35,19 +35,21 @@
 
 回复帖子id=2楼层为5的的帖子
 
-http://dev.wuanlife.com:800/?service=Post.PostReply&post_id=2&text=100000&user_id=1&replyfloor=5
+http://dev.wuanlife.com:800/?service=post.Postreply&post_id=25&text=666666&user_id=5&replyfloor=0
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "post_base_id": 2,
-            "user_base_id": "1",
-            "replyid": "2",
-            "text": "100000",
-            "floor": 44,
-            "createTime": "2016-11-19 20:12:59",
-            "reply_user_name": "汪汪汪"
+            "post_base_id": 25,
+            "user_base_id": "5",
+            "replyid": null,
+            "text": "666666",
+            "floor": 29,
+            "createTime": "2016-11-24 18:20:38",
+            "user_base_name": "奇奇",
+            "reply_user_name": null,
+            "replyPage": false
         },
         "msg": ""
     }
