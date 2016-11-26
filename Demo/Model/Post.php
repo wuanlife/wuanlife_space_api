@@ -544,6 +544,9 @@ class Model_Post extends PhalApi_Model_NotORM {
               . 'LIMIT :start,:num ';
         $params = array(':user_id' =>$userID,':start' =>($page-1)*$num , ':num' =>$num );
         $rs['posts'] = DI()->notorm->post_base->queryAll($sql, $params);
+        foreach ($rs['posts'] as $key => $value) {
+            $rs['posts']["$key"]['createTime']=date('Y-m-d H:i:s',$rs['posts']["$key"]['createTime']);
+        }
         return $rs;
     }
 
