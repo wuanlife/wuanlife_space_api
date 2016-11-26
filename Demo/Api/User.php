@@ -237,8 +237,8 @@ class Api_User extends PhalApi_Api{
                     'require' => false,
                     'desc'    => '是否已读'
                 ),
-                'messageType'   => array(
-                    'name'    => 'messageType',
+                'mtype'   => array(
+                    'name'    => 'mtype',
                     'type'    => 'int',
                     'default' => '1',
                     'require' => false,
@@ -503,7 +503,7 @@ class Api_User extends PhalApi_Api{
             'user_id'       => $this->user_id,
             'pn'            => $this->pn,
             'status'        => $this->status,
-            'messageType'   => $this->messageType,
+            'messageType'   => $this->mtype,
             );
         $domain = new Domain_User();
         $rs = $domain->ShowMessage($data);
