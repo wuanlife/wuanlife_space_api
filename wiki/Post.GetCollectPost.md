@@ -19,6 +19,7 @@
 
 |返回字段                | 类型   |     说明|
 |:--|:--|:--|
+|posts.postID   |      int   |   帖子id|
 |posts.createTime       |       string    |  收藏时间|
 |posts.post_name           |     string   |      帖子标题|
 |posts.gbID    |      int   |   帖子所属星球id|
