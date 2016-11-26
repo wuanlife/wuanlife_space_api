@@ -106,7 +106,6 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&mtype=2
             {
                 "id": "598",
                 "nickname": "taotao",
-                "messagetype": "3",
                 "messageInfo": "taotao已加入你的午安网",
                 "group_id": "2",
                 "createTime": "2016-11-16 15:53"
@@ -114,7 +113,6 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&mtype=2
             {
                 "id": "597",
                 "nickname": "taotao",
-                "messagetype": "3",
                 "messageInfo": "taotao已从你的午安网中退出",
                 "group_id": "2",
                 "createTime": "2016-11-16 15:53"
