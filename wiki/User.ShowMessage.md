@@ -15,7 +15,7 @@
 |user_id    |   整型| 必须     ||           最小：1  |  用户ID|
 |pn|整型|可选|默认1|消息页码|
 |status|整型|可选|默认1|1全部2已读3未读|
-|messageType|整型|必须|默认1|消息分类，1回复我的，2其他通知，3私密星球申请|
+|mtype|整型|必须|默认1|消息分类，1回复我的，2其他通知，3私密星球申请|
 
 ##消息分类，1回复我的，2其他通知，3私密星球申请
 
@@ -77,7 +77,6 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
 |info   | 数组  |用户消息列表详情,按时间降序排列|
 |info.id | 整型| 消息ID|
 |info.nickname|字符型|操作人昵称|
-|info.messagetype|字符型|消息类型，此处都是3|
 |info.messageInfo|字符型|消息详情|
 |info.group_id |整型|所属星球的ID|
 |info.createTime |字符串 |创建时间|
@@ -89,7 +88,7 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
 
 显示用户id=3的消息列表“其他通知”
 
-http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&messageType=2
+http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&mtype=2
 
     JSON:
     {
@@ -100,7 +99,6 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&messageType
             {
                 "id": "599",
                 "nickname": "汪汪汪",
-                "messagetype": "3",
                 "messageInfo": "汪汪汪已将你从装备2014中队中移除",
                 "group_id": "1",
                 "createTime": "2016-11-16 15:55"
@@ -154,7 +152,7 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3&messageType
 
 显示用户id=92的消息列表“私密星球申请”
 
-http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92&messageType=3
+http://dev.wuanlife.com:800/?service=User.ShowMessage&user_id=92&mtype=3
 
     JSON：
     {
