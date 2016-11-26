@@ -400,7 +400,6 @@ class Domain_User {
                 $rs[$keys] = array(
                                 'id'            =>$value['message_id'],
                                 'nickname'      =>$user_name,
-                                'messagetype'   =>$sql['type'],
                                 'messageInfo'   =>$sql['content'],
                                 'group_id'      =>$value['id_2'],
                                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
