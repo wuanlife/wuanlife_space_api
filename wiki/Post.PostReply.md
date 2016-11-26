@@ -30,25 +30,27 @@
 |nickname   |string|    回帖人昵称|
 |replynickname     |     字符串  |被回帖人昵称，为NULL代表回复楼主|
 |reply_Page    |     整型  |     帖子内回复的人的帖子所在的页数|
+|page|整型|回复内容所在的页码|
 
 ##示例
 
 回复帖子id=2楼层为5的的帖子
 
-http://dev.wuanlife.com:800/?service=post.Postreply&post_id=25&text=666666&user_id=5&replyfloor=0
+http://dev.wuanlife.com:800/?service=Post.PostReply&post_id=1&text=1&user_id=6
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "post_base_id": 25,
-            "user_base_id": "5",
             "replyid": null,
-            "text": "666666",
-            "floor": 29,
-            "createTime": "2016-11-24 18:20:38",
-            "user_base_name": "奇奇",
-            "reply_user_name": null,
+            "text": "1",
+            "floor": 44,
+            "createTime": "2016-11-26 17:25:11",
+            "nickname": "azusa",
+            "user_id": "6",
+            "postID": 1,
+            "replynickname": null,
+            "page": 2,
             "replyPage": false
         },
         "msg": ""

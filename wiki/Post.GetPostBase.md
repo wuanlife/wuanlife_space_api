@@ -33,25 +33,37 @@
 |deleteRight|	boolean	|	删除权限(0为无权限，1有)|
 |stickyRight|	boolean	|	置顶权限(0为无权限，1有)|
 |lockRight|	boolean	|	锁帖权限(0为无权限，1有)|
+|collect| boolean |   帖子是否收藏(0为未收藏，1为收藏)|
 
 ##示例
 
 显示帖子ID为1的帖子内容,此人为发帖者
 
-http://apihost/?service=Post.GetPostBase&post_id=1&id=1
+http://apihost/?service=Post.GetPostBase&post_id=3&id=2
 
      JSON:
-     {
-    "ret": 200,
-    "data": {
-        "postID": "1",
-        "groupID": "1",
-        "title": "title1",
-        "text": "1texttexttexttexttexttexttexttexttexttext",
-        "id": "1",
-        "nickname": "陶陶1",
-        "createTime": "2016-04-06 00:00:00",
-        "editRight": 1
-     },
-    "msg": ""
-     }
+    {
+        "ret": 200,
+        "data": {
+            "postID": "3",
+            "groupID": "1",
+            "groupName": "装备2014中队和是加",
+            "title": "hello world",
+            "text": "<p>大家好 &nbsp;我是java</p>",
+            "id": "3",
+            "nickname": "午安网",
+            "createTime": "2016-05-20 20:04:18",
+            "sticky": 0,
+            "lock": 0,
+            "p_image": [
+                []
+            ],
+            "collect": 0,
+            "editRight": 0,
+            "deleteRight": 0,
+            "stickyRight": 0,
+            "lockRight": 0,
+            "code": 1
+        },
+        "msg": ""
+    }
