@@ -128,10 +128,16 @@ class Domain_Post {
         return $rs;
     }
 
-    public function getPostBase($postID) {
+    public function getPostBase($postID,$userID) {
         $rs = array();
         $model = new Model_Post();
+        $common=new Domain_Common();
         $rs = $model->getPostBase($postID);
+        if($userID){
+            $rs[0]['collect']=$common->judgeCollectPost($postID,$userID);
+        }else{
+            $rs[0]['collect']=0;
+        }
         return $rs;
     }
 

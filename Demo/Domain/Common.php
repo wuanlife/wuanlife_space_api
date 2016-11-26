@@ -184,5 +184,15 @@ class Domain_Common
         return $re;
     }
 
+    /*
+    判断帖子是否已收藏
+     */
+    public function judgeCollectPost($post_id,$user_id){
+        $model=new Model_Post();
+        $re=$model->judgeCollectPost($post_id,$user_id);
+        return $re;
+    }
+
+
 
 }

@@ -204,6 +204,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $rs['user_id']=$rs['user_base_id'];
         $rs['postID']=$rs['post_base_id'];
         $rs['replynickname']=DI()->notorm->user_base->select('nickname')->where('id =?',$data['replyid'])->fetchone()['nickname'];
+        $rs['page']=$this->getPostReplyPage($data['post_base_id'],$data['floor']);
         $this->addReplyMessage($rs);
         unset($rs['user_base_id']);
         unset($rs['post_base_id']);
@@ -563,6 +564,17 @@ class Model_Post extends PhalApi_Model_NotORM {
         $sql=DI()->notorm->user_collection->select('*')->where('post_base_id',$post_id)->where('user_base_id',$user_id)->fetch();
         return $sql;
     }
+
+    public function judgeCollectPost($post_id,$user_id){
+        $sql=DI()->notorm->user_collection->select('*')->where('post_base_id',$post_id)->where('user_base_id',$user_id)->fetch();
+        if($sql){
+            $collect=1;
+        }else{
+            $collect=0;
+        }
+        return $collect;
+    }
+
 
     public function existCollectPost($user_id,$post_id){
         $time=time();

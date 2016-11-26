@@ -327,6 +327,7 @@ class Api_Post extends PhalApi_Api{
      * @return boolean deleteRight 删除权限(0为无权限，1有)
      * @return boolean stickyRight 置顶权限(0为无权限，1有)
      * @return boolean lockRight 锁帖权限(0为无权限，1有)
+     * @return boolean collect 是否收藏(0为未，1为收藏)
      */
     public function getPostBase(){
 
@@ -335,7 +336,7 @@ class Api_Post extends PhalApi_Api{
         $domain = new Domain_Post();
         $domain2 = new Domain_User();
         $domain3 = new Domain_Common();
-        $data = $domain->getPostBase($this->postID);
+        $data = $domain->getPostBase($this->postID,$this->userID);
         $groupID=$domain->getGroupId($this->postID);
         $privategroup = $domain3->judgeGroupPrivate($groupID);
         $data[0]['editRight']=0;
