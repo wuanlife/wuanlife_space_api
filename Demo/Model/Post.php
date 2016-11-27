@@ -596,7 +596,10 @@ class Model_Post extends PhalApi_Model_NotORM {
 
 
     public function deleteCollectPost($user_id,$post_id){
-        $sql=DI()->notorm->user_collection->where('post_base_id',$post_id)->where('user_base_id',$user_id)->delete();
+        $data=array('`delete`' => '1');
+        $sql=DI()->notorm->user_collection->where('post_base_id',$post_id)->where('user_base_id',$user_id)->update($data);
+            $rs['code']=1;
+            $rs['re']="操作成功";
         if($sql){
         $rs['code']=1;
         $rs['re']="操作成功";}else{
