@@ -19,9 +19,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
-		if($page > $rs['pageCount']){
-			$page = $rs['pageCount'];
-		}
+        if($page > $rs['pageCount']){
+            $page = $rs['pageCount'];
+        }
         $rs['currentPage'] = $page;
         $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
@@ -63,9 +63,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
-		if($page > $rs['pageCount']){
-			$page = $rs['pageCount'];
-		}
+        if($page > $rs['pageCount']){
+            $page = $rs['pageCount'];
+        }
         $rs['currentPage'] = $page;
         $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.createTime,ub.id,ub.nickname,pb.sticky,pb.lock '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
@@ -97,9 +97,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
-		if($page > $rs['pageCount']){
-			$page = $rs['pageCount'];
-		}
+        if($page > $rs['pageCount']){
+            $page = $rs['pageCount'];
+        }
         $rs['currentPage'] = $page;
         $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
@@ -168,11 +168,11 @@ class Model_Post extends PhalApi_Model_NotORM {
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
         }
-		if($page > $rs['pageCount']){
-			$page = $rs['pageCount'];
-		}
+        if($page > $rs['pageCount']){
+            $page = $rs['pageCount'];
+        }
         $rs['currentPage'] = $page;
-		$rs['reply']= DI()->notorm->post_detail
+        $rs['reply']= DI()->notorm->post_detail
         ->SELECT('post_detail.text,user_base.id AS user_id,user_base.nickname,post_detail.replyid,(SELECT nickname FROM user_base WHERE user_base.id =post_detail.replyid ) AS replynickname,post_detail.createTime,post_detail.floor')
         ->WHERE('post_detail.post_base_id = ?',$postID)
         ->AND('post_detail.delete = ?',0)
@@ -419,12 +419,12 @@ class Model_Post extends PhalApi_Model_NotORM {
  * 判断帖子是否存在
  */
     public function judgePostExist($post_id){
-		$g_id = $this->getGroupId($post_id);
-		$model=new Model_Group();
+        $g_id = $this->getGroupId($post_id);
+        $model=new Model_Group();
         $rs=$model->judgeGroupExist($g_id);
-		if($rs){
-			$sql=DI()->notorm->post_base->select('id')->where(array('id'=>$post_id,'`delete`'=>'0'))->fetch();
-		}
+        if($rs){
+            $sql=DI()->notorm->post_base->select('id')->where(array('id'=>$post_id,'`delete`'=>'0'))->fetch();
+        }
         if(!empty($sql)){
             $rs=1;
         }else{
@@ -598,13 +598,12 @@ class Model_Post extends PhalApi_Model_NotORM {
     public function deleteCollectPost($user_id,$post_id){
         $data=array('`delete`' => '1');
         $sql=DI()->notorm->user_collection->where('post_base_id',$post_id)->where('user_base_id',$user_id)->update($data);
+        if($sql){
             $rs['code']=1;
             $rs['re']="操作成功";
-        if($sql){
-        $rs['code']=1;
-        $rs['re']="操作成功";}else{
-        $rs['code']=0;
-        $rs['re']="操作失败";
+        }else{
+            $rs['code']=0;
+            $rs['re']="操作失败";
         }
         return $rs;
     }
@@ -635,4 +634,3 @@ class Model_Post extends PhalApi_Model_NotORM {
         return false;
     }
 }
-

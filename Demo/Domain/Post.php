@@ -180,10 +180,10 @@ class Domain_Post {
     }
 /*
     public function stickyPost($data){
-    	$rs = array();
-    	$domain = new Domain_Post();
+        $rs = array();
+        $domain = new Domain_Post();
         $domain1 = new Domain_User();
-    	$sqla = $domain->getGroupId($data['post_id']);
+        $sqla = $domain->getGroupId($data['post_id']);
         $sqlb = $domain1->judgeCreate($data['user_id'],$sqla);
         if($sqlb) {
             $model=new Model_Post();
@@ -195,10 +195,10 @@ class Domain_Post {
         }
         return $rs;
     }
-*/	
-	public function stickyPost($data){
-    	$rs = array();
-    	$model=new Model_Post();
+*/
+    public function stickyPost($data){
+        $rs = array();
+        $model=new Model_Post();
         $rs = $model->stickyPost($data);
         if($rs) {
             $rs['code']=1;
@@ -209,9 +209,9 @@ class Domain_Post {
         }
         return $rs;
     }
-	public function unstickyPost($data){
-    	$rs = array();
-    	$model=new Model_Post();
+    public function unstickyPost($data){
+        $rs = array();
+        $model=new Model_Post();
         $rs = $model->unstickyPost($data);
         if($rs) {
             $rs['code']=1;
@@ -256,7 +256,7 @@ class Domain_Post {
             $rs['code']=0;
             $rs['re']="仅星球创建者和发帖者和管理员能删除帖子!";
         }
-    	return $rs;
+        return $rs;
     }
 /*
     public function lockPost($user_id,$post_id){
@@ -277,7 +277,7 @@ class Domain_Post {
         return $rs;
     }
 */
-	public function lockPost($user_id,$post_id){
+    public function lockPost($user_id,$post_id){
         $model = new Model_Post();
         $rs = $model->lockPost($post_id);
         if($rs) {
@@ -289,7 +289,7 @@ class Domain_Post {
         }
         return $info;
     }
-	public function unlockPost($user_id,$post_id){
+    public function unlockPost($user_id,$post_id){
         $model = new Model_Post();
         $rs = $model->unlockPost($post_id);
         if($rs) {
@@ -301,7 +301,7 @@ class Domain_Post {
         }
         return $info;
     }
-/*	
+/*
     public function unlockPost($user_id,$post_id){
         $domain = new Domain_Post();
         $domain1 = new Domain_User();
@@ -342,16 +342,16 @@ class Domain_Post {
             $rs=$model->existCollectPost($user_id,$post_id);
             return $rs;
         }else{
-        $rs = $model->collectPost($user_id,$post_id);
-        if($rs) {
-            $info['code']=1;
-            $info['re']="收藏成功！";
-        }else{
-            $info['code']=0;
-            $info['re']="操作过于频繁！";
+            $rs = $model->collectPost($user_id,$post_id);
+            if($rs) {
+                $info['code']=1;
+                $info['re']="收藏成功！";
+            }else{
+                $info['code']=0;
+                $info['re']="操作过于频繁！";
+            }
+            return $info;
         }
-        return $info;
-    }
     }
 
     public function getCollectPost($user_id,$page) {
