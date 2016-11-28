@@ -128,13 +128,13 @@ class Domain_Group {
             );
             $result = $this->model->quit($data);
             $this->model->quitMessage($data);
-            $this->rs['msg'] = '退出成功！并通知星球创建者';
-            $this->rs['code'] = 1;
+            $re['msg'] = '退出成功！并通知星球创建者';
+            $re['code'] = 1;
         }else{
-            $this->rs['msg'] = $this->msg;
+            $re['msg'] = $this->msg;
         }
 
-        return $this->rs;
+        return $re;
     }
 
     public function uStatus($data){
