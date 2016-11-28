@@ -460,8 +460,8 @@ class Domain_User {
                 'messagetype'   =>$sql['type'],
                 'messageInfo'   =>array(
                 'information'   =>'已'.$a.'你的加入',
-				'group_name'    =>'《'.$group_name.'》',
-				'group_id'      =>$value['id_2'],
+                'group_name'    =>$group_name,
+                'group_id'      =>$value['id_2'],
                 ),
                 'createTime'    =>date('Y-m-d H:i',$value['createTime']),
 
@@ -484,7 +484,7 @@ class Domain_User {
                     'messagetype'   =>$sql['type'],
                     'messageInfo'   =>array(
                     'information'   =>'申请加入',
-					'group_name'    =>'《'.$group_name.'》',
+                    'group_name'    =>$group_name,
                     'group_id'      =>$value['id_2'],
                     'status'        =>$value['status'],
                     'text'          =>$text,

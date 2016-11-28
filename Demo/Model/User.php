@@ -234,6 +234,7 @@ class Model_User extends PhalApi_Model_NotORM {
         $sql = DI()->notorm->message_detail
         ->select('*')
         ->where('user_base_id = ?',$data['user_id'])
+        ->where('message_base_code',array('0001','0002','0003'))
         ->where('status',$status)
         ->order('createTime DESC')
         ->limit(($data['pn']-1)*$page_num,$page_num)
@@ -306,6 +307,7 @@ class Model_User extends PhalApi_Model_NotORM {
         $sql = DI()->notorm->message_detail
         ->select('*')
         ->where('user_base_id = ?',$user_id)
+        ->where('message_base_code',array('0001','0002','0003'))
         ->where('status',$status)
         ->fetchAll();
         return $sql;
