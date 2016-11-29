@@ -1,6 +1,6 @@
 #Post.DeleteCollectPost
 
-删除收藏帖子接口
+取消收藏帖子接口
 
 ##接口调用请求说明
 
@@ -24,7 +24,7 @@
 
 ##示例：
 
-将帖子id为1的帖子删除
+将帖子id为1的帖子取消收藏
 
 http://dev.wuanlife.com:800/?service=Post.DeleteCollectPost&user_id=14&post_id=2
 
