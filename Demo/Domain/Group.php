@@ -110,12 +110,12 @@ class Domain_Group {
 
             $result = $this->model->join($data);
             $this->model->joinMessage($data);
-            $this->rs['msg'] = '加入成功！并通知星球创建者';
-            $this->rs['code'] = 1;
+            $rs['msg'] = '加入成功！并通知星球创建者';
+            $rs['code'] = 1;
         }else{
-            $this->rs['msg'] = $this->msg;
+            $rs['msg'] = $this->msg;
         }
-        return $this->rs;
+        return $rs;
     }
     public function quit($data){
         $this->model = new Model_Group();
