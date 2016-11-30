@@ -118,29 +118,24 @@ class Model_User extends PhalApi_Model_NotORM {
             'month'=>$data['month'],
             'day'=>$data['day']);
         $sql=DI()->notorm->user_detail->where('user_base_id=?',$id)->update($field);
+        if(isset($sql)){
+            $re['code']=1;
+            $re['msg']='资料修改成功!';
+        }else{
+            $re['code']=0;
+            $re['msg']='资料修改失败!';
+        }
         if(!empty($data['nickname'])){
             $field=array('nickname'=>$data['nickname']);
             $user = $this->usernickname($field);
             if(empty($user)){
-                $re['code_2']=1;
-                $re['msg_2']='用户名修改成功！';
                 $sqla=DI()->notorm->user_base->where('id=?',$id)->update($field);
             }else{
-                if($user['id']==$id){
-                    $re['msg_2']='用户名未变化！';
-                    $re['code_2']=1;
-                }else{
-                    $re['code_2']=0;
-                    $re['msg_2']='用户名被占用！';
+                if($user['id']!=$id){
+                    $re['code']=0;
+                    $re['msg']='用户名被占用，其他资料修改成功！';
                 }
             }
-        }
-        if(isset($sql)){
-            $re['code_1']=1;
-            $re['msg_1']='其他资料修改成功!';
-        }else{
-            $re['code_1']=0;
-            $re['msg_1']='其他资料修改失败!';
         }
         return $re;
     }
