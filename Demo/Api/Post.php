@@ -347,9 +347,8 @@ class Api_Post extends PhalApi_Api{
         $re = $domain3->judgeGroupExist($groupID);
         $rs = $domain3->judgePostExist($this->postID);
         if(!$rs){
-            $data[0]['postID'] = $this->postID;
+            unset($data);
             $data[0]['code'] = 0;
-            $data[0]['groupID'] = $groupID;
             if($re){
                 $data[0]['msg'] = "帖子已被删除，不可查看！";
             }else{
@@ -364,14 +363,14 @@ class Api_Post extends PhalApi_Api{
                 if(empty($groupcreator)){
                     if(empty($groupuser)){
                         unset($data);
-                        $data[0]['code'] = 0;
+                        $data[0]['code'] = 2;
                         $data[0]['groupID'] = $groupID;
                         $data[0]['msg'] = "未加入，不可查看私密帖子！";
                     }
                 }
             }else{
                 unset($data);
-                $data[0]['code'] = 0;
+                $data[0]['code'] = 2;
                 $data[0]['groupID'] = $groupID;
                 $data[0]['msg'] = "未登录，不可查看私密帖子！";
             }
