@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Post.GetPostBase
+接口URL：http://dev.wuanlife.com:800/?service=Post.GetPostBase
 
 请求方式：GET
 
@@ -18,7 +18,7 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|code|int|操作码，帖子显示失败为0. 成功为1|
+|code|int|操作码，帖子删除为0. 正常显示为1. 私密帖子为2|
 |msg|string|提示信息|
 |postID	|	int	|帖子ID|
 |groupID	|	int	|星球ID|
@@ -39,7 +39,7 @@
 
 显示帖子ID为1的帖子内容,此人为发帖者
 
-http://apihost/?service=Post.GetPostBase&post_id=3&id=2
+http://dev.wuanlife.com:800/?service=Post.GetPostBase&post_id=3&id=2
 
      JSON:
     {
