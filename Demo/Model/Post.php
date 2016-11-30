@@ -566,7 +566,7 @@ class Model_Post extends PhalApi_Model_NotORM {
     }
 
     public function judgeCollectPost($post_id,$user_id){
-        $sql=DI()->notorm->user_collection->select('*')->where('post_base_id',$post_id)->where('user_base_id',$user_id)->fetch();
+        $sql=DI()->notorm->user_collection->select('*')->where('post_base_id',$post_id)->where('user_base_id',$user_id)->where('`delete`',0)->fetch();
         if($sql){
             $collect=1;
         }else{
