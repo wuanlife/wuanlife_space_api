@@ -228,10 +228,17 @@ class Model_Post extends PhalApi_Model_NotORM {
         return $sql;
     }
 /*
- *将回复情况发送给帖子主人
+ *将回复情况发送给帖主或者楼主
  */
     public function addReplyMessage($rs){
         $postc=$this->getPostCreator($rs['post_base_id']);
+        if(empty($rs['replyid'])){
+            if($postc['user_base_id']==$rs['user_base_id']){
+                return false;
+            }
+        }else{
+            $postc['user_base_id'] = $rs['replyid'];
+        }
         $field=array(
                     'message_base_code'=>'0007',
                     'user_base_id'=>$postc['user_base_id'],
