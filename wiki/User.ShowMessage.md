@@ -25,6 +25,7 @@
 |code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
 |info   | 数组  |用户消息列表详情,按时间降序排列|
 |info.userID | 整型| 回复人ID|
+|info.m_id | 整型| 消息ID|
 |info.replyfloor|字符型|回复人楼层|
 |info.nickname|字符型|回复人昵称|
 |info.replytext|字符型|回复内容|
