@@ -242,7 +242,7 @@ class Model_User extends PhalApi_Model_NotORM {
     public function ShowReplyMessage($data,$page_num) {
         $sql='SELECT ub.id AS userID,md.message_id AS m_id,mt.text AS replyfloor,ub.nickname,pd.text AS replytext,pd.createTime,pb.title AS posttitle,pb.id AS postID ,gb.id AS groupID ,gb.name AS groupname FROM user_base ub,post_detail pd,post_base pb,group_base gb,message_detail md,message_text mt '
             ."WHERE md.user_base_id = :user_id AND md.message_base_code = '0007' AND md.id_1 =ub.id AND md.message_id =mt.message_detail_id AND pd.post_base_id = md.id_2 AND pd.floor =mt.text AND pd.post_base_id = pb.id AND gb.id = pb.group_base_id "
-            .'AND md.status = 0 '
+            .'AND md.status = 1 '
             .'ORDER BY pd.createTime DESC '
             .'LIMIT :limit_st,:page_num';
         $params = array(':user_id' => $data['user_id'], ':limit_st' => ($data['pn']-1)*$page_num, ':page_num' => $page_num);
@@ -275,7 +275,7 @@ class Model_User extends PhalApi_Model_NotORM {
         ->select('*')
         ->where('user_base_id = ?',$user_id)
         ->where('message_base_code','0007')
-        ->where('status','0')
+        ->where('status',1)
         ->fetchAll();
         return $sql;
     }
@@ -374,7 +374,7 @@ class Model_User extends PhalApi_Model_NotORM {
  * 用于删除回复我的消息类型中帖子回复已被删除的消息
  */
     public function deleteMessage($data){
-        $field['status'] = 1;
+        $field['status'] = 2;
         $rs = DI()->notorm->message_detail->where('message_id = ?',$data['m_id'])->update($field);
         return $rs;
     }

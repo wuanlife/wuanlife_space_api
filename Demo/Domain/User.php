@@ -355,6 +355,10 @@ class Domain_User {
     public function getReplyMessage($data){
         $model = new Model_User();
         $model_p = new Model_Post();
+        $value['status'] = 0;
+        $value['user_base_id'] = $data['user_id'];
+        $status = 1;//消息已读
+        $this->alterStatus($value,$status);//将消息列表转化为已读
         $num = $model->getAllReplyMessage($data['user_id']);
         $page_num = 20;
         $pageCount  = ceil(count($num)/$page_num);
