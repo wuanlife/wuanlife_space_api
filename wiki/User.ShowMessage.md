@@ -53,6 +53,7 @@ http://dev.wuanlife.com:800/demo/?service=User.ShowMessage&user_id=3
         "info": [
             {
                 "userID": "1",
+                "m_id": "670",
                 "replyfloor": "36",
                 "nickname": "taotao",
                 "replytext": "接口测试",
