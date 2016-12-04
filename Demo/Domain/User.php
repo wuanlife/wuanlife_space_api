@@ -545,4 +545,19 @@ class Domain_User {
         }
         return $this;
     }
+/*
+ * 用于删除回复我的消息类型中帖子回复已被删除的消息
+ */
+    public function deleteMessage($data){
+        $model = new Model_User();
+        $rs = $model->deleteMessage($data);
+        if($rs) {
+            $this->code = 1;
+            $this->msg = '删除成功';
+        }else{
+            $this->code = 0;
+            $this->msg = '删除失败';
+        }
+        return $this;
+    }
 }

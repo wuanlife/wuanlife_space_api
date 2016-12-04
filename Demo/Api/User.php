@@ -283,6 +283,15 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户ID'
                 ),
             ),
+            'deleteMessage'=>array(
+                'm_id'   => array(
+                    'name'    => 'm_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '消息ID'
+                ),
+            ),
         );
     }
 
@@ -546,4 +555,18 @@ class Api_User extends PhalApi_Api{
         return $rs;
     }
 
+/**
+ * 删除信息接口
+ * @desc 用于删除回复我的消息类型中帖子回复已被删除的消息
+ * @return int code 1代表成功，0代表失败
+ * @return string msg 提示信息
+ */
+    public function deleteMessage(){
+        $data = array(
+            'm_id'       => $this->m_id,
+            );
+        $domain = new Domain_User();
+        $rs = $domain->deleteMessage($data);
+        return $rs;
+    }
 }
