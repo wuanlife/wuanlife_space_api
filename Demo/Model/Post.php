@@ -232,12 +232,11 @@ class Model_Post extends PhalApi_Model_NotORM {
  */
     public function addReplyMessage($rs){
         $postc=$this->getPostCreator($rs['post_base_id']);
-        if(empty($rs['replyid'])){
+        if(!empty($rs['replyid'])){
+            $postc['user_base_id'] = $rs['replyid'];
+        }
             if($postc['user_base_id']==$rs['user_base_id']){
                 return false;
-            }
-        }else{
-            $postc['user_base_id'] = $rs['replyid'];
         }
         $field=array(
                     'message_base_code'=>'0007',
