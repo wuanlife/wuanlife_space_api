@@ -248,7 +248,9 @@ class Model_Group extends PhalApi_Model_NotORM{
                         'message_detail_id' =>$sql['id'],
                         'text'              =>$data['text'],
             );
+            if(!empty($data['text'])){
             DI()->notorm->message_text->insert($field);
+            }
         }else{
             $rs = 0;
         }
