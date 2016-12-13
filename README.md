@@ -22,6 +22,7 @@
 13.[处理申请信息](/wiki/User.ProcessApp.md)<br>
 14.[检查未读信息](/wiki/User.CheckNewInfo.md)<br>
 15.[删除信息](/wiki/User.DeleteMessage.md)<br>
+16.[修改用户密码](/wiki/User.Changepwd.md)<br>
 
 ###B.星球相关
 1.[创建星球](/wiki/Group.Create.md)<br>
@@ -55,4 +56,5 @@
 14.[帖子收藏](/wiki/Post.CollectPost.md)<br>
 15.[我的收藏帖子显示](/wiki/Post.GetCollectPost.md)<br>
 16.[删除帖子回复](/wiki/Post.DeletePostReply.md)<br>
-16.[取消收藏帖子](/wiki/Post.DeleteCollectPost.md)<br>
+17.[取消收藏帖子](/wiki/Post.DeleteCollectPost.md)<br>
+18.[点赞帖子](/wiki/Post.ApprovePost.md)<br>

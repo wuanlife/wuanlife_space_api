@@ -26,6 +26,8 @@
 |reply.replynickname	|string|被回复人昵称，为NULL代表回复楼主|
 |reply.createTime|	date|	回帖时间|
 |reply.floor|  int|   帖子楼层|
+|reply.approved|	int	|是否点赞(0未点赞，1已点赞)|
+|reply.approvednum|	int	|点赞数|
 |reply.deleteRight|  int|   删除权限（1为有此权限）|
 |postID|		int	|帖子ID|
 |replyCount	|int|回帖数|

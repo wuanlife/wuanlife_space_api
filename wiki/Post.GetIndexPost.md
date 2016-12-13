@@ -12,6 +12,7 @@
 
 |参数|类型|是否必须|默认值|说明|
 |:--|:--|:--|:--|:--|
+|user_id|   整型| 可选     ||           最小：1  |  用户ID|
 |pn	|int|	false|	1	|第几页|
 
 ##返回说明
@@ -24,6 +25,8 @@
 |posts.nickname|	string	|发帖人|
 |posts.groupID|	int	|星球ID|
 |posts.lock|	int	|是否锁定|
+|posts.approved|	int	|是否点赞(0未点赞，1已点赞)|
+|posts.approvednum|	int	|点赞数|
 |posts.groupName|	string|	星球名称|
 |pageCount	|int|	总页数|
 |currentPage|	int	|当前页|

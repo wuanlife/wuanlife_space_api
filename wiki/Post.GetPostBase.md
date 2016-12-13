@@ -13,7 +13,7 @@
 |参数|类型|是否必须|说明|
 |:--|:--|:--|:--|
 |post_id|int|必须|帖子ID|
-|id|int|可选|用户ID|
+|user_id|int|可选|用户ID|
 
 ##返回说明
 |参数|类型|说明|
@@ -27,6 +27,8 @@
 |text	|string|	内容|
 |id|	int	|用户ID|
 |lock|    int |是否锁定(0为未锁定，1为锁定)|
+|approved|	int	|是否点赞(0未点赞，1已点赞)|
+|approvednum|	int	|点赞数|
 |nickName	|string|	发帖人|
 |createTime|	date|	发帖时间|
 |editRight|	boolean	|	编辑权限(0为无权限，1有)|
