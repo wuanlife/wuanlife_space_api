@@ -14,6 +14,13 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
 /*
+ * 通过用户id查找用户相关信息
+ */
+    public function userid($id) {
+        $rs =DI()->notorm->user_base->select('*')->where('id = ?',$id)->fetch();
+        return $rs;
+    }
+/*
  * 通过昵称查找用户相关信息
  */
     public function usernickname($data) {
@@ -377,5 +384,9 @@ class Model_User extends PhalApi_Model_NotORM {
         $field['status'] = 2;
         $rs = DI()->notorm->message_detail->where('message_id = ?',$data['m_id'])->update($field);
         return $rs;
+    }
+    public function changepwd($data){
+        $field['password'] = md5($data['newpwd']);
+        $rs = DI()->notorm->user_base->where('id = ?',$data['user_id'])->update($field);
     }
 }

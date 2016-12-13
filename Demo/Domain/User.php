@@ -564,4 +564,22 @@ class Domain_User {
         }
         return $this;
     }
+/*
+ * 用于修改密码
+ */
+    public function changepwd($data){
+        $model = new Model_User();
+        $pwd = $model->userid($data['user_id']);
+        $rs['code'] = 0;
+        if($pwd['password']!=md5($data['pwd'])){
+            $rs['msg'] = '登录密码不正确';
+        }elseif($data['newpwd']!=$data['checkNewpwd']){
+            $rs['msg'] = '两次密码不一致，请确认！';
+        }else{
+            $rs = $model->changepwd($data);
+            $rs['msg'] = '修改成功！';
+            $rs['code'] = 1;
+        }
+        return $rs;
+    }
 }

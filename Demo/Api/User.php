@@ -283,6 +283,36 @@ class Api_User extends PhalApi_Api{
                     'desc'    => '用户ID'
                 ),
             ),
+            'changepwd'=>array(
+                'user_id'   => array(
+                    'name'    => 'user_id',
+                    'type'    => 'int',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户ID'
+                ),
+                'pwd'   => array(
+                    'name'    => 'pwd',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户原密码'
+                ),
+                'newpwd'   => array(
+                    'name'    => 'newpwd',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '用户新密码'
+                ),
+                'checkNewpwd'   => array(
+                    'name'    => 'checkNewpwd',
+                    'type'    => 'string',
+                    'min'     => '1',
+                    'require' => true,
+                    'desc'    => '二次用户新密码'
+                ),
+            ),
             'deleteMessage'=>array(
                 'm_id'   => array(
                     'name'    => 'm_id',
@@ -567,6 +597,23 @@ class Api_User extends PhalApi_Api{
             );
         $domain = new Domain_User();
         $rs = $domain->deleteMessage($data);
+        return $rs;
+    }
+/**
+ * 修改密码接口
+ * @desc 用于验证旧密码，修改新密码
+ * @return int code 1代表成功，0代表失败
+ * @return string msg 提示信息
+ */
+    public function changepwd(){
+        $data = array(
+            'user_id'       => $this->user_id,
+            'pwd'      => $this->pwd,
+            'newpwd'   => $this->newpwd,
+            'checkNewpwd'   => $this->checkNewpwd,
+        );
+        $domain = new Domain_User();
+        $rs = $domain->changepwd($data);
         return $rs;
     }
 }
