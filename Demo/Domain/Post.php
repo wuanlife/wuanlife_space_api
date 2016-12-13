@@ -105,10 +105,10 @@ class Domain_Post {
         return $rs;
     }
 
-    public function getIndexPost($page) {
+    public function getIndexPost($page,$userID) {
         $rs = array();
         $model = new Model_Post();
-        $rs = $model->getIndexPost($page);
+        $rs = $model->getIndexPost($page,$userID);
         return $rs;
     }
 
@@ -132,7 +132,7 @@ class Domain_Post {
         $rs = array();
         $model = new Model_Post();
         $common=new Domain_Common();
-        $rs = $model->getPostBase($postID);
+        $rs = $model->getPostBase($postID,$userID);
         if($userID){
             $rs[0]['collect']=$common->judgeCollectPost($postID,$userID);
         }else{
@@ -387,6 +387,16 @@ class Domain_Post {
         return $rs;
     }
 
+    public function approvePost($data){
+        $model = new Model_Post();
+        $rs = $model->getApprovePost($data);
+        if($rs){
+            $rs = $model->updateApprovePost($data);
+        }else{
+            $rs = $model->addApprovePost($data);
+        }
+        return $rs;
+    }
 
 
 }

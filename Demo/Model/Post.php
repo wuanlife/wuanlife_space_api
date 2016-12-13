@@ -5,7 +5,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 /*
  * 主页帖子展示
  */
-    public function getIndexPost($page) {
+    public function getIndexPost($page,$userID) {
 
         $num=30;
         $rs   = array();
@@ -14,7 +14,7 @@ class Model_Post extends PhalApi_Model_NotORM {
              . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0' AND gb.delete='0'";
 
         $params = array(':num' =>$num);
-        $pageCount = DI()->notorm->user_base->queryAll($sql, $params);
+        $pageCount = DI()->notorm->post_base->queryAll($sql, $params);
         $rs['pageCount'] = (int)$pageCount[0]['pageCount'];
         if ($rs['pageCount'] == 0 ){
             $rs['pageCount']=1;
@@ -23,15 +23,19 @@ class Model_Post extends PhalApi_Model_NotORM {
             $page = $rs['pageCount'];
         }
         $rs['currentPage'] = $page;
-        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName '
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.createTime,ub.nickname,gb.id AS groupID,gb.name AS groupName,(SELECT approved FROM post_approved WHERE user_id=:userID AND post_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_id=pb.id AND approved=1) AS approvednum '
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,post_approved pa '
              . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
              . 'ORDER BY MIN(pd.createTime) DESC '
              . 'LIMIT :start,:num ';
-        $params = array(':start' =>($page-1)*$num , ':num' =>$num);
+        $params = array(':start' =>($page-1)*$num , ':num' =>$num,':userID'=>$userID);
         $rs['posts'] = DI()->notorm->user_base->queryAll($sql, $params);
-
+        foreach ($rs['posts'] as $key => $value) {
+            if(empty($rs['posts']["$key"]['approved'])){
+                $rs['posts']["$key"]['approved'] = '0';
+            }
+        }
         return $rs;
     }
 
@@ -116,13 +120,18 @@ class Model_Post extends PhalApi_Model_NotORM {
 /*
  * 单个帖子展示
  */
-    public function getPostBase($postID) {
+    public function getPostBase($postID,$userID) {
         $rs   = array();
-        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky,pb.lock '
+        $sql = 'SELECT pb.id AS postID,gb.id AS groupID,gb.name AS groupName,pb.title,pd.text,ub.id,ub.nickname,pd.createTime,pb.sticky,pb.lock,(SELECT approved FROM post_approved WHERE user_id=:user_id AND post_id=:post_id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_id=:post_id AND approved=1) AS approvednum '
              . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . 'WHERE pb.id=pd.post_base_id AND pb.delete=0 AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.id=:post_id AND pd.floor=1' ;
-        $params = array(':post_id' =>$postID );
+        $params = array(':post_id' =>$postID,':user_id'=>$userID );
         $rs = DI()->notorm->post_base->queryAll($sql, $params);
+        foreach ($rs as $key => $value) {
+            if(empty($rs["$key"]['approved'])){
+                $rs["$key"]['approved'] = '0';
+            }
+        }
         if (!empty($rs)){
             $rs[0]['sticky']=(int)$rs[0]['sticky'];
             $rs[0]['lock']=(int)$rs[0]['lock'];
@@ -638,5 +647,46 @@ class Model_Post extends PhalApi_Model_NotORM {
             }
         }
         return false;
+    }
+    public function getApprovePost($data){
+        $sql=DI()->notorm->post_approved->select('*')->where('post_id',$data['post_id'])->where('user_id',$data['user_id'])->where('floor',$data['floor'])->fetch();
+        return $sql;
+    }
+    public function updateApprovePost($data){
+        $approved = $this->getApprovePost($data);
+        if($approved['approved']){
+            $field = array('approved'=>0);
+            $rs['code'] = 1;
+            $rs['msg'] = '取消点赞成功';
+        }else{
+            $field = array('approved'=>1);
+            $rs['code'] = 1;
+            $rs['msg'] = '点赞成功';
+        }
+        $sql=DI()->notorm->post_approved->where('post_id',$data['post_id'])->where('user_id',$data['user_id'])->where('floor',$data['floor'])->update($field);
+        if($sql){
+            return $rs;
+        }else{
+            $rs['code'] = 0;
+            $rs['msg'] = '操作失败';
+            return $rs;
+        }
+    }
+    public function addApprovePost($data){
+        $field = array(
+                    'user_id' => $data['user_id'],
+                    'post_id' => $data['post_id'],
+                    'floor'   => $data['floor'],
+                    'approved' => 1,
+        );
+        $sql=DI()->notorm->post_approved->insert($field);
+        if($sql){
+            $rs['code'] = 1;
+            $rs['msg'] = '点赞成功';
+        }else{
+            $rs['code'] = 0;
+            $rs['msg'] = '点赞失败';
+        }
+        return $rs;
     }
 }

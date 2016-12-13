@@ -6,6 +6,7 @@ class Api_Post extends PhalApi_Api{
     public function getRules(){
         return array(
             'getIndexPost' => array(
+                'user_id' => array('name' => 'user_id', 'type' => 'int', 'require' => false, 'desc' => '用户ID'),
                 'page' =>array('name' => 'pn', 'type' => 'int',  'desc' => '第几页', 'default' => '1'),
             ),
             'getGroupPost' => array(
@@ -24,7 +25,7 @@ class Api_Post extends PhalApi_Api{
             ),
             'getPostBase' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
-                'userID' => array('name' => 'id', 'type' => 'int', 'require' => false,'desc' => '用户ID'),
+                'userID' => array('name' => 'user_id', 'type' => 'int', 'require' => false,'desc' => '用户ID'),
             ),
             'getPostReply' => array(
                 'postID' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
@@ -185,6 +186,35 @@ class Api_Post extends PhalApi_Api{
                         'desc'    => '楼层',
                     ),
                 ),
+            'approvePost'=>array(
+                'user_id'    => array(
+                        'name'    => 'user_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '用户id',
+                    ),
+                'post_id'    => array(
+                        'name'    => 'post_id',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '帖子id',
+                    ),
+                'floor'    => array(
+                        'name'    => 'floor',
+                        'type'    => 'int',
+                        'require' => false,
+                        'default' => 1,
+                        'desc'    => '楼层',
+                    ),
+                    /*
+                'approved'    => array(
+                        'name'    => 'approved',
+                        'type'    => 'int',
+                        'require' => true,
+                        'desc'    => '是否点赞',
+                    ),
+                    */
+                ),
         );
     }
 
@@ -205,7 +235,7 @@ class Api_Post extends PhalApi_Api{
         $data   = array();
 
         $domain = new Domain_Post();
-        $data = $domain->getIndexPost($this->page);
+        $data = $domain->getIndexPost($this->page,$this->user_id);
         $data = $domain->getImageUrl($data);
         $data = $domain->deleteImageGif($data);
         $data = $domain->postImageLimit($data);
@@ -607,4 +637,16 @@ class Api_Post extends PhalApi_Api{
         return $data;
     }
 
+    public function approvePost(){
+        $rs = array();
+        $data = array(
+                'user_id'       => $this->user_id,
+                'post_id'       => $this->post_id,
+                'floor'         => $this->floor,
+                //'approved'      => $this->approved,
+        );
+        $domain = new Domain_Post();
+        $rs = $domain->approvePost($data);
+        return $rs;
+    }
 }
