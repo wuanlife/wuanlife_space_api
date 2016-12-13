@@ -147,7 +147,7 @@ class Domain_Post {
         $domain1 = new Domain_User();
         $common=new Domain_Common();
         $model = new Model_Post();
-        $rs = $model->getPostReply($postID,$page);
+        $rs = $model->getPostReply($postID,$page,$userID);
         $sqla = $domain->getGroupId($postID);
         $sqlb = $domain1->judgeCreate($userID,$sqla);
         $sqld = $domain1->judgeAdmin($userID);

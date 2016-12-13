@@ -160,7 +160,7 @@ class Model_Post extends PhalApi_Model_NotORM {
 /*
  * 单个帖子的回复展示
  */
-    public function getPostReply($postID,$page) {
+    public function getPostReply($postID,$page,$userID) {
 
         $num=30;
         $rs   = array();
@@ -181,6 +181,7 @@ class Model_Post extends PhalApi_Model_NotORM {
             $page = $rs['pageCount'];
         }
         $rs['currentPage'] = $page;
+        /*
         $rs['reply']= DI()->notorm->post_detail
         ->SELECT('post_detail.text,user_base.id AS user_id,user_base.nickname,post_detail.replyid,(SELECT nickname FROM user_base WHERE user_base.id =post_detail.replyid ) AS replynickname,post_detail.createTime,post_detail.floor')
         ->WHERE('post_detail.post_base_id = ?',$postID)
@@ -189,6 +190,19 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->order('post_detail.floor ASC')
         ->limit(($page-1)*$num,$num)
         ->fetchALL();
+        */
+        $sql = 'SELECT pd.text,ub.id AS user_id,ub.nickname,pd.replyid,(SELECT nickname FROM user_base WHERE user_base.id = pd.replyid) AS replynickname,pd.createTime,pd.floor,(SELECT approved FROM post_approved WHERE user_id=:user_id AND post_id=:post_id AND floor=pd.floor) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=pd.floor AND post_id=:post_id AND approved=1) AS approvednum '
+             . 'FROM user_base ub,post_detail pd '
+             . 'WHERE pd.post_base_id = :post_id AND pd.delete = 0 AND pd.floor > 1 AND ub.id=pd.user_base_id '
+             . 'ORDER BY pd.floor ASC '
+             . 'LIMIT :start,:num ';
+        $params = array(':post_id' =>$postID,':start'=>($page-1)*$num,':num' =>$num,':user_id' =>$userID);
+        $rs['reply'] = DI()->notorm->post_detail->queryAll($sql, $params);
+        foreach ($rs['reply'] as $key => $value) {
+            if(empty($rs['reply']["$key"]['approved'])){
+                $rs['reply']["$key"]['approved'] = '0';
+            }
+        }
         return $rs;
     }
 /*

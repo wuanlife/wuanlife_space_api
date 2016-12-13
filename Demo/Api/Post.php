@@ -637,6 +637,12 @@ class Api_Post extends PhalApi_Api{
         return $data;
     }
 
+	/**
+     * 点赞帖子
+     * @desc 点赞帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
     public function approvePost(){
         $rs = array();
         $data = array(
