@@ -42,34 +42,38 @@ http://dev.wuanlife.com:800/?service=Post.GetPostReply&post_id=1&user_id=1
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "postID": 1,
-        "replyCount": 42,
-        "pageCount": 2,
-        "currentPage": 1,
-        "reply": [
-            {
-                "text": "你好幸福啊，真羡慕你",
-                "user_id": "9",
-                "nickname": "123",
-                "replyid": null,
-                "replynickname": null,
-                "createTime": "2016-05-20 20:03:39",
-                "floor": "2",
-                "deleteRight": 0
-            },
-            {
-                "text": "??",
-                "user_id": "9",
-                "nickname": "123",
-                "replyid": null,
-                "replynickname": null,
-                "createTime": "2016-05-30 14:09:16",
-                "floor": "3",
-                "deleteRight": 0
-            },
-        ]
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "postID": 1,
+            "replyCount": 39,
+            "pageCount": 2,
+            "currentPage": 1,
+            "reply": [
+                {
+                    "text": "6",
+                    "user_id": "9",
+                    "nickname": "123",
+                    "replyid": null,
+                    "replynickname": null,
+                    "createTime": "2016-05-30 14:26:54",
+                    "floor": "4",
+                    "approved": "0",
+                    "approvednum": "1",
+                    "deleteRight": 0
+                },
+                {
+                    "text": "1",
+                    "user_id": "1",
+                    "nickname": "12222",
+                    "replyid": null,
+                    "replynickname": null,
+                    "createTime": "2016-06-15 12:38:03",
+                    "floor": "7",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "deleteRight": 0
+                }
+            ]
+        },
+        "msg": ""
     }
