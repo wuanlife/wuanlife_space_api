@@ -696,10 +696,10 @@ class Model_Post extends PhalApi_Model_NotORM {
         $sql=DI()->notorm->post_approved->insert($field);
         if($sql){
             $rs['code'] = 1;
-            $rs['msg'] = '点赞成功';
+            $rs['msg']  = '点赞成功';
         }else{
             $rs['code'] = 0;
-            $rs['msg'] = '点赞失败';
+            $rs['msg']  = '点赞失败';
         }
         return $rs;
     }

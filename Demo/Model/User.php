@@ -14,11 +14,11 @@ class Model_User extends PhalApi_Model_NotORM {
     }
 
 /*
- * 通过用户id查找用户相关信息
+ * 通过用户id获取用户密码
  */
-    public function userid($id) {
+    public function getPwd($id) {
         $rs =DI()->notorm->user_base->select('*')->where('id = ?',$id)->fetch();
-        return $rs;
+        return $rs['password'];
     }
 /*
  * 通过昵称查找用户相关信息

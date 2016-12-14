@@ -33,7 +33,7 @@ class Api_Post extends PhalApi_Api{
                 'user_id'    => array(
                         'name'    => 'user_id',
                         'type'    => 'int',
-                        'require' => true,
+                        'require' => false,
                         'desc'    => '用户id',
                 ),
             ),
@@ -227,6 +227,9 @@ class Api_Post extends PhalApi_Api{
      * @return date posts.createTime 发帖时间
      * @return string posts.nickname 发帖人
      * @return int posts.groupID 星球ID
+     * @return int posts.lock 是否锁定
+     * @return int posts.approved 是否点赞(0未点赞，1已点赞)
+     * @return int posts.approvednum 点赞数
      * @return string posts.groupName 星球名称
      * @return int pageCount 总页数
      * @return int currentPage 当前页
@@ -343,12 +346,16 @@ class Api_Post extends PhalApi_Api{
     /**
      * 帖子的内容
      * @desc 单个帖子的内容显示
+     * @return int code 操作码，帖子删除为0. 正常显示为1. 私密帖子为2
      * @return int postID 帖子ID
      * @return int groupID 星球ID
      * @return string groupName 星球名称
      * @return string title 标题
      * @return string text 内容
      * @return int id 用户ID
+     * @return int lock 是否锁定(0为未锁定，1为锁定)
+     * @return int approved 是否点赞(0未点赞，1已点赞)
+     * @return int approvednum 点赞数
      * @return string nickname 发帖人
      * @return date createTime 发帖时间
      * @return int sticky 是否置顶（0为未置顶，1置顶）
@@ -433,8 +440,15 @@ class Api_Post extends PhalApi_Api{
     /**
      * 帖子的回复
      * @desc 单个帖子的回复内容显示
-     * @return string reply.text 内容
-     * @return string reply.nickname 回帖人
+     * @return string reply.text 回复内容
+     * @return int reply.user_id 回帖人id
+     * @return string reply.nickname 回帖人昵称
+     * @return int reply.replyid 被回复人ID，为NULL代表回复楼主
+     * @return string reply.replynickname 被回复人昵称，为NULL代表回复楼主
+     * @return int reply.floor 帖子楼层
+     * @return int approved 是否点赞(0未点赞，1已点赞)
+     * @return int approvednum 点赞数
+     * @return int reply.deleteRight 删除权限（1为有此权限）
      * @return date reply.createTime 回帖时间
      * @return int postID 帖子ID
      * @return int replyCount 回帖数

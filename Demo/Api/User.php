@@ -607,10 +607,10 @@ class Api_User extends PhalApi_Api{
  */
     public function changepwd(){
         $data = array(
-            'user_id'       => $this->user_id,
-            'pwd'      => $this->pwd,
-            'newpwd'   => $this->newpwd,
-            'checkNewpwd'   => $this->checkNewpwd,
+            'user_id'     => $this->user_id,
+            'pwd'         => $this->pwd,
+            'newpwd'      => $this->newpwd,
+            'checkNewpwd' => $this->checkNewpwd,
         );
         $domain = new Domain_User();
         $rs = $domain->changepwd($data);
