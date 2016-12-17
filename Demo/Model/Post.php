@@ -191,7 +191,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         ->limit(($page-1)*$num,$num)
         ->fetchALL();
         */
-        $sql = 'SELECT pd.text,ub.id AS user_id,ub.nickname,pd.replyid,(SELECT nickname FROM user_base WHERE user_base.id = pd.replyid) AS replynickname,pd.createTime,pd.floor,(SELECT approved FROM post_approved WHERE user_id=:user_id AND post_id=:post_id AND floor=pd.floor) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=pd.floor AND post_id=:post_id AND approved=1) AS approvednum '
+        $sql = 'SELECT pd.replyFloor,pd.text,ub.id AS user_id,ub.nickname,pd.replyid,(SELECT nickname FROM user_base WHERE user_base.id = pd.replyid) AS replynickname,pd.createTime,pd.floor,(SELECT approved FROM post_approved WHERE user_id=:user_id AND post_id=:post_id AND floor=pd.floor) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=pd.floor AND post_id=:post_id AND approved=1) AS approvednum '
              . 'FROM user_base ub,post_detail pd '
              . 'WHERE pd.post_base_id = :post_id AND pd.delete = 0 AND pd.floor > 1 AND ub.id=pd.user_base_id '
              . 'ORDER BY pd.floor ASC '
@@ -220,7 +220,9 @@ class Model_Post extends PhalApi_Model_NotORM {
         $data['floor'] = ($sql['max(floor)'])+1;
         $replyid=DI()->notorm->post_detail->select('user_base_id')->where('post_base_id =?',$data['post_base_id'])->where('floor =?',$replyfloor)->fetchone();
         $data['replyid']=$replyid['user_base_id'];
+        $data['replyFloor']=$replyfloor;
         $a=DI()->notorm->user_base->select('nickname')->where('id',$data['user_base_id'])->fetchone();
+
 
         $rs = DI()->notorm->post_detail->insert($data);
         $rs['nickname']=$a['nickname'];

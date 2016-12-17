@@ -41,7 +41,7 @@ class Api_Post extends PhalApi_Api{
                 'post_base_id' => array('name' => 'post_id', 'type' => 'int', 'require' => true, 'desc' => '帖子ID'),
                 'text'   => array('name' => 'text', 'type' => 'string', 'min' => '1','require' => true, 'desc' => '回复内容'),
                 'user_id' => array('name' => 'user_id', 'type' => 'string', 'require' => true, 'desc' => '回复人ID'),
-                'replyfloor' => array('name' => 'replyfloor', 'type' => 'int', 'require' => false, 'desc' => '回复帖楼层')
+                'replyfloor' => array('name' => 'replyfloor', 'type' => 'int', 'require' => false, 'desc' => '帖子内被回复的人的楼层')
             ),
             'editPost'  => array(
                 'user_id' => array('name' => 'user_id', 'type' => 'int', 'require' => true, 'desc' => '用户ID'),
@@ -440,6 +440,7 @@ class Api_Post extends PhalApi_Api{
     /**
      * 帖子的回复
      * @desc 单个帖子的回复内容显示
+     * @return int reply.replyFloor 回复内容
      * @return string reply.text 回复内容
      * @return int reply.user_id 回帖人id
      * @return string reply.nickname 回帖人昵称

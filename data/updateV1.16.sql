@@ -9,3 +9,8 @@ CREATE TABLE IF NOT EXISTS `post_approved` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子点赞表';
 ALTER TABLE post_approved
 ADD PRIMARY KEY (user_id,post_id,floor);
+
+
+
+
+ALTER TABLE `post_detail` ADD `replyFloor` INT DEFAULT NULL COMMENT '帖子内被回复的人的楼层';
