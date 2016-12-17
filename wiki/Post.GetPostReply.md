@@ -19,6 +19,7 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
+|reply.replyFloor|int  |帖子内被回复的人的楼层|
 |reply.text|string	|回复内容|
 |reply.user_id	|int|	回帖人ID|
 |reply.nickname	|string|	回帖人昵称|
@@ -36,42 +37,57 @@
 
 ##示例
 
-显示帖子ID为1用户id为1的第1页回复
+显示帖子ID为1用户id为1的第2页回复
 
-http://dev.wuanlife.com:800/?service=Post.GetPostReply&post_id=1&user_id=1
+http://dev.wuanlife.com:800/?service=Post.GetPostReply&post_id=1&user_id=1&pn=2
 
     JSON:
     {
         "ret": 200,
         "data": {
             "postID": 1,
-            "replyCount": 39,
+            "replyCount": 46,
             "pageCount": 2,
-            "currentPage": 1,
+            "currentPage": 2,
             "reply": [
                 {
-                    "text": "6",
-                    "user_id": "9",
-                    "nickname": "123",
-                    "replyid": null,
-                    "replynickname": null,
-                    "createTime": "2016-05-30 14:26:54",
-                    "floor": "4",
-                    "approved": "0",
-                    "approvednum": "1",
-                    "deleteRight": 0
-                },
-                {
+                    "replyFloor": "2",
                     "text": "1",
-                    "user_id": "1",
-                    "nickname": "12222",
-                    "replyid": null,
-                    "replynickname": null,
-                    "createTime": "2016-06-15 12:38:03",
-                    "floor": "7",
+                    "user_id": "6",
+                    "nickname": "azusa",
+                    "replyid": "9",
+                    "replynickname": "123",
+                    "createTime": "2016-12-17 19:09:47",
+                    "floor": "49",
                     "approved": "0",
                     "approvednum": "0",
-                    "deleteRight": 0
+                    "deleteRight": 1
+                },
+                {
+                    "replyFloor": "2",
+                    "text": "1",
+                    "user_id": "6",
+                    "nickname": "azusa",
+                    "replyid": "9",
+                    "replynickname": "123",
+                    "createTime": "2016-12-17 19:14:43",
+                    "floor": "50",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "deleteRight": 1
+                },
+                {
+                    "replyFloor": "4",
+                    "text": "1",
+                    "user_id": "6",
+                    "nickname": "azusa",
+                    "replyid": "9",
+                    "replynickname": "123",
+                    "createTime": "2016-12-17 19:15:25",
+                    "floor": "51",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "deleteRight": 1
                 }
             ]
         },

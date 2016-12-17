@@ -36,22 +36,23 @@
 
 回复帖子id=2楼层为5的的帖子
 
-http://dev.wuanlife.com:800/?service=Post.PostReply&post_id=1&text=1&user_id=6
+http://dev.wuanlife.com:800/?service=Post.PostReply&post_id=1&text=1&user_id=6&replyfloor=4
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "replyid": null,
+            "replyid": "9",
             "text": "1",
-            "floor": 44,
-            "createTime": "2016-11-26 17:25:11",
+            "floor": 51,
+            "createTime": "2016-12-17 19:15:25",
+            "replyFloor": 4,
             "nickname": "azusa",
             "user_id": "6",
             "postID": 1,
-            "replynickname": null,
+            "replynickname": "123",
             "page": 2,
-            "replyPage": false
+            "replyPage": 1
         },
         "msg": ""
     }
