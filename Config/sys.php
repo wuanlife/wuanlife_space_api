@@ -23,4 +23,11 @@ return array(
     'crypt' => array(
         'mcrypt_iv' => '12345678',      //8位
     ),
+    /**
+     * 判断用户是否在线url
+     * 测试地址：'url'=>'http://dev.wuanlife.com/news'
+     * 正式地址：url=>'http://wuanla.com/news'
+     */
+    //'url'=>'http://wuanla.com/news',
+    'url'=>'http://dev.wuanlife.com/news',
 );

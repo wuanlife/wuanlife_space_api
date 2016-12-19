@@ -9,10 +9,7 @@
 class Domain_Common
 {
 
-    //测试地址的接口
-    const url='http://dev.wuanlife.com/news';
-    //正式地址的接口
-/*    const url='http://wuanla.com/news';*/
+
 
     /*
      * 判断用户是否存在
@@ -145,6 +142,12 @@ class Domain_Common
     public function judgeUserOnline($user_id){
         $data1 = array ('userid' => $user_id);
         $data1 = http_build_query($data1);
+        $RootDIR = dirname(__FILE__);
+        $path=$RootDIR."/../../Public/init.php";
+        require_once $path;
+        $url=DI()->config->get('sys.url');
+
+
         $opts = array (
         'http' => array (
             'method' => 'POST',
@@ -153,7 +156,7 @@ class Domain_Common
         )
         );
         $context = stream_context_create($opts);
-        $html = file_get_contents(self::url, false, $context);
+        $html = file_get_contents($url, false, $context);
         return $html;
     }
 
