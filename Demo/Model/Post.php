@@ -672,7 +672,7 @@ class Model_Post extends PhalApi_Model_NotORM {
         $approved = $this->getApprovePost($data);
         if($approved['approved']){
             $field = array('approved'=>0);
-            $rs['code'] = 1;
+            $rs['code'] = 2;
             $rs['msg'] = '取消点赞成功';
         }else{
             $field = array('approved'=>1);
