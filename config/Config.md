@@ -2,12 +2,18 @@
 本文档仅适用于全新安装，并只适用于CentOS7系统。
 ###一、准备工作
 ####1.关闭SELinux
+
     vim /etc/selinux/config
+
 如果SELINUX=enforcing，将其改为disabled
+    
     SELINUX=disabled
+
 ####2.关闭防火墙
+    
     systemctl stop firewalld.service
     systemctl disable firewalld.service
+    
 ####3.安装epel源
     yum -y install epel-release
 ####4.更新系统
