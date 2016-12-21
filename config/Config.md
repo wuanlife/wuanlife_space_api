@@ -107,8 +107,9 @@ ctrl+c退出
     npm install forever -g
     export PORT=80
     PORT=80 node app.js
+
     forever start --uid wuanlife bin/www
-    echo "forever start -a --uid wuanlife /home/www/html/wuanlife/bin/www" >>/etc/rc.d/rc.local
+
 访问下http://YourIP，应该可以访问了。
     
 ###四、修改配置
