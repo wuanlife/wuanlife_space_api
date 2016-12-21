@@ -12,7 +12,7 @@
 ####2.关闭防火墙
     
     systemctl stop firewalld.service
-    systemctl disable firewalld.service
+    systemctl disable firewalld.service
     
 ####3.安装epel源
     yum -y install epel-release
