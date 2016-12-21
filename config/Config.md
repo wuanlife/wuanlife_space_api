@@ -3,10 +3,10 @@
 ###一、准备工作
 ####1.关闭SELinux
 
-    vim /etc/selinux/config
+    vim /etc/selinux/config
 
-如果SELINUX=enforcing，将其改为disabled
-    
+如果SELINUX=enforcing，将其改为disabled，然后重启服务器
+
     SELINUX=disabled
 
 ####2.关闭防火墙
