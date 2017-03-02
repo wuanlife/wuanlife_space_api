@@ -1,4 +1,4 @@
-#group.posts
+#group.posts  **存疑** **帖子图片地址**
 
 帖子发布-星球帖子发布
 
