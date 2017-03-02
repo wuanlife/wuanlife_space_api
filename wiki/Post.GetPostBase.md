@@ -26,7 +26,6 @@
 |p_title	|string|	标题|
 |p_text	|string|	内容|
 |user_id|	int	|用户ID|
-|lock|    int |是否锁定(0为未锁定，1为锁定)|
 |approved|	int	|是否点赞(0未点赞，1已点赞)|
 |approvednum|	int	|点赞数|
 |user_name	|string|	发帖人|
@@ -35,36 +34,41 @@
 |delete_right|	boolean	|	删除权限(0为无权限，1有)|
 |sticky_right|	boolean	|	置顶权限(0为无权限，1有)|
 |lock_right|	boolean	|	锁帖权限(0为无权限，1有)|
+|sticky   |int|    是否置顶（0为未置顶，1置顶）|
+|lock|    int|   是否锁定（0为未锁定，1锁定）|
 |collect| boolean |   帖子是否收藏(0为未收藏，1为收藏)|
+
 
 ##示例
 
 显示帖子ID为1的帖子内容,此人为发帖者
 
-http://dev.wuanlife.com:800/?service=Post.GetPostBase&post_id=3&id=2
+http://dev.wuanlife.com:800/?service=Post.GetPostBase&post_id=1&user_id=1
 
      JSON:
     {
         "ret": 200,
         "data": {
-            "postID": "3",
+            "postID": "1",
             "groupID": "1",
             "groupName": "装备2014中队和是加",
-            "title": "hello world",
-            "text": "<p>大家好 &nbsp;我是java</p>",
-            "id": "3",
-            "nickname": "午安网",
-            "createTime": "2016-05-20 20:04:18",
-            "sticky": 0,
+            "title": "avhfhkakfgaukufbakfbafbalfabif",
+            "text": "2",
+            "id": "1",
+            "nickname": "12222",
+            "createTime": "2016-06-12 17:57:58",
+            "sticky": 1,
             "lock": 0,
+            "approved": "1",
+            "approvednum": "1",
             "p_image": [
                 []
             ],
             "collect": 0,
             "editRight": 0,
-            "deleteRight": 0,
-            "stickyRight": 0,
-            "lockRight": 0,
+            "deleteRight": 1,
+            "stickyRight": 1,
+            "lockRight": 1,
             "code": 1
         },
         "msg": ""

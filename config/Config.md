@@ -1,20 +1,24 @@
 #午安网代码部署
 本文档仅适用于全新安装，并只适用于CentOS7系统。
 ###一、准备工作
-####1.更新系统
-    yum -y update
-####2.关闭防火墙
-    systemctl stop firewalld.service
-    systemctl disable firewalld.service
-ps如果防火墙全部关闭后仍然无法访问某些端口，可能是SELinux为enable状态，需要关闭
+####1.关闭SELinux
 
     vim /etc/selinux/config
-更改其内容为：
 
-    #SELINUX=enforcing  
+如果SELINUX=enforcing，将其改为disabled，然后重启服务器
+
     SELINUX=disabled
+
+####2.关闭防火墙
     
-####3.安装git、vim、unzip等必要组件
+    systemctl stop firewalld.service
+    systemctl disable firewalld.service
+    
+####3.安装epel源
+    yum -y install epel-release
+####4.更新系统
+    yum -y update
+####5.安装git、vim、unzip等必要组件
     yum -y install git vim unzip wget
 ###二、安装PHP环境
 ####1.安装MariaDB
@@ -23,9 +27,6 @@ ps如果防火墙全部关闭后仍然无法访问某些端口，可能是SELinu
     yum -y install php-fpm php-cli php-mysql php-gd php-ldap php-odbc php-pdo php-pecl-memcache php-pear php-mbstring php-xml php-xmlrpc php-mbstring php-snmp php-soap php-devel
 ####3.安装nginx
     yum -y install nginx
-如果提示nginx不存在，执行下列命令安装第三方源
-
-    yum -y install epel-release
 ####4.启动环境并设置自启
     systemctl enable mariadb.service
     systemctl start mariadb.service
@@ -106,8 +107,9 @@ ctrl+c退出
     npm install forever -g
     export PORT=80
     PORT=80 node app.js
+
     forever start --uid wuanlife bin/www
-    echo "forever start -a --uid wuanlife /home/www/html/wuanlife/bin/www" >>/etc/rc.d/rc.local
+
 访问下http://YourIP，应该可以访问了。
     
 ###四、修改配置

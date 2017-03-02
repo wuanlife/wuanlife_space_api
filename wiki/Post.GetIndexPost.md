@@ -1,6 +1,6 @@
 #post.get_index_post
 
-星球创建接口-用于创建星球
+首页帖子接口-用于展示首页帖子
 
 ##接口调用请求说明
 
@@ -35,70 +35,68 @@
 
 显示第二页帖子
 
-http://apihost/?service=Post.GetIndexPost&pn=2
+http://apihost/?service=Post.GetIndexPost&pn=6&user_id=1
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "posts": [
-            {
-                "postID": "34",
-                "title": "title34",
-                "text": "34texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:13:00",
-                "nickname": "陶陶14",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "33",
-                "title": "title33",
-                "text": "33texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:12:00",
-                "nickname": "陶陶13",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "32",
-                "title": "title32",
-                "text": "32texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:11:00",
-                "nickname": "陶陶12",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "31",
-                "title": "title31",
-                "text": "31texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:10:00",
-                "nickname": "陶陶11",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "30",
-                "title": "title30",
-                "text": "30texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:09:00",
-                "nickname": "陶陶10",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "29",
-                "title": "title29",
-                "text": "29texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:08:00",
-                "nickname": "陶陶9",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            }
-        ],
-        "pageCount": 7,
-        "currentPage": 2
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "pageCount": 6,
+            "currentPage": 6,
+            "posts": [
+                {
+                    "postID": "1",
+                    "title": "avhfhkakfgaukufbakfbafbalfabif",
+                    "text": "2",
+                    "lock": "0",
+                    "createTime": "2016-06-12 17:57:58",
+                    "nickname": "12222",
+                    "groupID": "1",
+                    "groupName": "装备2014中队和是加",
+                    "approved": "1",
+                    "approvednum": "1",
+                    "image": []
+                },
+                {
+                    "postID": "2",
+                    "title": "午安煎饼计划Android组第48周周报",
+                    "text": "",
+                    "lock": "0",
+                    "createTime": "2016-05-20 20:02:51",
+                    "nickname": "午安网",
+                    "groupID": "2",
+                    "groupName": "午安网啊阿萨阿萨安师大",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "image": []
+                },
+                {
+                    "postID": "11",
+                    "title": "biaoti14",
+                    "text": "6",
+                    "lock": "1",
+                    "createTime": "",
+                    "nickname": "撒旦法斯蒂芬",
+                    "groupID": "14",
+                    "groupName": "sdfd",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "image": []
+                },
+                {
+                    "postID": "12",
+                    "title": "biaoti15",
+                    "text": "7",
+                    "lock": "0",
+                    "createTime": "",
+                    "nickname": "azusa",
+                    "groupID": "15",
+                    "groupName": "sdfddd",
+                    "approved": "0",
+                    "approvednum": "0",
+                    "image": []
+                }
+            ]
+        },
+        "msg": ""
     }
