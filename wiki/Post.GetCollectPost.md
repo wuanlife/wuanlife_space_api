@@ -1,4 +1,4 @@
-#Group.GetCollectPost
+#group.get_collect_post
 
 获取用户收藏帖子的接口
 
@@ -19,15 +19,15 @@
 
 |返回字段                | 类型   |     说明|
 |:--|:--|:--|
-|posts.postID   |      int   |   帖子id|
-|posts.createTime       |       string    |  收藏时间|
-|posts.post_name           |     string   |      帖子标题|
-|posts.gbID    |      int   |   帖子所属星球id|
-|posts.groupName |   string   |   帖子所属星球名称|
+|posts.post_id  |      int   |   帖子id|
+|posts.create_time       |       string    |  收藏时间|
+|posts.p_name           |     string   |      帖子标题|
+|posts.group_id    |      int   |   帖子所属星球id|
+|posts.g_name |   string   |   帖子所属星球名称|
 |posts.user_name        |       string     |    发帖者|
 |posts.delete        |       int     |    帖子是否被删除|
-|pageCount           |     int     |    总页数|
-|currentPage        |      int   |      当前页|
+|page_count           |     int     |    总页数|
+|current_page        |      int   |      当前页|
 
 ##示例
 

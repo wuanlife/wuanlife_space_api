@@ -1,4 +1,4 @@
-#User.Logout
+#user.logout
 
 注销接口-用于清除用户登录信息
 

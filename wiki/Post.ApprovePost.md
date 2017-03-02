@@ -1,4 +1,4 @@
-#Post.ApprovePost
+#post.approve_post
 
 点赞帖子及其回复
 

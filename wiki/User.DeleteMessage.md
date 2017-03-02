@@ -1,4 +1,4 @@
-#User.DeleteMessage
+#user.delete_message
 
 删除信息接口-用于删除回复我的消息类型中帖子回复已被删除的消息
 
@@ -22,7 +22,7 @@
 
 ##示例
 
-显示用户m_id=3的消息
+删除用户m_id=3的消息
 
 http://dev.wuanlife.com:800/?service=User.DeleteMessage&m_id=3
 

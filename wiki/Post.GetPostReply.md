@@ -1,4 +1,4 @@
-#Post.GetPostReply
+#post.get_post_reply
 
 帖子详情-回帖内容
 
@@ -19,20 +19,20 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|reply.text|string	|回复内容|
+|reply.p_text|string	|回复内容|
 |reply.user_id	|int|	回帖人ID|
-|reply.nickname	|string|	回帖人昵称|
-|reply.replyid	|int|	被回复人ID，为NULL代表回复楼主|
-|reply.replynickname	|string|被回复人昵称，为NULL代表回复楼主|
-|reply.createTime|	date|	回帖时间|
-|reply.floor|  int|   帖子楼层|
+|reply.user_name	|string|	回帖人昵称|
+|reply.reply_id	|int|	被回复人ID，为NULL代表回复楼主|
+|reply.reply_nick_name	|string|被回复人昵称，为NULL代表回复楼主|
+|reply.create_time|	date|	回帖时间|
+|reply.p_floor|  int|   帖子楼层|
 |reply.approved|	int	|是否点赞(0未点赞，1已点赞)|
 |reply.approvednum|	int	|点赞数|
-|reply.deleteRight|  int|   删除权限（1为有此权限）|
-|postID|		int	|帖子ID|
-|replyCount	|int|回帖数|
-|pageCount	|int	|总页数|
-|currentPage	|int|	当前页|
+|reply.delete_right|  int|   删除权限（1为有此权限）|
+|post_id|		int	|帖子ID|
+|reply_count	|int|回帖数|
+|page_count	|int	|总页数|
+|current_page	|int|	当前页|
 
 ##示例
 

@@ -1,4 +1,4 @@
-#User.GetUserInfo
+#user.get_user_info
 
 获取用户详情
 
@@ -17,14 +17,14 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|userID|int|用户id|
-|Email|string|用户Email|
-|nickname|string|用户呢称|
+|user_id|int|用户id|
+|user_email|string|用户Email|
+|user_name|string|用户呢称|
 |sex|int|	用户性别,0为未设，1为男，2为女|
 |year|string|年|
 |month|string|月|
 |day|string|	日|
-|mailChecked|	string|	是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
+|mail_checked|	string|	是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
 |profile_picture|string|用户头像|
 
 ##示例

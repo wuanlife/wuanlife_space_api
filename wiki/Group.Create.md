@@ -1,4 +1,4 @@
-#Group.Create
+#group.create
 
 星球创建接口-用于创建星球
 
@@ -13,7 +13,7 @@
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--|:--|
 |user_id|整型|必须|-|用户id|
-|name|字符串|必须|最小：1 最大：80|星球名称|
+|g_name|字符串|必须|最小：1 最大：80|星球名称|
 |g_image|字符串  | 可选 ||  星球图片base64编码|
 |g_introduction|字符串|可选||星球简介|
 |private|整型|可选||私密，1为私密0为不私密|
@@ -23,9 +23,9 @@
 |:--|:--|:--|
 |code|整型|操作码，1表示创建成功，0表示创建失败|
 |info                 |对象   |星球信息对象|
-|info.group_base_id   |整型   |星球ID|
-|info.user_base_id    |字符串 |创建者ID|
-|info.name            |字符串 |星球名称|
+|info.group_id   |整型   |星球ID|
+|info.user_id    |字符串 |创建者ID|
+|info.g_name            |字符串 |星球名称|
 |info.g_introduction   |字符串  | 星球简介|
 |info.g_image        |字符串|星球图片路径|
 |msg                  |字符串 |提示信息|

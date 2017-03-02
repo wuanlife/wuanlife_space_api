@@ -1,4 +1,4 @@
-#User.CheckNewInfo
+#user.check_new_info
 
 用户消息未读检查接口-检查用户是否有新信息
 

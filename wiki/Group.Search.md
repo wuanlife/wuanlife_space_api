@@ -1,4 +1,4 @@
-#Group.Search
+#group.search
 
 搜索接口
 
@@ -22,21 +22,21 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|group.name           |字符型   |星球名称|
+|group.g_name           |字符型   |星球名称|
 |group.g_image           |字符型   |星球图片|
 |group.g_introduction           |字符型   |星球介绍|
-|group.id     |整型 |星球ID|
+|group.group_id     |整型 |星球ID|
 |group.num           |整型 |星球成员数|
-|groupPage          |整型 |星球总页数|
-|posts.postID   |   int|    帖子ID|
-|posts.title|   string| 标题|
-|posts.text |string |内容|
-|posts.createTime|  date|   发帖时间|
-|posts.nickname|    string  |发帖人|
-|posts.groupID| int |星球ID|
+|group_page          |整型 |星球总页数|
+|posts.post_id   |   int|    帖子ID|
+|posts.p_title|   string| 标题|
+|posts.p_text |string |内容|
+|posts.create_time|  date|   发帖时间|
+|posts.user_name|    string  |发帖人|
+|posts.group_id| int |星球ID|
 |posts.lock|    int |是否锁定|
-|posts.groupName|   string| 星球名称|
-|groupPage          |整型 |帖子总页数数|
+|posts.g_name|   string| 星球名称|
+|group_page          |整型 |帖子总页数数|
 
 
 

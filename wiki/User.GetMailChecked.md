@@ -1,4 +1,4 @@
-#User.GetMailChecked
+#user.get_mail_checked
 
 确认邮箱验证接口-用于验证用户邮箱是否已被验证
 
@@ -17,8 +17,8 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|userID|整型|用户ID|
-|mailChecked|字符串|是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
+|user_id|整型|用户ID|
+|mail_checked|字符串|是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
 
 
 ##示例

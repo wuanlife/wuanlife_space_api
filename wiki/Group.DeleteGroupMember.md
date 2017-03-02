@@ -1,4 +1,4 @@
-#Group.DeleteGroupMember
+#group.delete_group_member
 
 星球用户管理接口-用于显示加入星球的用户，方便管理
 

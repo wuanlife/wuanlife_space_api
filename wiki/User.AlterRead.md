@@ -1,4 +1,4 @@
-#User.AlterRead
+#user.alter_read **存疑**
 
 已读接口-用于将未读消息标记为已读
 

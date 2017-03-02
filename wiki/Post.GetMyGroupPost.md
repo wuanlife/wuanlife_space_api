@@ -1,4 +1,4 @@
-#Post.GetMyGroupPost
+#post.get_mygroup_post
 
 我的星球页面帖子显示
 
@@ -19,14 +19,14 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|post.id	|	int	|帖子ID|
-|post.title	|string	|标题|
-|post.text	|string|	内容|
-|post.createTime|	date|	发帖时间|
-|post.nickname	|string	|发帖人|
-|post.groupName	|string|	星球名称|
-|pageCount	|int	|总页数|
-|currentPage	|int	|当前页|
+|post.post_id	|	int	|帖子ID|
+|post.p_title	|string	|标题|
+|post.p_text	|string|	内容|
+|post.create_time|	date|	发帖时间|
+|post.user_name	|string	|发帖人|
+|post.g_name	|string|	星球名称|
+|page_count	|int	|总页数|
+|current_page	|int	|当前页|
 |identity    |int    |01创建者，02成员，03非成员|
 |private    |int    |0否，1私密|
 

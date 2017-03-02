@@ -1,4 +1,4 @@
-#Group.UStatus
+#group.u_status
 
 判断用户登陆状态-判断是否登录
 
@@ -19,8 +19,8 @@
 |:--|:--|:--|
 |code           | 整型 | 操作码，1表示已登录，0表示未登录|
 |info           | 对象 | 状态信息对象|
-|info.id       |  整型 | 用户ID|
-|info.nickname |  字符串| 用户昵称|
+|info.user_id       |  整型 | 用户ID|
+|info.user_name |  字符串| 用户昵称|
 |msg            | 字符串| 提示信息|
 
 ##示例

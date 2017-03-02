@@ -1,4 +1,4 @@
-#User.AlterUserInfo
+#user.alter_user_info
 
 修改用户的信息
 

@@ -1,4 +1,4 @@
-#Group.Lists
+#group.lists
 
 星球列表-按成员数降序显示星球列表
 
@@ -18,13 +18,13 @@
 |参数|类型|说明|
 |:--|:--|:--|
 |lists                |整型  |星球列表对象|
-|lists.name           |整型   |星球名称|
+|lists.g_name           |整型   |星球名称|
 |lists.g_image           |字符型   |星球图片|
 |lists.g_introduction           |字符型   |星球介绍|
-|lists.id     |整型 |星球ID|
+|lists.group_id     |整型 |星球ID|
 |lists.num           |整型 |星球成员数|
-|pageCount           |整型 |总页数|
-|currentPage           |整型 |当前页|
+|page_count           |整型 |总页数|
+|current_page           |整型 |当前页|
 
 
 ##示例
@@ -39,26 +39,11 @@ http://apilost/?service=Group.Lists&page=1
         "data": {
         "lists": [
             {
-                "name": "asdasf",
-                "id": "4",
+                "g_name": "asdasf",
+				"g_image": "asdasf",
+				"g_introduction": "asdasf",
+                "group_id": "4",
                 "num": "3"
-            },
-            
-            {
-                "name": "123",
-                "id": "31",
-                "num": "1"
-            },
-
-            {
-                "name": "weref",
-                "id": "32",
-                "num": "1"
-            },
-            {
-                "name": "qwefdsf112",
-                "id": "25",
-                "num": "1"
             }
         ]
     },

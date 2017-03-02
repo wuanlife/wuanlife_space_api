@@ -1,4 +1,4 @@
-#User.ProcessApp
+#user.process_apply
 
 处理申请者加入私密星球的申请接口-用于同意或者拒绝申请人加入私密星球
 

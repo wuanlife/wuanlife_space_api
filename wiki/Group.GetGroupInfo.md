@@ -1,4 +1,4 @@
-#Group.GetGroupInfo
+#group.get_group_info
 
 获取星球详情
 
@@ -18,8 +18,8 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|groupID|int|	星球id|
-|groupName|string|星球名称|
+|group_id|int|	星球id|
+|g_name|string|星球名称|
 |g_introduction|string|	星球介绍|
 |g_image|string|	星球图片链接|
 |creator|int|是否为创建者，1为创建者，0不是创建者|
@@ -36,8 +36,8 @@ JSON
 {
     "ret": 200,
     "data": {
-        "groupID": "1",
-        "groupName": "装备2014中队",
+        "group_id": "1",
+        "g_name": "装备2014中队",
         "g_introduction": "1",
         "g_image": "1"，
         "creator":0

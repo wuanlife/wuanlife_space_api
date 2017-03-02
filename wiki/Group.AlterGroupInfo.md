@@ -1,4 +1,4 @@
-#Group.AlterGroupInfo
+#group.alter_group_info
 
 修改星球详情
 
@@ -20,7 +20,7 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|data	|	int	|1代表修改成功,0代表修改失败|
+|code	|	int	|1代表修改成功,0代表修改失败|
 |msg	|	string	|报错信息|
 
 
@@ -34,7 +34,7 @@ http://apihost/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction
      {
     "ret": 200,
     "data": {
-        "data": 1,
+        "code": 1,
         "msg": "修改成功"
     },
     "msg": ""

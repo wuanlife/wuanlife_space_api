@@ -1,4 +1,4 @@
-#Post.editPost
+#post.edit_post
 
 帖子的编辑-单个帖子的编辑操作
 
@@ -14,19 +14,19 @@
 |:--|:--|:--|:--|:--|:--|
 |user_id    |整型    |必须 ||                               |用户ID|
 |post_id    | 整型   | 必须                                ||帖子ID|
-|title       |字符串 | 必须        |        最小：1   |     |帖子标题|
-|text       | 字符串 | 必须  |              最小：1   ||     帖子内容|
+|p_title       |字符串 | 必须        |        最小：1   |     |帖子标题|
+|p_text       | 字符串 | 必须  |              最小：1   ||     帖子内容|
 
 ##返回说明
 |字段    |        类型   |      说明|
 |:--|:--|:--|
 |code    |            整型      |  操作码，1表示编辑成功，0表示编辑失败|
-|info.post_base_id |  整型      |  帖子ID|
-|info.user_base_id   |整型     |   编辑人ID|
-|info.title         | 字符串   |   编辑帖子标题|
-|info.text           |字符串    |  编辑帖子内容|
-|info.floor       |   整型      |  楼主楼层1|
-|info.createTime    | 日期   |     编辑时间|
+|info.post_id |  整型      |  帖子ID|
+|info.user_id   |整型     |   编辑人ID|
+|info.p_title         | 字符串   |   编辑帖子标题|
+|info.p_text           |字符串    |  编辑帖子内容|
+|info.p_floor       |   整型      |  楼主楼层1|
+|info.create_time    | 日期   |     编辑时间|
 
 ##示例
 

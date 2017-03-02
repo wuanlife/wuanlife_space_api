@@ -1,4 +1,4 @@
-#Group.GStatus
+#group.g_status
 
 判断用户是否加入该星球
 
@@ -13,7 +13,7 @@
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--:|:--|
 |user_id|整形|必须|-|用户ID|
-|group_base_id|整型|必须|-|星球ID|
+|group_id|整型|必须|-|星球ID|
 
 ##返回说明
 |参数|类型|说明|
@@ -25,7 +25,7 @@
 
 判断用户是否加入该星球，1表示已加入，0表示未加入
 
-http://apilost/?service=Group.GStatus&group_base_id=2
+http://apilost/?service=Group.GStatus&group_id=2
 
 JSON:
     

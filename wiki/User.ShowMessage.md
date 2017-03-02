@@ -1,4 +1,4 @@
-#User.ShowMessage
+#user.show_message **存疑 待修改**
 
 用户消息中心接口-用于接收其他用户发送给用户消息
 

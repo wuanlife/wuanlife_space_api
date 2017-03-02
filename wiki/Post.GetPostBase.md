@@ -1,4 +1,4 @@
-#Post.GetPostBase
+#post.get_post_base
 
 帖子详情-发帖内容
 
@@ -20,21 +20,21 @@
 |:--|:--|:--|
 |code|int|操作码，帖子删除为0. 正常显示为1. 私密帖子为2|
 |msg|string|提示信息|
-|postID	|	int	|帖子ID|
-|groupID	|	int	|星球ID|
-|groupName|	string	|星球名称|
-|title	|string|	标题|
-|text	|string|	内容|
-|id|	int	|用户ID|
+|post_id	|	int	|帖子ID|
+|group_id	|	int	|星球ID|
+|g_name|	string	|星球名称|
+|p_title	|string|	标题|
+|p_text	|string|	内容|
+|user_id|	int	|用户ID|
 |lock|    int |是否锁定(0为未锁定，1为锁定)|
 |approved|	int	|是否点赞(0未点赞，1已点赞)|
 |approvednum|	int	|点赞数|
-|nickName	|string|	发帖人|
-|createTime|	date|	发帖时间|
-|editRight|	boolean	|	编辑权限(0为无权限，1有)|
-|deleteRight|	boolean	|	删除权限(0为无权限，1有)|
-|stickyRight|	boolean	|	置顶权限(0为无权限，1有)|
-|lockRight|	boolean	|	锁帖权限(0为无权限，1有)|
+|user_name	|string|	发帖人|
+|create_time|	date|	发帖时间|
+|edit_right|	boolean	|	编辑权限(0为无权限，1有)|
+|delete_right|	boolean	|	删除权限(0为无权限，1有)|
+|sticky_right|	boolean	|	置顶权限(0为无权限，1有)|
+|lock_right|	boolean	|	锁帖权限(0为无权限，1有)|
 |collect| boolean |   帖子是否收藏(0为未收藏，1为收藏)|
 
 ##示例
