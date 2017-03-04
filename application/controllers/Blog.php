@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @author: Chac
- * @since: 2017/3/2 16:09
- */
+
 class Blog extends CI_Controller
 {
     public function response($data,$ret=200,$msg=null){
