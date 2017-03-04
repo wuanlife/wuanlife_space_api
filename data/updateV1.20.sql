@@ -124,7 +124,7 @@ AND
 -- ----------------------------
 -- 更新其他表字段
 -- ----------------------------
-ALTER TABLE post_detail CHANGE createTime create_time INT(10);
+ALTER TABLE post_detail CHANGE createTime create_time varchar(20);
 ALTER TABLE post_detail CHANGE replyid reply_id INT(5);
 ALTER TABLE post_detail CHANGE replyFloor reply_floor INT(5);
 ALTER TABLE user_base CHANGE Email email varchar(30);
