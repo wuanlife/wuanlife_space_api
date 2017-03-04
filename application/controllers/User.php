@@ -18,7 +18,9 @@ class User extends CI_Controller
             ->set_header('Pragma: no-cache')
             ->set_header('Expires: 0')
             ->set_content_type('application/json', 'utf-8')
-            ->set_output(json_encode($response));
+            ->set_output(json_encode($response))
+            ->_display();
+        exit;
     }
 
     public function login($email,$password){
@@ -41,7 +43,19 @@ class User extends CI_Controller
     }
 
 
-
+    public function reg(){
+/*        $data=array(
+            'nickname'=>$nickname,
+            'email'=>$email,
+            'password'=>$password,
+        );*/
+        if(true){
+          //  $this->response(1,200,1);
+        }
+        if(true){
+            $this->response(2,200,2);
+        }
+    }
 
 
 
