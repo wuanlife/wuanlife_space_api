@@ -23,13 +23,13 @@ class User extends CI_Controller
         exit;
     }
 
-    public function login($email,$password){
+    public function login($email=null,$password=null){
         $data=array(
             'email' => $email,
             'password' => $password,
         );
         $re['code']=0;
-        $model= $this->User_model->login($data);
+        $model= $this->User_model->user_email($data);
         if(!$model){
             $msg='该邮箱尚未注册！';
         }elseif($data['password']!=$model['password']){
@@ -43,18 +43,22 @@ class User extends CI_Controller
     }
 
 
-    public function reg(){
-/*        $data=array(
+    public function reg($nickname,$email,$password){
+        $data=array(
             'nickname'=>$nickname,
             'email'=>$email,
             'password'=>$password,
-        );*/
-        if(true){
-          //  $this->response(1,200,1);
+        );
+        $user_email=$this->User_model->user_email($data);
+        $user_nickname=$this->User_model->user_nickname($data);
+        if(!empty($user_email)){
+            $msg='该邮箱已注册！';
+        }elseif (!empty($user_nickname)){
+            $msg='该昵称已注册！';
+        }else{
+            //$re=$this->User_model->
         }
-        if(true){
-            $this->response(2,200,2);
-        }
+
     }
 
 
