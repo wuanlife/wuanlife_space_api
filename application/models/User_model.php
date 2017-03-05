@@ -34,11 +34,22 @@ class User_model extends CI_Model
     }
 
     public function reg($data){
-/*        $nickname=$data['nickname'];
+        $nickname=$data['nickname'];
         $email=$data['email'];
         $password=$data['password'];
         $regtime=time();
-        $query=$this->db->query("insert into user_base values ()");*/
+        $sql='insert into user_base (password,nickname,email,regtime) '.
+            "values (\"$password\",\"$nickname\",\"$email\",\"$regtime\")";
+        $query=$this->db->query($sql);
+
+        if($query){
+            $sql1="select id as userID,nickname,email from user_base where nickname=\"$nickname\"";
+            $query=$this->db->query($sql1);
+            $re=$query->result_array()[0];
+        }else{
+            $re=false;
+        }
+        return $re;
     }
 
 
