@@ -8,6 +8,7 @@ class Group extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Group_model');
+        $this->load->model('Common_model');
         $this->load->helper('url_helper');
     }
     public function response($data,$ret=200,$msg=null){
@@ -26,7 +27,7 @@ class Group extends CI_Controller
 
 
     public function create($user_id,$g_name,$g_image,$g_introduction,$private){
-        $private=$this->Group_model->judgePrivate($private);
+        $private=$this->Common_model->judgePrivate($private);
         $data=array(
             'user_id'=>$user_id,
             'g_name'=>$g_name,
