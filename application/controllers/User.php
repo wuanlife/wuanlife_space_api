@@ -86,15 +86,58 @@ class User extends CI_Controller
         $this->response($re,200,$msg);
     }
 
+    /**
+     * 注销接口
+     * @desc 用于清除用户登录状态
+     * @return int code 操作码，1表示注销成功，0表示注销失败
+     * @return string msg 提示信息
+     */
+    public function logout(){
+        $re['code']='1';
+        $msg='注销成功！';
+        $this->response($re,200,$msg);
+    }
 
 
+    /**
+     *获取用户信息
+     * @desc 用于获取用户的信息
+     * @return int userID 用户id
+     * @return string Email 用户Email
+     * @return string nickname 用户名称
+     * @return int sex 用户性别,0为未设，1为男，2为女
+     * @return string year 年
+     * @return string month 月
+     * @return string day 日
+     * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
+     */
+    public function getUserInfo($user_id){
+        $re=$this->User_model->getUserInfo($user_id);
+        $msg=null;
+        $this->response($re,200,$msg);
+
+    }
 
 
-
-
-
-
-
+    /**
+     *修改用户信息接口
+     * @desc 修改用户的信息
+     * @return int data true代表成功修改，false代表修改失败
+     */
+    public function alterUserInfo($user_id,$user_name=null,$profile_picture=null,$sex=null,$year=null,$month=null,$day=null){
+        $data = array(
+            'user_id'       =>$user_id,
+            'nickname'      =>$user_name,
+            'profile_picture'   =>$profile_picture,
+            'sex'           =>$sex,
+            'year'          =>$year,
+            'month'         =>$month,
+            'day'           =>$day,
+        );
+        $re=$this->User_model->alterUserInfo($data);
+        $msg=null;
+        $this->response($re,200,$msg);
+    }
 
 
 
