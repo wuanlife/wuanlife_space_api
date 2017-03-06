@@ -16,7 +16,9 @@ class News extends CI_Controller {
             ->set_header('Pragma: no-cache')
             ->set_header('Expires: 0')
             ->set_content_type('application/json', 'utf-8')
-            ->set_output(json_encode($response));
+            ->set_output(json_encode($response))
+            ->_display();
+        exit;
     }
 
 
