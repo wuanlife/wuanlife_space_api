@@ -10,7 +10,9 @@ class User_model extends CI_Model
     }
 
 
-
+    /*
+     * 判断邮箱是否已注册
+     */
     public function user_email($data){
        $email=$data['email'];
        $re=false;
@@ -22,6 +24,9 @@ class User_model extends CI_Model
         return $re;
     }
 
+    /*
+     * 判断用户昵称是否已使用
+     */
     public function user_nickname($data){
         $nickname=$data['nickname'];
         $re=false;
@@ -39,8 +44,6 @@ class User_model extends CI_Model
         $sql='insert into user_base (password,nickname,email,regtime) '.
             "values (\"$password\",\"$nickname\",\"$email\",\"$regtime\")";
         $query=$this->db->query($sql);
-
-
         if($query){
             $sql2="select id as userID,nickname,email from user_base where nickname=\"$nickname\"";
             $query2=$this->db->query($sql2);
@@ -55,7 +58,7 @@ class User_model extends CI_Model
         return $re;
     }
 
-    public function getUserInfo($user_id){
+    public function get_user_info($user_id){
         $sql='select user_base_id as userID,sex,year,month,day,mail_checked,profile_picture from user_detail '.
             "where user_base_id=$user_id";
         $sqlb="select email,nickname from user_base where id=$user_id";
@@ -72,7 +75,7 @@ class User_model extends CI_Model
     }
 
 
-    public function alterUserInfo($data){
+    public function alter_user_info($data){
         extract($data);
         $sql="update user_detail set profile_picture=\"$profile_picture\",sex=\"$sex\",year=\"$year\",month=\"$month\",day=\"$day\" ".
             "where user_base_id=$user_id";

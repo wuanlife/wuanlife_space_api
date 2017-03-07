@@ -27,8 +27,18 @@ class Group extends CI_Controller
     }
 
 
-
-    public function create($user_id,$g_name,$g_image,$g_introduction,$private){
+    /**
+     * 星球创建接口
+     * @desc 用于创建星球
+     * @return int code 操作码，1表示创建成功，0表示创建失败
+     * @return object info 星球信息对象
+     * @return int info.group_base_id 星球ID
+     * @return string info.user_base_id 创建者ID
+     * @return string info.authorization 权限，01表示创建者
+     * @return string info.name 星球名称
+     * @return string msg 提示信息
+     */
+    public function create($user_id,$g_name,$private,$g_image=null,$g_introduction=null){
         $private=$this->Common_model->judgePrivate($private);
         $data=array(
             'user_id'=>$user_id,
@@ -38,33 +48,76 @@ class Group extends CI_Controller
             'private'=>$private,
         );
         $msg=null;
-        $re=$this->Group_model->create($data);
-        $this->response($re,200,$msg);
+        $check_group_name=$this->check_group_name($g_name);
+        if($check_group_name['code']){
+            if(empty($g_image)){
+                $data['g_image']='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            }
+            $create=$this->Group_model->create($data);
+            if($create){
+                $re['code']=1;
+                $msg='创建成功！';
+            }else{
+                $re['code']=0;
+                $msg='创建失败';
+            }
+        }else{
+            $msg=$check_group_name['msg'];
+            $re['code']=$check_group_name['code'];
+        }
 
+        $this->response($re,200,$msg);
+    }
+
+    /**
+     * 加入星球接口
+     * @desc 用户加入星球
+     * @return int code 操作码，1表示加入成功，0表示加入失败
+     * @return object info 星球信息对象
+     * @return int info.group_base_id 加入星球ID
+     * @return string info.user_base_id 加入者ID
+     * @return string info.authorization 权限，03表示会员
+     * @return string msg 提示信息
+     */
+    public function join($user_id,$g_id){
+        $data = array(
+            'user_base_id' => $user_id,
+            'group_base_id'    => $g_id,
+            'authorization'=>'03',
+        );
+        $re=$this->Group_model->join($data);
+        if($re){
+            $msg='加入成功！并通知星球创建者';
+            $rs['code']=1;
+        }else{
+            $msg='加入失败';
+            $rs['code']=0;
+        }
+        $this->response($re,200,$msg);
     }
     public function lists(){
         $model = $this->Group_model;
         $pn = $this->input->get('pn');
-        $all_num      = $model->get_all_group_num();              //����
-        $page_num     = 20;                                       //ÿҳ����
-        $pageCount =ceil($all_num/$page_num);                //��ҳ��
+        $all_num      = $model->get_all_group_num();              //总条
+        $page_num     = 20;                                       //每页条数
+        $pageCount =ceil($all_num/$page_num);                //总页数
         if ($pageCount == 0){
             $pageCount =1;
         }
         if($pn > $pageCount){
             $pn = $pageCount;
         }
-        $pn         =empty($pn)?1:$pn;                    //��ǰҳ��
-        $pn         =(int)$pn;                              //��ȫǿ��ת��
-        $limit_st     =($pn-1)*$page_num;                     //��ʼ��
+        $pn         =empty($pn)?1:$pn;                    //当前页数
+        $pn         =(int)$pn;                              //安全强制转换
+        $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->lists($limit_st,$page_num);
         $rs['lists']=$this->Common_model->judge_image_exist($re);
         $rs['pageCount']  = $pageCount;
         $rs['currentPage'] = $pn;
         if(empty($re)){
-            $msg = '��������';
+            $msg = '暂无星球';
         }else{
-            $msg = '��ȡ�����б��ɹ�';
+            $msg = '获取星球列表成功';
         }
         $this->response($rs,200,$msg);
     }
@@ -72,18 +125,18 @@ class Group extends CI_Controller
         $user_id = $this->input->get('user_id');
         $model = $this->Group_model;
         $pn = $this->input->get('pn');
-        $all_num      = $model->get_all_cgroup_num($user_id);              //����
-        $page_num     = 20;                                       //ÿҳ����
-        $pageCount =ceil($all_num/$page_num);                //��ҳ��
+        $all_num      = $model->get_all_cgroup_num($user_id);              //总条
+        $page_num     = 20;                                       //每页条数
+        $pageCount =ceil($all_num/$page_num);                //总页数
         if ($pageCount == 0){
             $pageCount =1;
         }
         if($pn > $pageCount){
             $pn = $pageCount;
         }
-        $pn         =empty($pn)?1:$pn;                    //��ǰҳ��
-        $pn         =(int)$pn;                              //��ȫǿ��ת��
-        $limit_st     =($pn-1)*$page_num;                     //��ʼ��
+        $pn         =empty($pn)?1:$pn;                    //当前页数
+        $pn         =(int)$pn;                              //安全强制转换
+        $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->get_create($limit_st,$page_num,$user_id);
         $rs['groups']=$this->Common_model->judge_image_exist($re);
         $rs['pageCount']  = $pageCount;
@@ -91,9 +144,9 @@ class Group extends CI_Controller
         $rs['num']=$all_num;
         $rs['user_name']=$this->User_model->get_user_infomation($user_id)['nickname'];
         if(empty($re)){
-            $msg = '��������';
+            $msg = '暂无星球';
         }else{
-            $msg = '��ȡ�����б��ɹ�';
+            $msg = '获取星球列表成功';
         }
         $this->response($rs,200,$msg);
     }
@@ -101,18 +154,18 @@ class Group extends CI_Controller
         $user_id = $this->input->get('user_id');
         $model = $this->Group_model;
         $pn = $this->input->get('pn');
-        $all_num      = $model->get_all_jgroup_num($user_id);              //����
-        $page_num     = 20;                                       //ÿҳ����
-        $pageCount =ceil($all_num/$page_num);                //��ҳ��
+        $all_num      = $model->get_all_jgroup_num($user_id);              //总条
+        $page_num     = 20;                                       //每页条数
+        $pageCount =ceil($all_num/$page_num);                //总页数
         if ($pageCount == 0){
             $pageCount =1;
         }
         if($pn > $pageCount){
             $pn = $pageCount;
         }
-        $pn         =empty($pn)?1:$pn;                    //��ǰҳ��
-        $pn         =(int)$pn;                              //��ȫǿ��ת��
-        $limit_st     =($pn-1)*$page_num;                     //��ʼ��
+        $pn         =empty($pn)?1:$pn;                    //当前页数
+        $pn         =(int)$pn;                              //安全强制转换
+        $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->get_joined($limit_st,$page_num,$user_id);
         $rs['groups']=$this->Common_model->judge_image_exist($re);
         $rs['pageCount']  = $pageCount;
@@ -120,9 +173,9 @@ class Group extends CI_Controller
         $rs['num']=$all_num;
         $rs['user_name']=$this->User_model->get_user_infomation($user_id)['nickname'];
         if(empty($re)){
-            $msg = '��������';
+            $msg = '暂无星球';
         }else{
-            $msg = '��ȡ�����б��ɹ�';
+            $msg = '获取星球列表成功';
         }
         $this->response($rs,200,$msg);
     }
@@ -137,13 +190,13 @@ class Group extends CI_Controller
         $re = $model->private_group($data,$user_id);
         if($re) {
             $rs['code'] = 1;
-            $msg = '����ɹ�����ȴ���������ˣ�';
+            $msg = '申请成功！请等待创建者审核！';
         }else {
             $rs['code'] = 0;
-            $msg = '����ʧ�ܣ�';
+            $msg = '申请失败！';
         }
         /*
-         * ����ǰ�˽ӿ�  ������
+         * 调用前端接口  待测试
         $re=$this->Common_model->judgeUserOnline($user_id);
 
         if(empty($re)){
@@ -176,14 +229,14 @@ class Group extends CI_Controller
                 $re['group_id'] = $data['group_id'];
                 $re['users'] = $rs;
                 $re['code'] = 1;
-                $msg = '��ʾ�ɹ���';
+                $msg = '显示成功！';
             }else {
                 $re['code'] = 0;
-                $msg = '������û��������Ա��';
+                $msg = '该星球没有其他成员！';
             }
         }else{
             $re['code'] = 0;
-            $msg = '���������򴴽��ߣ�û��Ȩ�ޣ�';
+            $msg = '您不是星球创建者，没有权限！';
         }
         $this->response($re,200,$msg);
     }
@@ -199,15 +252,15 @@ class Group extends CI_Controller
             $rs = $model->delete_group_member($data);
             if($rs) {
                 $re['code'] = 1;
-                $msg = '�����ɹ�����֪ͨ��ɾ���ĳ�Ա';
+                $msg = '操作成功！并通知被删除的成员';
                 $model->dgm_message($data);
             }else {
                 $re['code'] = 0;
-                $msg = '����ʧ�ܣ�';
+                $msg = '操作失败！';
             }
         }else{
             $re['code'] = 0;
-            $msg = '���������򴴽��ߣ�û��Ȩ�ޣ�';
+            $msg = '您不是星球创建者，没有权限！';
         }
         $this->response($re,200,$msg);
     }
@@ -251,11 +304,33 @@ class Group extends CI_Controller
         //var_dump($rs);
     }
 
+    /**
+     * 退出星球接口
+     * @desc 用户退出星球
+     * @return int code 操作码，1表示退出成功，0表示退出失败
+     * @return string msg 提示信息
+     */
+    public function quit($user_id,$g_id){
+        $data=array(
+            'user_id'=>$user_id,
+            'group_id'=>$g_id,
+        );
+        $creator=$this->Group_model->judge_group_creator($data);
+        if($creator){
+            $msg='您是星球创建者，无法退出';
+            $re['code']=0;
+        }else{
+            $this->Group_model->quit($data);
+            $re['code']=1;
+            $msg='退出成功！并通知星球创建者';
+        }
+        $this->response($re,200,$msg);
+    }
     private function search_posts($text,$pnum,$pn){
         $model=$this->Post_model;
         $page_num=$pnum;
         $all_num=$model->search_posts_num($text);
-        $page_all_num =ceil($all_num/$page_num);                //��ҳ��
+        $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
             $page_all_num =1;
         }
@@ -276,7 +351,7 @@ class Group extends CI_Controller
         $domain =$this->Common_model;
         $page_num=$gnum;
         $all_num=$model->search_group_num($text);
-        $page_all_num =ceil($all_num/$page_num);                //��ҳ��
+        $page_all_num =ceil($all_num/$page_num);                //总页数
         if ($page_all_num == 0){
             $page_all_num =1;
         }
@@ -314,6 +389,104 @@ class Group extends CI_Controller
         $this->response($rs);
 
     }
+
+
+
+    /**
+     * 判断用户是否加入该星球
+     * @desc 判断用户是否加入该星球
+     * @return int code 操作码，1表示已加入，0表示未加入
+     * @return string msg 提示信息
+     */
+    public function g_status($user_id,$g_id){
+        $data=array(
+            'user_id'=>$user_id,
+            'g_id'=>$g_id,
+        );
+        $re['code']=$this->Group_model->g_status($data);
+        if($re['code']) {
+            $msg = '已加入该星球';
+        }else{
+            $msg='未加入该星球';
+        }
+        $this->response($re,200,$msg);
+    }
+
+
+
+    public function get_group_info($group_id,$user_id){
+        $data=array(
+            'group_id'=>$group_id,
+            'user_id'=>$user_id,
+        );
+        $group_exist=$this->Group_model->judge_group_exist($group_id);
+        $creator=$this->Group_model->judge_group_creator($data);
+        if($group_exist){
+            $re=$this->Group_model->get_group_info($group_id);
+            if($creator){
+                $re['creator']=1;
+            }else{
+                $re['creator']=0;
+            }
+        }else{
+            $re=0;
+        }
+        $this->response($re,200,null);
+    }
+
+    /**
+     *修改星球接口
+     * @desc 修改星球详情
+     * @return int data 0代表修改失败,1代表修改成功
+     * @return string msg 提示错误信息
+     */
+    public function alter_group_info($group_id,$user_id,$g_introduction=null,$g_image=null){
+        $data=array(
+            'group_id'=>$group_id,
+            'user_id'=>$user_id,
+            'g_introduction'=>$g_introduction,
+            'g_image'=>$g_image,
+        );
+        $group_exist=$this->Group_model->judge_group_exist($group_id);
+        $creator=$this->Group_model->judge_group_creator($data);
+        if($group_exist){
+            if($creator){
+                $this->Group_model->alter_group_info($data);
+                $re['code']=1;
+                $msg='修改成功';
+            }else{
+                $re['code']=0;
+                $msg='不是创建者';
+            }
+        }else{
+            $re['code']=0;
+            $msg='星球不存在';
+        }
+        $this->response($re,200,$msg);
+    }
+
+
+
+
+
+
+
+    /*
+     * 判断星球名称是否合法
+     */
+    public function check_group_name($g_name){
+        $re=$this->Group_model->gname_exist($g_name);
+        $rs['code']=0;
+        if (!preg_match('/^[0-9a-zA-Z_\x{4e00}-\x{9fa5}]{1,20}+$/u', $g_name)) {
+            $rs['msg'] = '小组名只能为中文、英文、数字或者下划线，但不得超过20字节！';
+        }elseif (!empty($re)) {
+            $rs['msg'] = '该星球已创建！';
+        }else{
+            $rs['code']=1;
+        }
+        return $rs;
+    }
+
 
 
 
