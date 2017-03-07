@@ -9,6 +9,7 @@ class User extends CI_Controller
         parent::__construct();
         $this->load->model('User_model');
         $this->load->model('Group_model');
+        $this->load->model('Common_model');
         $this->load->helper('url_helper');
     }
     private function response($data,$ret=200,$msg=null){
@@ -138,13 +139,6 @@ class User extends CI_Controller
         $this->response($re,200,$msg);
     }
     public function show_message(){
-        /*
-        $data = array(
-            'user_id'       => $this->uri->segment(3),
-            'm_type'   => $this->uri->segment(4),
-            'pn'            => $this->uri->segment(5),
-        );
-        */
         $data = array(
             'user_id'       => $this->input->get('user_id'),
             'm_type'   => $this->input->get('m_type'),
@@ -323,6 +317,13 @@ class User extends CI_Controller
         }else{
             $rs['msg'] = '您不是创建者，没有权限！';
         }
+        /*
+        $re=$this->Common_model->judgeUserOnline($info['user_apply_id']);
+        if(empty($re)){
+            $rs['code']=2;
+        }
+        调用前端接口
+        */
         return $rs;
     }
     private function process_app_info($m_type,$data){
@@ -365,27 +366,4 @@ class User extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
-    public function check_array()
-    {
-        $this->load->helper(array('form', 'url'));
-
-        $this->load->library('form_validation');
-
-        $this->form_validation->set_rules('username', 'Username', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required',
-            array('required' => 'You must provide a %s.')
-        );
-        $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required');
-        $this->form_validation->set_message('required', 'Error Message');
-        if ($this->form_validation->run() == FALSE)
-        {
-            echo validation_errors();echo form_error('username');
-        }
-        else
-        {
-            $this->load->view('formsuccess');
-        }
-    }
-
 }

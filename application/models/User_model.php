@@ -225,6 +225,7 @@ class User_model extends CI_Model
     }
     public function check_new_info($id){
         $table = array('message_notice','message_apply','message_reply');
+        $num = array();
         for($i=0;$i<3;$i++){
             $num[$i] = $this->get_num_message($id,$table[$i],1);
         }
