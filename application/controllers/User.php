@@ -110,8 +110,8 @@ class User extends CI_Controller
      * @return string day 日
      * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
      */
-    public function getUserInfo($user_id){
-        $re=$this->User_model->getUserInfo($user_id);
+    public function get_user_info($user_id){
+        $re=$this->User_model->get_user_info($user_id);
         $msg=null;
         $this->response($re,200,$msg);
 
@@ -123,7 +123,7 @@ class User extends CI_Controller
      * @desc 修改用户的信息
      * @return int data true代表成功修改，false代表修改失败
      */
-    public function alterUserInfo($user_id,$user_name=null,$profile_picture=null,$sex=null,$year=null,$month=null,$day=null){
+    public function alter_user_info($user_id,$user_name=null,$profile_picture=null,$sex=null,$year=null,$month=null,$day=null){
         $data = array(
             'user_id'       =>$user_id,
             'nickname'      =>$user_name,
@@ -133,7 +133,7 @@ class User extends CI_Controller
             'month'         =>$month,
             'day'           =>$day,
         );
-        $re=$this->User_model->alterUserInfo($data);
+        $re=$this->User_model->alter_user_info($data);
         $msg=null;
         $this->response($re,200,$msg);
     }
