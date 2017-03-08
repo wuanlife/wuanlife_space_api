@@ -181,6 +181,7 @@ class Group_model extends CI_Model
     public function get_create($limit_st,$page_num,$user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '01'");
         $re = $query->result_array();
+        $row = array();
         foreach ($re as $key=>$value){
             $row[]=$value["group_base_id"];
         }
@@ -197,6 +198,7 @@ class Group_model extends CI_Model
     public function get_joined($limit_st,$page_num,$user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '03'");
         $re = $query->result_array();
+        $row = array();
         foreach ($re as $key=>$value){
             $row[]=$value["group_base_id"];
         }
@@ -280,6 +282,7 @@ class Group_model extends CI_Model
     public function test($user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '01'");
         $re = $query->result_array();
+        $row = array();
         foreach ($re as $key=>$value){
             $row[]=$value["group_base_id"];
         }

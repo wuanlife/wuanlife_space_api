@@ -355,8 +355,8 @@ class User extends CI_Controller
         $this->response($rs,200,$msg=NULL);
     }
     public function delete_message(){
-        $value['id'] = $this->input->get('m_id');
-        $rs = $this->alter_status($value,2,'message_reply');
+        $data['id'] = $this->input->get('m_id');
+        $rs = $this->alter_status($data,2,'message_reply');
         if($rs){
             $msg = '删除成功';
             $re['code'] = 1;
@@ -365,5 +365,32 @@ class User extends CI_Controller
             $re['code'] = 0;
         }
         $this->response($re,200,$msg);
+    }
+    public function test(){
+        $data = array(
+            'id'=>'',
+            'name'=>'csc',
+            'psw'=>''
+        );
+        $this->load->library('Validator');
+        $rs = $this->validator->check($data,__FUNCTION__);
+        $this->response($rs);
+
+    }
+
+
+    private function email(){
+        $this->load->library('email');
+        $this->email->from('wuanlife@163.com', '陈世超');
+        $this->email->to('1195417752@qq.com');
+        $this->email->subject('ssl模式发送');
+        $this->email->message('Testing s.');
+        var_dump($this->email->send());
+    }
+    private function verification_code(){
+        $this->load->helper('icode');
+        $cap = create_code(5,'123456789');
+        echo $cap;
+
     }
 }
