@@ -152,6 +152,7 @@ class Post_model extends CI_Model
             return 1;
         }
         return false;
+    }
     public function get_index_post($data){
         $num=30;
         $user_id=$data['user_id'];
@@ -210,7 +211,7 @@ class Post_model extends CI_Model
             }
         }
         return $rs;
-    }
+
     }
 
     /**
@@ -219,7 +220,6 @@ class Post_model extends CI_Model
      * 帖子回复
      */
     public function post_reply($data) {
-        $rs = array();
         $time = date('Y-m-d H:i:s',time());
         //查询最大楼层
         $sql=$this->db->from('post_detail')

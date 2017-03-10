@@ -35,28 +35,34 @@ class Common_model extends CI_Model
     /*
      *判断用户是否在线(调用前端接口)
      */
-    public function judgeUserOnline($user_id){
-        $data1 = array ('userid' => $user_id);
-        $data1 = http_build_query($data1);
-        $RootDIR = dirname(__FILE__);
-        $path=$RootDIR."/../../Public/init.php";
-        require_once $path;
-        $url=DI()->config->get('sys.url');
-
-
-        $opts = array (
-            'http' => array (
-                'method' => 'POST',
-                'header'=> "Content-type: application/x-www-form-urlencoded",
-                'content' => $data1
-            )
-        );
-        $context = stream_context_create($opts);
-        $html = file_get_contents($url, false, $context);
-        return $html;
-    }
-    /*
+    /**
+     * 先被注释  待修改
+     *
+     * public function judgeUserOnline($user_id){
+     * $data1 = array ('userid' => $user_id);
+     * $data1 = http_build_query($data1);
+     * $RootDIR = dirname(__FILE__);
+     * $path=$RootDIR."/../../Public/init.php";
+     * require_once $path;
+     * //$url=DI()->config->get('sys.url');
+     *
+     *
+     * $opts = array (
+     * 'http' => array (
+     * 'method' => 'POST',
+     * 'header'=> "Content-type: application/x-www-form-urlencoded",
+     * 'content' => $data1
+     * )
+     * );
+     * $context = stream_context_create($opts);
+     * $html = file_get_contents($url, false, $context);
+     * return $html;
+     * }
+     * /
+     * /*
      * 判断星球是否有头像，若没有给默认头像
+     * @param $lists
+     * @return
      */
     public function judge_image_exist($lists){
         for($i=0;$i<count($lists);$i++){
@@ -76,6 +82,10 @@ class Common_model extends CI_Model
         $re =$this->Group_model->get_group_infomation($group_id)['private'];
         return $re;
     }
+    /*
+     * @param $group_id
+     * @return int
+     * 已存在相同函数
     public function judge_group_exist($group_id){
         $sql=$this->db->select('id')
             ->where('id',$group_id)
@@ -89,6 +99,7 @@ class Common_model extends CI_Model
         }
         return $rs;
     }
+     * /
 
     /**
      * @param $post_id
@@ -237,6 +248,10 @@ class Common_model extends CI_Model
     /*
     通过星球id判断星球是否为私密星球
      */
+    /*
+     * @param $group_id
+     * @return mixed
+     * 已存在相同函数
     public function judge_group_private($group_id){
         $sql=$this->db->select('private')
             ->where('id',$group_id)
@@ -266,6 +281,11 @@ class Common_model extends CI_Model
     /*
     判断用户是否为星球创建者
     */
+    /*
+     * @param $group_id
+     * @param $user_id
+     * @return int|null
+     * 已存在相同函数
     public function judge_group_creator($group_id,$user_id){
         $sql=$this->db->select('*')
             ->where('group_base_id',$group_id)
