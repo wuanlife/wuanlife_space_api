@@ -33,6 +33,15 @@ class Group_model extends CI_Model
         }
         return $re;
     }
+    public function get_group_infomation($group_id){
+        $this->db->select('*');
+        $this->db->from('group_base');
+        $this->db->where('id',$group_id);
+        $this->db->join('group_detail', 'group_detail.group_base_id = group_base.id');
+        $this->db->where('authorization',01);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
 
     /*
      * 根据星球名判断星球是否存在
@@ -150,12 +159,17 @@ class Group_model extends CI_Model
         return $re;
     }
     public function check_group($user_id,$group_id){
-        return $this->db->where('group_base_id',$group_id)
+        $re =  $this->db->where('group_base_id',$group_id)
             ->where('user_base_id',$user_id)
             ->where('authorization','03')
             ->from('group_detail')
             ->get()
             ->row_array();
+        if(!empty($re)){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function get_all_group_num(){
         $this->db->from('group_base');
@@ -289,4 +303,36 @@ class Group_model extends CI_Model
         $arr_string = join(',', $row);
         return $arr_string;
     }
+    public function posts($data){
+        $b_data = array(
+            'user_base_id'  => $data['user_id'],
+            'group_base_id' => $data['group_id'],
+            'title'         => $data['p_title'],
+        );
+        $time = date('Y-m-d H:i:s',time());
+        $this->db->insert('post_base',$b_data);
+        $d_data = array(
+            'post_base_id' => $this->db->insert_id('post_base'),
+            'user_base_id' => $data['user_id'],
+            'text' => $data['p_text'],
+            'floor'=> '1',
+            'create_time' => $time,
+        );
+        $this->db->insert('post_detail',$d_data);
+        return $d_data['post_base_id'];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

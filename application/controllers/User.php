@@ -230,9 +230,9 @@ class User extends CI_Controller
             foreach($re['info'] as $keys => $values){
                 $re['info'][$keys]['content'] = $this->message_array($values['type'],$values['user_name'],$values['g_name']);
                 if(in_array($values['type'],array(4,5))){
-                    $re['info'][$keys]['image'] = $model->get_user_infomation($values['user_id'])['profile_picture'];
+                    $re['info'][$keys]['image'] = $model->get_user_information($values['user_id'])['profile_picture'];
                 }elseif(in_array($values['type'],array(1,2,3))){
-                    $re['info'][$keys]['image'] = $model->get_group_infomation($values['group_id'])['g_image'];
+                    $re['info'][$keys]['image'] = $this->Group_model->get_group_infomation($values['group_id'])['g_image'];
                 }
             }
         }
@@ -277,16 +277,11 @@ class User extends CI_Controller
         $rs = $this->process_apply_1($data);
         $this->response($rs,200,$msg=NULL);
     }
-    private function check_group($user_id,$group_id){
-        $model_g = $this->Group_model;
-        return $model_g->check_group($user_id,$group_id);
-    }
     private function process_apply_1($data){
-        $model = $this->User_model;
         $info = $this->get_message_info($data['m_id']);
-        $founder_id = $model->get_group_infomation($info['group_base_id'])['user_base_id'];
+        $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];
         if($founder_id==$data['user_id']){
-            if($this->check_group($info['user_apply_id'],$info['group_base_id'])){
+            if($this->Common_model->check_group($info['user_apply_id'],$info['group_base_id'])){
                 $rs['msg'] = '操作失败！该用户已加入此星球！';
             }else{
                 if($data['mark'] == 1) {

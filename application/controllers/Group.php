@@ -142,7 +142,7 @@ class Group extends CI_Controller
         $rs['pageCount']  = $pageCount;
         $rs['currentPage'] = $pn;
         $rs['num']=$all_num;
-        $rs['user_name']=$this->User_model->get_user_infomation($user_id)['nickname'];
+        $rs['user_name']=$this->User_model->get_user_information($user_id)['nickname'];
         if(empty($re)){
             $msg = '暂无星球';
         }else{
@@ -171,7 +171,7 @@ class Group extends CI_Controller
         $rs['pageCount']  = $pageCount;
         $rs['currentPage'] = $pn;
         $rs['num']=$all_num;
-        $rs['user_name']=$this->User_model->get_user_infomation($user_id)['nickname'];
+        $rs['user_name']=$this->User_model->get_user_information($user_id)['nickname'];
         if(empty($re)){
             $msg = '暂无星球';
         }else{
@@ -186,7 +186,7 @@ class Group extends CI_Controller
             'p_text'    =>$this->input->get('p_text')
         );
         $model = $this->Group_model;
-        $user_id=$this->User_model->get_group_infomation($data['group_id'])['user_base_id'];
+        $user_id=$model->get_group_infomation($data['group_id'])['user_base_id'];
         $re = $model->private_group($data,$user_id);
         if($re) {
             $rs['code'] = 1;
@@ -210,18 +210,18 @@ class Group extends CI_Controller
             'user_id' =>$this->input->get('user_id'),
             'group_id' =>$this->input->get('group_id')
         );
-        $user_id=$this->User_model->get_group_infomation($data['group_id'])['user_base_id'];
+        $user_id=$this->Group_model->get_group_infomation($data['group_id'])['user_base_id'];
         if($user_id == $data['user_id']){
             $model = $this->Group_model;
             $rs = $model->user_manage($data);
             foreach($rs as $keys => $value){
-                $profile_picture = $this->User_model->get_user_infomation($value['user_base_id'])['profile_picture'];
+                $profile_picture = $this->User_model->get_user_information($value['user_base_id'])['profile_picture'];
                 if(empty($profile_picture)){
                     $profile_picture = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
                 }
                 $rs[$keys] = array(
                     'user_id'           =>$value['user_base_id'],
-                    'user_name'         =>$this->User_model->get_user_infomation($value['user_base_id'])['nickname'],
+                    'user_name'         =>$this->User_model->get_user_information($value['user_base_id'])['nickname'],
                     'profile_picture'  =>$profile_picture,
                 );
             }
@@ -246,7 +246,7 @@ class Group extends CI_Controller
             'group_id' =>$this->input->get('group_id'),
             'member_id' =>$this->input->get('member_id')
         );
-        $user_id=$this->User_model->get_group_infomation($data['group_id'])['user_base_id'];
+        $user_id=$this->Group_model->get_group_infomation($data['group_id'])['user_base_id'];
         if($user_id == $data['user_id']){
             $model = $this->Group_model;
             $rs = $model->delete_group_member($data);
@@ -485,6 +485,26 @@ class Group extends CI_Controller
             $rs['code']=1;
         }
         return $rs;
+    }
+    public function posts(){
+        $data = array(
+            'user_id' =>$this->input->get('user_id'),
+            'group_id' =>$this->input->get('group_id'),
+            'p_title' =>$this->input->get('p_title'),
+            'p_text' =>$this->input->get('p_text'),
+        );
+        $boola = $this->Common_model->check_group($data['user_id'],$data['group_id']);
+        $boolb = $this->Common_model->judge_group_creator($data['group_id'],$data['user_id']);
+        $rs['code'] = 0;
+        if ($boola||$boolb) {
+            $post_id = $this->Group_model->posts($data);
+            $rs['post_id'] = $post_id;
+            $rs['code'] = 1;
+            $msg = '发表成功';
+        }else{
+            $msg = '未加入该星球';
+        }
+        $this->response($rs,200,$msg);
     }
 
 

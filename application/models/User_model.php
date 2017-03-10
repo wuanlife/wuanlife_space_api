@@ -83,21 +83,11 @@ class User_model extends CI_Model
         return $query;
     }
 
-    public function get_user_infomation($user_id){
+    public function get_user_information($user_id){
         $this->db->select('*');
         $this->db->from('user_base');
         $this->db->where('id',$user_id);
         $this->db->join('user_detail', 'user_detail.user_base_id = user_base.id');
-        $query = $this->db->get();
-        return $query->row_array();
-    }
-
-    public function get_group_infomation($group_id){
-        $this->db->select('*');
-        $this->db->from('group_base');
-        $this->db->where('id',$group_id);
-        $this->db->join('group_detail', 'group_detail.group_base_id = group_base.id');
-        $this->db->where('authorization',01);
         $query = $this->db->get();
         return $query->row_array();
     }
