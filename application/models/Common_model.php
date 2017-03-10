@@ -76,6 +76,19 @@ class Common_model extends CI_Model
         $re =$this->Group_model->get_group_infomation($group_id)['private'];
         return $re;
     }
+    public function judge_group_exist($group_id){
+        $sql=$this->db->select('id')
+            ->where('id',$group_id)
+            ->where('`delete`','0')
+            ->get('group_base')
+            ->row_array();
+        if(!empty($sql)){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
 
     /**
      * @param $post_id
@@ -208,6 +221,87 @@ class Common_model extends CI_Model
     public function get_post_reply_page($p_id,$floor){
         return $this->Post_model->get_post_reply_page($p_id,$floor);
     }
+
+
+    /*
+     * 通过星球id获取星球名称
+     */
+    public function get_group_name($group_id){
+        $sql=$this->db->select('name')
+            ->where('id',$group_id)
+            ->get('group_base')
+            ->row_array();
+        return $sql['name'];
+    }
+
+    /*
+    通过星球id判断星球是否为私密星球
+     */
+    public function judge_group_private($group_id){
+        $sql=$this->db->select('private')
+            ->where('id',$group_id)
+            ->get('group_base')
+            ->row_array();
+        return $sql['private'];
+    }
+
+    /*
+    判断用户是否为星球成员
+     */
+    public function judge_group_user($group_id,$user_id){
+        $sql=$this->db->select('*')
+            ->where('group_base_id',$group_id)
+            ->where('user_base_id',$user_id)
+            ->where('authorization',03)
+            ->get('group_detail')
+            ->row_array();
+        if(empty($sql)){
+            $re=NULL;
+        }else{
+            $re=1;
+        }
+        return $re;
+    }
+
+    /*
+    判断用户是否为星球创建者
+    */
+    public function judge_group_creator($group_id,$user_id){
+        $sql=$this->db->select('*')
+            ->where('group_base_id',$group_id)
+            ->where('user_base_id',$user_id)
+            ->where('authorization',01)
+            ->get('group_detail')
+            ->row_array();
+        if(empty($sql)){
+            $re=NULL;
+        }else{
+            $re=1;
+        }
+        return $re;
+    }
+
+    /*
+    判断用户是否在申请加入私有星球
+    */
+    public function judge_user_application($user_id,$group_id){
+        $sql=$this->db->select('*')
+            ->where_in('status',array(0,1))
+            ->where('message_base_code','0001')
+            ->where('id_1',$user_id)
+            ->where('id_2',$group_id)
+            ->get('message_detail')
+            ->row_array();
+        if(empty($sql)){
+            $re=NULL;
+        }else{
+            $re=1;
+        }
+        return $re;
+    }
+
+
+
 
 
 }
