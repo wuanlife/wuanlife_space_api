@@ -21,7 +21,7 @@
 12.[用户消息列表](/wiki/user.show_message.md)<br>
 13.[处理申请信息](/wiki/user.process_apply.md)<br>
 14.[检查未读信息](/wiki/user.check_new_info.md)<br>
-15.[删除信息](/wiki/User.DeleteMessage.md)<br>
+15.[删除信息](/wiki/user.delete_message.md)<br>
 16.[修改用户密码](/wiki/User.Changepwd.md)<br>
 
 ###B.星球相关
