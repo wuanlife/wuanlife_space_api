@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `message_apply`;
 CREATE TABLE `message_apply` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '消息id',
-  `text` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '申请理由',
+  `text` varchar(80) COLLATE utf8_bin NULL COMMENT '申请理由',
   `user_base_id` int(11) NOT NULL COMMENT '接收者id',
   `group_base_id` int(11) NOT NULL COMMENT '星球id',
   `user_apply_id` int(11) NOT NULL COMMENT '申请者id',
@@ -130,6 +130,7 @@ ALTER TABLE post_detail CHANGE replyFloor reply_floor INT(5);
 ALTER TABLE user_base CHANGE Email email varchar(30);
 ALTER TABLE user_code CHANGE getpasstime get_pass_time int(10);
 ALTER TABLE user_code CHANGE id uesr_base_id int(11);
+ALTER TABLE user_code CHANGE code code varchar(11);
 ALTER TABLE user_collection CHANGE createTime create_time INT(10);
 ALTER TABLE user_detail CHANGE lastLogTime last_logtime int(10);
 ALTER TABLE user_detail CHANGE mailChecked mail_checked varchar(2);
