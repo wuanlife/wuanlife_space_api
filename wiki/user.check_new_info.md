@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.CheckNewInfo
+接口URL：http://localhost:88/index.php/user/check_new_info
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -19,20 +19,20 @@
 |参数|        类型|   说明|
 |:--|:--|:--|
 |num|整型|1有信息 0没有
-|msg |字符串 |提示信息|
+|msg |null |null|
 
 
 ##示例
 
 显示用户id=1的消息列表
 
-http://dev.wuanlife.com:800/?service=User.CheckNewInfo&user_id=1
+http://localhost:88/index.php/user/check_new_info?user_id=58
 
     JSON：
     {
-    "ret": 200,
-    "data": {
-        "num": 1
-    },
-    "msg": ""
+	"ret": 200,
+	"data": {
+		"num": 1
+	},
+	"msg": null
     }

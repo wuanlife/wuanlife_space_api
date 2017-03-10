@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.editPost
+接口URL：http://localhost:88/index.php/post/edit_post
 
 请求方式：POST
 
@@ -21,32 +21,21 @@
 |字段    |        类型   |      说明|
 |:--|:--|:--|
 |code    |            整型      |  操作码，1表示编辑成功，0表示编辑失败|
-|info.post_id |  整型      |  帖子ID|
-|info.user_id   |整型     |   编辑人ID|
-|info.p_title         | 字符串   |   编辑帖子标题|
-|info.p_text           |字符串    |  编辑帖子内容|
-|info.p_floor       |   整型      |  楼主楼层1|
-|info.create_time    | 日期   |     编辑时间|
+|post_id|整型|帖子id,此处只返回帖子id,由此跳转到帖子详情|
+|msg|字符型|提示信息|
 
 ##示例
 
 回复帖子
 
-http://dev.wuanlife.com:800/?service=post.editPost&post_id=1&text=666999&user_id=1&title=666666
+http://localhost:88/index.php/post/edit_post?user_id=1&p_title=2&p_text=6656xsxs&post_id=45
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "info": {
-            "post_base_id": 1,
-            "user_base_id": 1,
-            "title": "666666",
-            "text": "666999",
-            "floor": 1,
-            "createTime": "2016-04-22 20:05:07"
-        }
-    },
-    "msg": ""
+	"ret": 200,
+	"data": {
+		"code": 1,
+		"post_id": "45"
+	},
+	"msg": "编辑成功"
     }

@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.GetPostBase
+接口URL：http://localhost:88/index.php/post/get_post_base
 
 请求方式：GET
 
@@ -14,6 +14,7 @@
 |:--|:--|:--|:--|
 |post_id|int|必须|帖子ID|
 |user_id|int|可选|用户ID|
+|pn|int|可选|当前回复页数|
 
 ##返回说明
 |参数|类型|说明|
@@ -28,6 +29,7 @@
 |user_id|	int	|用户ID|
 |approved|	int	|是否点赞(0未点赞，1已点赞)|
 |approvednum|	int	|点赞数|
+|p_image|string|帖子内容图片，用户安卓端|
 |user_name	|string|	发帖人|
 |create_time|	date|	发帖时间|
 |edit_right|	boolean	|	编辑权限(0为无权限，1有)|
@@ -43,33 +45,33 @@
 
 显示帖子ID为1的帖子内容,此人为发帖者
 
-http://dev.wuanlife.com:800/?service=Post.GetPostBase&post_id=1&user_id=1
+http://localhost:88/index.php/post/get_post_base?user_id=1&post_id=1
 
      JSON:
     {
-        "ret": 200,
-        "data": {
-            "postID": "1",
-            "groupID": "1",
-            "groupName": "装备2014中队和是加",
-            "title": "avhfhkakfgaukufbakfbafbalfabif",
-            "text": "2",
-            "id": "1",
-            "nickname": "12222",
-            "createTime": "2016-06-12 17:57:58",
-            "sticky": 1,
-            "lock": 0,
-            "approved": "1",
-            "approvednum": "1",
-            "p_image": [
-                []
-            ],
-            "collect": 0,
-            "editRight": 0,
-            "deleteRight": 1,
-            "stickyRight": 1,
-            "lockRight": 1,
-            "code": 1
-        },
-        "msg": ""
+	"ret": 200,
+	"data": {
+		"post_id": "1",
+		"group_id": "2",
+		"g_name": "星球2号",
+		"p_title": "通过接口编辑",
+		"p_text": "成功",
+		"user_id": "58",
+		"user_name": "xiaochao_php",
+		"create_time": "2017-02-12 20:26:06",
+		"sticky": 0,
+		"lock": 1,
+		"approved": "0",
+		"approvednum": "3",
+		"p_image": [
+			[]
+		],
+		"collect": 0,
+		"edit_right": 0,
+		"delete_right": 1,
+		"sticky_right": 1,
+		"lock_right": 1,
+		"code": 1
+	},
+	"msg": "查看帖子成功"
     }

@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.DeleteMessage
+接口URL：http://localhost:88/index.php/user/delete_message
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -22,16 +22,15 @@
 
 ##示例
 
-删除用户m_id=3的消息
+删除用户m_id=19的消息
 
-http://dev.wuanlife.com:800/?service=User.DeleteMessage&m_id=3
+http://localhost:88/index.php/user/delete_message?m_id=19
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 0,
-        "msg": "删除失败"
-    },
-    "msg": ""
-    }
+	"ret": 200,
+	"data": {
+		"code": 1
+	},
+	"msg": "删除成功"
+	}

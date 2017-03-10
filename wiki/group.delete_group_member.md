@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Group.DeleteGroupMember
+接口URL：http://localhost:88/index.php/group/delete_group_member
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -26,16 +26,15 @@
 
 ##示例
 
-显示用户id=1的消息列表
+删除星球id=1的成员id=3
 
-http://dev.wuanlife.com:800/?service=Group.DeleteGroupMember&group_id=1&user_id=2&member_id=1
+http://localhost:88/index.php/group/delete_group_member?user_id=1&group_id=1&member_id=3
 
     JSON：
     {
-    "ret": 200,
-    "data": {
-        "code": 0,
-        "msg": "操作失败！"
-    },
-    "msg": ""
-    }
+	"ret": 200,
+	"data": {
+		"code": 1
+	},
+	"msg": "操作成功！并通知被删除的成员"
+	}

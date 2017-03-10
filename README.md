@@ -18,9 +18,9 @@
 9.[是否登陆](/wiki/Group.UStatus.md)<br>
 10.[获取用户信息](/wiki/User.GetUserInfo.md)<br>
 11.[修改用户信息](/wiki/User.AlterUserInfo.md)<br>
-12.[用户消息列表](/wiki/User.ShowMessage.md)<br>
-13.[处理申请信息](/wiki/User.ProcessApp.md)<br>
-14.[检查未读信息](/wiki/User.CheckNewInfo.md)<br>
+12.[用户消息列表](/wiki/user.show_message.md)<br>
+13.[处理申请信息](/wiki/user.process_apply.md)<br>
+14.[检查未读信息](/wiki/user.check_new_info.md)<br>
 15.[删除信息](/wiki/User.DeleteMessage.md)<br>
 16.[修改用户密码](/wiki/User.Changepwd.md)<br>
 
@@ -29,25 +29,25 @@
 2.[加入星球](/wiki/Group.Join.md)<br>
 3.[退出星球](/wiki/Group.Quit.md)<br>
 4.[是否加入星球](/wiki/Group.GStatus.md)<br>
-5.[星球列表](/wiki/Group.Lists.md)<br>
-6.[获取用户创建星球](/wiki/Group.GetCreate.md)<br>
-7.[获取用户加入星球](/wiki/Group.GetJoined.md)<br>
+5.[星球列表](/wiki/group.lists.md)<br>
+6.[获取用户创建星球](/wiki/group.get_create.md)<br>
+7.[获取用户加入星球](/wiki/group.get_joined.md)<br>
 8.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 9.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
-10.[申请加入私密星球](/wiki/Group.PrivateGroup.md)<br>
-11[搜索接口](/wiki/Group.Search.md)<br>
-12.[星球成员管理](/wiki/Group.UserManage.md)<br>
-13.[删除星球成员](/wiki/Group.DeleteGroupMember.md)<br>
+10.[申请加入私密星球](/wiki/group.private_group.md)<br>
+11[搜索接口](/wiki/group.search.md)<br>
+12.[星球成员管理](/wiki/group.user_manage.md)<br>
+13.[删除星球成员](/wiki/group.delete_group_member.md)<br>
 
 ###C.帖子相关
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
 2.[我的星球 页面帖子显示](/wiki/Post.GetMyGroupPost.md)<br>
 3.[每个星球页面帖子显示](/wiki/Post.GetGroupPost.md)<br>
-4.[帖子详情 发帖内容](/wiki/Post.GetPostBase.md)<br>
-5.[帖子详情 回帖内容](/wiki/Post.GetPostReply.md)<br>
-6.[帖子发布](/wiki/Group.Posts.md)<br>
-7.[帖子回复](/wiki/Post.PostReply.md)<br>
-8.[帖子编辑](/wiki/Post.editPost.md)<br>
+4.[帖子详情 发帖内容](/wiki/post.get_post_base.md)<br>
+5.[帖子详情 回帖内容](/wiki/post.get_post_reply.md)<br>
+6.[帖子发布](/wiki/group.posts.md)<br>
+7.[帖子回复](/wiki/post.post_reply.md)<br>
+8.[帖子编辑](/wiki/post.edit_post.md)<br>
 9.[帖子删除](/wiki/Post.DeletePost.md)<br>
 10.[帖子置顶](/wiki/Post.StickyPost.md)<br>
 11.[帖子置顶取消](/wiki/Post.UnStickyPost.md)<br>
