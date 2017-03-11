@@ -45,10 +45,10 @@ class User extends CI_Controller
         $model= $this->User_model->user_email($data);
         if(!$model){
             $msg='该邮箱尚未注册！';
-        }elseif($data['password']!=$model['password']){
+        }elseif(md5($data['password'])!=$model['password']){
             $msg='密码错误，请重试！';
         }else{
-            $re['info']= array('userID' => $model['id'], 'nickname' => $model['nickname'], 'Email' => $model['email']);
+            $re['info']= array('user_id' => $model['id'], 'user_name' => $model['nickname'], 'user_email' => $model['email']);
             $re['code']='1';
             $msg='登录成功！';
         }
@@ -134,6 +134,11 @@ class User extends CI_Controller
             'month'         =>$month,
             'day'           =>$day,
         );
+        $judge_name=$this->User_model->user_nickname($data);
+        if($judge_name){
+            $msg='用户名被占用';
+            $this->response(false,200,$msg);
+        }
         $re=$this->User_model->alter_user_info($data);
         $msg=null;
         $this->response($re,200,$msg);
