@@ -309,7 +309,7 @@ class User_model extends CI_Model
         $sql = $this->User_model->userEmail($data);
         $id  = $sql['id'];
         $num = $data['num'];
-        $row = $this->db->select('*')->from('user_code')->where(array('user_base_id' =>$id,'difference'=>$num))->get()->row_array();;
+        $row = $this->db->select('*')->from('user_code')->where(array('user_base_id' =>$id,'difference'=>$num))->get()->row_array();
         //print_r($row);
         return $row;
     }
@@ -389,6 +389,11 @@ class User_model extends CI_Model
         $msg = "发送成功";
     }
     return $msg;
+    }
+    public function getmailchecked($user_id){
+        $rs = $this->db->query("select mail_checked from user_detail where user_base_id = 85")->row();
+        return $rs->mail_checked;
+
     }
 
 

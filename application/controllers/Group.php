@@ -557,7 +557,33 @@ class Group extends CI_Controller
         $this->response($rs,200,$msg);
     }
 
+    public function checkStatus($user_id=null){
+        // $this->cookie['nickname'] = '123';
+        // $this->cookie['user_id'] = 1;
 
+        if (empty($this->cookie['nickname'])) {
+            $msg = '用户尚未登录！';
+            $u_status = '0';
+            $re = array('code'=> 0,
+                'msg' =>'用户尚未登录！');
+            return $this->response($re,200,$msg);
+        }else{
+            $u_status = '1';
+            $msg = '用户已登录！';
+            $user_id = $this->cookie['user_id'];
+            $nickname = $this->cookie['nickname'];
+            $info =array('user_id'=>"$user_id",
+                'nickname'=>"$nickname");
+            $re = array('code'=> 1,
+                'msg' =>'用户已登录！',
+                $info);
+
+        }
+
+        $rs['nickname'] = $this->Group_model->get_user($user_id);
+        return $this->response($re,200,$msg);
+        
+    }
 
 
 

@@ -617,4 +617,22 @@ class User extends CI_Controller
         // $rs = $domain->changepwd($data);
         return $rs;
     }
+
+    public function get_mail_checked($user_id=null){
+
+        $rs = $this->User_model->getmailchecked($this->input->get('user_id'));
+        $msg ="";
+        if($rs==1)
+        {
+            $re = array('user_id' => $this->input->get('user_id'),
+                    'mail_checked'=>1);
+
+        }
+        elseif($rs==0)
+        {
+            $re = array('user_id' => $this->input->get('user_id'),
+                    'mail_checked'=>0);
+        }
+        return $this->response($re,200,$msg);
+    }
 }
