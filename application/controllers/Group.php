@@ -13,6 +13,12 @@ class Group extends CI_Controller
         $this->load->model('Post_model');
         $this->load->helper('url_helper');
     }
+    /**
+     * @param $data
+     * @param int $ret
+     * @param null $msg
+     * 返回JSON数据到前端
+     */
     public function response($data,$ret=200,$msg=null){
         $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
         $this->output
@@ -95,6 +101,9 @@ class Group extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
+    /**
+     * 星球列表
+     */
     public function lists(){
         $model = $this->Group_model;
         $pn = $this->input->get('pn');
@@ -111,9 +120,9 @@ class Group extends CI_Controller
         $pn         =(int)$pn;                              //安全强制转换
         $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->lists($limit_st,$page_num);
-        $rs['lists']=$this->Common_model->judge_image_exist($re);
-        $rs['pageCount']  = $pageCount;
-        $rs['currentPage'] = $pn;
+        $rs['groups']=$this->Common_model->judge_image_exist($re);
+        $rs['page_count']  = $pageCount;
+        $rs['current_page'] = $pn;
         if(empty($re)){
             $msg = '暂无星球';
         }else{
@@ -121,6 +130,9 @@ class Group extends CI_Controller
         }
         $this->response($rs,200,$msg);
     }
+    /**
+     * 获取用户创建的星球
+     */
     public function get_create(){
         $user_id = $this->input->get('user_id');
         $model = $this->Group_model;
@@ -139,8 +151,8 @@ class Group extends CI_Controller
         $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->get_create($limit_st,$page_num,$user_id);
         $rs['groups']=$this->Common_model->judge_image_exist($re);
-        $rs['pageCount']  = $pageCount;
-        $rs['currentPage'] = $pn;
+        $rs['page_count']  = $pageCount;
+        $rs['current_page'] = $pn;
         $rs['num']=$all_num;
         $rs['user_name']=$this->User_model->get_user_information($user_id)['nickname'];
         if(empty($re)){
@@ -150,6 +162,9 @@ class Group extends CI_Controller
         }
         $this->response($rs,200,$msg);
     }
+    /**
+     * 获取用户加入的星球
+     */
     public function get_joined(){
         $user_id = $this->input->get('user_id');
         $model = $this->Group_model;
@@ -168,8 +183,8 @@ class Group extends CI_Controller
         $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->get_joined($limit_st,$page_num,$user_id);
         $rs['groups']=$this->Common_model->judge_image_exist($re);
-        $rs['pageCount']  = $pageCount;
-        $rs['currentPage'] = $pn;
+        $rs['page_count']  = $pageCount;
+        $rs['current_page'] = $pn;
         $rs['num']=$all_num;
         $rs['user_name']=$this->User_model->get_user_information($user_id)['nickname'];
         if(empty($re)){
@@ -179,11 +194,14 @@ class Group extends CI_Controller
         }
         $this->response($rs,200,$msg);
     }
+    /**
+     * 申请加入私密星球
+     */
     public function private_group(){
         $data = array(
             'user_id' =>$this->input->get('user_id'),
             'group_id' =>$this->input->get('group_id'),
-            'p_text'    =>$this->input->get('p_text')
+            'text'    =>$this->input->get('text')
         );
         $model = $this->Group_model;
         $user_id=$model->get_group_infomation($data['group_id'])['user_base_id'];
@@ -195,7 +213,7 @@ class Group extends CI_Controller
             $rs['code'] = 0;
             $msg = '申请失败！';
         }
-        /*
+        /**
          * 调用前端接口  待测试
         $re=$this->Common_model->judgeUserOnline($user_id);
 
@@ -205,6 +223,9 @@ class Group extends CI_Controller
         */
         $this->response($rs,200,$msg);
     }
+    /**
+     * 星球成员管理
+     */
     public function user_manage(){
         $data = array(
             'user_id' =>$this->input->get('user_id'),
@@ -231,15 +252,21 @@ class Group extends CI_Controller
                 $re['code'] = 1;
                 $msg = '显示成功！';
             }else {
+                $re['group_id'] = $data['group_id'];
+                $re['users'] = NULL;
                 $re['code'] = 0;
                 $msg = '该星球没有其他成员！';
             }
         }else{
+            $re['group_id'] = $data['group_id'];
             $re['code'] = 0;
             $msg = '您不是星球创建者，没有权限！';
         }
         $this->response($re,200,$msg);
     }
+    /**
+     * 删除星球成员
+     */
     public function delete_group_member(){
         $data = array(
             'user_id' =>$this->input->get('user_id'),
@@ -264,6 +291,9 @@ class Group extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
+    /**
+     * 搜索接口，搜索星球或者帖子
+     */
     public function search(){
         $data = array(
             'text'=>$this->input->get('text'),
@@ -272,36 +302,22 @@ class Group extends CI_Controller
             'gn'=>$this->input->get('gn'),
             'pn'=>$this->input->get('pn')
         );
-        /*
-        if(empty($data['gn'])||empty($data['gnum'])){
-            $rs=$this->search_posts($data['text'],$data['pnum'],$data['pn']);
-            $rs['group']=array();
-        }elseif(empty($data['pn'])||empty($data['pnum'])){
-            $rs=$this->search_group($data['text'],$data['gnum'],$data['gn']);
-            $rs['posts']=array();
-        }elseif(empty($data['gn'])&&empty($data['gnum'])&&empty($data['pn'])&&empty($data['pnum'])){
-            $rs['group']=array();
-            $rs['posts']=array();
-        }else{
-            $group=$this->search_group($data['text'],$data['gnum'],$data['gn']);
-            $posts=$this->search_posts($data['text'],$data['pnum'],$data['pn']);
-            $rs=array_merge($group,$posts);
-        }
-        */
-        //$re = $this->delete_html_posts($rs);
-        //$re = ($rs['posts']);
+        $pn = empty($data['pn'])?1:$data['pn'];
+        $gn = empty($data['gn'])?1:$data['gn'];
         $group=array();
         $posts=array();
         if(!empty($data['gnum'])){
-            $group = $this->search_group($data['text'],$data['gnum'],$data['gn']);
+            $group = $this->search_group($data['text'],$data['gnum'],$gn);
         }
         if(!empty($data['pnum'])){
-            $posts = $this->search_posts($data['text'],$data['pnum'],$data['pn']);
+            $posts = $this->search_posts($data['text'],$data['pnum'],$pn);
         }
         $rs=array_merge($group,$posts);
+        /**
+         * 此处为临时调用方法，待合代码之后统一改为$this->Post_model->delete_html_posts($rs)方法
+         */
+        $rs = $this->Post_model->delete_html_posts_1($rs);
         $this->response($rs);
-        //$a['b'] = array();
-        //var_dump($rs);
     }
 
     /**
@@ -326,6 +342,13 @@ class Group extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
+    /**
+     * @param $text
+     * @param $pnum
+     * @param $pn
+     * @return array
+     * 搜索帖子
+     */
     private function search_posts($text,$pnum,$pn){
         $model=$this->Post_model;
         $page_num=$pnum;
@@ -340,12 +363,19 @@ class Group extends CI_Controller
         $re['posts']=$model->search_posts($text,$pnum,$pn);
         if(!empty($re['posts'])){
             $re['posts_page']=$page_all_num;
-            $re['p_currentPage']=(int)$pn;
+            $re['p_current_page']=(int)$pn;
         }else{
             $re=array();
         }
         return $re;
     }
+    /**
+     * @param $text
+     * @param $gnum
+     * @param $gn
+     * @return array
+     * 搜索星球
+     */
     private function search_group($text,$gnum,$gn){
         $model=$this->Group_model;
         $domain =$this->Common_model;
@@ -362,13 +392,18 @@ class Group extends CI_Controller
         $re['group']=$domain->judge_image_exist($rs);
         if(!empty($re['group'])){
             $re['group_page']=$page_all_num;
-            $re['g_currentPage']=(int)$gn;
+            $re['g_current_page']=(int)$gn;
         }else{
             $re=array();
         }
         return $re;
     }
-    public function delete_html_posts($data){
+    /**
+     * @param $data
+     * @return mixed
+     * 删除帖子的html标签
+     */
+    private function delete_html_posts($data){
         $rs = $data;
         if(!empty($rs)){
             for ($i=0; $i<count($rs['posts']); $i++) {
@@ -377,6 +412,9 @@ class Group extends CI_Controller
         }
         return $rs;
     }
+    /**
+     * 测试接口，待完成所有接口之后删除
+     */
     public function test(){
         $data = array(
             'text'=>$this->input->get('text'),
@@ -486,6 +524,9 @@ class Group extends CI_Controller
         }
         return $rs;
     }
+    /**
+     * 发表帖子
+     */
     public function posts(){
         $data = array(
             'user_id' =>$this->input->get('user_id'),

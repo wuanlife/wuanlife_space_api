@@ -8,14 +8,17 @@ class Post_model extends CI_Model
     {
         $this->load->database();
     }
+    /**
+     * @param $text
+     * @param $pnum
+     * @param $pn
+     * @return mixed
+     * 搜索帖子
+     */
     public function search_posts($text,$pnum,$pn){
-        if(empty($pn)){
-            $rs = array();
-            return $rs;
-        }
         $text = strtolower($text);
         $num=($pn-1)*$pnum;
-        $sql = 'SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.create_time,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+        $sql = 'SELECT pb.id AS post_id,pb.title AS p_title,pd.text AS p_text,pb.lock,pd.create_time,ub.nickname AS user_name,gb.id AS group_id,gb.name AS g_name '
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
             . "AND lower(pb.title) LIKE '%$text%' "
@@ -25,6 +28,11 @@ class Post_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $text
+     * @return mixed
+     * 搜索帖子数量
+     */
     public function search_posts_num($text){
         $text = strtolower($text);
         $sql = 'SELECT count(*) AS num '
@@ -33,9 +41,20 @@ class Post_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->row_array()['num'];
     }
+    /**
+     * @param $post_id
+     * @return mixed
+     * 通过帖子id查找所属星球id
+     */
     public function get_group_id($post_id){
         return $this->get_post_information($post_id)['group_base_id'];
     }
+    /**
+     * @param $post_id
+     * @param $user_id
+     * @return mixed
+     * 单个帖子的内容详情，不包括回复列表
+     */
     public function get_post_base($post_id,$user_id){
         if(empty($user_id)){
             $user_id = 0;
@@ -61,11 +80,20 @@ class Post_model extends CI_Model
         }
         return $rs;
     }
+    /**
+     * @param $post_id
+     * @param $pn
+     * @param $user_id
+     * @return array
+     * 单个帖子的回复详情，不包括帖子内容
+     */
     public function get_post_reply($post_id,$pn,$user_id){
         $num=30;                    //每页显示数量
         $rs   = array();
-
-        $rs['postID']=$post_id;
+        if(empty($user_id)){
+            $user_id = 0;
+        }
+        $rs['post_id']=$post_id;
         $sql = "SELECT ceil(count(pd.post_base_id)/$num) AS page_count,count(*) AS reply_count "
             . 'FROM post_detail as pd '
             . "WHERE pd.post_base_id=$post_id AND pd.floor>1 AND pd.delete=0 ";
@@ -82,7 +110,8 @@ class Post_model extends CI_Model
         $rs['current_page'] = $pn;
         $sql = 'SELECT pd.reply_floor,pd.text AS p_text,ub.id AS user_id,ub.nickname AS user_name,pd.reply_id,'
             .'(SELECT nickname FROM user_base WHERE user_base.id = pd.reply_id) AS reply_nick_name,'
-            ."pd.create_time,pd.floor AS p_floor,(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=$post_id AND floor=pd.floor) AS approved,"
+            .'pd.create_time,pd.floor AS p_floor,'
+            ."(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=$post_id AND floor=pd.floor) AS approved,"
             ."(SELECT count(approved) FROM post_approved WHERE floor=pd.floor AND post_base_id=$post_id AND approved=1) AS approvednum "
             . 'FROM user_base ub,post_detail pd '
             . "WHERE pd.post_base_id = $post_id AND pd.`delete` = 0 AND pd.floor > 1 AND ub.id=pd.user_base_id "
@@ -96,6 +125,11 @@ class Post_model extends CI_Model
         }
         return $rs;
     }
+    /**
+     * @param $post_id
+     * @return mixed
+     * 通过帖子ud获取帖子详情
+     */
     public function get_post_information($post_id){
         $this->db->select('*');
         $this->db->from('post_base');
@@ -105,6 +139,12 @@ class Post_model extends CI_Model
         $query = $this->db->get();
         return $query->row_array();
     }
+    /**
+     * @param $post_id
+     * @param $user_id
+     * @return int
+     * 判断帖子是否被收藏
+     */
     public function judge_collect_post($post_id,$user_id){
         $sql=$this->db->select('*')
             ->from('user_collection')
@@ -243,6 +283,10 @@ class Post_model extends CI_Model
             return false;
         }
     }
+    /**
+     * @param $data
+     * 编辑帖子
+     */
     public function edit_post($data){
         $b_data = array(
             'title' => $data['title'],
@@ -266,6 +310,17 @@ class Post_model extends CI_Model
             if(count($value['image'])>3){
                 $rs['posts'][$key]['image'] = array_slice($value['image'],0,3);
             }
+        }
+        return $rs;
+    }
+    /*
+     * 删除帖子列表html
+     * 此处为临时调用方法，待合代码之后统一改为delete_html_posts($data)方法
+     */
+    public function delete_html_posts_1($data){
+        $rs = $data;
+        for ($i=0; $i<count($rs['posts']); $i++) {
+            $rs['posts'][$i]['p_text'] = strip_tags($rs['posts'][$i]['p_text']);
         }
         return $rs;
     }
@@ -328,8 +383,9 @@ class Post_model extends CI_Model
     }
 
 
-    /*
+    /**
      * 通过用户id获得用户昵称
+     * User_model已存在相同方法get_user_information
      */
     public function get_user($user_id){
         $re=$this->db->select('nickname')
@@ -341,8 +397,9 @@ class Post_model extends CI_Model
 
 
 
-    /*
+    /**
      * 通过星球id查找创建者id
+     * Group_model已存在相同方法get_group_information
      */
     public function get_creater_id($group_id){
         $re=$this->db->select('user_base_id')
@@ -353,8 +410,9 @@ class Post_model extends CI_Model
         return $re;
     }
 
-    /*
+    /**
      * 通过星球id返回星球创建者昵称
+     * Group_model已存在相同方法get_group_information
      */
     public function get_creator($group_id){
         $re=$this->db->select('user_base_id')

@@ -13,6 +13,12 @@ class Post extends CI_Controller
         $this->load->model('Common_model');
         $this->load->helper('url_helper');
     }
+    /**
+     * @param $data
+     * @param int $ret
+     * @param null $msg
+     * 返回JSON数据到前端
+     */
     public function response($data,$ret=200,$msg=null){
         $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
         $this->output
@@ -27,7 +33,7 @@ class Post extends CI_Controller
     }
 
     /**
-     *
+     * 单个帖子的内容详情，不包括回复列表
      */
     public function get_post_base(){
         $data = array(
@@ -100,12 +106,16 @@ class Post extends CI_Controller
         }
         $this->response($rs[0],200,$msg);
     }
+    /**
+     * 单个帖子的回复详情，不包括帖子内容
+     */
     public function get_post_reply(){
         $data = array(
             'post_id' =>$this->input->get('post_id'),
             'user_id' =>$this->input->get('user_id'),
             'pn'      =>$this->input->get('pn'),
         );
+        $data['pn'] = empty($data['pn'])?1:$data['pn'];
         $model = $this->Post_model;
         $common = $this->Common_model;
         $rs = $model->get_post_reply($data['post_id'],$data['pn'],$data['user_id']);
@@ -124,6 +134,9 @@ class Post extends CI_Controller
         $rs = $common->delete_html_reply($rs);
         $this->response($rs,200,$msg='帖子回复显示成功');
     }
+    /**
+     * 回复帖子
+     */
     public function post_reply(){
         $data = array(
             'post_base_id' =>$this->input->get('post_id'),
@@ -155,6 +168,9 @@ class Post extends CI_Controller
         }
         $this->response($rs,200,$msg);
     }
+    /**
+     * 编辑帖子
+     */
     public function edit_post(){
         $data = array(
             'post_base_id' =>$this->input->get('post_id'),

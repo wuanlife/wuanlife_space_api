@@ -84,6 +84,11 @@ class User_model extends CI_Model
         return $query;
     }
 
+    /**
+     * @param $user_id
+     * @return mixed
+     * 通过用户id获取用户消息
+     */
     public function get_user_information($user_id){
         $this->db->select('*');
         $this->db->from('user_base');
@@ -93,6 +98,11 @@ class User_model extends CI_Model
         return $query->row_array();
     }
 
+    /**
+     * @param $group_id
+     * @return mixed
+     * 通过星球id获取星球成员信息
+     */
     public function get_group_menber($group_id){
         $this->db->select('*');
         $this->db->from('group_detail');
@@ -111,6 +121,13 @@ class User_model extends CI_Model
         }
         return $re;
     }
+    /**
+     * @param $user_id
+     * @param $table string 数据表名称
+     * @param null $num
+     * @return int
+     * 获取消息的数量
+     */
     public function get_num_message($user_id,$table,$num=NULL){
         $this->db->from($table);
         $this->db->where('user_base_id',$user_id);
@@ -123,6 +140,8 @@ class User_model extends CI_Model
         }
         return $this->db->count_all_results();
     }
+    /**
+     * 获取用户消息，合并为一个方法
     public function get_num_reply_message($user_id){
         $this->db->from('message_reply');
         $this->db->where('user_base_id',$user_id);
@@ -132,40 +151,21 @@ class User_model extends CI_Model
         $this->db->from('message_apply');
         $this->db->where('user_base_id',$user_id);
         return $this->db->count_all_results();
-        /*
-        //$this->db->from('message_apply');
-        $array = array('user_base_id'=>$user_id);
-        //$this->db->where($array);
-        if($status!=1){
-            if($status==2){
-                $str="status='2' OR status='3' OR status='4'";
-            }elseif($status==3) {
-               $str = "status='0' OR status='1'";
-            }
-            //$this->db->where($str);
-        }
-        //$apply_num = $this->db->count_all_results();
-        $type = "type='1' OR type='2'";
-        $notice_num = $this->get_num_notice_message($user_id,$str,$type);
-        return $notice_num;
-        */
     }
     public function get_num_notice_message($user_id){
         $this->db->from('message_notice');
         $this->db->where('user_base_id',$user_id);
         return $this->db->count_all_results();
-        /*
-        $this->db->from('message_notice');
-        $array = array('user_base_id'=>$user_id);
-        $this->db->where($array);
-        if(!empty($status)){
-            $this->db->where($status);
         }
-        $this->db->where($type);
-        return $this->db->count_all_results();
         */
-    }
 
+    /**
+     * @param $value
+     * @param $status
+     * @param $table string 数据表名称
+     * @return CI_DB_active_record
+     * 修改消息状态
+     */
     public function alter_status($value,$status,$table){
         $data['status'] = $status;
         if(empty($value['id'])){
@@ -175,6 +175,12 @@ class User_model extends CI_Model
         }
         return $re;
     }
+    /**
+     * @param $data
+     * @param $page_num int 每页数量
+     * @return mixed
+     * 获取帖子通知
+     */
     public function show_reply_message($data,$page_num){
         $user_id = $data['user_id'];
         $limsit_st = ($data['pn']-1)*$page_num;
@@ -187,6 +193,12 @@ class User_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $data
+     * @param $page_num int 每页数量
+     * @return mixed
+     * 获取私密星球申请通知
+     */
     public function show_apply_message($data,$page_num){
         $user_id = $data['user_id'];
         $limsit_st = ($data['pn']-1)*$page_num;
@@ -198,6 +210,12 @@ class User_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $data
+     * @param $page_num
+     * @return mixed
+     * 获取星球通知
+     */
     public function show_notice_message($data,$page_num){
         $user_id = $data['user_id'];
         $limsit_st = ($data['pn']-1)*$page_num;
@@ -209,14 +227,28 @@ class User_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $m_id int 用户id
+     * @return mixed
+     * 通过消息id获取私密星球申请详情
+     */
     public function get_message_info($m_id){
         $this->db->select('*')->from('message_apply')->where('id',$m_id);
         $query = $this->db->get();
         return $query->row_array();
     }
+    /**
+     * @param $data
+     * 将私密星球申请存表，通知创建者
+     */
     public function process_app_info($data){
         $this->db->insert('message_notice',$data);
     }
+    /**
+     * @param $id
+     * @return array
+     * 检测是否有新消息
+     */
     public function check_new_info($id){
         $table = array('message_notice','message_apply','message_reply');
         $num = array();
