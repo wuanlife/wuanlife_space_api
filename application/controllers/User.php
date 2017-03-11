@@ -606,16 +606,42 @@ class User extends CI_Controller
  * code 整型  操作码，1表示修改成功，0表示修改失败
    msg 字符串 提示信息
  */
-    public function change_pwd(){
+    public function change_pwd($user_id=null,$pwd=null,$new_pwd=null,$check_new_pwd=null){
         $data = array(
-            'user_id'     => $this->user_id,
-            'pwd'         => $this->pwd,
-            'new_pwd'      => $this->new_pwd,
-            'check_new_pwd' => $this->check_new_pwd,
+            'user_id'     => $this->input->get('user_id'),
+            'pwd'         => $this->input->get('pwd'),
+            'new_pwd'      => $this->input->get('new_pwd'),
+            'check_new_pwd' => $this->input->get('check_new_pwd'),
         );
-        // $domain = new Domain_User();
+        if($this->User_model->get_user_information($data['user_id']))
+        {
+            $info = $this->User_model->get_user_information($data['user_id']);
+            // print_r($info);
+            if($data['pwd'] == $info['password'])
+            {
+                if($data['new_pwd'] ==$data['check_new_pwd'])
+                {
+                    $data['user_email'] = $info['email'];
+                    $data['password'] = $data['new_pwd'];
+                    $this->User_model->repsw($data);
+                    $msg ='修改成功';
+                }
+                else
+                {
+                    $re['code'] = 0;
+                    $msg = "两次密码不一致，请确认！";
+                }
+            }
+            else
+            {
+                $re['code'] = 0;
+                $msg = "密码错误，请重试！";
+            }
+            $re['code'] = 1;
+            return $this->response($re,200,$msg);
+        }
         // $rs = $domain->changepwd($data);
-        return $rs;
+        //return $rs;
     }
 
     public function get_mail_checked($user_id=null){

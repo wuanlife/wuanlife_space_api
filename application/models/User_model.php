@@ -317,7 +317,7 @@ class User_model extends CI_Model
     /*
  * 重置密码
  */
-    public function repsw($psw,$data){
+    public function repsw($data){
         $sql = $this->User_model->userEmail($data);
         
         $password= $data['password'];
@@ -396,6 +396,9 @@ class User_model extends CI_Model
 
     }
 
+    public function change_pwd(){
+        
+    }
 
 
 
