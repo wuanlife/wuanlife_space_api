@@ -30,6 +30,7 @@
 |info.profile_picture|字符串|回复人头像|
 |info.p_title|字符串|帖子标题|
 |info.post_id|整型|帖子id|
+|info.page|整型|回复所在的回复列表页码数|
 |page_count|整型|总页码|
 |current_page|整型|当前页码|
 |msg |字符串 |提示信息|
