@@ -1,29 +1,28 @@
-#user.check_mail
+#user.check_mail_1
+é‚®ç®±éªŒè¯æŽ¥å£-ç”¨äºŽå‘é€åŒ…å«éªŒè¯é‚®ç®±éªŒè¯ç çš„é‚®ä»¶
 
-ÓÊÏäÑéÖ¤½Ó¿Ú-ÓÃÓÚ·¢ËÍ°üº¬ÑéÖ¤ÓÊÏäÑéÖ¤ÂëµÄÓÊ¼þ
+##æŽ¥å£è°ƒç”¨è¯·æ±‚è¯´æ˜Ž
 
-##½Ó¿Úµ÷ÓÃÇëÇóËµÃ÷
+æŽ¥å£URLï¼šhttp://dev.wuanlife.com:800/?service=User.CheckMail
 
-½Ó¿ÚURL£ºhttp://dev.wuanlife.com:800/?service=User.CheckMail
+è¯·æ±‚æ–¹å¼ï¼šPOST
 
-ÇëÇó·½Ê½£ºPOST
+å‚æ•°è¯´æ˜Žï¼š
 
-²ÎÊýËµÃ÷£º
-
-|²ÎÊýÃû×Ö  |  ÀàÐÍ  |ÊÇ·ñ±ØÐë|    Ä¬ÈÏÖµ    |·¶Î§  |      ËµÃ÷|
+|å‚æ•°åå­—  |  ç±»åž‹  |æ˜¯å¦å¿…é¡»|    é»˜è®¤å€¼    |èŒƒå›´  |      è¯´æ˜Ž|
 |:--|:--|:--|:--|:--|:--|
-|user_email    |   ×Ö·û´®| ±ØÐë     |        |   ×îÐ¡£º1 |   ÓÃ»§ÓÊÏä|
+|user_email    |   å­—ç¬¦ä¸²| å¿…é¡»     |        |   æœ€å°ï¼š1 |   ç”¨æˆ·é‚®ç®±|
 
 
-##·µ»ØËµÃ÷
-|²ÎÊý|ÀàÐÍ|ËµÃ÷|
+##è¿”å›žè¯´æ˜Ž
+|å‚æ•°|ç±»åž‹|è¯´æ˜Ž|
 |:--|:--|:--|
-|msg       |      ×Ö·û´® |ÌáÊ¾ÐÅÏ¢|
-|code       |     ÕûÐÍ|   ²Ù×÷Âë£¬1±íÊ¾·¢ËÍ³É¹¦£¬0±íÊ¾·¢ËÍÊ§°Ü|
+|msg       |      å­—ç¬¦ä¸² |æç¤ºä¿¡æ¯|
+|code       |     æ•´åž‹|   æ“ä½œç ï¼Œ1è¡¨ç¤ºå‘é€æˆåŠŸï¼Œ0è¡¨ç¤ºå‘é€å¤±è´¥|
 
-##Ê¾Àý
+##ç¤ºä¾‹
 
-·¢ËÍÑéÖ¤Âëµ½ÓÊÏä
+å‘é€éªŒè¯ç åˆ°é‚®ç®±
 
 http://dev.wuanlife.com800service=User.CheckMail&Email=1195417752
 
@@ -32,7 +31,7 @@ http://dev.wuanlife.com800service=User.CheckMail&Email=1195417752
     "ret": 200,
     "data": {
         "code": 1,
-        "msg": "ÏµÍ³ÒÑÏòÄúµÄÓÊÏä·¢ËÍÁËÒ»·âÑéÖ¤ÓÊÏäÓÊ¼þ£¬ÇëµÇÂ¼µ½ÄúµÄÓÊÏä²é¿´ÑéÖ¤Âë£¡"
+        "msg": "ç³»ç»Ÿå·²å‘æ‚¨çš„é‚®ç®±å‘é€äº†ä¸€å°éªŒè¯é‚®ç®±é‚®ä»¶ï¼Œè¯·ç™»å½•åˆ°æ‚¨çš„é‚®ç®±æŸ¥çœ‹éªŒè¯ç ï¼"
     },
     "msg": ""
     }
