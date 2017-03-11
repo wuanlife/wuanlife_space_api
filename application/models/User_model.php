@@ -257,6 +257,128 @@ class User_model extends CI_Model
         return $num;
     }
 
+    /**
+     * [生成5位数字验证码]
+     * @return [type] [description]
+     */
+    public function code() {
+        $char_len = 5;
+        //$font = 6;
+        $char = array_merge(/*range('A','Z'),range('a','z'),*/range('1','9'));//生成随机码值数组，不需要0，避免与O冲突
+        $rand_keys = array_rand($char,$char_len);//随机生成$char_len个码值的键；
+        if($char_len == 1) {//判断码值长度为一时，将其放入数组中
+            $rand_keys = array($rand_keys);
+        }
+        shuffle($rand_keys);//打乱数组
+        $code = '';
+        foreach($rand_keys as $key) {
+            $code .= $char[$key];
+        }//拼接字符串
+    
+        return $code;
+    }
+/**
+ * 查询邮箱对应的信息
+ * @param  [type] $data [description]
+ * @return [type]       [description]
+ */
+    public function userEmail($data){
+        
+        $user_email = $data['user_email'];
+        
+        $rs = $this->db->select('*')->from('user_base')->where("email = '$user_email'")->get()->row_array();;
+        return $rs;
+    }
+
+    /*
+ * 获取数据库保存的验证码
+ */
+    public function getcode($data) {
+        $sql = $this->User_model->userEmail($data);
+        $id  = $sql['id'];
+        $num = $data['num'];
+        $row = $this->db->select('*')->from('user_code')->where(array('user_base_id' =>$id,'difference'=>$num))->get()->row_array();;
+        //print_r($row);
+        return $row;
+    }
+
+    /*
+ * 重置密码
+ */
+    public function repsw($psw,$data){
+        $sql = $this->User_model->userEmail($data);
+        
+        $password= $data['password'];
+        $id = $sql['id'];
+        $sqla = $this->db->query("update user_base set password = $password where id = $id");
+    }
+
+    /*
+ * 更新数据库中的验证码
+ */
+    public function updatecode($i_code,$data){
+        $sql = $this->User_model->userEmail($data);
+        $id = $sql['id'];
+            $sqla = $this->db->query("update user_code set used = 0, code = $i_code where user_base_id = $id");
+
+    }
+/*
+ * 发送邮件验证码
+ */
+    public function sendmail($data)
+    {
+        $data['user_email'] = stripslashes(trim($data['user_email']));
+        $data['user_email'] = $this->User_model->injectChk($data['user_email']);
+        $rs = $this->User_model->userEmail($data);
+        return $rs;
+
+    }
+
+    /*
+ * 防止注入
+ */
+    public function injectChk($sql_str) {
+        /*php5.3起不再支持eregi()函数
+        相关链接http://www.t086.com/article/5086
+        */
+        //$check = eregi('select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile', $sql_str);
+        $check = preg_match('/select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/i', $sql_str);
+        if ($check) {
+            echo('您的邮箱格式包含非法字符，请确认！');
+            exit ();
+        }else {
+            return $sql_str;
+        }
+    }
+    public function send($data) {
+    
+        $this->load->library('email');
+
+        $email = $data['user_email'];
+        $this->email->from('wuanlife@163.com','午安网团队');
+        $this->email->to("$email");
+        if($data['num'] == 1)
+        {
+            $this->email->subject('找回密码');
+            $this->email->message('<a href="https://www.baidu.com/">找回密码</a>');
+        }
+        else if($data['num'] == 2)
+        {
+        $this->email->subject('午安验证码');
+        $code = $this->User_model->code();
+        $this->User_model->updatecode($code,$data);
+        $this->email->message(date('Y-m-d H:i:s').'您的验证码为'.$code);
+    }
+    
+    //$this->email->message(date('Y-m-d H:i:s').'<a href="https://www.baidu.com/">找回密码</a>');
+    
+    if($this->email->send());
+    {
+        $msg = "发送成功";
+    }
+    return $msg;
+    }
+
 
 
 

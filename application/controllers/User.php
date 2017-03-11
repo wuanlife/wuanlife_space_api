@@ -455,4 +455,162 @@ class User extends CI_Controller
         echo $cap;
 
     }
+
+    /**
+ * 邮箱验证接口-用于发送包含验证邮箱验证码的邮件
+ */
+
+    public function check_mail_1($user_email=null){
+        $data = array(
+            'user_email' => $this->input->get('user_email'),
+            'num'        => 2,
+            );
+        $back = array(
+            'user_email' => $this->input->get('user_email'),
+            'code'        => 1,
+            );
+        $re = array($back);
+        $msg = $this->User_model->send($data);
+
+        $this->response($re,200,$msg);
+    }
+/**
+ * 邮箱验证接口-用于检验验证码的正确性并验证邮箱
+ */
+    public function check_mail_2($user_email=null,$i_code=null){
+        $data = array(
+            'user_email' => $this->input->get('user_email'),
+            'i_code'        => $this->input->get('i_code'),
+            'num'  => 1,
+            );
+        
+        //获取数据库中保存的验证码
+        $code = $this->User_model->getcode($data)['code'];
+        $i_code = $data['i_code'];
+        if($code ==$i_code)
+        {
+            $back = array(
+            'code'        => 1,
+            );
+            $msg = "验证成功";
+        }
+        else
+        {
+            $back = array(
+            'code'        => 0,
+            );
+            $msg = "验证失败";
+        }
+        $re = array($back);
+
+        $this->response($re,200,$msg);
+    }
+    
+    public function SendMail($user_email=null){
+         $data = array(
+            'user_email'    => $this->input->get('user_email'),
+            'num'      => 1,
+            );
+        
+        $re = array($data);
+        
+        $sql = $this->User_model->sendmail($data);
+
+        $this->code = 0;
+        if(empty($sql)){
+            $this->msg = '您输入的账号不存在！';
+        }
+        else
+        { 
+            $data['email'] = '583239353@qq.com';
+            $msg = $this->User_model->send($data);
+            
+        }
+        return $this->response($re,200,$msg);
+    }
+/**
+ * 
+ * @return [msg] [description]
+ * msg  字符串 提示信息
+    code    整型  操作码，1表示重置成功，0表示重置失败
+ */
+    public function re_psw($i_code=null,$password=null,$psw=null,$user_email=null){
+        $data = array(
+            'i_code'    => $this->input->get('i_code'),
+            'password'=>$this->input->get('password'),
+            'psw'     =>$this->input->get('psw'),
+            'user_email'   =>$this->input->get('user_email'),
+            'num'     => 1,
+            );
+        $re = array($data);
+        
+        $code = $this->User_model->code();//生成5位验证码
+        $rs = $this->User_model->userEmail($data);
+        //print_r($rs);
+        if(!$rs)
+        {
+            $msg = '用户名不存在，请确认！';
+            
+        }
+        else
+        {
+            //print_r($data);
+           // echo time();
+            $row = $this->User_model->getcode($data);
+            $Boolean = time()-$row['get_pass_time']>910*10*60;
+           // print_r($re);
+            if($Boolean)
+            {
+                $msg = '验证码已过期，请重新获取！';
+                return $this->response($re,200,$msg);
+
+            }
+            else
+            {
+                if($data['i_code'] == $row['code'])
+                {
+                    if($data['password'] == $data['psw'])
+                    {
+                        $psw = array('password'=>md5($data['password']));
+                        $code_p = array('used'=>1);
+                        $this->User_model->repsw($psw,$data); //更新密码
+                        $this->User_model->updatecode($code_p,$data); //更新验证码
+                        // $this->code = 1;
+                        $msg = '密码修改成功！';
+                        return $this->response($re,200,$msg);
+                    }
+                    else
+                    {
+                        $msg = '两次密码不一致，请确认！';
+                        return $this->response($re,200,$msg);
+                    }
+                }
+                else
+                {
+                    $msg = '验证码不正确，请确认！';
+                    return $this->response($re,200,$msg);
+                }
+            }
+        }
+
+        //return $this->response($re,200,$msg);
+    }        
+    
+
+/**
+ * 修改密码接口-用于验证旧密码，修改新密码
+ * code 整型  操作码，1表示修改成功，0表示修改失败
+   msg 字符串 提示信息
+ */
+    public function change_pwd(){
+        $data = array(
+            'user_id'     => $this->user_id,
+            'pwd'         => $this->pwd,
+            'new_pwd'      => $this->new_pwd,
+            'check_new_pwd' => $this->check_new_pwd,
+        );
+        // $domain = new Domain_User();
+        // $rs = $domain->changepwd($data);
+        return $rs;
+    }
 }
