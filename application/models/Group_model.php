@@ -33,6 +33,11 @@ class Group_model extends CI_Model
         }
         return $re;
     }
+    /**
+     * @param $group_id
+     * @return mixed
+     * 通过星球id获取星球详情
+     */
     public function get_group_infomation($group_id){
         $this->db->select('*');
         $this->db->from('group_base');
@@ -67,9 +72,12 @@ class Group_model extends CI_Model
     }
 
 
-    /*
+    /**
+     * @param $data
+     * @return int
      * 通过用户id和星球id
      * 判断用户是否为星球创建者
+     * 在Common已存在相同方法
      */
     public function judge_group_creator($data){
         $query=$this->db->select('user_base_id')
@@ -112,8 +120,11 @@ class Group_model extends CI_Model
 
 
 
-    /*
+    /**
+     * @param $group_id
+     * @return int
      * 通过星球id判断星球是否存在
+     * 在Common已存在相同方法
      */
     public function judge_group_exist($group_id){
         $query=$this->db->select('id')
@@ -129,6 +140,11 @@ class Group_model extends CI_Model
         return $re;
     }
 
+    /**
+     * @param $group_id
+     * @return mixed
+     * 本模型已存在相同方法get_group_infomation
+     */
     public function get_group_info($group_id){
         $re=$this->db->select('id as groupID,name as groupName,g_introduction,g_image')
             ->from('group_base')
@@ -158,6 +174,12 @@ class Group_model extends CI_Model
         $re=$this->db->insert('group_detail', $data);
         return $re;
     }
+    /**
+     * @param $user_id
+     * @param $group_id
+     * @return bool
+     * 判断用户是否已加入星球
+     */
     public function check_group($user_id,$group_id){
         $re =  $this->db->where('group_base_id',$group_id)
             ->where('user_base_id',$user_id)
@@ -171,18 +193,46 @@ class Group_model extends CI_Model
             return false;
         }
     }
+    /**
+     * @return int
+     * 获取所有星球数量
+     */
     public function get_all_group_num(){
         $this->db->from('group_base');
         return $this->db->count_all_results();
     }
+    /**
+     * @param $user_id
+     * @return int
+     * 获取用户创建星球数量
+     */
     public function get_all_cgroup_num($user_id){
-        $this->db->where('user_base_id', $user_id)->where('authorization','01')->from('group_detail');
+        $this->db->from('group_detail')
+            ->where('user_base_id', $user_id)
+            ->where('authorization','01')
+            ->join('group_base','group_detail.group_base_id = group_base.id')
+            ->where('delete',0);
         return $this->db->count_all_results();
     }
+    /**
+     * @param $user_id
+     * @return int
+     * 获取用户加入星球数量
+     */
     public function get_all_jgroup_num($user_id){
-        $this->db->where('user_base_id', $user_id)->where('authorization','03')->from('group_detail');
+        $this->db->from('group_detail')
+            ->where('user_base_id', $user_id)
+            ->where('authorization','03')
+            ->join('group_base','group_detail.group_base_id = group_base.id')
+            ->where('delete',0);
         return $this->db->count_all_results();
     }
+    /**
+     * @param $limit_st
+     * @param $page_num int 每页数量
+     * @return mixed
+     * 获取星球列表
+     */
     public function lists($limit_st,$page_num){
         $sql='SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
             .'WHERE gb.id = gd.group_base_id AND gb.delete=0 '
@@ -192,6 +242,13 @@ class Group_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $limit_st
+     * @param $page_num
+     * @param $user_id
+     * @return mixed
+     * 获取用户创建星球
+     */
     public function get_create($limit_st,$page_num,$user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '01'");
         $re = $query->result_array();
@@ -200,7 +257,7 @@ class Group_model extends CI_Model
             $row[]=$value["group_base_id"];
         }
         $arr_string = join(',', $row);
-        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
+        $sql="SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
             ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
             .'ORDER BY COUNT(gd.group_base_id) DESC '
@@ -209,6 +266,13 @@ class Group_model extends CI_Model
         $re = $query->result_array();
         return $re;
     }
+    /**
+     * @param $limit_st
+     * @param $page_num
+     * @param $user_id
+     * @return mixed
+     * 获取用户加入星球
+     */
     public function get_joined($limit_st,$page_num,$user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '03'");
         $re = $query->result_array();
@@ -217,7 +281,7 @@ class Group_model extends CI_Model
             $row[]=$value["group_base_id"];
         }
         $arr_string = join(',', $row);
-        $sql="SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
+        $sql="SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
             ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
             .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
             .'ORDER BY COUNT(gd.group_base_id) DESC '
@@ -226,17 +290,33 @@ class Group_model extends CI_Model
         $re = $query->result_array();
         return $re;
     }
+    /**
+     * @param $data
+     * @param $user_id
+     * @return bool
+     * 私密星球申请
+     */
     public function private_group($data,$user_id){
         $field = array(
             'user_base_id'      =>$user_id,
             'user_apply_id'     =>$data['user_id'],
             'group_base_id'     =>$data['group_id'],
             'create_time'        =>time(),
-            'text'              =>$data['p_text'],
+            'text'              =>$data['text'],
             'status'            =>0
         );
-        return $this->db->insert('message_apply',$field);
+        $boolean =  $this->db->insert('message_apply',$field);
+        if($boolean){
+            return true;
+        }else{
+            return false;
+        }
     }
+    /**
+     * @param $data
+     * @return mixed
+     * 星球成员管理
+     */
     public function user_manage($data){
         return $this->db->where('group_base_id',$data['group_id'])
             ->where('authorization','03')
@@ -244,6 +324,11 @@ class Group_model extends CI_Model
             ->get()
             ->result_array();
     }
+    /**
+     * @param $data
+     * @return bool
+     * 删除星球成员
+     */
     public function delete_group_member($data){
         $boolean = $this->check_group($data['member_id'],$data['group_id']);
         if($boolean == NULL){
@@ -256,6 +341,11 @@ class Group_model extends CI_Model
             return true;
         }
     }
+    /**
+     * @param $data
+     * @return CI_DB_active_record
+     * 删除星球成员消息反馈给成员
+     */
     public function dgm_message($data){
         $field=array(
             'user_base_id'      =>$data['member_id'],
@@ -267,14 +357,17 @@ class Group_model extends CI_Model
         );
         return $this->db->insert('message_notice',$field);
     }
+    /**
+     * @param $text
+     * @param $gnum
+     * @param $gn
+     * @return mixed
+     * 搜索星球
+     */
     public function search_group($text,$gnum,$gn){
-        if(empty($gn)){
-            $re = array();
-            return $re;
-        }
         $text = strtolower($text);
         $num=($gn-1)*$gnum;
-        $sql='SELECT gb.name,gb.id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num '
+        $sql='SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num '
             .'FROM group_detail gd, group_base gb '
             .'WHERE gb.id = gd.group_base_id AND gb.delete=0 '
             ."AND lower(gb.name) LIKE '%$text%' "
@@ -284,6 +377,11 @@ class Group_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    /**
+     * @param $text
+     * @return mixed
+     * 搜索星球数量
+     */
     public function search_group_num($text){
         $text = strtolower($text);
         $sql='SELECT COUNT(group_base.id) AS num '
@@ -293,6 +391,11 @@ class Group_model extends CI_Model
         $query = $this->db->query($sql);
         return $query->row_array()['num'];
     }
+    /**
+     * @param $user_id
+     * @return string
+     * 测试接口，待全部完成之后删除
+     */
     public function test($user_id){
         $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '01'");
         $re = $query->result_array();
@@ -303,6 +406,11 @@ class Group_model extends CI_Model
         $arr_string = join(',', $row);
         return $arr_string;
     }
+    /**
+     * @param $data
+     * @return mixed
+     * 发表帖子
+     */
     public function posts($data){
         $b_data = array(
             'user_base_id'  => $data['user_id'],

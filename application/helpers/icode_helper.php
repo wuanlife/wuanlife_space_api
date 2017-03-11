@@ -8,10 +8,15 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 if ( ! function_exists('create_code'))
 {
+    /**
+     * @param string $word_length 验证码长度
+     * @param string $pool 验证码所显示的字符库
+     * @return bool|string
+     */
     function create_code($word_length='',$pool='')
     {
         if(empty($pool)){
-            $pool = '123456789qwertyuiopasdfghjklzxcvbnmQAZXSWEDCVFRTGBNHYUJMKIOLP';
+            $pool = '0123456789qwertyuiopasdfghjklzxcvbnmQAZXSWEDCVFRTGBNHYUJMKIOLP';
         }
         if (empty($word))
         {

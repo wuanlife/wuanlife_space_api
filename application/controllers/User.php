@@ -12,6 +12,12 @@ class User extends CI_Controller
         $this->load->model('Common_model');
         $this->load->helper('url_helper');
     }
+    /**
+     * @param $data
+     * @param int $ret
+     * @param null $msg
+     * 返回JSON数据到前端
+     */
     private function response($data,$ret=200,$msg=null){
         $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
         $this->output
@@ -138,6 +144,10 @@ class User extends CI_Controller
         $msg=null;
         $this->response($re,200,$msg);
     }
+    /**
+     * 用户消息列表展示
+     * m_type 1帖子通知 2星球通知 3私密星球申请 4消息列表主页
+     */
     public function show_message(){
         $data = array(
             'user_id'       => $this->input->get('user_id'),
@@ -156,8 +166,8 @@ class User extends CI_Controller
         if(!empty($rs['info'])){
             $re['code'] = 1;
             $re['info'] = $rs['info'];
-            $re['pageCount']  = $rs['pageCount'];
-            $re['currentPage']  = (int)$rs['currentPage'];
+            $re['page_count']  = $rs['pageCount'];
+            $re['current_page']  = (int)$rs['currentPage'];
             $msg  = '接收成功';
         }else{
             $re['code'] = 0;
@@ -166,6 +176,11 @@ class User extends CI_Controller
         $this->response($re,200,$msg);
     }
 
+    /**
+     * @param $data
+     * @return array
+     * 获取用户消息列表，帖子通知
+     */
     private function get_reply_message($data){
         $model= $this->User_model;
         $value['status'] = 0;
@@ -189,6 +204,11 @@ class User extends CI_Controller
         return $rs;
     }
 
+    /**
+     * @param $data
+     * @return array
+     * 获取用户消息列表，私密星球申请
+     */
     private function get_apply_message($data){
         $model = $this->User_model;
         //$num = $model->get_num_apply_message($data['user_id']);
@@ -211,6 +231,11 @@ class User extends CI_Controller
         $re['currentPage'] = $data['pn'];
         return $re;
     }
+    /**
+     * @param $data
+     * @return array
+     * 获取用户消息列表，星球通知
+     */
     private function get_notice_message($data){
         $model = $this->User_model;
         $value['status'] = 0;
@@ -240,19 +265,31 @@ class User extends CI_Controller
         $re['currentPage'] = $data['pn'];
         return $re;
     }
+    /**
+     * @param $data
+     * @return mixed
+     * 获取用户消息列表，主页
+     */
     private function get_index_message($data){
         error_reporting(0);
         $model = $this->User_model;
         $rs['pageCount']  = 1;
         $rs['currentPage'] = 1;
         $rs['info'] =array(
-            'notice'=>$model->show_notice_message($data,20)[0] ,
+            'notice'=>$this->get_notice_message($data)['info'][0] ,
             'apply'=>$model->show_apply_message($data,20)[0] ,
             'reply'=>$model->show_reply_message($data,20)[0]
         );
         return $rs;
     }
 
+    /**
+     * @param $type 1同意加入 2拒绝加入 3移出星球 4退出星球 5加入星球
+     * @param $user_name
+     * @param $g_name
+     * @return mixed
+     * 获取用户星球通知不同类型的拼接消息
+     */
     private function message_array($type,$user_name,$g_name){
         $array = array(
             1=>"同意了你的加入申请".$g_name,
@@ -264,25 +301,32 @@ class User extends CI_Controller
         return $array["$type"];
     }
 
+    /**
+     * @param $value
+     * @param $status int 0未读 1已读；0未处理 1已同意 2已拒绝
+     * @param $table string 数据表名称
+     * @return CI_DB_active_record
+     * 修改消息的状态
+     */
     private function alter_status($value,$status,$table){
         $model = $this->User_model;
         return $model->alter_status($value,$status,$table);
     }
+    /**
+     * 申请加入私密星球
+     */
     public function process_apply(){
         $data = array(
             'user_id'       => $this->input->get('user_id'),
             'm_id'   => $this->input->get('m_id'),
             'mark'            => $this->input->get('mark'),
         );
-        $rs = $this->process_apply_1($data);
-        $this->response($rs,200,$msg=NULL);
-    }
-    private function process_apply_1($data){
+        $rs['code'] = 0;
         $info = $this->get_message_info($data['m_id']);
         $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];
         if($founder_id==$data['user_id']){
             if($this->Common_model->check_group($info['user_apply_id'],$info['group_base_id'])){
-                $rs['msg'] = '操作失败！该用户已加入此星球！';
+                $msg = '操作失败！该用户已加入此星球！';
             }else{
                 if($data['mark'] == 1) {
                     $field = array(
@@ -299,10 +343,10 @@ class User extends CI_Controller
                 $this->process_app_info($m_type,$info);//加入私密星球的申请的结果返回给申请者
                 $rs['code'] = 1;
                 if($data['mark'] == 1) {
-                    $rs['msg'] = '操作成功！您已同意该成员的申请！';
+                    $msg = '操作成功！您已同意该成员的申请！';
                     $status = 2;
                 }else {
-                    $rs['msg'] = '操作成功！您已拒绝该成员的申请！';
+                    $msg = '操作成功！您已拒绝该成员的申请！';
                     $status = 3;
                 }
                 $values['id'] = $data['m_id'];
@@ -310,7 +354,7 @@ class User extends CI_Controller
                 $this->alter_status($values,$status,$table);//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
             }
         }else{
-            $rs['msg'] = '您不是创建者，没有权限！';
+            $msg = '您不是创建者，没有权限！';
         }
         /*
         $re=$this->Common_model->judgeUserOnline($info['user_apply_id']);
@@ -319,8 +363,13 @@ class User extends CI_Controller
         }
         调用前端接口
         */
-        return $rs;
+        $this->response($rs,200,$msg);
     }
+    /**
+     * @param $m_type 1已同意 2已拒绝
+     * @param $data mixed 申请信息相关数据
+     * 加入私密星球的申请的结果返回给申请者
+     */
     private function process_app_info($m_type,$data){
         $model = $this->User_model;
         $array = array(
@@ -333,10 +382,18 @@ class User extends CI_Controller
         );
         $model->process_app_info($array);
     }
+    /**
+     * @param $m_id
+     * @return mixed
+     * 通过消息id获取私密星球申请消息详情
+     */
     private function get_message_info($m_id){
         $model = $this->User_model;
         return $model->get_message_info($m_id);
     }
+    /**
+     * 检测是否有新消息
+     */
     public function check_new_info(){
         $id = $this->input->get('user_id');
         $model = $this->User_model;
@@ -349,6 +406,9 @@ class User extends CI_Controller
         }
         $this->response($rs,200,$msg=NULL);
     }
+    /**
+     * 删除帖子通知中回复被删除或帖子不存在的帖子通知消息
+     */
     public function delete_message(){
         $data['id'] = $this->input->get('m_id');
         $rs = $this->alter_status($data,2,'message_reply');
@@ -361,27 +421,34 @@ class User extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
+    /**
+     * 测试接口，待完成所有接口之后删除
+     */
     public function test(){
         $data = array(
             'id'=>'',
             'name'=>'csc',
             'psw'=>''
         );
-        $this->load->library('Validator');
         $rs = $this->validator->check($data,__FUNCTION__);
         $this->response($rs);
 
     }
 
-
+    /**
+     * 发送邮件测试接口，配置信息保存在config/email.php
+     */
     private function email(){
         $this->load->library('email');
-        $this->email->from('wuanlife@163.com', '陈世超');
+        $this->email->from('wuanlife@163.com', 'xiaochao');
         $this->email->to('1195417752@qq.com');
         $this->email->subject('ssl模式发送');
         $this->email->message('Testing s.');
         var_dump($this->email->send());
     }
+    /**
+     * 验证码生成测试接口
+     */
     private function verification_code(){
         $this->load->helper('icode');
         $cap = create_code(5,'123456789');

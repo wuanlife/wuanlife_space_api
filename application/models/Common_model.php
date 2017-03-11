@@ -32,10 +32,9 @@ class Common_model extends CI_Model
         return $private;
     }
 
-    /*
-     *判断用户是否在线(调用前端接口)
-     */
     /**
+     *判断用户是否在线(调用前端接口)
+     *
      * 先被注释  待修改
      *
      * public function judgeUserOnline($user_id){
@@ -59,7 +58,7 @@ class Common_model extends CI_Model
      * return $html;
      * }
      * /
-     * /*
+    /**
      * 判断星球是否有头像，若没有给默认头像
      * @param $lists
      * @return
@@ -234,8 +233,9 @@ class Common_model extends CI_Model
     }
 
 
-    /*
+    /**
      * 通过星球id获取星球名称
+     * Group_model已存在相同方法get_group_information
      */
     public function get_group_name($group_id){
         $sql=$this->db->select('name')
@@ -245,10 +245,9 @@ class Common_model extends CI_Model
         return $sql['name'];
     }
 
-    /*
+    /**
     通过星球id判断星球是否为私密星球
-     */
-    /*
+
      * @param $group_id
      * @return mixed
      * 已存在相同函数
@@ -259,9 +258,9 @@ class Common_model extends CI_Model
             ->row_array();
         return $sql['private'];
     }
-
-    /*
-    判断用户是否为星球成员
+     */
+    /**
+     * 判断用户是否为星球成员
      */
     public function judge_group_user($group_id,$user_id){
         $sql=$this->db->select('*')
@@ -300,9 +299,12 @@ class Common_model extends CI_Model
         }
         return $re;
     }
-
-    /*
-    判断用户是否在申请加入私有星球
+    */
+    /**
+     * @param $user_id
+     * @param $group_id
+     * @return int|null
+     * 判断用户是否在申请加入私有星球
     */
     public function judge_user_application($user_id,$group_id){
         $sql=$this->db->select('*')
