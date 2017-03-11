@@ -161,9 +161,9 @@ class Post extends CI_Controller
                 'user_name'=>$this->User_model->get_user_information($data['user_base_id'])['nickname'],
                 'reply_user_name'=>$this->User_model->get_user_information($data['reply_id'])['nickname'],
                 'page'=>$this->Common_model->get_post_reply_page($data['post_base_id'],$data['floor']),
-            ); //adshasilailsdh
-        }//asdhilashdasild
-            $msg='帖子不存在或者被锁定';
+            );
+            $this->Post_model->post_reply_message($data);
+        }else{            $msg='帖子不存在或者被锁定';
             $rs['code'] = 0;
         }
         $this->response($rs,200,$msg);

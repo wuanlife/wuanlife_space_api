@@ -197,6 +197,10 @@ class User extends CI_Controller
         $rs = array();
         if($data['pn'] !=0){
             $rs['info'] = $model->show_reply_message($data,$page_num);
+            foreach($rs['info'] as $key=>$value){
+                $value['page'] = $this->Common_model->get_post_reply_page($value['post_id'],$value['reply_floor']);
+                $rs['info'][$key] = $value;
+            }
         }
         $rs['pageCount']  = $pageCount;
         $rs['currentPage'] = $data['pn'];
@@ -270,6 +274,7 @@ class User extends CI_Controller
      * 获取用户消息列表，主页
      */
     private function get_index_message($data){
+        $data['pn'] = empty($data['pn'])?1:$data['pn'];
         error_reporting(0);
         $model = $this->User_model;
         $rs['pageCount']  = 1;
