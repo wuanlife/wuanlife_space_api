@@ -195,6 +195,9 @@ class Post_model extends CI_Model
     }
     public function get_index_post($data){
         $num=30;
+        if($data['user_id']==null){
+            $data['user_id']=0;
+        }
         $user_id=$data['user_id'];
         $rs=array();
         $sql = "SELECT ceil(count(*)/$num) AS pageCount "
@@ -206,10 +209,12 @@ class Post_model extends CI_Model
         }
         if($data['page'] > $rs['pageCount']){
             $data['page'] = $rs['pageCount'];
+        }elseif ($data['page']==null){
+            $data['page']=1;
         }
         $start=($data['page']-1)*$num;
         $rs['currentPage'] = (int)$data['page'];
-        $sql = "SELECT pb.id AS postID,pb.title,pd.text,pb.lock,pd.create_time,ub.nickname,gb.id AS groupID,gb.name AS groupName,(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approvednum "
+        $sql = "SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS groupName,(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approvednum "
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,post_approved pa '
             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
             . 'GROUP BY pb.id '
@@ -228,8 +233,8 @@ class Post_model extends CI_Model
     public function get_image_url($data){
         $rs = $data;
         for ($i=0; $i<count($rs['posts']); $i++) {
-            $rs['posts'][$i]['text'] = str_replace('\"', '', $rs['posts'][$i]['text']);
-            preg_match_all('/<img[^>]*src\s?=\s?[\'|"]([^\'|"]*)[\'|"]/is', $rs['posts'][$i]['text'], $picarr);
+            $rs['posts'][$i]['p_text'] = str_replace('\"', '', $rs['posts'][$i]['p_text']);
+            preg_match_all('/<img[^>]*src\s?=\s?[\'|"]([^\'|"]*)[\'|"]/is', $rs['posts'][$i]['p_text'], $picarr);
             $rs['posts'][$i]['image']=$picarr['1'];
         }
         return $rs;
@@ -331,7 +336,7 @@ class Post_model extends CI_Model
     public function delete_html_posts($data){
         $rs = $data;
         for ($i=0; $i<count($rs['posts']); $i++) {
-            $rs['posts'][$i]['text'] = strip_tags($rs['posts'][$i]['text']);
+            $rs['posts'][$i]['p_text'] = strip_tags($rs['posts'][$i]['p_text']);
 
         }
         return $rs;
@@ -343,7 +348,7 @@ class Post_model extends CI_Model
     public function post_text_limit($data){
         $rs=$data;
         for ($i=0; $i<count($rs['posts']); $i++) {
-            $rs['posts'][$i]['text'] =mb_convert_encoding(substr($rs['posts'][$i]['text'],0,299), 'UTF-8','GB2312,UTF-8');
+            $rs['posts'][$i]['p_text'] =mb_convert_encoding(substr($rs['posts'][$i]['p_text'],0,299), 'UTF-8','GB2312,UTF-8');
         }
         return $rs;
     }
@@ -352,7 +357,7 @@ class Post_model extends CI_Model
     /*
      * 我的星球帖子展示
      */
-    public function get_mygroup_post($user_id,$page) {
+    public function get_mygroup_post($user_id,$page=null) {
         $num=30;
         $rs   = array();
 
@@ -367,10 +372,12 @@ class Post_model extends CI_Model
         }
         if($page > $rs['pageCount']){
             $page = $rs['pageCount'];
+        }elseif ($page==null){
+            $page=1;
         }
         $start=($page-1)*$num;
         $rs['currentPage'] = (int)$page;
-        $sql = 'SELECT  pb.id AS postID,pb.title,pd.text,pb.lock,pd.create_time,ub.nickname,gb.id AS groupID,gb.name AS groupName '
+        $sql = 'SELECT  pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name '
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 AND gb.delete=0 '
             . "AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =$user_id )"
@@ -430,12 +437,12 @@ class Post_model extends CI_Model
     }
 
 
-    public function get_group_post($group_id,$page){
+    public function get_group_post($group_id,$page=null){
 
         $num=30;
         $rs   = array();
 
-        $groupData=$this->db->select('id as groupID,name as groupName')
+        $groupData=$this->db->select('id as group_id,name as group_name')
             ->where('id',$group_id)
             ->get('group_base')
             ->row_array();
@@ -444,8 +451,8 @@ class Post_model extends CI_Model
         if(empty($groupData)){
             return null;
         }
-        $rs['groupID'] = $groupData['groupID'];
-        $rs['groupName'] = $groupData['groupName'];
+        $rs['group_id'] = $groupData['group_id'];
+        $rs['group_name'] = $groupData['group_name'];
 
 
         $sql = "SELECT ceil(count(*)/$num) AS pageCount "
@@ -460,10 +467,12 @@ class Post_model extends CI_Model
         }
         if($page > $rs['pageCount']){
             $page = $rs['pageCount'];
+        }elseif ($page==null){
+            $page=1;
         }
         $rs['currentPage'] = $page;
         $start=($page-1)*$num;
-        $sql = 'SELECT  pb.digest,pb.id AS postID,pb.title,pd.text,pd.create_time,ub.id,ub.nickname,pb.sticky,pb.lock '
+        $sql = 'SELECT  pb.digest,pb.id AS post_id,pb.title,pd.text as p_text,pd.create_time,ub.id,ub.nickname as user_name,pb.sticky,pb.lock '
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=$group_id AND pb.delete=0 "
             . 'GROUP BY pb.id '
@@ -476,6 +485,24 @@ class Post_model extends CI_Model
 
         return $rs;
 }
+    public function post_reply_message($rs){
+        $create_id = $this->get_post_information($rs['post_base_id'])['user_base_id'];
+        if(empty($rs['reply_id'])){
+            $rs['reply_id'] = $create_id;
+        }
+        if($rs['user_base_id']==$create_id){
+            return false;
+        }
+        $data = array(
+            'user_base_id' =>$rs['reply_id'],
+            'user_reply_id'=>$rs['user_base_id'],
+            'post_base_id'=>$rs['post_base_id'],
+            'reply_floor'=>$rs['floor'],
+            'create_time'=>time(),
+            'status'=>0,
+        );
+        $this->db->insert('message_reply',$data);
+    }
 
 
 }

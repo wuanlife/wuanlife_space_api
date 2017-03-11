@@ -162,8 +162,8 @@ class Post extends CI_Controller
                 'reply_user_name'=>$this->User_model->get_user_information($data['reply_id'])['nickname'],
                 'page'=>$this->Common_model->get_post_reply_page($data['post_base_id'],$data['floor']),
             );
-        }else{
-            $msg='帖子不存在或者被锁定';
+            $this->Post_model->post_reply_message($data);
+        }else{            $msg='帖子不存在或者被锁定';
             $rs['code'] = 0;
         }
         $this->response($rs,200,$msg);
@@ -207,7 +207,7 @@ class Post extends CI_Controller
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
-    public function get_index_post($user_id,$page){
+    public function get_index_post($user_id=null,$page=null){
         $data=array(
             'user_id'=>$user_id,
             'page'=>$page,
@@ -237,7 +237,7 @@ class Post extends CI_Controller
      * @return int currentPage 当前页
      * @return string user_name 用户名
      */
-    public function get_mygroup_post($user_id,$page){
+    public function get_mygroup_post($user_id,$page=null){
         $data   = array();
 
         $data = $this->Post_model->get_mygroup_post($user_id,$page);
@@ -272,15 +272,15 @@ class Post extends CI_Controller
      * @return int identity 用户身份(01为创建者，02为成员，03非成员)
      * @return int private 是否私密(0为否，1为私密)
      */
-    public function get_group_post($group_id,$page,$user_id=null){
+    public function get_group_post($group_id,$user_id=null,$page=null){
         $data   = array();
 
-        $data['creatorID']=$this->Post_model->get_creater_id($group_id)['user_base_id'];
+        $data['creator_id']=$this->Post_model->get_creater_id($group_id)['user_base_id'];
         $creatorName=$this->Post_model->get_creator($group_id);
-        $data['creatorName']=$creatorName;
-        $data['groupID']=$group_id;
-        $rs = $this->Common_model->judge_group_exist($data['groupID']);
-        $data['groupName']=$this->Common_model->get_group_name($group_id);
+        $data['creator_name']=$creatorName;
+        $data['group_id']=$group_id;
+        $rs = $this->Common_model->judge_group_exist($data['group_id']);
+        $data['g_name']=$this->Common_model->get_group_name($group_id);
         $private=$this->Common_model->judge_group_private($group_id);
         $data['private']=$private;
         $user=$this->Common_model->judge_group_user($group_id,$user_id);

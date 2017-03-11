@@ -18,20 +18,22 @@ class Group_model extends CI_Model
         );
         $re=$this->db->insert('group_base',$group);
         $this->db->flush_cache();
-        $query=$this->db->select('id')
+        $query=$this->db->select('name as g_name,id as group_id,g_image,g_introduction')
             ->where('name',$data['g_name'])
             ->get('group_base')
             ->row_array();
         if($re){
             $detail=array(
-                'group_base_id'=>$query['id'],
+                'group_base_id'=>$query['group_id'],
                 'user_base_id'=>$data['user_id'],
                 'authorization'=>'01',
             );
             $this->db->flush_cache();
             $re=$this->db->insert('group_detail',$detail);
+            $query['user_id']=$data['user_id'];
+            $query['authorization']='01';
         }
-        return $re;
+        return $query;
     }
     /**
      * @param $group_id
@@ -146,7 +148,7 @@ class Group_model extends CI_Model
      * 本模型已存在相同方法get_group_infomation
      */
     public function get_group_info($group_id){
-        $re=$this->db->select('id as groupID,name as groupName,g_introduction,g_image')
+        $re=$this->db->select('id as group_id,name as g_name,g_introduction,g_image')
             ->from('group_base')
             ->where('id',$group_id)
             ->get()

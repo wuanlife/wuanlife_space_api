@@ -51,10 +51,10 @@ class User extends CI_Controller
         $model= $this->User_model->user_email($data);
         if(!$model){
             $msg='该邮箱尚未注册！';
-        }elseif($data['password']!=$model['password']){
+        }elseif(md5($data['password'])!=$model['password']){
             $msg='密码错误，请重试！';
         }else{
-            $re['info']= array('userID' => $model['id'], 'nickname' => $model['nickname'], 'Email' => $model['email']);
+            $re['info']= array('user_id' => $model['id'], 'user_name' => $model['nickname'], 'user_email' => $model['email']);
             $re['code']='1';
             $msg='登录成功！';
         }
@@ -141,8 +141,7 @@ class User extends CI_Controller
             'day'           =>$day,
         );
         $re=$this->User_model->alter_user_info($data);
-        $msg=null;
-        $this->response($re,200,$msg);
+        $this->response($re['code'],200,$re['msg']);
     }
     /**
      * 用户消息列表展示
@@ -198,6 +197,10 @@ class User extends CI_Controller
         $rs = array();
         if($data['pn'] !=0){
             $rs['info'] = $model->show_reply_message($data,$page_num);
+            foreach($rs['info'] as $key=>$value){
+                $value['page'] = $this->Common_model->get_post_reply_page($value['post_id'],$value['reply_floor']);
+                $rs['info'][$key] = $value;
+            }
         }
         $rs['pageCount']  = $pageCount;
         $rs['currentPage'] = $data['pn'];
@@ -271,6 +274,7 @@ class User extends CI_Controller
      * 获取用户消息列表，主页
      */
     private function get_index_message($data){
+        $data['pn'] = empty($data['pn'])?1:$data['pn'];
         error_reporting(0);
         $model = $this->User_model;
         $rs['pageCount']  = 1;

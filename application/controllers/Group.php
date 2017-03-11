@@ -44,7 +44,7 @@ class Group extends CI_Controller
      * @return string info.name 星球名称
      * @return string msg 提示信息
      */
-    public function create($user_id,$g_name,$private,$g_image=null,$g_introduction=null){
+    public function create($user_id,$g_name,$g_image=null,$g_introduction=null,$private=null){
         $private=$this->Common_model->judgePrivate($private);
         $data=array(
             'user_id'=>$user_id,
@@ -60,8 +60,9 @@ class Group extends CI_Controller
                 $data['g_image']='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
             }
             $create=$this->Group_model->create($data);
-            if($create){
+            if(!empty($create)){
                 $re['code']=1;
+                $re['info']=$create;
                 $msg='创建成功！';
             }else{
                 $re['code']=0;
@@ -451,7 +452,15 @@ class Group extends CI_Controller
     }
 
 
-
+    /**
+     *获取星球详情
+     * @desc 获取星球详情接口
+     * @return int groupID 星球id
+     * @return string groupName 星球名称
+     * @return string g_introduction 星球介绍
+     * @return string g_image 星球图片链接
+     * @return int creator 是否为创建者，1为创建者，0不是创建者
+     */
     public function get_group_info($group_id,$user_id){
         $data=array(
             'group_id'=>$group_id,
