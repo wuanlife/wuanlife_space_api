@@ -140,14 +140,8 @@ class User extends CI_Controller
             'month'         =>$month,
             'day'           =>$day,
         );
-        $judge_name=$this->User_model->user_nickname($data);
-        if($judge_name){
-            $msg='用户名被占用';
-            $this->response(false,200,$msg);
-        }
         $re=$this->User_model->alter_user_info($data);
-        $msg=null;
-        $this->response($re,200,$msg);
+        $this->response($re['code'],200,$re['msg']);
     }
     /**
      * 用户消息列表展示
