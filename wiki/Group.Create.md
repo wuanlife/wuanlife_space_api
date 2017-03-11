@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Group.Create
+接口URL：http://localhost/wuanlife_api/index.php/group/create/user_id/g_name/g_image/g_introduction/private
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -33,24 +33,23 @@
 
 ##示例
 
-创建名为“鬼扯1”的星球
+创建名为“dk6689”的星球
 
-http://apihost/?service=Group.Create
+http://localhost/wuanlife_api/index.php/group/create/1/dk6689
 
     JSON:
     {
         "ret": 200,
         "data": {
             "code": 1,
-            "msg": "",
             "info": {
-                "group_base_id": "48",
-                "user_base_id": "15",
-                "authorization": "01",
-                "name": "鬼扯1",
-                "g_introduction": "照片裁剪",
-                "URL": "../upload/group/2016/05/28/apic14052.jpg"
+                "g_name": "dk6689",
+                "group_id": "409",
+                "g_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                "g_introduction": null,
+                "user_id": "1",
+                "authorization": "01"
             }
         },
-        "msg": ""
+        "msg": "创建成功！"
     }

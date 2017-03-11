@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=User.Logout
+接口URL：http://localhost/wuanlife_api/index.php/user/logout
 
 请求方式：GET
 
@@ -22,14 +22,13 @@
 
 注销账号(均返回注销成功)
 
-http://apihost/?service=User.Logout
+http://localhost/wuanlife_api/index.php/user/logout
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": "0",
-        "msg": "未登录，无需注销！"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": "1"
+        },
+        "msg": "注销成功！"
     }

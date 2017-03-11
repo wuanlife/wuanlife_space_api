@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=User.Reg
+接口URL：http://localhost/wuanlife_api/index.php/user/reg/nickname/email/password
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -20,7 +20,7 @@
 |参数|类型|说明|
 |:--|:--|:--|
 |msg        |   字符串 |提示信息|
-|code         | 整型 |  操作码，1表示登录成功，0表示登录失败|
+|data.code         | 整型 |  操作码，1表示登录成功，0表示登录失败|
 |info         | 对象 | 用户信息对象|
 |info.user_id  | 整型  | 用户ID|
 |info.user_name| 字符串| 用户昵称|
@@ -30,19 +30,18 @@
 
 注册账号(以下链接将提示该邮箱已注册！)
 
-http://apihost/?service=User.Reg&Email=taotao@taotao.com&nickname=taotao&password=111111
+http://localhost/wuanlife_api/index.php/user/reg/c1ha11c11/ch1111ac/1
     
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "msg": "注册成功，并自动登录！",
-        "code": "1",
-        "info": {
-            "userID": "26",
-            "nickname": "taotao",
-            "Email": "taotao@taotao.com"
-        }
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1,
+            "info": {
+                "user_id": "189",
+                "user_name": "c1ha11c11",
+                "user_email": "ch1111ac"
+            }
+        },
+        "msg": "注册成功，并自动登录！"
     }

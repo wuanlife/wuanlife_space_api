@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
+接口URL：http://localhost/wuanlife_api/index.php/user/get_user_info/user_id
 
 请求方式：GET
 
@@ -31,22 +31,22 @@
 
 获取用户ID为1的用户信息
 
-http://dev.wuanlife.com:800/?service=User.getUserInfo&user_id=1
+http://localhost/wuanlife_api/index.php/user/get_user_info/1
 
     JSON
     {
-    "ret": 200,
-    "data": {
-        "userID": "1",
-        "sex": "0",
-        "year": "1000",
-        "month": null,
-        "day": null,
-        "mailChecked": "0",
-		"profile_picture": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
-        "Email": null,
-        "nickname": "taotao"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "userID": "1",
+            "sex": "0",
+            "year": "",
+            "month": "",
+            "day": "",
+            "mail_checked": "1",
+            "profile_picture": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+            "email": "taotao@taotao.com",
+            "nickname": "我是一只鸟"
+        },
+        "msg": null
     }
 

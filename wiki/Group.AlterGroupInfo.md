@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction=1$g_image=1
+接口URL：http://localhost/wuanlife_api/index.php/group/alter_group_info/group_id/user_id/g_introduction/g_image
 
 请求方式：GET
 
@@ -26,16 +26,15 @@
 
 ##示例
 
-修改用户ID为1星球ID为1的星球信息
+修改用户ID为1星球ID为4的星球信息
 
-http://apihost/?service=Group.alterGroupInfo&group_id=1&user_id=1&g_introduction=1$g_image=1
+http://localhost/wuanlife_api/index.php/group/alter_group_info/4/1
 
      JSON:
-     {
-    "ret": 200,
-    "data": {
-        "code": 1,
+    {
+        "ret": 200,
+        "data": {
+            "code": 1
+        },
         "msg": "修改成功"
-    },
-    "msg": ""
     }

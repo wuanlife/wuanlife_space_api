@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apilost/?service=Post.GetGroupPost
+接口URL：http://localhost/wuanlife_api/index.php/post/get_group_post/group_id/user_id/pn
 
 请求方式：GET
 
@@ -39,75 +39,49 @@
 
 ##示例
 
-显示星球ID为1的第1页帖子
+显示星球ID为16的帖子
 
-http://apilost/?service=Post.GetGroupPost&group_id=1&pn=1
+http://localhost/wuanlife_api/index.php/post/get_group_post/166
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-    "creatorID": "1",
-    "groupID": "1",
-    "groupName": "装备2014中队",
-        "posts": [
-            {
-                "postID": "40",
-                "title": "title40",
-                "text": "40texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:19:00",
-                "nickname": "陶陶20",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "39",
-                "title": "title39",
-                "text": "39texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:18:00",
-                "nickname": "陶陶19",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "38",
-                "title": "title38",
-                "text": "38texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:17:00",
-                "nickname": "陶陶18",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "37",
-                "title": "title37",
-                "text": "37texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:16:00",
-                "nickname": "陶陶17",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "36",
-                "title": "title36",
-                "text": "36texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:15:00",
-                "nickname": "陶陶16",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            },
-            {
-                "postID": "35",
-                "title": "title35",
-                "text": "35texttexttexttexttexttexttexttexttexttext ",
-                "createTime": "2016-04-06 01:14:00",
-                "nickname": "陶陶15",
-                "groupID": "1",
-                "groupName": "鬼扯1"
-            }
-        ],
-        "pageCount": 4,
-        "currentPage": 1
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "creator_id": "46",
+            "creator_name": "叶寻",
+            "group_id": "166",
+            "g_name": "叶氏春秋",
+            "private": "0",
+            "identity": "03",
+            "posts": [
+                {
+                    "digest": "0",
+                    "post_id": "16",
+                    "title": "1",
+                    "p_text": "1",
+                    "create_time": "2017",
+                    "id": "127",
+                    "user_name": "xjkui",
+                    "sticky": "0",
+                    "lock": "0",
+                    "image": []
+                },
+                {
+                    "digest": "0",
+                    "post_id": "24",
+                    "title": "1",
+                    "p_text": "1",
+                    "create_time": "2017",
+                    "id": "127",
+                    "user_name": "xjkui",
+                    "sticky": "0",
+                    "lock": "0",
+                    "image": []
+                }
+            ],
+            "group_name": "叶氏春秋",
+            "pageCount": 1,
+            "currentPage": 1
+        },
+        "msg": null
     }

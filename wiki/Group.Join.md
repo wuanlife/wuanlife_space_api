@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Group.Join
+接口URL：http://localhost/wuanlife_api/index.php/group/join/user_id/group_id
 
 请求方式：GET
 
@@ -18,21 +18,19 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|code|整型|操作码，1表示加入成功，0表示加入失败|
+|data|boolen|操作码，true表示加入成功，false表示加入失败|
 |msg                  |字符串 |提示信息|
 
 ##示例
 
-加入星球id为11的星球
+加入星球id为4的星球
 
-http://apihost/?service=Group.Join&group_id=11&user_id=1
+http://localhost/wuanlife_api/index.php/group/join/3/4
 
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "msg": "已加入该星球！",
-    "msg": ""
+        "ret": 200,
+        "data": true,
+        "msg": "加入成功！并通知星球创建者"
     }

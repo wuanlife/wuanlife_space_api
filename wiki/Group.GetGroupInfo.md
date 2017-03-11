@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Group.GetGroupInfo&group_id=1&user_id=2
+接口URL：http://localhost/wuanlife_api/index.php/group/get_group_info/group_id/user_id
 
 请求方式：GET
 
@@ -29,18 +29,17 @@
 
 获取用户ID为1星球ID为1的星球信息
 
-http://dev.wuanlife.com:800/?service=Group.GetGroupInfo&group_id=1&user_id=2
+http://localhost/wuanlife_api/index.php/group/get_group_info/4/1
 
-
-JSON
-{
-    "ret": 200,
-    "data": {
-        "group_id": "1",
-        "g_name": "装备2014中队",
-        "g_introduction": "1",
-        "g_image": "1"，
-        "creator":0
+    JSON
+    {
+        "ret": 200,
+        "data": {
+            "group_id": "4",
+            "g_name": "测试测试789",
+            "g_introduction": "测试",
+            "g_image": "../upload/group/2016/05/30/195108file.jpg",
+            "creator": 1
         },
-    "msg": ""
-}
+        "msg": null
+    }
