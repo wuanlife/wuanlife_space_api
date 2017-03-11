@@ -485,6 +485,24 @@ class Post_model extends CI_Model
 
         return $rs;
 }
+    public function post_reply_message($rs){
+        $create_id = $this->get_post_information($rs['post_base_id'])['user_base_id'];
+        if(empty($rs['reply_id'])){
+            $rs['reply_id'] = $create_id;
+        }
+        if($rs['user_base_id']==$create_id){
+            return false;
+        }
+        $data = array(
+            'user_base_id' =>$rs['reply_id'],
+            'user_reply_id'=>$rs['user_base_id'],
+            'post_base_id'=>$rs['post_base_id'],
+            'reply_floor'=>$rs['floor'],
+            'create_time'=>time(),
+            'status'=>0,
+        );
+        $this->db->insert('message_reply',$data);
+    }
 
 
 }
