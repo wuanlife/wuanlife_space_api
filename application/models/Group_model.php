@@ -98,6 +98,18 @@ class Group_model extends CI_Model
     }
 
 
+    public function quit_message($data){
+        $creator = $this->get_group_infomation($data['group_id'])['user_base_id'];
+        $field = array(
+            'user_base_id'      =>$creator,
+            'user_notice_id'     =>$data['user_id'],
+            'group_base_id'     =>$data['group_id'],
+            'create_time'        =>time(),
+            'type'              =>4,
+            'status'            =>0
+        );
+        $this->db->insert('message_notice',$field);
+    }
     public function quit($data){
         $this->db->where('group_base_id',$data['group_id'])
             ->where('user_base_id',$data['user_id'])
@@ -164,7 +176,18 @@ class Group_model extends CI_Model
         return $re;
     }
 
-
+    public function join_message($data){
+        $creator = $this->get_group_infomation($data['group_base_id'])['user_base_id'];
+        $field = array(
+            'user_base_id'      =>$creator,
+            'user_notice_id'     =>$data['user_base_id'],
+            'group_base_id'     =>$data['group_base_id'],
+            'create_time'        =>time(),
+            'type'              =>5,
+            'status'            =>0
+        );
+        $this->db->insert('message_notice',$field);
+    }
 
 
 

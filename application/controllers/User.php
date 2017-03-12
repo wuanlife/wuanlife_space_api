@@ -331,6 +331,7 @@ class User extends CI_Controller
         if($founder_id==$data['user_id']){
             if($this->Common_model->check_group($info['user_apply_id'],$info['group_base_id'])){
                 $msg = '操作失败！该用户已加入此星球！';
+                $status = 2;
             }else{
                 if($data['mark'] == 1) {
                     $field = array(
@@ -353,10 +354,10 @@ class User extends CI_Controller
                     $msg = '操作成功！您已拒绝该成员的申请！';
                     $status = 3;
                 }
+            }
                 $values['id'] = $data['m_id'];
                 $table = 'message_apply';
                 $this->alter_status($values,$status,$table);//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
-            }
         }else{
             $msg = '您不是创建者，没有权限！';
         }

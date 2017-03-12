@@ -94,6 +94,7 @@ class Group extends CI_Controller
         );
         $re=$this->Group_model->join($data);
         if($re){
+            $this->Group_model->join_message($data);
             $msg='加入成功！并通知星球创建者';
             $rs['code']=1;
         }else{
@@ -314,10 +315,7 @@ class Group extends CI_Controller
             $posts = $this->search_posts($data['text'],$data['pnum'],$pn);
         }
         $rs=array_merge($group,$posts);
-        /**
-         * 此处为临时调用方法，待合代码之后统一改为$this->Post_model->delete_html_posts($rs)方法
-         */
-        $rs = $this->Post_model->delete_html_posts_1($rs);
+        $rs = $this->Post_model->delete_html_posts($rs);
         $this->response($rs);
     }
 
@@ -338,6 +336,7 @@ class Group extends CI_Controller
             $re['code']=0;
         }else{
             $this->Group_model->quit($data);
+            $this->Group_model->quit_message($data);
             $re['code']=1;
             $msg='退出成功！并通知星球创建者';
         }
@@ -557,33 +556,10 @@ class Group extends CI_Controller
         $this->response($rs,200,$msg);
     }
 
-    public function checkStatus($user_id=null){
-        // $this->cookie['nickname'] = '123';
-        // $this->cookie['user_id'] = 1;
 
-        if (empty($this->cookie['nickname'])) {
-            $msg = '用户尚未登录！';
-            $u_status = '0';
-            $re = array('code'=> 0,
-                'msg' =>'用户尚未登录！');
-            return $this->response($re,200,$msg);
-        }else{
-            $u_status = '1';
-            $msg = '用户已登录！';
-            $user_id = $this->cookie['user_id'];
-            $nickname = $this->cookie['nickname'];
-            $info =array('user_id'=>"$user_id",
-                'nickname'=>"$nickname");
-            $re = array('code'=> 1,
-                'msg' =>'用户已登录！',
-                $info);
 
-        }
 
-        $rs['nickname'] = $this->Group_model->get_user($user_id);
-        return $this->response($re,200,$msg);
         
-    }
 
 
 
