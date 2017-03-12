@@ -352,17 +352,3 @@ VALUES
 	('0005','3','{0}已从你的{1}中退出'),
 	('0006','3','{0}已加入你的{1}'),
 	('0007','3','{0}回复我的主题{1}');
-
--- 2016/12/13   11:24
--- 新增用户点赞表
--- user:小超
-CREATE TABLE IF NOT EXISTS `post_approved` (
-  `user_id` int(11) NOT NULL,
-  `post_id` int(11) NOT NULL,
-  `floor` int(11) NOT NULL,
-  `approved` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子点赞表';
-ALTER TABLE post_approved
-ADD PRIMARY KEY (user_id,post_id,floor);
-
-ALTER TABLE `post_detail` ADD `replyFloor` INT DEFAULT NULL COMMENT '帖子内被回复的人的楼层';

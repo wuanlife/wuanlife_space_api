@@ -12,6 +12,10 @@ class User extends CI_Controller
         $this->load->model('Common_model');
         $this->load->helper('url_helper');
     }
+	public function index(){
+		echo '接口测试<br>登录接口url：<br>';
+		echo 'index.php/user/login';
+	}
     /**
      * @param $data
      * @param int $ret
