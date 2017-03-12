@@ -46,10 +46,10 @@ class User extends CI_Controller
      * @return string msg 提示信息
      *
      */
-    public function login($email=null,$password=null){
+    public function login(){
         $data=array(
-            'email' => $email,
-            'password' => $password,
+            'email' => $this->input->get('email'),
+            'password' => $this->input->get('password'),
         );
         $re['code']=0;
         $model= $this->User_model->user_email($data);
@@ -76,11 +76,11 @@ class User extends CI_Controller
      * @return string msg 提示信息
      *
      */
-    public function reg($nickname,$email,$password){
+    public function reg(){
         $data=array(
-            'nickname'=>$nickname,
-            'email'=>$email,
-            'password'=>$password,
+            'nickname'=>$this->input->get('nickname'),
+            'email'=>$this->input->get('email'),
+            'password'=>$this->input->get('password'),
         );
         $re['code']=0;
         $user_email=$this->User_model->user_email($data);
@@ -121,7 +121,8 @@ class User extends CI_Controller
      * @return string day 日
      * @return string mailChecked 是否验证邮箱，0为未验证邮箱，1为已验证邮箱
      */
-    public function get_user_info($user_id){
+    public function get_user_info(){
+        $user_id=$this->input->get('user_id');
         $re=$this->User_model->get_user_info($user_id);
         $msg=null;
         $this->response($re,200,$msg);
@@ -134,15 +135,15 @@ class User extends CI_Controller
      * @desc 修改用户的信息
      * @return int data true代表成功修改，false代表修改失败
      */
-    public function alter_user_info($user_id,$user_name=null,$profile_picture=null,$sex=null,$year=null,$month=null,$day=null){
+    public function alter_user_info(){
         $data = array(
-            'user_id'       =>$user_id,
-            'nickname'      =>$user_name,
-            'profile_picture'   =>$profile_picture,
-            'sex'           =>$sex,
-            'year'          =>$year,
-            'month'         =>$month,
-            'day'           =>$day,
+            'user_id'       =>$this->input->get('user_id'),
+            'nickname'      =>$this->input->get('user_name'),
+            'profile_picture'   =>$this->input->get('profile_picture'),
+            'sex'           =>$this->input->get('sex'),
+            'year'          =>$this->input->get('year'),
+            'month'         =>$this->input->get('month'),
+            'day'           =>$this->input->get('day'),
         );
         $re=$this->User_model->alter_user_info($data);
         $this->response($re['code'],200,$re['msg']);

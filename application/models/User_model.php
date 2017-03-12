@@ -126,7 +126,7 @@ class User_model extends CI_Model
        $email=$data['email'];
        $re=false;
 
-        $query = $this->db->query("SELECT * FROM user_base where email=\"$email\"");
+        $query = $this->db->query("SELECT * FROM user_base where email='$email'");
         if($query->result_array()){
            $re=$query->result_array()[0];
         }

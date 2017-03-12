@@ -44,16 +44,19 @@ class Group extends CI_Controller
      * @return string info.name 星球名称
      * @return string msg 提示信息
      */
-    public function create($user_id,$g_name,$g_image=null,$g_introduction=null,$private=null){
+    public function create(){
+        $private=$this->input->get('private');
         $private=$this->Common_model->judgePrivate($private);
         $data=array(
-            'user_id'=>$user_id,
-            'g_name'=>$g_name,
-            'g_image'=>$g_image,
-            'g_introduction'=>$g_introduction,
+            'user_id'=>$this->input->get('user_id'),
+            'g_name'=>$this->input->get('g_name'),
+            'g_image'=>$this->input->get('g_image'),
+            'g_introduction'=>$this->input->get('g_introduction'),
             'private'=>$private,
         );
         $msg=null;
+        $g_name=$this->input->get('g_name');
+        $g_image=$this->input->get('g_image');
         $check_group_name=$this->check_group_name($g_name);
         if($check_group_name['code']){
             if(empty($g_image)){
@@ -86,10 +89,10 @@ class Group extends CI_Controller
      * @return string info.authorization 权限，03表示会员
      * @return string msg 提示信息
      */
-    public function join($user_id,$g_id){
+    public function join(){
         $data = array(
-            'user_base_id' => $user_id,
-            'group_base_id'    => $g_id,
+            'user_base_id' => $this->input->get('user_id'),
+            'group_base_id'    => $this->input->get('g_id'),
             'authorization'=>'03',
         );
         $re=$this->Group_model->join($data);
@@ -325,10 +328,10 @@ class Group extends CI_Controller
      * @return int code 操作码，1表示退出成功，0表示退出失败
      * @return string msg 提示信息
      */
-    public function quit($user_id,$g_id){
+    public function quit(){
         $data=array(
-            'user_id'=>$user_id,
-            'group_id'=>$g_id,
+            'user_id'=>$this->input->get('user_id'),
+            'group_id'=>$this->input->get('g_id'),
         );
         $creator=$this->Group_model->judge_group_creator($data);
         if($creator){
@@ -436,10 +439,10 @@ class Group extends CI_Controller
      * @return int code 操作码，1表示已加入，0表示未加入
      * @return string msg 提示信息
      */
-    public function g_status($user_id,$g_id){
+    public function g_status(){
         $data=array(
-            'user_id'=>$user_id,
-            'g_id'=>$g_id,
+            'user_id'=>$this->input->get('user_id'),
+            'g_id'=>$this->input->get('g_id'),
         );
         $re['code']=$this->Group_model->g_status($data);
         if($re['code']) {
@@ -460,7 +463,9 @@ class Group extends CI_Controller
      * @return string g_image 星球图片链接
      * @return int creator 是否为创建者，1为创建者，0不是创建者
      */
-    public function get_group_info($group_id,$user_id){
+    public function get_group_info(){
+        $group_id=$this->input->get('group_id');
+        $user_id=$this->input->get('user_id');
         $data=array(
             'group_id'=>$group_id,
             'user_id'=>$user_id,
@@ -486,7 +491,11 @@ class Group extends CI_Controller
      * @return int data 0代表修改失败,1代表修改成功
      * @return string msg 提示错误信息
      */
-    public function alter_group_info($group_id,$user_id,$g_introduction=null,$g_image=null){
+    public function alter_group_info(){
+        $group_id=$this->input->get('group_id');
+        $user_id=$this->input->get('user_id');
+        $g_introduction=$this->input->get('g_introduction');
+        $g_image=$this->input->get('g_image');
         $data=array(
             'group_id'=>$group_id,
             'user_id'=>$user_id,
