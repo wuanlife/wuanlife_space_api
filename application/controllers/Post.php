@@ -208,10 +208,10 @@ class Post extends CI_Controller
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      */
-    public function get_index_post($user_id=null,$page=null){
+    public function get_index_post(){
         $data=array(
-            'user_id'=>$user_id,
-            'page'=>$page,
+            'user_id'=>$this->input->get('user_id'),
+            'page'=>$this->input->get('page'),
         );
         $re=$this->Post_model->get_index_post($data);
         $re=$this->Post_model->get_image_url($re);
@@ -238,8 +238,10 @@ class Post extends CI_Controller
      * @return int currentPage 当前页
      * @return string user_name 用户名
      */
-    public function get_mygroup_post($user_id,$page=null){
+    public function get_mygroup_post(){
         $data   = array();
+        $user_id=$this->input->get('user_id');
+        $page=$this->input->get('page');
 
         $data = $this->Post_model->get_mygroup_post($user_id,$page);
         $data = $this->Post_model->get_image_url($data);
@@ -273,8 +275,11 @@ class Post extends CI_Controller
      * @return int identity 用户身份(01为创建者，02为成员，03非成员)
      * @return int private 是否私密(0为否，1为私密)
      */
-    public function get_group_post($group_id,$user_id=null,$page=null){
+    public function get_group_post(){
         $data   = array();
+        $group_id=$this->input->get('group_id');
+        $user_id=$this->input->get('user_id');
+        $page=$this->input->get('page');
 
         $data['creator_id']=$this->Post_model->get_creater_id($group_id)['user_base_id'];
         $creatorName=$this->Post_model->get_creator($group_id);
@@ -291,7 +296,7 @@ class Post extends CI_Controller
             $data['posts']='星球已关闭，不显示帖子';
             $data['pageCount']=1;
             $data['currentPage']=1;
-            return $data;
+            $this->response($data,200,null);
         }
         if(empty($user)&&empty($creator)){
             $data['identity']='03';
@@ -303,7 +308,7 @@ class Post extends CI_Controller
                 $data['posts']=array();
                 $data['pageCount']=1;
                 $data['currentPage']=1;
-                return $data;
+                $this->response($data,200,null);
             }
         }elseif (!empty($user)) {
             $data['identity']='02';
