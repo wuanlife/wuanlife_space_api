@@ -320,18 +320,6 @@ class Post_model extends CI_Model
     }
     /*
      * 删除帖子列表html
-     * 此处为临时调用方法，待合代码之后统一改为delete_html_posts($data)方法
-     */
-    public function delete_html_posts_1($data){
-        $rs = $data;
-        for ($i=0; $i<count($rs['posts']); $i++) {
-            $rs['posts'][$i]['p_text'] = strip_tags($rs['posts'][$i]['p_text']);
-        }
-        return $rs;
-    }
-
-    /*
-     * 删除帖子列表html
      */
     public function delete_html_posts($data){
         $rs = $data;
