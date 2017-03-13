@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/post/get_group_post/group_id/user_id/pn
+接口URL：http://localhost/wuanlife_api/index.php/post/get_group_post
 
 请求方式：GET
 
@@ -41,7 +41,7 @@
 
 显示星球ID为16的帖子
 
-http://localhost/wuanlife_api/index.php/post/get_group_post/166
+http://localhost/wuanlife_api/index.php/post/get_group_post?group_id=1&pn=1
 
     JSON:
     {
