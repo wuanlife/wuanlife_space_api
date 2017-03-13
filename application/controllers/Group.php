@@ -92,7 +92,7 @@ class Group extends CI_Controller
     public function join(){
         $data = array(
             'user_base_id' => $this->input->get('user_id'),
-            'group_base_id'    => $this->input->get('g_id'),
+            'group_base_id'    => $this->input->get('group_id'),
             'authorization'=>'03',
         );
         $re=$this->Group_model->join($data);
@@ -331,7 +331,7 @@ class Group extends CI_Controller
     public function quit(){
         $data=array(
             'user_id'=>$this->input->get('user_id'),
-            'group_id'=>$this->input->get('g_id'),
+            'group_id'=>$this->input->get('group_id'),
         );
         $creator=$this->Group_model->judge_group_creator($data);
         if($creator){
@@ -442,7 +442,7 @@ class Group extends CI_Controller
     public function g_status(){
         $data=array(
             'user_id'=>$this->input->get('user_id'),
-            'g_id'=>$this->input->get('g_id'),
+            'g_id'=>$this->input->get('group_id'),
         );
         $re['code']=$this->Group_model->g_status($data);
         if($re['code']) {

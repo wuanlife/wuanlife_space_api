@@ -78,8 +78,8 @@ class User extends CI_Controller
      */
     public function reg(){
         $data=array(
-            'nickname'=>$this->input->get('nickname'),
-            'email'=>$this->input->get('email'),
+            'nickname'=>$this->input->get('user_name'),
+            'email'=>$this->input->get('user_email'),
             'password'=>$this->input->get('password'),
         );
         $re['code']=0;

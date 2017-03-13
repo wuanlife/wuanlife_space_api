@@ -211,7 +211,7 @@ class Post extends CI_Controller
     public function get_index_post(){
         $data=array(
             'user_id'=>$this->input->get('user_id'),
-            'page'=>$this->input->get('page'),
+            'page'=>$this->input->get('pn'),
         );
         $re=$this->Post_model->get_index_post($data);
         $re=$this->Post_model->get_image_url($re);
@@ -241,7 +241,7 @@ class Post extends CI_Controller
     public function get_mygroup_post(){
         $data   = array();
         $user_id=$this->input->get('user_id');
-        $page=$this->input->get('page');
+        $page=$this->input->get('pn');
 
         $data = $this->Post_model->get_mygroup_post($user_id,$page);
         $data = $this->Post_model->get_image_url($data);
