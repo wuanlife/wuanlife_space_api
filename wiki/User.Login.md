@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/user/login/email/password
+接口URL：http://localhost/wuanlife_api/index.php/user/login
 
 请求方式：GET
 
@@ -29,7 +29,7 @@
 
 注册账号
 
-http://localhost/wuanlife_api/index.php/user/login/ch1111ac/1
+http://localhost/wuanlife_api/index.php/user/login?email=ch1111ac&password=1
 
     JSON:
     {

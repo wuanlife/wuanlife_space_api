@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/quit/user_id/group_id
+接口URL：http://localhost/wuanlife_api/index.php/group/quit
 
 请求方式：GET
 
@@ -23,9 +23,9 @@
 
 ##示例
 
-退出星球id为4的星球
+退出星球id为2的星球
 
-http://localhost/wuanlife_api/index.php/group/quit/3/4
+http://localhost/wuanlife_api/index.php/group/quit?user_id=1&group_id=2
 
 
     JSON:

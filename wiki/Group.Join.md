@@ -25,7 +25,7 @@
 
 加入星球id为4的星球
 
-http://localhost/wuanlife_api/index.php/group/join/3/4
+http://localhost/wuanlife_api/index.php/group/join?user_id=17&group_id=11
 
 
     JSON:

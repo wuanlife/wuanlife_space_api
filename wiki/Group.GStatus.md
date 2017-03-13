@@ -4,8 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/g_status/user_id/group_id
-
+接口URL：http://localhost/wuanlife_api/index.php/group/g_status
 请求方式：GET
 
 参数说明：
@@ -25,7 +24,7 @@
 
 判断用户是否加入该星球，1表示已加入，0表示未加入
 
-http://localhost/wuanlife_api/index.php/group/g_status/3/4
+http://localhost/wuanlife_api/index.php/group/g_status?user_id=1&group_id=4
 
     JSON:
     {

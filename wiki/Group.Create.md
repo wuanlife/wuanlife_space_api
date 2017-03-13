@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/create/user_id/g_name/g_image/g_introduction/private
+接口URL：http://localhost/wuanlife_api/index.php/group/create
 
 请求方式：GET
 
@@ -33,9 +33,9 @@
 
 ##示例
 
-创建名为“dk6689”的星球
+创建星球
 
-http://localhost/wuanlife_api/index.php/group/create/1/dk6689
+http://localhost/wuanlife_api/index.php/group/create?user_id=1&g_name=12chhac
 
     JSON:
     {
@@ -43,8 +43,8 @@ http://localhost/wuanlife_api/index.php/group/create/1/dk6689
         "data": {
             "code": 1,
             "info": {
-                "g_name": "dk6689",
-                "group_id": "409",
+                "g_name": "12chhac",
+                "group_id": "410",
                 "g_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
                 "g_introduction": null,
                 "user_id": "1",

@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/user/get_user_info/user_id
+接口URL：http://localhost/wuanlife_api/index.php/user/get_user_info
 
 请求方式：GET
 
@@ -31,7 +31,7 @@
 
 获取用户ID为1的用户信息
 
-http://localhost/wuanlife_api/index.php/user/get_user_info/1
+http://localhost/wuanlife_api/index.php/user/get_user_info?user_id=1
 
     JSON
     {

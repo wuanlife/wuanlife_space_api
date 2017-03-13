@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/post/get_mygroup_post/user_id/pn
+接口URL：http://localhost/wuanlife_api/index.php/post/get_mygroup_post
 
 请求方式：GET
 
@@ -34,7 +34,7 @@
 
 显示用户ID为1的第1页帖子
 
-http://localhost/wuanlife_api/index.php/post/get_mygroup_post/9
+http://localhost/wuanlife_api/index.php/post/get_mygroup_post?user_id=1&pn=1
 
     JSON:
     {
