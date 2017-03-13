@@ -279,7 +279,7 @@ class Post extends CI_Controller
         $data   = array();
         $group_id=$this->input->get('group_id');
         $user_id=$this->input->get('user_id');
-        $page=$this->input->get('page');
+        $page=$this->input->get('pn');
 
         $data['creator_id']=$this->Post_model->get_creater_id($group_id)['user_base_id'];
         $creatorName=$this->Post_model->get_creator($group_id);
