@@ -26,14 +26,14 @@
 
 置顶帖子id为1的帖子
 
-http://dev.wuanlife.com:800/?service=Post.StickyPost&user_id=1&post_id=1
+http://dev.wuanlife.com:800/?service=Post.StickyPost
 
     JSON:
     {
     "ret": 200,
     "data": {
         "code": 1,
-        "re": "操作成功"
+        "msg": "操作成功"
     },
     "msg": ""
     }
