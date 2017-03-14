@@ -57,7 +57,7 @@ class Common_model extends CI_Model
      * $html = file_get_contents($url, false, $context);
      * return $html;
      * }
-     * /
+     */
     /**
      * 判断星球是否有头像，若没有给默认头像
      * @param $lists
@@ -245,20 +245,6 @@ class Common_model extends CI_Model
         return $sql['name'];
     }
 
-    /**
-    通过星球id判断星球是否为私密星球
-
-     * @param $group_id
-     * @return mixed
-     * 已存在相同函数
-    public function judge_group_private($group_id){
-        $sql=$this->db->select('private')
-            ->where('id',$group_id)
-            ->get('group_base')
-            ->row_array();
-        return $sql['private'];
-    }
-     */
     /**
      * 判断用户是否为星球成员
      */
