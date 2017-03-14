@@ -7,10 +7,15 @@ class User extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->helper(array('form', 'url','url_helper'));
+        $this->load->library('form_validation');
         $this->load->model('User_model');
         $this->load->model('Group_model');
         $this->load->model('Common_model');
-        $this->load->helper('url_helper');
+        $this->form_validation->set_message('required', '{field} 参数是必填选项.');
+        $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
+        $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
+
     }
 	public function index(){
 		echo '接口测试<br>登录接口url：<br>';
@@ -154,10 +159,13 @@ class User extends CI_Controller
      */
     public function show_message(){
         $data = array(
-            'user_id'       => $this->input->get('user_id'),
-            'm_type'   => $this->input->get('m_type'),
-            'pn'            => $this->input->get('pn'),
+            'user_id'       => $this->input->post('user_id'),
+            'm_type'   => $this->input->post('m_type'),
+            'pn'            => $this->input->post('pn'),
         );
+        //$this->form_validation->set_data($data);
+        if ($this->form_validation->run('show_message') == FALSE)
+            $this->response(null,400,validation_errors());
         if($data['m_type']==1){
             $rs = $this->get_reply_message($data);
         }elseif($data['m_type']==2){
@@ -199,17 +207,33 @@ class User extends CI_Controller
         if($data['pn'] > $pageCount){
             $data['pn'] = $pageCount;
         }
-        $rs = array();
+        $re = array();
         if($data['pn'] !=0){
             $rs['info'] = $model->show_reply_message($data,$page_num);
             foreach($rs['info'] as $key=>$value){
-                $value['page'] = $this->Common_model->get_post_reply_page($value['post_id'],$value['reply_floor']);
-                $rs['info'][$key] = $value;
+                //没有头像给默认头像
+                if(empty($value['profile_picture'])){
+                    $value['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                }
+                $re['info'][$key]['users']=array(
+                    'user_id'=>$value['user_id'],
+                    'user_name'=>$value['user_name'],
+                );
+                $re['info'][$key]['posts']=array(
+                    'post_id'=>$value['post_id'],
+                    'p_title'=>$value['p_title'],
+                    'reply_floor'=>$value['reply_floor'],
+                    'page'=>$this->Common_model->get_post_reply_page($value['post_id'],$value['reply_floor']),
+                );
+                $re['info'][$key]['messages']=array(
+                    'm_id'=>$value['m_id'],
+                    'image'=>$value['profile_picture'],
+                );
             }
         }
-        $rs['pageCount']  = $pageCount;
-        $rs['currentPage'] = $data['pn'];
-        return $rs;
+        $re['pageCount']  = $pageCount;
+        $re['currentPage'] = $data['pn'];
+        return $re;
     }
 
     /**
@@ -233,7 +257,27 @@ class User extends CI_Controller
         }
         $re = array();
         if($data['pn'] !=0){
-            $re['info'] = $model->show_apply_message($data,$page_num);
+            $rs['info'] = $model->show_apply_message($data,$page_num);
+            foreach($rs['info'] as $key=>$value){
+                //没有头像给默认头像
+                if(empty($value['profile_picture'])){
+                    $value['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                }
+                $re['info'][$key]['users']=array(
+                    'user_id'=>$value['user_id'],
+                    'user_name'=>$value['user_name'],
+                );
+                $re['info'][$key]['groups']=array(
+                    'group_id'=>$value['group_id'],
+                    'g_name'=>$value['g_name'],
+                );
+                $re['info'][$key]['messages']=array(
+                    'm_id'=>$value['m_id'],
+                    'status'=>$value['status'],
+                    'image'=>$value['profile_picture'],
+                    'text'=>$value['text'],
+                );
+            }
         }
         $re['pageCount']  = $pageCount;
         $re['currentPage'] = $data['pn'];
@@ -259,14 +303,32 @@ class User extends CI_Controller
         }
         $re = array();
         if($data['pn'] !=0){
-            $re['info'] = $model->show_notice_message($data,$page_num);
-            foreach($re['info'] as $keys => $values){
-                $re['info'][$keys]['content'] = $this->message_array($values['type'],$values['user_name'],$values['g_name']);
-                if(in_array($values['type'],array(4,5))){
-                    $re['info'][$keys]['image'] = $model->get_user_information($values['user_id'])['profile_picture'];
-                }elseif(in_array($values['type'],array(1,2,3))){
-                    $re['info'][$keys]['image'] = $this->Group_model->get_group_infomation($values['group_id'])['g_image'];
+            $rs['info'] = $model->show_notice_message($data,$page_num);
+            foreach($rs['info'] as $key => $value){
+                $re['info'][$key]['content'] = $this->message_array($value['type'],$value['user_name'],$value['g_name']);
+                if(in_array($value['type'],array(4,5))){
+                    $image = $model->get_user_information($value['user_id'])['profile_picture'];
+                }elseif(in_array($value['type'],array(1,2,3))){
+                    $image = $this->Group_model->get_group_infomation($value['group_id'])['g_image'];
                 }
+                //没有头像给默认头像
+                if(empty($image)){
+                    $image = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                }
+                $re['info'][$key]['users']=array(
+                    'user_id'=>$value['user_id'],
+                    'user_name'=>$value['user_name'],
+                );
+                $re['info'][$key]['groups']=array(
+                    'group_id'=>$value['group_id'],
+                    'g_name'=>$value['g_name'],
+                );
+                $re['info'][$key]['messages']=array(
+                    'm_id'=>$value['m_id'],
+                    'type'=>$value['type'],
+                    'status'=>$value['status'],
+                    'image'=>$image,
+                );
             }
         }
         $re['pageCount']  = $pageCount;
@@ -286,8 +348,8 @@ class User extends CI_Controller
         $rs['currentPage'] = 1;
         $rs['info'] =array(
             'notice'=>$this->get_notice_message($data)['info'][0] ,
-            'apply'=>$model->show_apply_message($data,20)[0] ,
-            'reply'=>$model->show_reply_message($data,20)[0]
+            'apply'=>$this->get_apply_message($data)['info'][0] ,
+            'reply'=>$this->get_reply_message($data)['info'][0] ,
         );
         return $rs;
     }
@@ -434,14 +496,19 @@ class User extends CI_Controller
     /**
      * 测试接口，待完成所有接口之后删除
      */
-    public function test(){
+    public function test()
+    {
+        //$this->form_validation->set_rules('username', 'Username', 'required');
+        //$this->form_validation->set_rules('password', 'Password', 'required',
+         //   array('required' => 'You must provide a %s.')
+       // );
+       // $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required');
+       // $this->form_validation->set_rules('email', 'Email', 'required');
         $data = array(
-            'id'=>'',
-            'name'=>'csc',
-            'psw'=>''
+            'user_id'       => $this->input->get('user_id'),
+            'm_type'   => $this->input->get('m_type'),
+            'pn'            => $this->input->get('pn'),
         );
-        $rs = $this->validator->check($data,__FUNCTION__);
-        $this->response($rs);
 
     }
 
