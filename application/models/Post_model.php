@@ -508,7 +508,7 @@ class Post_model extends CI_Model
         }
         else
         {
-            return FALSE
+            return FALSE;
         }
     }
 
