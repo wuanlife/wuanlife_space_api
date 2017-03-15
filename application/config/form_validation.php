@@ -43,6 +43,13 @@ $config = array(
             'rules' => 'required'
         ),
     ),
+    'get_create' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required'
+        ),
+    ),
     'delete_message' =>array(
         array(
             'field' => 'id',
