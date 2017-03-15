@@ -392,6 +392,9 @@ class User extends CI_Controller
             'm_id'   => $this->input->get('m_id'),
             'mark'            => $this->input->get('mark'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('process_apply') == FALSE)
+            $this->response(null,400,validation_errors());
         $rs['code'] = 0;
         $info = $this->get_message_info($data['m_id']);
         $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];

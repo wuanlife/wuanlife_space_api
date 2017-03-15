@@ -19,6 +19,23 @@ $config = array(
             'rules' => 'required'
         )
     ),
+    'process_apply' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'm_id',
+            'label' => 'm_id',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'mark',
+            'label' => 'mark',
+            'rules' => 'required'
+        )
+    ),
     'email' => array(
         array(
             'field' => 'emailaddress',
