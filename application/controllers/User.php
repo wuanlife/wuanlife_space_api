@@ -489,6 +489,9 @@ class User extends CI_Controller
      */
     public function delete_message(){
         $data['id'] = $this->input->get('m_id');
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('delete_message') == FALSE)
+            $this->response(null,400,validation_errors());
         $rs = $this->alter_status($data,2,'message_reply');
         if($rs){
             $msg = '删除成功';
