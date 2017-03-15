@@ -143,12 +143,12 @@ class Group extends CI_Controller
      * 获取用户创建的星球
      */
     public function get_create(){
-        $data['user_id'] = $this->input->get('user_id');
-        $this->form_validation->set_data($data);
+        $data['user_id'] = $this->input->post('user_id');
+        //$this->form_validation->set_data($data);
         if ($this->form_validation->run('get_create') == FALSE)
             $this->response(null,400,validation_errors());
         $model = $this->Group_model;
-        $pn = $this->input->get('pn');
+        $pn = $this->input->post('pn');
         $all_num      = $model->get_all_cgroup_num($data['user_id']);              //总条
         $page_num     = 20;                                       //每页条数
         $pageCount =ceil($all_num/$page_num);                //总页数
