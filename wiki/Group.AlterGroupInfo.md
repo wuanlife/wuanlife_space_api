@@ -1,8 +1,8 @@
-#group.alter_group_info
+# group.alter_group_info
 
 修改星球详情
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://localhost/wuanlife_api/index.php/group/alter_group_info
 
@@ -17,14 +17,14 @@
 |g_introduction|string|可选|星球简介|
 |g_image|string|可选|星球图片|
 
-##返回说明
+## 返回说明
 |参数|类型|说明|
 |:--|:--|:--|
 |code	|	int	|1代表修改成功,0代表修改失败|
 |msg	|	string	|报错信息|
 
 
-##示例
+## 示例
 
 修改用户ID为1星球ID为2的星球信息
 
