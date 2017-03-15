@@ -4,9 +4,9 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost:88/index.php/group/get_create
+接口URL：http://dev.wuanlife.com:800/group/get_create
 
-请求方式：GET
+请求方式：POST
 
 参数说明：
 
@@ -34,7 +34,7 @@
 
 显示用户ID为58创建的星球
 
-http://localhost:88/index.php/group/get_create?user_id=58
+http://dev.wuanlife.com:800/group/get_create
 
     JSON
     {
