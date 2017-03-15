@@ -326,6 +326,16 @@ class Post extends CI_Controller
 
     }
 
+    /**
+     * 置顶帖子
+     * @desc 帖子置顶
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string msg 提示信息
+     */
+    public function post_sticky(){        
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $rs = array();
 
     public function test(){
         $this->load->helper(array('form', 'url'));
@@ -362,5 +372,44 @@ class Post extends CI_Controller
     }
 
 
+        $rs = $this->Post_model->post_sticky();
+        if($rs)
+        {
+            $data['code'] = 1;
+            $msg = "操作成功";
+        }
+        else
+        {
+            $data['code'] = 0;
+            $msg = "操作失败";
+        }
+        $this->response($data,200,$msg);
+    }
+
+    /**
+     * 取消置顶帖子
+     * @desc 帖子取消置顶
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string msg 提示信息
+     */
+    public function post_unsticky(){        
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $rs = array();
+
+
+        $rs = $this->Post_model->post_unsticky();
+        if($rs)
+        {
+            $data['code'] = 1;
+            $msg = "操作成功";
+        }
+        else
+        {
+            $data['code'] = 0;
+            $msg = "操作失败";
+        }
+        $this->response($data,200,$msg);
+    }
 
 }
