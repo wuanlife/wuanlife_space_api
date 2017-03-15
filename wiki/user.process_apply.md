@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost:88/index.php/user/process_apply
+接口URL：http://dev.wuanlife.com:800/user/process_apply
 
 请求方式：GET
 
@@ -18,6 +18,7 @@
 
 
 ##返回说明
+
 |参数|        类型|   说明|
 |:--|:--|:--|
 |msg   |  字符串 |提示信息|
@@ -28,7 +29,7 @@
 
 发送验证码到邮箱
 
-http://localhost:88/index.php/user/process_apply?user_id=58&mark=1&m_id=15
+http://dev.wuanlife.com:800/user/process_apply?user_id=58&mark=1&m_id=15
 
     JSON:
     {
