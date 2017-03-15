@@ -470,9 +470,12 @@ class User extends CI_Controller
      * 检测是否有新消息
      */
     public function check_new_info(){
-        $id = $this->input->get('user_id');
+        $data['id'] = $this->input->get('user_id');
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('check_new_info') == FALSE)
+            $this->response(null,400,validation_errors());
         $model = $this->User_model;
-        $num = $model->check_new_info($id);
+        $num = $model->check_new_info($data['id']);
         $num_all = $num[0]+$num[1]+$num[2];
         if($num_all){
             $rs['num']=1;

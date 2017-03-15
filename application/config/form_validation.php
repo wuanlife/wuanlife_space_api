@@ -36,6 +36,13 @@ $config = array(
             'rules' => 'required'
         )
     ),
+    'check_new_info' =>array(
+        array(
+            'field' => 'id',
+            'label' => 'user_id',
+            'rules' => 'required'
+        ),
+    ),
     'email' => array(
         array(
             'field' => 'emailaddress',
