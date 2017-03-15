@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Group.Quit
+接口URL：http://localhost/wuanlife_api/index.php/group/quit
 
 请求方式：GET
 
@@ -23,17 +23,16 @@
 
 ##示例
 
-加入星球id为11的星球
+退出星球id为2的星球
 
-http://apihost/?service=Group.Join&group_id=11
+http://localhost/wuanlife_api/index.php/group/quit?user_id=1&group_id=2
 
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "msg": "退出成功！并通知星球创建者",
-    },
-    "msg": ""
-	}
+        "ret": 200,
+        "data": {
+            "code": 1
+        },
+        "msg": "退出成功！并通知星球创建者"
+    }

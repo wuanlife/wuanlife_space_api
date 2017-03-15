@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=Post.GetIndexPost
+接口URL：http://localhost/wuanlife_api/index.php/post/get_index_post
 
 请求方式：GET
 
@@ -33,9 +33,9 @@
 
 ##示例
 
-显示第二页帖子
+显示第1页帖子
 
-http://apihost/?service=Post.GetIndexPost&pn=6&user_id=1
+http://localhost/wuanlife_api/index.php/post/get_index_post?user_id=1&pn=1
 
     JSON:
     {
@@ -45,53 +45,27 @@ http://apihost/?service=Post.GetIndexPost&pn=6&user_id=1
             "currentPage": 6,
             "posts": [
                 {
-                    "postID": "1",
-                    "title": "avhfhkakfgaukufbakfbafbalfabif",
-                    "text": "2",
+                    "post_id": "3",
+                    "p_title": "sdfasd",
+                    "p_text": "fasdfsd",
                     "lock": "0",
-                    "createTime": "2016-06-12 17:57:58",
-                    "nickname": "12222",
-                    "groupID": "1",
-                    "groupName": "装备2014中队和是加",
-                    "approved": "1",
-                    "approvednum": "1",
-                    "image": []
-                },
-                {
-                    "postID": "2",
-                    "title": "午安煎饼计划Android组第48周周报",
-                    "text": "",
-                    "lock": "0",
-                    "createTime": "2016-05-20 20:02:51",
-                    "nickname": "午安网",
-                    "groupID": "2",
-                    "groupName": "午安网啊阿萨阿萨安师大",
+                    "create_time": "2017",
+                    "user_name": "123123",
+                    "group_id": "355",
+                    "groupName": "一二三四五六七八九十一二三四五六七八九十",
                     "approved": "0",
                     "approvednum": "0",
                     "image": []
                 },
                 {
-                    "postID": "11",
-                    "title": "biaoti14",
-                    "text": "6",
-                    "lock": "1",
-                    "createTime": "",
-                    "nickname": "撒旦法斯蒂芬",
-                    "groupID": "14",
-                    "groupName": "sdfd",
-                    "approved": "0",
-                    "approvednum": "0",
-                    "image": []
-                },
-                {
-                    "postID": "12",
-                    "title": "biaoti15",
-                    "text": "7",
+                    "post_id": "11",
+                    "p_title": "1",
+                    "p_text": "1",
                     "lock": "0",
-                    "createTime": "",
-                    "nickname": "azusa",
-                    "groupID": "15",
-                    "groupName": "sdfddd",
+                    "create_time": "2017",
+                    "user_name": "xjkui",
+                    "group_id": "166",
+                    "groupName": "叶氏春秋",
                     "approved": "0",
                     "approvednum": "0",
                     "image": []

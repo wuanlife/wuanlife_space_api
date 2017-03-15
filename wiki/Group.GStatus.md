@@ -4,8 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://apilost/?service=Group.GStatus
-
+接口URL：http://localhost/wuanlife_api/index.php/group/g_status
 请求方式：GET
 
 参数说明：
@@ -25,17 +24,13 @@
 
 判断用户是否加入该星球，1表示已加入，0表示未加入
 
-http://apilost/?service=Group.GStatus&group_id=2
+http://localhost/wuanlife_api/index.php/group/g_status?user_id=1&group_id=4
 
-JSON:
-    
-    {    
-        "ret": 200,    
-        "data": {    
-            "code": 1,    
-            "msg": "已加入该星球！",    
-            "info": []
+    JSON:
+    {
+        "ret": 200,
+        "data": {
+            "code": 1
         },
-        "msg": ""
-
+        "msg": "已加入该星球"
     }

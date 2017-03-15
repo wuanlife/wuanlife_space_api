@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.alterUserInfo
+接口URL：http://localhost/wuanlife_api/index.php/user/alter_user_info
 
 请求方式：GET
 
@@ -23,21 +23,18 @@
 ##返回说明
 |参数|类型|说明|
 |:--|:--|:--|
-|code |   int |1代表成功修改，0代表修改失败|
+|data |   int |1代表成功修改，0代表修改失败|
 |msg|string|提示信息|
 
 ##示例
 
 修改用户ID为1的信息
 
-http://dev.wuanlife.com:800/?service=User.alterUserInfo&user_id=1&user_name=我是一只鸟
+http://localhost/wuanlife_api/index.php/user/alter_user_info?user_id=1&user_name=123
 
      JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 0,
+        "ret": 200,
+        "data": 0,
         "msg": "用户名被占用，其他资料修改成功！"
-    },
-    "msg": ""
     }

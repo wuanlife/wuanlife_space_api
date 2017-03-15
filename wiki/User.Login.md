@@ -4,15 +4,15 @@
 
 ##接口调用请求说明
 
-接口URL：http://apihost/?service=User.Login
+接口URL：http://localhost/wuanlife_api/index.php/user/login
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--|:--|
-|user_email     |  字符串| 必须    |      最小：1|           用户邮箱|
+|email     |  字符串| 必须    |      最小：1|           用户邮箱|
 |password  |  字符串 |必须     |       最小：1|         用户密码|
 
 ##返回说明
@@ -29,19 +29,18 @@
 
 注册账号
 
-http://apihost/?service=User.Login&Email=taotao@taotao.com&password=111111
+http://localhost/wuanlife_api/index.php/user/login?email=ch1111ac&password=1
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "msg": "登录成功！",
-        "code": "1",
-        "info": {
-            "userID": "26",
-            "nickname": "taotao",
-            "Email": "taotao@taotao.com"
-        }
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": "1",
+            "info": {
+                "user_id": "189",
+                "user_name": "c1ha11c11",
+                "user_email": "ch1111ac"
+            }
+        },
+        "msg": "登录成功！"
     }
