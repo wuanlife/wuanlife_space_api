@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost:88/index.php/group/lists
+接口URL：http://dev.wuanlife.com:800/group/lists
 
 请求方式：GET
 
@@ -15,6 +15,7 @@
 |pn|整型|可选|-|当前页数|
 
 ##返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |groups                |整型  |星球列表对象|
@@ -32,7 +33,7 @@
 
 显示第1页星球列表
 
-http://localhost:88/index.php/group/lists
+http://dev.wuanlife.com:800/group/lists
 
     JSON:
     {
