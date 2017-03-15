@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $config['base_url'] = ' ';
-$config['base_url'] = "http://localhost/";
+$config['base_url'] = "http://dev.wuanlife.com:800/";
 $config['index_page']       = "";
 $config['uri_protocol']     = "REQUEST_URI";
 /*
