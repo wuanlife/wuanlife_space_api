@@ -4,7 +4,7 @@
 
 ##接口调用请求说明
 
-接口URL：http://localhost:88/index.php/user/check_new_info
+接口URL：http://dev.wuanlife.com:800/user/check_new_info
 
 请求方式：GET
 
@@ -16,6 +16,7 @@
 
 
 ##返回说明
+
 |参数|        类型|   说明|
 |:--|:--|:--|
 |num|整型|1有信息 0没有
@@ -26,7 +27,7 @@
 
 显示用户id=1的消息列表
 
-http://localhost:88/index.php/user/check_new_info?user_id=58
+http://dev.wuanlife.com:800/user/check_new_info?user_id=1
 
     JSON：
     {
