@@ -1,10 +1,10 @@
-#post.get_post_base
+# post.get_post_base
 
 帖子详情-发帖内容
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/post/get_post_base
+接口URL：http://dev.wuanlife.com:800/post/get_post_base
 
 请求方式：GET
 
@@ -14,9 +14,9 @@
 |:--|:--|:--|:--|
 |post_id|int|必须|帖子ID|
 |user_id|int|可选|用户ID|
-|pn|int|可选|当前回复页数|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |code|int|操作码，帖子删除为0. 正常显示为1. 私密帖子为2|
@@ -41,11 +41,11 @@
 |collect| boolean |   帖子是否收藏(0为未收藏，1为收藏)|
 
 
-##示例
+## 示例
 
 显示帖子ID为1的帖子内容,此人为发帖者
 
-http://localhost:88/index.php/post/get_post_base?user_id=1&post_id=1
+http://dev.wuanlife.com:800/post/get_post_base?user_id=1&post_id=1
 
      JSON:
     {
