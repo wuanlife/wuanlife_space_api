@@ -1,10 +1,10 @@
-#post.get_post_reply
+# post.get_post_reply
 
 帖子详情-回帖内容
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/post/get_post_reply
+接口URL：http://dev.wuanlife.com:800/post/get_post_reply
 
 请求方式：GET
 
@@ -16,7 +16,8 @@
 |user_id|int    |可选|    -   |用户ID|
 |pn	|int	|可选|	1|	第几页|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |reply.p_text|string	|回复内容
@@ -34,11 +35,11 @@
 |page_count	|int	|总页数|
 |current_page	|int|	当前页|
 
-##示例
+## 示例
 
 显示帖子ID为1用户id为1的第2页回复
 
-http://localhost:88/index.php/post/get_post_reply?post_id=1
+http://dev.wuanlife.com:800/post/get_post_reply?post_id=1
 
     JSON:
     {
