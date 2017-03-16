@@ -1,10 +1,10 @@
-#post.post_reply
+# post.post_reply
 
 帖子的回复-单个帖子的回复操作
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/post/post_reply
+接口URL：http://dev.wuanlife.com:800/post/post_reply
 
 请求方式：POST
 
@@ -13,11 +13,11 @@
 |参数  |  类型|  是否必须|    默认值 |   范围     | 说明|
 |:--|:--|:--|:--|:--|:--|:--|
 |post_id|整型|必须|||帖子ID|
-|p_text  |  字符串|  必须||大于1|回复内容|
+|p_text  |  字符串|  必须||大于1小于5000|回复内容|
 |user_id | 整型 | 必须|||回帖人ID|
 |reply_floor | 整型|可选|||帖子内被回复的人的楼层|
 
-##返回说明
+## 返回说明
 
 |返回字段         |   类型      |  说明|
 |:--|:--|:--|
@@ -36,7 +36,7 @@
 
 回复帖子id=45楼层为1（楼主）的的帖子
 
-http://localhost:88/index.php/post/post_reply?user_id=1&p_text=6656xsxs&post_id=45
+http://dev.wuanlife.com:800/post/post_reply
 
     JSON:
     {
