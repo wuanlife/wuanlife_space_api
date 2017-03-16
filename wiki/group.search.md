@@ -1,10 +1,10 @@
-#group.search
+# group.search
 
 搜索接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/group/search
+接口URL：http://dev.wuanlife.com:800/group/search
 
 请求方式：GET
 
@@ -19,7 +19,8 @@
 |gn|int|可选|星球当前页数|
 
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |group.g_name           |字符型   |星球名称|
@@ -43,11 +44,11 @@
 
 
 
-##示例
+## 示例
 
 查询字符串等于1的星球和帖子结果
 
-http://localhost:88/index.php/group/search?text=1&gnum=2&pnum=2&gn=1&pn=1
+http://dev.wuanlife.com:800/group/search?text=1&gnum=2&pnum=2&gn=1&pn=1
     
 	JSON:
     {
