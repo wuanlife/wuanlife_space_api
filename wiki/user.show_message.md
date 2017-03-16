@@ -230,6 +230,7 @@ http://dev.wuanlife.com:800/user/show_message
 
 ## 返回说明——4
 
+
 |参数|        类型|   说明|
 |:--|:--|:--|
 |code  |  整型  |操作码，1表示接收成功，0表示没有新消息|
@@ -245,9 +246,12 @@ http://dev.wuanlife.com:800/user/show_message
 |notice.content |字符串 |消息内容预览|
 |notice.messages.image|字符串|用户头像或者星球头像url|
 |notice.apply|数组|星球验证消息|
-||||
+
+
+|参数|        类型|   说明|
+|:--|:--|:--|
 |info.apply|数组|私密星球申请|
-|apply.messages.m_id | 整型| 消息ID|
+|apply.messages.m_id| 整型| 消息ID|
 |apply.users.user_id|整型|用户ID|
 |apply.messages.text|字符型|申请理由|
 |apply.messages.image|字符型|用户头像|
@@ -255,7 +259,10 @@ http://dev.wuanlife.com:800/user/show_message
 |apply.groups.g_name|字符型|星球名称|
 |apply.groups.group_id|字符型|星球ID|
 |apply.messages.status|整型|消息是否处理1未处理2已同意3已拒绝|
-||||
+
+
+|参数|        类型|   说明|
+|:--|:--|:--|
 |info.reply|数组|帖子通知|
 |reply.users.user_id | 整型| 回复人ID|
 |reply.messages.m_id | 整型| 消息ID|
