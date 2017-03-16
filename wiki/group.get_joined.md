@@ -1,12 +1,12 @@
-#group.get_joined
+# group.get_joined
 
 获取用户加入星球的接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/group/get_joined
+接口URL：http://dev.wuanlife.com:800/group/get_joined
 
-请求方式：GET
+请求方式：POST
 
 参数说明：
 
@@ -15,7 +15,7 @@
 |user_id    |     整型 |  必须  |       |                              | 用户id|
 |pn       |整型   |可选          | 1   |                              |当前页面|
 
-##返回说明
+## 返回说明
 
 |返回字段                 |类型    |    说明|
 |:--|:--|:--|
@@ -30,11 +30,11 @@
 |user_name|字符型|用户昵称|
 |msg|字符型|提示信息|
 
-##示例
+## 示例
 
 显示用户ID为58加入的星球
 
-http://localhost:88/index.php/group/get_joined?user_id=58
+http://dev.wuanlife.com:800/group/get_joined
 
     JSON
     {
