@@ -1,8 +1,8 @@
-#user.check_new_info
+# user.check_new_info
 
 用户消息未读检查接口-检查用户是否有新信息
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/user/check_new_info
 
@@ -15,7 +15,7 @@
 |user_id    |   整型| 必须     ||           最小：1  |  用户ID|
 
 
-##返回说明
+## 返回说明
 
 |参数|        类型|   说明|
 |:--|:--|:--|
@@ -23,7 +23,7 @@
 |msg |null |null|
 
 
-##示例
+## 示例
 
 显示用户id=1的消息列表
 
