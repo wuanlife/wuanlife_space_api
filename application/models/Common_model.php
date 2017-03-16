@@ -171,7 +171,7 @@ class Common_model extends CI_Model
      */
     public function judge_group_creator($group_id,$user_id){
         $re=$this->Group_model->get_group_infomation($group_id)['user_base_id'];
-        if($re == $user_id){
+        if($re == $user_id&&!empty($user_id)){
             return true;
         }else{
             return false;

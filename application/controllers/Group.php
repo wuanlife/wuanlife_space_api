@@ -178,7 +178,10 @@ class Group extends CI_Controller
      * 获取用户加入的星球
      */
     public function get_joined(){
-        $user_id = $this->input->get('user_id');
+        $user_id = $this->input->post('user_id');
+        //$this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
         $model = $this->Group_model;
         $pn = $this->input->get('pn');
         $all_num      = $model->get_all_jgroup_num($user_id);              //总条
@@ -215,6 +218,9 @@ class Group extends CI_Controller
             'group_id' =>$this->input->get('group_id'),
             'text'    =>$this->input->get('text')
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('private_group') == FALSE)
+            $this->response(null,400,validation_errors());
         $model = $this->Group_model;
         $user_id=$model->get_group_infomation($data['group_id'])['user_base_id'];
         $re = $model->private_group($data,$user_id);
@@ -243,6 +249,9 @@ class Group extends CI_Controller
             'user_id' =>$this->input->get('user_id'),
             'group_id' =>$this->input->get('group_id')
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('private_group') == FALSE)
+            $this->response(null,400,validation_errors());
         $user_id=$this->Group_model->get_group_infomation($data['group_id'])['user_base_id'];
         if($user_id == $data['user_id']){
             $model = $this->Group_model;
@@ -285,6 +294,9 @@ class Group extends CI_Controller
             'group_id' =>$this->input->get('group_id'),
             'member_id' =>$this->input->get('member_id')
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('delete_group_member') == FALSE)
+            $this->response(null,400,validation_errors());
         $user_id=$this->Group_model->get_group_infomation($data['group_id'])['user_base_id'];
         if($user_id == $data['user_id']){
             $model = $this->Group_model;
@@ -314,6 +326,9 @@ class Group extends CI_Controller
             'gn'=>$this->input->get('gn'),
             'pn'=>$this->input->get('pn')
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('search') == FALSE)
+            $this->response(null,400,validation_errors());
         $pn = empty($data['pn'])?1:$data['pn'];
         $gn = empty($data['gn'])?1:$data['gn'];
         $group=array();
@@ -325,7 +340,9 @@ class Group extends CI_Controller
             $posts = $this->search_posts($data['text'],$data['pnum'],$pn);
         }
         $rs=array_merge($group,$posts);
+        if(!empty($rs['posts'])){
         $rs = $this->Post_model->delete_html_posts($rs);
+        }
         $this->response($rs);
     }
 
@@ -553,11 +570,14 @@ class Group extends CI_Controller
      */
     public function posts(){
         $data = array(
-            'user_id' =>$this->input->get('user_id'),
-            'group_id' =>$this->input->get('group_id'),
-            'p_title' =>$this->input->get('p_title'),
-            'p_text' =>$this->input->get('p_text'),
+            'user_id' =>$this->input->post('user_id'),
+            'group_id' =>$this->input->post('group_id'),
+            'p_title' =>$this->input->post('p_title'),
+            'p_text' =>$this->input->post('p_text'),
         );
+        //$this->form_validation->set_data($data);
+        if ($this->form_validation->run('posts') == FALSE)
+            $this->response(null,400,validation_errors());
         $boola = $this->Common_model->check_group($data['user_id'],$data['group_id']);
         $boolb = $this->Common_model->judge_group_creator($data['group_id'],$data['user_id']);
         $rs['code'] = 0;

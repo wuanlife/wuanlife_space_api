@@ -19,6 +19,13 @@ $config = array(
             'rules' => 'required'
         )
     ),
+    'get_post_base' => array(
+        array(
+            'field' => 'post_id',
+            'label' => 'post_id',
+            'rules' => 'required'
+        )
+    ),
     'process_apply' =>array(
         array(
             'field' => 'user_id',
@@ -36,6 +43,101 @@ $config = array(
             'rules' => 'required'
         )
     ),
+    'private_group' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'group_id',
+            'label' => 'group_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'text',
+            'label' => 'text',
+            'rules' => 'min_length[1]|max_length[50]'
+        )
+    ),
+    'posts' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'group_id',
+            'label' => 'group_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'p_text',
+            'label' => 'p_text',
+            'rules' => 'required|min_length[1]|max_length[5000]'
+        ),
+        array(
+            'field' => 'p_title',
+            'label' => 'p_title',
+            'rules' => 'required|min_length[1]|max_length[60]'
+        )
+    ),
+    'edit_post' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => 'post_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'p_text',
+            'label' => 'p_text',
+            'rules' => 'required|min_length[1]|max_length[5000]'
+        ),
+        array(
+            'field' => 'p_title',
+            'label' => 'p_title',
+            'rules' => 'required|min_length[1]|max_length[60]'
+        )
+    ),
+    'post_reply' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => 'post_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'p_text',
+            'label' => 'p_text',
+            'rules' => 'required|min_length[1]|max_length[5000]'
+        )
+    ),
+    'delete_group_member' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'group_id',
+            'label' => 'group_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'member_id',
+            'label' => 'member_id',
+            'rules' => 'required|min_length[1]'
+        )
+    ),
     'check_new_info' =>array(
         array(
             'field' => 'id',
@@ -47,6 +149,13 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => 'user_id',
+            'rules' => 'required'
+        ),
+    ),
+    'search' =>array(
+        array(
+            'field' => 'text',
+            'label' => 'text',
             'rules' => 'required'
         ),
     ),
