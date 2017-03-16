@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://localhost:88/index.php/group/user_manage
+接口URL：http://dev.wuanlife.com:800/group/user_manage
 
 请求方式：GET
 
@@ -33,7 +33,7 @@
 
 显示星球id=1的用户列表
 
-http://localhost:88/index.php/group/user_manage?user_id=1&group_id=1
+http://dev.wuanlife.com:800/group/user_manage?user_id=1&group_id=1
 
     JSON：
     {
