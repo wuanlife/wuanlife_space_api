@@ -1,10 +1,10 @@
-#post.get_mygroup_post
+# post.get_mygroup_post
 
 我的星球页面帖子显示
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/post/get_mygroup_post
+接口URL：http://dev.wuanlife.com:800/post/get_mygroup_post
 
 请求方式：GET
 
@@ -15,7 +15,8 @@
 |user_id	|int|	可选|	-|	用户ID|
 |pn|	int	|不必须	|1|	第几页|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |post.post_id	|	int	|帖子ID|
@@ -30,11 +31,11 @@
 |user_name   |string    |当前用户名|
 
 
-##示例
+## 示例
 
 显示用户ID为1的第1页帖子
 
-http://localhost/wuanlife_api/index.php/post/get_mygroup_post?user_id=1&pn=1
+http://dev.wuanlife.com:800/post/get_mygroup_post?user_id=1&pn=1
 
     JSON:
     {

@@ -1,8 +1,8 @@
-#post.delete_post_reply
+# post.delete_post_reply
 
 删除帖子回复接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/?service=Post.DeletePostReply
 
@@ -16,14 +16,14 @@
 |post_id    |整型   |必须         |      |最小：1     |帖子id|
 |p_floor    |整型   |必须         |      |最小：1     |帖子楼层|
 
-##返回说明：
+## 返回说明：
 
 |参数        |类型   |说明|
 |:--|:--|:--|
 |code            |整型   |操作码，1表示删帖成功，0表示删帖失败|
 |msg             |字符串  |提示信息|
 
-##示例：
+## 示例：
 
 将帖子id为1的帖子删除
 

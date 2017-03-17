@@ -1,8 +1,8 @@
-#post.collect_post
+# post.collect_post
 
 收藏帖子接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/?service=Post.CollectPost
 
@@ -15,14 +15,14 @@
 |user_id    |字符串   |必须    |           |最小：1     |用户id|
 |post_id    |字符串   |必须         |      |最小：1     |帖子id|
 
-##返回说明：
+## 返回说明：
 
 |参数        |类型   |说明|
 |:--|:--|:--|
 |code            |整型   |操作码，1表示收藏成功，0表示收藏失败|
 |msg             |字符串  |提示信息|
 
-##示例：
+## 示例：
 
 将帖子id为2的帖子收藏
 

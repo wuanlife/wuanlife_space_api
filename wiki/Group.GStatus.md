@@ -1,10 +1,10 @@
-#group.g_status
+# group.g_status
 
 判断用户是否加入该星球
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/g_status
+接口URL：http://dev.wuanlife.com:800/group/g_status
 请求方式：GET
 
 参数说明：
@@ -14,17 +14,18 @@
 |user_id|整形|必须|-|用户ID|
 |group_id|整型|必须|-|星球ID|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |code|整型|操作码，1表示创建成功，0表示创建失败|
 |msg                  |字符串 |提示信息|
 
-##示例
+## 示例
 
 判断用户是否加入该星球，1表示已加入，0表示未加入
 
-http://localhost/wuanlife_api/index.php/group/g_status?user_id=1&group_id=4
+http://dev.wuanlife.com:800/group/g_status?user_id=1&group_id=4
 
     JSON:
     {

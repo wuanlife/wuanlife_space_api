@@ -1,8 +1,8 @@
-#post.approve_post
+# post.approve_post
 
 点赞帖子及其回复
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/?service=Post.ApprovePost
 
@@ -16,14 +16,14 @@
 |post_id|   整型| 必须     ||           最小：1  |  帖子ID|
 |floor|   整型|可选|默认：1|           最小：1  |  帖子楼层|
 
-##返回说明
+## 返回说明
 |参数|        类型|   说明|
 |:--|:--|:--|
 |code  |  整型  |操作码，1表示操作成功，0表示操作失败|
 |msg |字符串 |提示信息|
 
 
-##示例
+## 示例
 
 给帖子id=1的帖子点赞
 

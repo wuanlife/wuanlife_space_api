@@ -1,10 +1,10 @@
-#post.get_group_post
+# post.get_group_post
 
 星球页面帖子显示
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/post/get_group_post
+接口URL：http://dev.wuanlife.com:800/post/get_group_post
 
 请求方式：GET
 
@@ -16,7 +16,7 @@
 |user_id|int|不必须|-|用户ID|
 |pn|int|不必须|1|第几页|
 
-##返回说明
+## 返回说明
 
 |参数|类型|说明|
 |:--|:--|:--|
@@ -37,11 +37,11 @@
 |current_page	|int	|当前页|
 
 
-##示例
+## 示例
 
 显示星球ID为16的帖子
 
-http://localhost/wuanlife_api/index.php/post/get_group_post?group_id=1&pn=1
+http://dev.wuanlife.com:800/post/get_group_post?group_id=1&pn=1
 
     JSON:
     {

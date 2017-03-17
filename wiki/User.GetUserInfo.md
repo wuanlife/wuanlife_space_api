@@ -1,10 +1,10 @@
-#user.get_user_info
+# user.get_user_info
 
 获取用户详情
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/user/get_user_info
+接口URL：http://dev.wuanlife.com:800/user/get_user_info
 
 请求方式：GET
 
@@ -14,7 +14,8 @@
 |:--|:--|:--|:--|
 |user_id|int|必须|用户ID|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |user_id|int|用户id|
@@ -27,11 +28,11 @@
 |mail_checked|	string|	是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
 |profile_picture|string|用户头像|
 
-##示例
+## 示例
 
 获取用户ID为1的用户信息
 
-http://localhost/wuanlife_api/index.php/user/get_user_info?user_id=1
+http://dev.wuanlife.com:800/user/get_user_info?user_id=1
 
     JSON
     {

@@ -1,8 +1,8 @@
-#post.unlock_post
+# post.unlock_post
 
 解锁帖子接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/?service=Post.UnlockPost
 
@@ -15,7 +15,7 @@
 |post_id    |整型   |必须         |      |             |帖子id|
 |user_id    |整型   |必须         |      |             |用户id|
 
-##返回说明：
+## 返回说明：
 
 |参数        |类型   |说明|
 |:--|:--|:--|

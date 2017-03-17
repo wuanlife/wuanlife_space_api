@@ -1,8 +1,8 @@
-#group.get_collect_post
+# group.get_collect_post
 
 获取用户收藏帖子的接口
 
-##接口调用请求说明
+## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/?service=Post.GetCollectPost
 
@@ -15,7 +15,7 @@
 |user_id        |整型   |必须          ||                              |用户id|
 |pn       |整型   |可选          | 1   |                          |当前页面|
 
-##返回说明
+## 返回说明
 
 |返回字段                | 类型   |     说明|
 |:--|:--|:--|
@@ -29,7 +29,7 @@
 |page_count           |     int     |    总页数|
 |current_page        |      int   |      当前页|
 
-##示例
+## 示例
 
 显示用户ID为1所加入的星球
 

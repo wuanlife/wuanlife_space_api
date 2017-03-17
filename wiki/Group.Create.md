@@ -1,10 +1,10 @@
-#group.create
+# group.create
 
 星球创建接口-用于创建星球
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/create
+接口URL：http://dev.wuanlife.com:800/group/create
 
 请求方式：GET
 
@@ -18,7 +18,8 @@
 |g_introduction|字符串|可选||星球简介|
 |private|整型|可选||私密，1为私密0为不私密|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |code|整型|操作码，1表示创建成功，0表示创建失败|
@@ -31,11 +32,11 @@
 |msg                  |字符串 |提示信息|
 |info.authorization   |字符串 |权限，01表示创建者，02表示管理员，03表示会员|
 
-##示例
+## 示例
 
 创建星球
 
-http://localhost/wuanlife_api/index.php/group/create?user_id=1&g_name=12chhac
+http://dev.wuanlife.com:800/group/create?user_id=1&g_name=12chhac
 
     JSON:
     {

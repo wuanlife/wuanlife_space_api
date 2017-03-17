@@ -1,10 +1,10 @@
-#post.get_index_post
+# post.get_index_post
 
 首页帖子接口-用于展示首页帖子
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/post/get_index_post
+接口URL：http://dev.wuanlife.com:800/post/get_index_post
 
 请求方式：GET
 
@@ -15,7 +15,8 @@
 |user_id|   整型| 可选     ||           最小：1  |  用户ID|
 |pn	|int|	false|	1	|第几页|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |posts.post_id	|	int|	帖子ID|
@@ -31,11 +32,11 @@
 |page_count	|int|	总页数|
 |current_page|	int	|当前页|
 
-##示例
+## 示例
 
 显示第1页帖子
 
-http://localhost/wuanlife_api/index.php/post/get_index_post?user_id=1&pn=1
+http://dev.wuanlife.com:800/post/get_index_post?user_id=1&pn=1
 
     JSON:
     {

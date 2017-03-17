@@ -1,10 +1,10 @@
-#group.get_group_info
+# group.get_group_info
 
 获取星球详情
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/get_group_info
+接口URL：http://dev.wuanlife.com:800/group/get_group_info
 请求方式：GET
 
 参数说明：
@@ -14,7 +14,8 @@
 |group_id|int|必须|星球id|
 |user_id|int|必须|用户ID|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |group_id|int|	星球id|
@@ -24,11 +25,11 @@
 |creator|int|是否为创建者，1为创建者，0不是创建者|
 
 
-##示例
+## 示例
 
 获取用户ID为2星球ID为1的星球信息
 
-http://localhost/wuanlife_api/index.php/group/get_group_info?group_id=1&user_id=2
+http://dev.wuanlife.com:800/group/get_group_info?group_id=1&user_id=2
 
     JSON
     {

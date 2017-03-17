@@ -1,10 +1,10 @@
-#user.login
+# user.login
 
 登录接口-用于验证并登录用户
 
-##接口调用请求说明
+## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/user/login
+接口URL：http://dev.wuanlife.com:800/user/login
 
 请求方式：GET
 
@@ -15,7 +15,8 @@
 |email     |  字符串| 必须    |      最小：1|           用户邮箱|
 |password  |  字符串 |必须     |       最小：1|         用户密码|
 
-##返回说明
+## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |msg        |     字符串 |提示信息|
@@ -25,11 +26,11 @@
 |info.user_name |  字符串 |用户昵称|
 |info.user_email    |  字符串 |用户邮箱|
 
-##示例
+## 示例
 
 注册账号
 
-http://localhost/wuanlife_api/index.php/user/login?email=ch1111ac&password=1
+http://dev.wuanlife.com:800/user/login?email=ch1111ac&password=1
 
     JSON:
     {

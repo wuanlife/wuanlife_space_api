@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/group/alter_group_info
+接口URL：http://dev.wuanlife.com:800/group/alter_group_info
 
 请求方式：GET
 
@@ -18,6 +18,7 @@
 |g_image|string|可选|星球图片|
 
 ## 返回说明
+
 |参数|类型|说明|
 |:--|:--|:--|
 |code	|	int	|1代表修改成功,0代表修改失败|
@@ -28,7 +29,7 @@
 
 修改用户ID为1星球ID为2的星球信息
 
-http://localhost/wuanlife_api/index.php/group/alter_group_info?group_id=1&user_id=2
+http://dev.wuanlife.com:800/group/alter_group_info?group_id=1&user_id=2
 
      JSON:
     {
