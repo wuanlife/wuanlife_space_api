@@ -11,7 +11,11 @@ class Post extends CI_Controller
         $this->load->model('User_model');
         $this->load->model('Group_model');
         $this->load->model('Common_model');
-        $this->load->helper('url_helper');
+        $this->load->helper(array('form', 'url','url_helper'));
+        $this->load->library('form_validation');
+        $this->form_validation->set_message('required', '{field} 参数是必填选项.');
+        $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
+        $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
     }
     /**
      * @param $data
@@ -40,6 +44,9 @@ class Post extends CI_Controller
             'post_id' =>$this->input->get('post_id'),
             'user_id' =>$this->input->get('user_id'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_post_base') == FALSE)
+            $this->response(null,400,validation_errors());
         $model = $this->Post_model;
         $common_model = $this->Common_model;
         $rs = $model->get_post_base($data['post_id'],$data['user_id']);
@@ -115,6 +122,9 @@ class Post extends CI_Controller
             'user_id' =>$this->input->get('user_id'),
             'pn'      =>$this->input->get('pn'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_post_base') == FALSE)
+            $this->response(null,400,validation_errors());
         $data['pn'] = empty($data['pn'])?1:$data['pn'];
         $model = $this->Post_model;
         $common = $this->Common_model;
@@ -139,11 +149,13 @@ class Post extends CI_Controller
      */
     public function post_reply(){
         $data = array(
-            'post_base_id' =>$this->input->get('post_id'),
-            'user_base_id' =>$this->input->get('user_id'),
-            'text'  =>$this->input->get('p_text'),
-            'reply_floor'=>$this->input->get('reply_floor')
+            'post_base_id' =>$this->input->post('post_id'),
+            'user_base_id' =>$this->input->post('user_id'),
+            'text'  =>$this->input->post('p_text'),
+            'reply_floor'=>$this->input->post('reply_floor')
         );
+        if ($this->form_validation->run('post_reply') == FALSE)
+            $this->response(null,400,validation_errors());
         $exist =$this->Common_model->judge_post_exist($data['post_base_id']);
         $lock=$this->Common_model->judge_post_lock($data['post_base_id']);
         if($exist&&!$lock) {
@@ -174,11 +186,13 @@ class Post extends CI_Controller
      */
     public function edit_post(){
         $data = array(
-            'post_base_id' =>$this->input->get('post_id'),
-            'user_base_id' =>$this->input->get('user_id'),
-            'text'  =>$this->input->get('p_text'),
-            'title'=>$this->input->get('p_title')
+            'post_base_id' =>$this->input->post('post_id'),
+            'user_base_id' =>$this->input->post('user_id'),
+            'text'  =>$this->input->post('p_text'),
+            'title'=>$this->input->post('p_title')
         );
+        if ($this->form_validation->run('edit_post') == FALSE)
+            $this->response(null,400,validation_errors());
         $poster = $this->Common_model->judge_post_creator($data['user_base_id'],$data['post_base_id']);
         if($poster){
             $msg='编辑成功';
@@ -362,5 +376,31 @@ class Post extends CI_Controller
     }
 
 
+
+    /**
+     * 取消置顶帖子
+     * @desc 帖子取消置顶
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string msg 提示信息
+     */
+    public function post_unsticky(){        
+        $this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $rs = array();
+
+
+        $rs = $this->Post_model->post_unsticky();
+        if($rs)
+        {
+            $data['code'] = 1;
+            $msg = "操作成功";
+        }
+        else
+        {
+            $data['code'] = 0;
+            $msg = "操作失败";
+        }
+        $this->response($data,200,$msg);
+    }
 
 }

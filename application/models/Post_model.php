@@ -512,4 +512,23 @@ class Post_model extends CI_Model
         }
     }
 
+    public function post_unsticky(){
+        $data = array(
+                'post_id' => $this->input->post('post_id'),
+        );
+        $param = array(
+                'sticky' => 0,
+        );
+        
+        if(count($data) > 0)
+        {
+            $this->db->where('id',$data['post_id']);
+            $this->db->update('post_base', $param);
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
 }
