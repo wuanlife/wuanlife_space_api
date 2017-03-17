@@ -5,6 +5,7 @@
 ## 接口调用请求说明
 
 接口URL：http://dev.wuanlife.com:800/group/get_group_info
+
 请求方式：GET
 
 参数说明：

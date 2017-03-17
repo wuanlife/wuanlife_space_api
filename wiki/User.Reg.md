@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://localhost/wuanlife_api/index.php/user/reg
+接口URL：http://dev.wuanlife.com:800/user/reg
 
 请求方式：GET
 
@@ -31,7 +31,7 @@
 
 注册账号(以下链接将提示该邮箱已注册！)
 
-http://localhost/wuanlife_api/index.php/user/reg?user_name=dfgsdsd&user_email=1112&password=1
+http://dev.wuanlife.com:800/user/reg?user_name=dfgsdsd&user_email=1112&password=1
 
     JSON:
     {
