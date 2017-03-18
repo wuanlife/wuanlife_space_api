@@ -340,21 +340,13 @@ class Post extends CI_Controller
 
     }
 
-
-    public function test(){
-        $this->load->helper(array('form', 'url'));
-        $this->load->view('test');
-    }
     /**
      * 置顶帖子
      * @desc 帖子置顶
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function post_sticky(){
-        $this->load->helper(array('form', 'url'));
-        $this->load->library('form_validation');
-
+    public function sticky_post(){
         $rs = $this->Post_model->post_sticky();
         if($rs)
         {
@@ -369,18 +361,13 @@ class Post extends CI_Controller
         $this->response($data,200,$msg);
     }
 
-
-
     /**
      * 取消置顶帖子
      * @desc 帖子取消置顶
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function post_unsticky(){        
-        $this->load->helper(array('form', 'url'));
-        $this->load->library('form_validation');
-
+    public function unsticky_post(){        
         $rs = $this->Post_model->post_unsticky();
         if($rs)
         {
@@ -582,6 +569,5 @@ class Post extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
-
 
 }
