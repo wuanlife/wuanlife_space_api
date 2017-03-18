@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.DeletePost
+接口URL：http://dev.wuanlife.com:800/post/delete_post
 
 请求方式：POST
 
