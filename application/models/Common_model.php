@@ -308,6 +308,20 @@ class Common_model extends CI_Model
         return $re;
     }
 
+    public function ifexist_collect_post($data){
+        $sql=$this->db->select('post_base_id')
+            ->from('user_collection')
+            ->where('post_base_id',$data['post_id'])
+            ->where('user_base_id',$data['user_id'])
+            ->get()
+            ->row_array();
+        if($sql){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+
 
 
 
