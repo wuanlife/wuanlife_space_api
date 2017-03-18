@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.UnStickyPost
+接口URL：http://dev.wuanlife.com:800/post/unsticky_post
 
 请求方式：POST
 
@@ -26,7 +26,7 @@
 
 置顶帖子id为1的帖子
 
-http://dev.wuanlife.com:800/?service=Post.UnStickyPost&user_id=1&post_id=1
+http://dev.wuanlife.com:800/post/unsticky_post
 
     JSON:
     {
