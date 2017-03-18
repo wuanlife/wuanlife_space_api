@@ -26,7 +26,7 @@
 
 将帖子id为1的帖子删除
 
-http://dev.wuanlife.com:800/?service=Post.DeletePost&user_id=1&post_id=1
+http://dev.wuanlife.com:800/post/delete_post
 
     JSON:
     {
