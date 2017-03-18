@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.LockPost
+接口URL：http://dev.wuanlife.com:800/post/lock_post
 
 请求方式：POST
 
@@ -26,7 +26,7 @@
 
 将帖子id为1的帖子锁定
 
-http://dev.wuanlife.com:800/?service=Post.LockPost&post_id=1&user_id=1
+http://dev.wuanlife.com:800/post/lock_post
 
     JSON:
     {
