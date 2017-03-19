@@ -5,8 +5,7 @@
 
 接口URL：http://dev.wuanlife.com:800/?service=User.CheckMail
 
-请求方式：POST
-
+请求方式：GET
 参数说明：
 
 |参数名字  |  类型  |是否必须|    默认值    |范围  |      说明|
@@ -24,7 +23,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com800service=User.CheckMail&Email=1195417752
+http://dev.wuanlife.com:800/user/check_mail_1?user_email=1195417752
 
     JSON
     {
