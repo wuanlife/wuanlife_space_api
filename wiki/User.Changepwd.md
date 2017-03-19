@@ -6,7 +6,7 @@
 
 接口URL：http://dev.wuanlife.com:800/user/change_pwd
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -27,7 +27,7 @@
 
 ## 示例
 
-修改用户id=1的密码
+修改用户id=85的密码
 
 http://dev.wuanlife.com:800/user/change_pwd&user_id=85&pwd=123321&newpwd=123123&checkNewpwd=123123
 
