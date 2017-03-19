@@ -454,11 +454,16 @@ class Group_model extends CI_Model
         $this->db->insert('post_detail',$d_data);
         return $d_data['post_base_id'];
     }
-
-
-
-
-
+/**
+ * 判断用户是否登陆
+ */
+public function u_status($user_id)
+{
+    if(isset($_COOKIE['user_name'])&&$_COOKIE['user_name'] = $data)
+    {
+        
+    }
+}
 
 
 

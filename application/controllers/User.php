@@ -628,11 +628,10 @@ class User extends CI_Controller
             'user_email'   =>$this->input->get('user_email'),
             'num'     => 1,
             );
-        $re = array($data);
+        $re = array('code' =>0);
         
         $code = $this->User_model->code();//生成5位验证码
         $rs = $this->User_model->userEmail($data);
-        //print_r($rs);
         if(!$rs)
         {
             $msg = '用户名不存在，请确认！';
@@ -640,12 +639,10 @@ class User extends CI_Controller
         }
         else
         {
-            //print_r($data);
-           // echo time();
             $row = $this->User_model->getcode($data);
-            $Boolean = time()-$row['get_pass_time']>910*10*60;
-           // print_r($re);
-            if($Boolean)
+            $Boolean = time()-$row['get_pass_time']>90*10*60;
+
+            if(!$Boolean)
             {
                 $msg = '验证码已过期，请重新获取！';
                 return $this->response($re,200,$msg);
@@ -659,10 +656,11 @@ class User extends CI_Controller
                     {
                         $psw = array('password'=>md5($data['password']));
                         $code_p = array('used'=>1);
-                        $this->User_model->repsw($psw,$data); //更新密码
+
+                        $this->User_model->repsw($data); //更新密码
                         $this->User_model->updatecode($code_p,$data); //更新验证码
-                        // $this->code = 1;
                         $msg = '密码修改成功！';
+                        $re['code'] = 1;
                         return $this->response($re,200,$msg);
                     }
                     else
@@ -679,7 +677,6 @@ class User extends CI_Controller
             }
         }
 
-        //return $this->response($re,200,$msg);
     }        
     
 
@@ -698,8 +695,8 @@ class User extends CI_Controller
         if($this->User_model->get_user_information($data['user_id']))
         {
             $info = $this->User_model->get_user_information($data['user_id']);
-            // print_r($info);
-            if($data['pwd'] == $info['password'])
+            //print_r($info);
+            if(md5($data['pwd']) == $info['password'])
             {
                 if($data['new_pwd'] ==$data['check_new_pwd'])
                 {

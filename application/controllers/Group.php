@@ -592,6 +592,37 @@ class Group extends CI_Controller
         $this->response($rs,200,$msg);
     }
 
+/**
+ *
+ * 判断用户登陆状态-判断是否登录
+ */
+    public function check_status($user_id=null){
+        //setcookie('user_name','lwy_test');
+        $rs = array();
+        $user_id = $this->input->get('user_id');
+        
+        $dat = $this->User_model->get_user_information($user_id);
+        //print_r($dat);
+
+        if(isset($_COOKIE['user_name'])&&$_COOKIE['user_name'] == $dat['nickname'])
+        {
+            $rs['code'] = 1;
+            $rs['info'] = array(
+                'user_id' => $dat['id'],
+                'user_name' =>$dat['nickname']);
+            $msg = "用户已登陆";
+        }
+        else
+        {
+            $code = 0;
+            $rs['info'] = array(
+                'user_id' => $dat['id'],
+                'user_name' =>$dat['nickname']);
+            $msg = "用户未登录";
+        }
+        $this->response($rs,200,$msg);
+       
+    }
 
 
 

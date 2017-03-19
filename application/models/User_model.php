@@ -295,7 +295,7 @@ class User_model extends CI_Model
  * @return [type]       [description]
  */
     public function userEmail($data){
-        
+
         $user_email = $data['user_email'];
         
         $rs = $this->db->select('*')->from('user_base')->where("email = '$user_email'")->get()->row_array();;
@@ -320,15 +320,19 @@ class User_model extends CI_Model
     public function repsw($data){
         $sql = $this->User_model->userEmail($data);
         
-        $password= $data['password'];
+        $password = $data['password'];
+        $password = md5($password);
         $id = $sql['id'];
-        $sqla = $this->db->query("update user_base set password = $password where id = $id");
+
+        $this->db->query("update user_base set password = '$password' where id = $id");
     }
 
     /*
  * 更新数据库中的验证码
  */
     public function updatecode($i_code,$data){
+
+        $i_code = $data['i_code'];
         $sql = $this->User_model->userEmail($data);
         $id = $sql['id'];
             $sqla = $this->db->query("update user_code set used = 0, code = $i_code where user_base_id = $id");
