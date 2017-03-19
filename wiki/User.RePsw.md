@@ -35,8 +35,7 @@ http://dev.wuanlife.com:800/user/repsw?user_email=1195417752@qq.com&code=20759&p
     {
     "ret": 200,
     "data": {
-        "msg": "验证码不正确，请确认！",
-        "code": 0
+        "code": 1
     },
-    "msg": ""
+    "msg": "密码修改成功！"
     }
