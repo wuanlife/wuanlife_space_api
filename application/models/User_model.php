@@ -404,6 +404,38 @@ class User_model extends CI_Model
         
     }
 
+    public function judge_create($user_id,$group_id){
+        $sql=$this->db->select('user_base_id')
+            ->from('group_detail')
+            ->where('user_base_id',$user_id)
+            ->where('group_base_id',$group_id)
+            ->where('authorization','01')
+            ->get('')
+            ->row_array();
+        if(!empty($sql)){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+    public function judge_admin($user_id){
+        $sql=$this->db->select('authorization')
+            ->from('user_detail')
+            ->where('user_base_id',$user_id)
+            ->where('authorization','02')
+            ->get()
+            ->row_array();
+        if(!empty($sql)){
+                $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+
 
 
 

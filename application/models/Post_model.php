@@ -214,12 +214,13 @@ class Post_model extends CI_Model
         }
         $start=($data['page']-1)*$num;
         $rs['currentPage'] = (int)$data['page'];
-        $sql = "SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS groupName,(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approvednum "
-            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,post_approved pa '
-            . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
-            . 'GROUP BY pb.id '
-            . 'ORDER BY MIN(pd.create_time) DESC '
-            . "LIMIT $start,$num ";
+        $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name,'
+            ."(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_id=pb.id AND approved=1) AS approvednum "
+             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,post_approved pa '
+             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
+             . 'GROUP BY pb.id '
+             . 'ORDER BY MIN(pd.create_time) DESC '
+             . "LIMIT $start,$num ";
         $this->db->flush_cache();
         $rs['posts']=$this->db->query($sql)->result_array();
         foreach ($rs['posts'] as $key => $value) {
@@ -365,7 +366,7 @@ class Post_model extends CI_Model
         }
         $start=($page-1)*$num;
         $rs['currentPage'] = (int)$page;
-        $sql = 'SELECT  pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name '
+        $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name '
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 AND gb.delete=0 '
             . "AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =$user_id )"
@@ -494,17 +495,16 @@ class Post_model extends CI_Model
 
     public function post_sticky(){
         $data = array(
-                'post_id' => $this->input->post('post_id'),
+                'post_id' => $this->input->get('post_id'),
         );
         $param = array(
                 'sticky' => 1,
         );
-        
-        if(count($data) > 0)
+        if(!empty($data['post_id']))
         {
             $this->db->where('id',$data['post_id']);
-            $this->db->update('post_base', $param);
-            return TRUE;
+            $re=$this->db->update('post_base', $param);
+            return $re;
         }
         else
         {
@@ -514,21 +514,233 @@ class Post_model extends CI_Model
 
     public function post_unsticky(){
         $data = array(
-                'post_id' => $this->input->post('post_id'),
+                'post_id' => $this->input->get('post_id'),
         );
         $param = array(
                 'sticky' => 0,
         );
         
-        if(count($data) > 0)
+        if(!empty($data['post_id']))
         {
             $this->db->where('id',$data['post_id']);
-            $this->db->update('post_base', $param);
-            return TRUE;
+            $re=$this->db->update('post_base', $param);
+            return $re;
         }
         else
         {
             return FALSE;
         }
     }
+
+    public function judge_poster($user_id,$post_id){
+        $sql=$this->db->select('floor')
+            ->from('post_detail')
+            ->where('user_base_id',$user_id)
+            ->where('post_base_id',$post_id)
+            ->get()
+            ->row_array();
+        if($sql['floor']==1){
+            $rs=1;
+        }else{
+            $rs=0;
+        }
+        return $rs;
+    }
+
+    public function delete_post($data){
+        $d_data = array(
+            '`delete`' => '1',
+        );
+        $this->db->where('id', $data['post_id'])
+            ->update('post_base',$d_data);
+        $rs['code']=1;
+        return $rs;
+    }
+
+    public function lock_post(){
+        $data = array(
+                'post_id' => $this->input->get('post_id'),
+        );
+        $param = array(
+                'lock' => 1,
+        );
+        if(!empty($data['post_id']))
+        {
+            $this->db->where('id',$data['post_id']);
+            $re=$this->db->update('post_base', $param);
+            return $re;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+        public function unlock_post(){
+        $data = array(
+                'post_id' => $this->input->get('post_id'),
+        );
+        $param = array(
+                'lock' => 0,
+        );
+        if(!empty($data['post_id']))
+        {
+            $this->db->where('id',$data['post_id']);
+            $re=$this->db->update('post_base', $param);
+            return $re;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function exist_collect_post($data){
+        $time=time();
+        $d_data=array('delete' => '0',
+            'create_time'=>$time);
+        $re=$this->db->where('post_base_id',$data['post_id'])
+            ->where('user_base_id',$data['user_id'])
+            ->update('user_collection',$d_data);
+        return $re;
+    }
+
+    public function collect_post($data){
+        $i_data=array(
+            'post_base_id'=>$data['post_id'],
+            'user_base_id'=>$data['user_id'],
+            'create_time'=>time(),
+        );
+        $re=$this->db->insert('user_collection',$i_data);
+        return $re;
+    }
+
+    public function get_collect_post($data){
+        $num=20;
+        if($data['user_id']==null){
+            $data['user_id']=0;
+        }
+        $user_id=$data['user_id'];
+        $rs=array();
+        $sql = "SELECT ceil(count(*)/$num) AS pageCount "
+             . 'FROM user_collection '
+             . "WHERE user_collection.user_base_id='$user_id' AND user_collection.delete=0 ";
+        $pageCount=$this->db->query($sql)->result_array()[0];
+
+        $rs['pageCount'] = (int)$pageCount['pageCount'];
+        if ($rs['pageCount'] == 0 ){
+            $rs['pageCount']=1;
+        }
+        if($data['page'] > $rs['pageCount']){
+            $data['page'] = $rs['pageCount'];
+        }elseif ($data['page']==null){
+            $data['page']=1;
+        }
+        $start=($data['page']-1)*$num;
+        $rs['currentPage'] = (int)$data['page'];
+        $sql = 'SELECT pb.id AS post_id,uc.create_time,pb.title AS post_name,gb.id AS gb_id,gb.name AS group_name,ub.nickname AS user_name,pb.delete '
+             . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub '
+             . "WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=$user_id AND uc.delete=0 AND pb.user_base_id=ub.id "
+              . "LIMIT $start,$num ";
+        $this->db->flush_cache();
+        $rs['posts']=$this->db->query($sql)->result_array();
+        foreach ($rs['posts'] as $key => $value) {
+            $rs['posts']["$key"]['create_time']=date('Y-m-d H:i:s',$rs['posts']["$key"]['create_time']);
+        }
+        return $rs;
+    }
+
+    public function delete_collect_post($data){
+        $param = array(
+                'delete' => 1,
+        );
+        if(!(empty($data['post_id'])||empty($data['user_id'])))
+        {
+            $this->db->where('post_base_id',$data['post_id'])
+                ->where('user_base_id',$data['user_id']);
+            $re=$this->db->update('user_collection', $param);
+            return $re;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+
+    public function get_approve_post($data){
+      $sql=$this->db->select('*')
+          ->from('post_approved')
+          ->where('post_base_id',$data['post_id'])
+          ->where('user_base_id',$data['user_id'])
+          ->where('floor',$data['floor'])
+          ->get()
+          ->row_array();
+      return $sql;
+    }
+
+    public function update_approve_post($data){
+        $approved = $this->get_approve_post($data);
+        if($approved['approved']){
+            $field = array('approved'=>0);
+            $rs['code'] = 2;
+            $rs['msg'] = '取消点赞成功';
+        }else{
+            $field = array('approved'=>1);
+            $rs['code'] = 1;
+            $rs['msg'] = '点赞成功';
+        }
+        $sql=$this->db->where('post_base_id',$data['post_id'])
+            ->where('user_base_id',$data['user_id'])
+            ->where('floor',$data['floor'])
+            ->update('post_approved',$field);
+        if($sql){
+            return $rs;
+        }else{
+            $rs['code'] = 0;
+            $rs['msg'] = '操作失败';
+            return $rs;
+        }
+    }
+    public function add_approve_post($data){
+        $field = array(
+                    'user_base_id' => $data['user_id'],
+                    'post_base_id' => $data['post_id'],
+                    'floor'   => $data['floor'],
+                    'approved' => 1,
+        );
+        $sql=$this->db->insert('post_approved',$field);
+        if($sql){
+            $rs['code'] = 1;
+            $rs['msg']  = '点赞成功';
+        }else{
+            $rs['code'] = 0;
+            $rs['msg']  = '点赞失败';
+        }
+        return $rs;
+    }
+
+    public function judge_post_reply_user($user_id,$post_id,$floor){
+        $sql=$this->db->select('post_base_id')
+            ->from('post_detail')
+            ->where('post_base_id',$post_id)
+            ->where('user_base_id',$user_id)
+            ->where('floor',$floor)
+            ->get()
+            ->row_array();
+        return $sql;
+    }
+
+
+    public function delete_post_reply($data){
+        $d_data=array(
+            'delete'=>1,
+        );
+        $this->db->where('post_base_id',$data['post_id'])
+            ->where('floor',$data['floor'])
+            ->update('post_detail',$d_data);
+        $rs['code']=1;
+        return $rs;
+    }
+
+
 }

@@ -340,42 +340,26 @@ class Post extends CI_Controller
 
     }
 
-
-    public function test(){
-        $this->load->helper(array('form', 'url'));
-        $this->load->view('test');
-    }
     /**
      * 置顶帖子
      * @desc 帖子置顶
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function post_sticky(){        
-        $this->load->helper(array('form', 'url'));
-        $this->load->library('form_validation');
-        $rs = array();
-
-
+    public function sticky_post(){
         $rs = $this->Post_model->post_sticky();
         if($rs)
         {
-            $data = array(
-                    'code'       => 1,
-                    'msg'       => "操作成功",
-            );
+            $data['code'] = 1;
+            $msg = "置顶帖子成功!";
         }
         else
         {
-            $data = array(
-                    'code'       => 0,
-                    'msg'       => "操作失败",
-            );
+            $data['code'] = 0;
+            $msg = "操作过于频繁!";
         }
-        $this->response($data,200,null);
+        $this->response($data,200,$msg);
     }
-
-
 
     /**
      * 取消置顶帖子
@@ -383,24 +367,207 @@ class Post extends CI_Controller
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function post_unsticky(){        
-        $this->load->helper(array('form', 'url'));
-        $this->load->library('form_validation');
-        $rs = array();
-
-
+    public function unsticky_post(){        
         $rs = $this->Post_model->post_unsticky();
         if($rs)
         {
             $data['code'] = 1;
-            $msg = "操作成功";
+            $msg = "取消置顶帖子成功!";
         }
         else
         {
             $data['code'] = 0;
-            $msg = "操作失败";
+            $msg = "操作过于频繁!";
         }
         $this->response($data,200,$msg);
+    }
+
+
+    /**
+     * 删除帖子
+     * @desc 删除帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function delete_post(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'post_id'=>$this->input->get('post_id'),
+        );
+        $sqla=$this->Post_model->get_group_id($data['post_id']);
+        $sqlb=$this->User_model->judge_create($data['user_id'],$sqla);
+        $sqlc=$this->Post_model->judge_poster($data['user_id'],$data['post_id'],$sqla);
+        $sqld=$this->User_model->judge_admin($data['user_id']);
+        if($sqlb||$sqlc||$sqld){
+            $re=$this->Post_model->delete_post($data);
+            $msg='成功删除帖子';
+        }else{
+            $re['code']=0;
+            $msg='仅星球创建者和发帖者和管理员能删除帖子!';
+        }
+        $this->response($re,200,$msg);
+    }
+
+    /**
+     * 锁定帖子
+     * @desc 锁定帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function lock_post(){
+        $rs = $this->Post_model->lock_post();
+        if($rs)
+        {
+            $data['code'] = 1;
+            $msg = "锁定帖子成功!";
+        }
+        else
+        {
+            $data['code'] = 0;
+            $msg = "操作过于频繁!";
+        }
+        $this->response($data,200,$msg);
+    }
+
+    /**
+     * 解锁帖子
+     * @desc 解锁帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function unlock_post(){
+        $rs = $this->Post_model->unlock_post();
+        if($rs)
+        {
+            $data['code'] = 1;
+            $msg = "解除锁定帖子成功!";
+        }
+        else
+        {
+            $data['code'] = 0;
+            $msg = "操作过于频繁!";
+        }
+        $this->response($data,200,$msg);
+    }
+
+
+    /**
+     * 收藏帖子
+     * @desc 收藏帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function collect_post(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'post_id'=>$this->input->get('post_id'),
+        );
+        $delete=$this->Common_model->ifexist_collect_post($data);
+        if($delete){
+            $rs=$this->Post_model->exist_collect_post($data);
+            if($rs){
+                $info['code']=1;
+                $msg="收藏成功！";
+            }else{
+                $info['code']=0;
+                $msg="操作过于频繁！";
+            }
+            $this->response($info,200,$msg);
+        }else{
+            $rs=$this->Post_model->collect_post($data);
+            if($rs) {
+                $info['code']=1;
+                $msg="收藏成功！";
+            }else{
+                $info['code']=0;
+                $msg="操作过于频繁！";
+            }
+            $this->response($info,200,$msg);
+        }
+    }
+
+    /**
+     * 获取收藏的帖子
+     * @desc 获取收藏的帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function get_collect_post(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'page'=>$this->input->get('page'),
+        );
+        $re=$this->Post_model->get_collect_post($data);
+        $this->response($re,200,null);
+    }
+
+    /**
+     * 删除收藏帖子
+     * @desc 删除收藏帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function delete_collect_post(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'post_id'=>$this->input->get('post_id'),
+        );
+        $rs=$this->Post_model->delete_collect_post($data);
+        if($rs){
+            $info['code']=1;
+            $msg="删除收藏成功！";
+        }else{
+            $info['code']=0;
+            $msg="操作过于频繁！";
+        }
+        $this->response($info,200,$msg);
+    }
+
+	 /**
+     * 点赞帖子
+     * @desc 点赞帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function approve_post(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'post_id'=>$this->input->get('post_id'),
+            'floor'=>$this->input->get('floor'),
+        );
+        $rs=$this->Post_model->get_approve_post($data);
+        if($rs){
+            $rs=$this->Post_model->update_approve_post($data);
+        }else{
+            $rs=$this->Post_model->add_approve_post($data);
+        }
+        $this->response($rs,200,null);
+    }
+
+    /**
+     * 删除帖子回复
+     * @desc 删除帖子回复
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function delete_post_reply(){
+        $data=array(
+            'user_id'=>$this->input->get('user_id'),
+            'post_id'=>$this->input->get('post_id'),
+            'floor'=>$this->input->get('floor'),
+        );
+        $sqla=$this->Post_model->get_group_id($data['post_id']);
+        $sqlb=$this->User_model->judge_create($data['user_id'],$sqla);
+        $sqlc=$this->Post_model->judge_post_reply_user($data['user_id'],$data['post_id'],$data['floor']);
+        $sqld=$this->User_model->judge_admin($data['user_id']);
+        if($sqlb||$sqlc||$sqld){
+            $re=$this->Post_model->delete_post_reply($data);
+            $msg='成功删除帖子回复';
+        }else{
+            $re['code']=0;
+            $msg='仅星球创建者和回帖者和管理员能删除帖子!';
+        }
+        $this->response($re,200,$msg);
     }
 
 }
