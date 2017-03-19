@@ -3,7 +3,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.CheckMail
+接口URL：http://dev.wuanlife.com:800/user/check_mail_1
 
 请求方式：GET
 参数说明：
@@ -23,7 +23,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/user/check_mail_1?user_email=1195417752
+http://dev.wuanlife.com:800/user/check_mail_1?user_email=583239@qq.com
 
     JSON
     {
