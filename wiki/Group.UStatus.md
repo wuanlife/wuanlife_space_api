@@ -1,4 +1,4 @@
-# group.u_status
+# group.check_status
 
 判断用户登陆状态-判断是否登录
 
