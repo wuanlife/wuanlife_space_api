@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/post/unlock_post
+接口URL：http://localhost/wuanlife_api/index.php/Post/unlock_post
 
 请求方式：POST
 
@@ -13,7 +13,6 @@
 |参数名字    |类型   |是否必须    |默认值    |范围        |说明|
 |:--|:--|:--|:--|:--|:--|
 |post_id    |整型   |必须         |      |             |帖子id|
-|user_id    |整型   |必须         |      |             |用户id|
 
 ## 返回说明：
 
@@ -26,14 +25,13 @@
 
 将帖子id为1的帖子解锁
 
-http://dev.wuanlife.com:800/post/unlock_post
+http://localhost/wuanlife_api/index.php/Post/unlock_post?post_id=1
 
     JSON:
     {
         "ret": 200,
         "data": {
-            "code": 0,
-            "re": "操作成功"
+            "code": 1
         },
-        "msg": ""
+        "msg": "解除锁定帖子成功!"
     }

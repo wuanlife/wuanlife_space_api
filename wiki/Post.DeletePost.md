@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/post/delete_post
+接口URL：http://localhost/wuanlife_api/index.php/Post/delete_post
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -26,14 +26,13 @@
 
 将帖子id为1的帖子删除
 
-http://dev.wuanlife.com:800/post/delete_post
+http://localhost/wuanlife_api/index.php/Post/delete_post?post_id=1&user_id=58
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "re": "操作成功"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1
+        },
+        "msg": "成功删除帖子"
     }

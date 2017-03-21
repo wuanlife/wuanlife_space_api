@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.DeletePostReply
+接口URL：http://localhost/wuanlife_api/index.php/Post/delete_post_reply
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -14,7 +14,7 @@
 |:--|:--|:--|:--|:--|:--|
 |user_id    |整型   |必须    |           |最小：1     |用户id|
 |post_id    |整型   |必须         |      |最小：1     |帖子id|
-|p_floor    |整型   |必须         |      |最小：1     |帖子楼层|
+|floor    |整型   |必须         |      |最小：1     |帖子楼层|
 
 ## 返回说明：
 
@@ -27,14 +27,13 @@
 
 将帖子id为1的帖子删除
 
-http://dev.wuanlife.com:800/?service=Post.DeletePostReply&user_id=1&post_base_id=1&floor=6
+http://localhost/wuanlife_api/index.php/Post/delete_post_reply?user_id=58&post_id=1&floor=1
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "re": "操作成功"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1
+        },
+        "msg": "成功删除帖子回复"
     }
