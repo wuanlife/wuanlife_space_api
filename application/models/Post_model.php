@@ -216,7 +216,7 @@ class Post_model extends CI_Model
         $rs['currentPage'] = (int)$data['page'];
         $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name,'
             ."(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_id=pb.id AND floor=1) AS approved,(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_id=pb.id AND approved=1) AS approvednum "
-             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,post_approved pa '
+            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
              . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
              . 'GROUP BY pb.id '
              . 'ORDER BY MIN(pd.create_time) DESC '
