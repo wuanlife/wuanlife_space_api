@@ -37,6 +37,39 @@ class User_model extends CI_Model
         return $re;
 
     }
+    /*
+     * 判断邀请码是否存在
+     */
+    public function invite_code($code){
+        $this->db->select('code,used')->from('user_code')->where('code',$code)->where('difference',3);
+        $query = $this->db->get()->row_array();
+        return $query;
+    }
+    /**
+     * @param $user_id
+     * @return mixed
+     * 查找用户邀请码
+     */
+    public function show_code($user_id){
+        $this->db->select('code,used as num')->from('user_code')->where('user_base_id',$user_id)->where('difference',3);
+        $query = $this->db->get()->row_array();
+        return $query;
+    }
+    /**
+     * @param $user_id
+     * @param $i_code
+     * 生成邀请码
+     */
+    public function create_code($user_id,$i_code){
+        $data = array(
+            'code' => $i_code,
+            'difference' => 3,
+            'used' => 99,
+            'user_base_id'=>$user_id,
+            'get_pass_time'=>time(),
+        );
+        $this->db->insert('user_code', $data);
+    }
 
     public function reg($data){
         extract($data);
