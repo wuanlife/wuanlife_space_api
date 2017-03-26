@@ -53,9 +53,12 @@ class User extends CI_Controller
      */
     public function login(){
         $data=array(
-            'email' => $this->input->get('email'),
-            'password' => $this->input->get('password'),
+            'email' => $this->input->post('user_email'),
+            'password' => $this->input->post('password'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('login') == FALSE)
+            $this->response(null,400,validation_errors());
         $re['code']=0;
         $model= $this->User_model->user_email($data);
         if(!$model){
@@ -81,19 +84,40 @@ class User extends CI_Controller
      * @return string msg 提示信息
      *
      */
+    public function show_code(){
+        $data['user_id'] = $this->input->post('user_id');
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
+        $rs = $this->User_model->show_code($data['user_id']);
+        if(empty($rs)){
+            $this->load->helper('icode');
+            $i_code = create_code(6);
+            $this->User_model->create_code($data['user_id'],$i_code);
+            $rs = $this->User_model->show_code($data['user_id']);
+        }
+        $this->response($rs,200,'查询成功');
+    }
     public function reg(){
         $data=array(
-            'nickname'=>$this->input->get('user_name'),
-            'email'=>$this->input->get('user_email'),
-            'password'=>$this->input->get('password'),
+            'nickname'=>$this->input->post('user_name'),
+            'email'=>$this->input->post('user_email'),
+            'password'=>$this->input->post('password'),
+            'code' =>$this->input->post('i_code'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('reg') == FALSE)
+            $this->response(null,400,validation_errors());
         $re['code']=0;
         $user_email=$this->User_model->user_email($data);
         $user_nickname=$this->User_model->user_nickname($data);
+        $invite_code = $this->User_model->invite_code($data['code']);
         if(!empty($user_email)){
             $msg='该邮箱已注册！';
         }elseif (!empty($user_nickname)){
             $msg='该昵称已注册！';
+        }elseif(empty($invite_code)||$invite_code['used']==0){
+            $msg='邀请码已过期或不存在！';
         }else{
             $re['info']=$this->User_model->reg($data);
             $re['code']=1;

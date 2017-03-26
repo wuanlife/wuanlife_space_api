@@ -129,10 +129,16 @@ ALTER TABLE post_detail CHANGE replyid reply_id INT(5);
 ALTER TABLE post_detail CHANGE replyFloor reply_floor INT(5);
 ALTER TABLE user_base CHANGE Email email varchar(30);
 ALTER TABLE user_code CHANGE getpasstime get_pass_time int(10);
-ALTER TABLE user_code CHANGE id uesr_base_id int(11);
+ALTER TABLE user_code CHANGE id user_base_id int(11);
 ALTER TABLE user_code CHANGE code code varchar(11);
 ALTER TABLE user_collection CHANGE createTime create_time INT(10);
 ALTER TABLE user_detail CHANGE lastLogTime last_logtime int(10);
 ALTER TABLE user_detail CHANGE mailChecked mail_checked varchar(2);
 ALTER TABLE post_approved CHANGE user_id user_base_id int(11);
 ALTER TABLE post_approved CHANGE post_id post_base_id int(11);
+
+-- ----------------------------
+-- 修改user_code表 增加邀请码功能
+-- ----------------------------
+ALTER TABLE `user_code`
+ADD PRIMARY KEY (`user_base_id`, `code`, `difference`);

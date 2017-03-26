@@ -2,6 +2,40 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'login'=>array(
+        array(
+            'field' => 'email',
+            'label' => 'user_email',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'password',
+            'rules' => 'required|min_length[6]'
+        )
+    ),
+    'reg'=>array(
+        array(
+            'field' => 'nickname',
+            'label' => 'user_name',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'email',
+            'label' => 'user_email',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'password',
+            'rules' => 'required|min_length[6]'
+        ),
+        array(
+            'field' => 'code',
+            'label' => 'i_code',
+            'rules' => 'required'
+        ),
+    ),
     'show_message' => array(
         array(
             'field' => 'user_id',
