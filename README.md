@@ -1,12 +1,12 @@
 # 午安网API文档
 
-##一、服务器部署
+## 一、服务器部署
 
 [服务器部署文档](/config/Config.md)
 
-##二、API接口文档
+## 二、API接口文档
 
-###A.用户相关<br>
+### A.用户相关<br>
 1.[注册](/wiki/User.Reg.md)<br>
 2.[登录](/wiki/User.Login.md)<br>
 3.[注销](/wiki/User.Logout.md)<br>
@@ -25,7 +25,7 @@
 16.[修改用户密码](/wiki/User.Changepwd.md)<br>
 17.[查看用户邀请码](/wiki/user.show_code.md)<br>
 
-###B.星球相关<br>
+### B.星球相关<br>
 1.[创建星球](/wiki/Group.Create.md)<br>
 2.[加入星球](/wiki/Group.Join.md)<br>
 3.[退出星球](/wiki/Group.Quit.md)<br>
@@ -40,7 +40,7 @@
 12.[星球成员管理](/wiki/group.user_manage.md)<br>
 13.[删除星球成员](/wiki/group.delete_group_member.md)<br>
 
-###C.帖子相关<br>
+### C.帖子相关<br>
 1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
 2.[我的星球 页面帖子显示](/wiki/Post.GetMyGroupPost.md)<br>
 3.[每个星球页面帖子显示](/wiki/Post.GetGroupPost.md)<br>
