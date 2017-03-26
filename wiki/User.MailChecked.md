@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.MailChecked
+接口URL：http://dev.wuanlife.com:800/user/check_mail_2
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -27,7 +27,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/?service=User.MailChecked&Email=1195417752@qq.com&code=27183
+http://dev.wuanlife.com:800/user/check_mail_2?user_email=583239@qq.com&code=27183
     
 	JSON
     {

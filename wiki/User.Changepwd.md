@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.Changepwd
+接口URL：http://dev.wuanlife.com:800/user/change_pwd
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -27,16 +27,15 @@
 
 ## 示例
 
-修改用户id=1的密码
+修改用户id=85的密码
 
-http://dev.wuanlife.com:800/?service=User.Changepwd&user_id=1&pwd=1&newpwd=1&checkNewpwd=1
+http://dev.wuanlife.com:800/user/change_pwd&user_id=85&pwd=123321&newpwd=123123&checkNewpwd=123123
 
     JSON：
     {
     "ret": 200,
     "data": {
-        "code": 0,
-        "msg": "登录密码不正确"
+        "code": 1
     },
-    "msg": ""
+    "msg": "修改成功"
     }

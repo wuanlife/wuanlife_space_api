@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.DeleteCollectPost
+接口URL：http://localhost/wuanlife_api/index.php/Post/delete_collect_post
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -26,14 +26,13 @@
 
 将帖子id为1的帖子取消收藏
 
-http://dev.wuanlife.com:800/?service=Post.DeleteCollectPost&user_id=14&post_id=2
+http://localhost/wuanlife_api/index.php/Post/delete_collect_post?user_id=58&post_id=1
 
     JSON:
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "re": "操作成功"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1
+        },
+        "msg": "删除收藏成功！"
     }

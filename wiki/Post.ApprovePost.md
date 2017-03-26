@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=Post.ApprovePost
+接口URL：http://localhost/wuanlife_api/index.php/Post/approve_post
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -27,14 +27,14 @@
 
 给帖子id=1的帖子点赞
 
-http://dev.wuanlife.com:800/?service=Post.ApprovePost&post_id=1&user_id=1
+http://localhost/wuanlife_api/index.php/Post/approve_post?user_id=58&post_id=1&floor=1
 
     JSON：
     {
-    "ret": 200,
-    "data": {
-        "code": 1,
-        "msg": "点赞成功"
-    },
-    "msg": ""
+        "ret": 200,
+        "data": {
+            "code": 1,
+            "msg": "点赞成功"
+        },
+        "msg": null
     }
