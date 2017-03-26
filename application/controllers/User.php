@@ -163,8 +163,10 @@ class User extends CI_Controller
             'm_type'   => $this->input->post('m_type'),
             'pn'            => $this->input->post('pn'),
         );
-        //$this->form_validation->set_data($data);
-        if ($this->form_validation->run('show_message') == FALSE)
+        $data['m_type'] = $data['m_type']?$data['m_type']:4;
+        $data['pn'] = $data['pn']?$data['pn']:1;
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
             $this->response(null,400,validation_errors());
         if($data['m_type']==1){
             $rs = $this->get_reply_message($data);
