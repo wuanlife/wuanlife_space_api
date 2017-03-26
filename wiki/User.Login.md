@@ -6,13 +6,13 @@
 
 接口URL：http://dev.wuanlife.com:800/user/login
 
-请求方式：GET
+请求方式：POST
 
 参数说明：
 
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--|:--|
-|email     |  字符串| 必须    |      最小：1|           用户邮箱|
+|user_email     |  字符串| 必须    |      最小：1|           用户邮箱|
 |password  |  字符串 |必须     |       最小：1|         用户密码|
 
 ## 返回说明
@@ -28,9 +28,9 @@
 
 ## 示例
 
-注册账号
+登录账号
 
-http://dev.wuanlife.com:800/user/login?email=ch1111ac&password=1
+http://dev.wuanlife.com:800/user/login
 
     JSON:
     {

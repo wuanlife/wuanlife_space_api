@@ -6,15 +6,16 @@
 
 接口URL：http://dev.wuanlife.com:800/user/reg
 
-请求方式：GET
+请求方式：POST
 
 参数说明：
 
 |参数|类型|是否必须|范围|说明|
 |:--|:--|:--|:--|:--|
-|user_name| 字符串 |   必须   |     最小：1    |         用户昵称|
-|user_email   | 字符串|   必须  |        最小：1  |         用户邮箱|
-|password| 字符串 |   必须   |      最小：1|           用户密码|
+|user_name| 字符串 |   必须   |-|         用户昵称|
+|user_email   | 字符串|   必须  |-|         用户邮箱|
+|password| 字符串 |   必须   | 最小：6|           用户密码|
+|i_code|字符串|必须|-|邀请码|
 
 ## 返回说明
 
@@ -31,7 +32,7 @@
 
 注册账号(以下链接将提示该邮箱已注册！)
 
-http://dev.wuanlife.com:800/user/reg?user_name=dfgsdsd&user_email=1112&password=1
+http://dev.wuanlife.com:800/user/reg
 
     JSON:
     {

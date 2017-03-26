@@ -23,6 +23,7 @@
 14.[检查未读信息](/wiki/user.check_new_info.md)<br>
 15.[删除信息](/wiki/user.delete_message.md)<br>
 16.[修改用户密码](/wiki/User.Changepwd.md)<br>
+17.[查看用户邀请码](/wiki/user.show_code.md)<br>
 
 ###B.星球相关<br>
 1.[创建星球](/wiki/Group.Create.md)<br>
