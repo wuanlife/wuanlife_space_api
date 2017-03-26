@@ -51,7 +51,7 @@ class User_model extends CI_Model
      * 查找用户邀请码
      */
     public function show_code($user_id){
-        $this->db->select('code,used as num')->from('user_code')->where('user_base_id',$user_id)->where('difference',3);
+        $this->db->select('code as i_code,used as num')->from('user_code')->where('user_base_id',$user_id)->where('difference',3);
         $query = $this->db->get()->row_array();
         return $query;
     }
