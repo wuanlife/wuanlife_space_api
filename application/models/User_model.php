@@ -10,7 +10,9 @@ class User_model extends CI_Model
     }
 
 
-    /*
+    /**
+     * @param $data
+     * @return bool
      * 判断邮箱是否已注册
      */
     public function user_email($data){
@@ -24,7 +26,9 @@ class User_model extends CI_Model
         return $re;
     }
 
-    /*
+    /**
+     * @param $data
+     * @return bool
      * 判断用户昵称是否已使用
      */
     public function user_nickname($data){
@@ -37,7 +41,9 @@ class User_model extends CI_Model
         return $re;
 
     }
-    /*
+    /**
+     * @param $code
+     * @return mixed
      * 判断邀请码是否存在
      */
     public function invite_code($code){
@@ -172,7 +178,8 @@ class User_model extends CI_Model
      * @return int
      * 获取消息的数量
      */
-    public function get_num_message($user_id,$table,$num=NULL){
+    public function get_num_message($user_id,$table,$num=NULL)
+    {
         $this->db->from($table);
         $this->db->where('user_base_id',$user_id);
         if(!empty($num)){
@@ -183,25 +190,8 @@ class User_model extends CI_Model
             $this->db->or_where('status',1);
         }
         return $this->db->count_all_results();
+
     }
-    /**
-     * 获取用户消息，合并为一个方法
-    public function get_num_reply_message($user_id){
-        $this->db->from('message_reply');
-        $this->db->where('user_base_id',$user_id);
-        return $this->db->count_all_results();
-    }
-    public function get_num_apply_message($user_id){
-        $this->db->from('message_apply');
-        $this->db->where('user_base_id',$user_id);
-        return $this->db->count_all_results();
-    }
-    public function get_num_notice_message($user_id){
-        $this->db->from('message_notice');
-        $this->db->where('user_base_id',$user_id);
-        return $this->db->count_all_results();
-        }
-        */
 
     /**
      * @param $value
@@ -303,141 +293,49 @@ class User_model extends CI_Model
     }
 
     /**
-     * [生成5位数字验证码]
-     * @return [type] [description]
-     */
-    public function code() {
-        $char_len = 5;
-        //$font = 6;
-        $char = array_merge(/*range('A','Z'),range('a','z'),*/range('1','9'));//生成随机码值数组，不需要0，避免与O冲突
-        $rand_keys = array_rand($char,$char_len);//随机生成$char_len个码值的键；
-        if($char_len == 1) {//判断码值长度为一时，将其放入数组中
-            $rand_keys = array($rand_keys);
-        }
-        shuffle($rand_keys);//打乱数组
-        $code = '';
-        foreach($rand_keys as $key) {
-            $code .= $char[$key];
-        }//拼接字符串
-    
-        return $code;
-    }
-/**
- * 查询邮箱对应的信息
- * @param  [type] $data [description]
- * @return [type]       [description]
- */
-    public function userEmail($data){
-
-        $user_email = $data['user_email'];
-        
-        $rs = $this->db->select('*')->from('user_base')->where("email = '$user_email'")->get()->row_array();;
-        return $rs;
-    }
-
-    /*
- * 获取数据库保存的验证码
- */
-    public function getcode($data) {
-        $sql = $this->User_model->userEmail($data);
-        $id  = $sql['id'];
-        $num = $data['num'];
-        $row = $this->db->select('*')->from('user_code')->where(array('user_base_id' =>$id,'difference'=>$num))->get()->row_array();
-        //print_r($row);
-        return $row;
-    }
-
-    /*
  * 重置密码
+     * @param $data
  */
-    public function repsw($data){
-        $sql = $this->User_model->userEmail($data);
-        
+    public function re_psw($data){
         $password = $data['password'];
-        $password = md5($password);
-        $id = $sql['id'];
-
+        $id = $data['user_id'];
         $this->db->query("update user_base set password = '$password' where id = $id");
     }
 
-    /*
- * 更新数据库中的验证码
- */
-    public function updatecode($i_code,$data){
-
-        $i_code = $data['i_code'];
-        $sql = $this->User_model->userEmail($data);
-        $id = $sql['id'];
-            $sqla = $this->db->query("update user_code set used = 0, code = $i_code where user_base_id = $id");
+    /**
+     * @param $user_id
+     * @return mixed
+     * 查看邮箱是否被验证
+     */
+    public function get_mail_checked($user_id){
+        $query = $this->db->select('mail_checked')
+            ->where('user_base_id', $user_id)
+            ->from('user_detail')
+            ->get()
+            ->row_array();
+        return $query['mail_checked'];
 
     }
-/*
- * 发送邮件验证码
- */
-    public function sendmail($data)
+
+    /**
+     * @param $data
+     * @return mixed
+     * 将用户邮箱状态更新为已验证
+     */
+    public function check_mail($data)
     {
-        $data['user_email'] = stripslashes(trim($data['user_email']));
-        $data['user_email'] = $this->User_model->injectChk($data['user_email']);
-        $rs = $this->User_model->userEmail($data);
-        return $rs;
-
+        $this->db->where('user_base_id', $data['user_id']);
+        $this->db->update('user_detail', ['mail_checked' => 1]);
+        return $this->get_mail_checked($data['user_id']);
     }
 
-    /*
- * 防止注入
- */
-    public function injectChk($sql_str) {
-        /*php5.3起不再支持eregi()函数
-        相关链接http://www.t086.com/article/5086
-        */
-        //$check = eregi('select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile', $sql_str);
-        $check = preg_match('/select|insert|update|delete|\'|\/\*|\*|\.\.\/|\.\/|union|into|load_file|outfile/i', $sql_str);
-        if ($check) {
-            echo('您的邮箱格式包含非法字符，请确认！');
-            exit ();
-        }else {
-            return $sql_str;
-        }
-    }
-    public function send($data) {
-    
-        $this->load->library('email');
-
-        $email = $data['user_email'];
-        $this->email->from('wuanlife@163.com','午安网团队');
-        $this->email->to("$email");
-        if($data['num'] == 1)
-        {
-            $this->email->subject('找回密码');
-            $this->email->message('<a href="https://www.baidu.com/">找回密码</a>');
-        }
-        else if($data['num'] == 2)
-        {
-        $this->email->subject('午安验证码');
-        $code = $this->User_model->code();
-        $this->User_model->updatecode($code,$data);
-        $this->email->message(date('Y-m-d H:i:s').'您的验证码为'.$code);
-    }
-    
-    //$this->email->message(date('Y-m-d H:i:s').'<a href="https://www.baidu.com/">找回密码</a>');
-    
-    if($this->email->send());
-    {
-        $msg = "发送成功";
-    }
-    return $msg;
-    }
-    public function getmailchecked($user_id){
-        $rs = $this->db->query("select mail_checked from user_detail where user_base_id = 85")->row();
-        return $rs->mail_checked;
-
-    }
-
-    public function change_pwd(){
-        
-    }
-
-    public function judge_create($user_id,$group_id){
+    /**
+     * @param $user_id
+     * @param $group_id
+     * @return int
+     * 判断用户是否是星球创建者
+     */
+    public function judge_create($user_id, $group_id){
         $sql=$this->db->select('user_base_id')
             ->from('group_detail')
             ->where('user_base_id',$user_id)
@@ -453,6 +351,11 @@ class User_model extends CI_Model
         return $rs;
     }
 
+    /**
+     * @param $user_id
+     * @return int
+     * 判断用户是否是管理员 user_detail
+     */
     public function judge_admin($user_id){
         $sql=$this->db->select('authorization')
             ->from('user_detail')
