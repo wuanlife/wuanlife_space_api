@@ -31,5 +31,5 @@ http://dev.wuanlife.com:800/user/check_mail_1?user_email=1195417752@qq.com
     "data": {
         "code": 1
     },
-    "msg": "发送成功"
+    "msg": "发送成功"
     }
