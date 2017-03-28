@@ -12,8 +12,7 @@
 
 |参数名字  |  类型  |是否必须|    默认值    |范围  |      说明|
 |:--|:--|:--|:--|:--|:--|
-|user_email    |   字符串| 必须     |        |   最小：1 |   用户邮箱|
-|i_code      |  字符串 |可选    ||            最小：1 |  验证码|
+|user_id   |   字符串| 必须     |        |   最小：1 |   用户id，由token解密|
 
 
 ## 返回说明
@@ -27,14 +26,13 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/user/check_mail_2?user_email=583239@qq.com&code=27183
-    
-	JSON
+http://dev.wuanlife.com:800/user/check_mail_2?user_id=1
+
+    JSON
     {
     "ret": 200,
     "data": {
-        "code": 1,
-        "msg": "您的邮箱验证成功！"
+        "code": 1
     },
-    "msg": ""
+    "msg": "验证成功"
     }
