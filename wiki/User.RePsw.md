@@ -28,7 +28,7 @@
 
 重置密码
 
-http://dev.wuanlife.com:800/user/repsw
+http://dev.wuanlife.com:800/user/re_psw
     
     JSON:
     {
