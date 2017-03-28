@@ -23,7 +23,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/user/check_mail_1?user_email=583239@qq.com
+http://dev.wuanlife.com:800/user/check_mail_1?user_email=1195417752@qq.com
 
     JSON
     {
