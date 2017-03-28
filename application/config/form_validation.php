@@ -140,6 +140,28 @@ $config = array(
             'rules' => 'required|min_length[1]|max_length[60]'
         )
     ),
+    'change_pwd' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'password',
+            'rules' => 'required|min_length[6]'
+        ),
+        array(
+            'field' => 'psw',
+            'label' => 'psw',
+            'rules' => 'required|min_length[6]'
+        ),
+        array(
+            'field' => 'check_psw',
+            'label' => 'check_psw',
+            'rules' => 'required|min_length[6]'
+        )
+    ),
     'edit_post' =>array(
         array(
             'field' => 'user_id',

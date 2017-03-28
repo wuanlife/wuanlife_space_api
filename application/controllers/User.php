@@ -714,23 +714,27 @@ class User extends CI_Controller
 
     public function change_pwd(){
         $data = array(
-            'user_id'     => $this->input->get('user_id'),
-            'pwd'         => $this->input->get('pwd'),
-            'new_pwd'      => $this->input->get('new_pwd'),
-            'check_new_pwd' => $this->input->get('check_new_pwd'),
+            'user_id'     => $this->input->post('user_id'),
+            'password'         => $this->input->post('password'),
+            'psw'      => $this->input->post('psw'),
+            'check_psw' => $this->input->post('check_psw'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('change_pwd') == FALSE)
+            $this->response(null,400,validation_errors());
         if($this->User_model->get_user_information($data['user_id']))
         {
             $info = $this->User_model->get_user_information($data['user_id']);
             //print_r($info);
-            if(md5($data['pwd']) == $info['password'])
+            if(md5($data['password']) == $info['password'])
             {
-                if($data['new_pwd'] ==$data['check_new_pwd'])
+                if($data['psw'] == $data['check_psw'])
                 {
                     $data['user_email'] = $info['email'];
-                    $data['password'] = $data['new_pwd'];
+                    $data['password'] = $data['psw'];
                     $data['password'] = md5($data['password']);
                     $this->User_model->re_psw($data);
+                    $re['code'] = 1;
                     $msg ='修改成功';
                 }
                 else
@@ -744,7 +748,6 @@ class User extends CI_Controller
                 $re['code'] = 0;
                 $msg = "密码错误，请重试！";
             }
-            $re['code'] = 1;
             $this->response($re,200,$msg);
         }
     }
