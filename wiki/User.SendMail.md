@@ -4,7 +4,7 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/user/sendmail
+接口URL：http://dev.wuanlife.com:800/user/send_mail
 
 请求方式：GET
 
@@ -27,14 +27,13 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/user/sendmail&user_email=1195417752@qq.com
+http://dev.wuanlife.com:800/user/send_mail?user_email=1195417752@qq.com
    
     JSON:
     {
     "ret": 200,
     "data": {
-        "code": 1,
-        "msg": "系统已向您的邮箱发送了一封找回密码邮件，请登录到您的邮箱查看验证码！"
+        "code": 1
     },
-    "msg": ""
+    "msg": "发送成功"
     }
