@@ -6,16 +6,16 @@
 
 接口URL：http://dev.wuanlife.com:800/user/change_pwd
 
-请求方式：GET
+请求方式：POST
 
 参数说明：
 
 |参数名字   | 类型|  是否必须   | 默认值   | 范围      |  说明|
 |:--|:--|:--|:--|:--|:--|
 |user_id    |   整型| 必须     ||           最小：1  |  用户ID|
-|pwd|字符串|必须| |最小：6|登录密码|
-|new_pwd|字符串|必须| |最小：6|新密码|
-|check_new_pwd|字符串|必须| |最小：6|二次确认新密码|
+|password|字符串|必须| |最小：6|登录密码|
+|psw|字符串|必须| |最小：6|新密码|
+|check_psw|字符串|必须| |最小：6|二次确认新密码|
 
 ## 返回说明
 
@@ -29,7 +29,7 @@
 
 修改用户id=85的密码
 
-http://dev.wuanlife.com:800/user/change_pwd&user_id=85&pwd=123321&newpwd=123123&checkNewpwd=123123
+http://dev.wuanlife.com:800/user/change_pwd
 
     JSON：
     {
