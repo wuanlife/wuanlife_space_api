@@ -29,8 +29,7 @@ http://dev.wuanlife.com:800/user/check_mail_1?user_email=1195417752@qq.com
     {
     "ret": 200,
     "data": {
-        "code": 1,
-        "msg": "系统已向您的邮箱发送了一封验证邮箱邮件，请登录到您的邮箱查看验证码！"
+        "code": 1
     },
-    "msg": ""
+    "msg": "发送成功"
     }
