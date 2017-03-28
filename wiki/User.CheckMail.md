@@ -6,6 +6,7 @@
 接口URL：http://dev.wuanlife.com:800/user/check_mail_1
 
 请求方式：GET
+
 参数说明：
 
 |参数名字  |  类型  |是否必须|    默认值    |范围  |      说明|
