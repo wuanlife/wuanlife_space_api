@@ -1,17 +1,14 @@
 <?php
 
 
-
 class User extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(array('form', 'url','url_helper'));
-        $this->load->library('form_validation');
-        $this->load->model('User_model');
-        $this->load->model('Group_model');
-        $this->load->model('Common_model');
+        $this->load->library(array('form_validation','jwt'));
+        $this->load->model(array('User_model','Group_model','Common_model'));
         $this->form_validation->set_message('required', '{field} 参数是必填选项.');
         $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
         $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
@@ -369,7 +366,6 @@ class User extends CI_Controller
     private function get_index_message($data){
         $data['pn'] = empty($data['pn'])?1:$data['pn'];
         error_reporting(0);
-        $model = $this->User_model;
         $rs['pageCount']  = 1;
         $rs['currentPage'] = 1;
         $rs['info'] =array(
@@ -528,190 +524,182 @@ class User extends CI_Controller
         }
         $this->response($re,200,$msg);
     }
+
     /**
      * 测试接口，待完成所有接口之后删除
      */
     public function test()
     {
-        //$this->form_validation->set_rules('username', 'Username', 'required');
-        //$this->form_validation->set_rules('password', 'Password', 'required',
-         //   array('required' => 'You must provide a %s.')
-       // );
-       // $this->form_validation->set_rules('passconf', 'Password Confirmation', 'required');
-       // $this->form_validation->set_rules('email', 'Email', 'required');
-        $data = array(
-            'user_id'       => $this->input->get('user_id'),
-            'm_type'   => $this->input->get('m_type'),
-            'pn'            => $this->input->get('pn'),
-        );
-
-    }
-
-    /**
-     * 发送邮件测试接口，配置信息保存在config/email.php
-     */
-    private function email(){
+        /**
+         * 发送邮件测试接口，配置信息保存在config/email.php
+         */
         $this->load->library('email');
         $this->email->from('wuanlife@163.com', 'xiaochao');
         $this->email->to('1195417752@qq.com');
         $this->email->subject('ssl模式发送');
         $this->email->message('Testing s.');
         var_dump($this->email->send());
-    }
-    /**
-     * 验证码生成测试接口
-     */
-    private function verification_code(){
+        /**
+         * 验证码生成测试接口
+         */
         $this->load->helper('icode');
         $cap = create_code(5,'123456789');
         echo $cap;
 
     }
 
-    /**
- * 邮箱验证接口-用于发送包含验证邮箱验证码的邮件
- */
 
-    public function check_mail_1($user_email=null){
+    /**
+     * 邮箱验证接口-用于发送包含验证邮箱验证码的邮件
+     */
+
+    public function check_mail_1(){
         $data = array(
-            'user_email' => $this->input->get('user_email'),
+            'email' => $this->input->get('user_email'),
             'num'        => 2,
             );
-        $back = array(
-            'user_email' => $this->input->get('user_email'),
-            'code'        => 1,
-            );
-        $re = array($back);
-        $msg = $this->User_model->send($data);
-
-        $this->response($re,200,$msg);
+        $sql = $this->User_model->user_email($data);
+        if(empty($sql)){
+            $re['code'] = 0;
+            $re['msg'] = '您输入的账号不存在！';
+        }
+        else
+        {
+            $data['user_id'] = $sql['id'];
+            $data['user_name'] = $sql['nickname'];
+            $re = $this->send($data);
+        }
+        $this->response(['code'=>$re['code']],200,$re['msg']);
     }
 /**
  * 邮箱验证接口-用于检验验证码的正确性并验证邮箱
  */
-    public function check_mail_2($user_email=null,$i_code=null){
+    public function check_mail_2(){
         $data = array(
-            'user_email' => $this->input->get('user_email'),
-            'i_code'        => $this->input->get('i_code'),
-            'num'  => 1,
+            'user_id' => $this->input->get('user_id'),
             );
-        
-        //获取数据库中保存的验证码
-        $code = $this->User_model->getcode($data)['code'];
-        $i_code = $data['i_code'];
-        if($code ==$i_code)
+        if($this->User_model->check_mail($data))
         {
-            $back = array(
-            'code'        => 1,
-            );
+            $re['code'] = 1;
             $msg = "验证成功";
         }
         else
         {
-            $back = array(
-            'code'        => 0,
-            );
+            $re['code'] = 0;
             $msg = "验证失败";
         }
-        $re = array($back);
 
         $this->response($re,200,$msg);
     }
-    
-    public function SendMail($user_email=null){
+
+    /**
+     * @param $data
+     * @return string
+     */
+    private function email_psw($data){
+        $this->load->library('jwt');
+        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']]);
+        $url = DN.'retrievepassword/reset?token='.$token;
+        $user_name = $data['user_name'];
+        $time = date('Y-m-d H:i:s', time());
+        $content ='亲爱的用户：'.$user_name.' 您好！<br>'
+            .'您在'.$time.'提交了密码重置的请求。<br>'
+            .'请在10分钟内点击下面的链接重设您的密码：<br><br>'
+            ."请点击该验证码链接 <a href=$url>重置密码</a> (该链接在10分钟内有效)<br><br><br>"
+            .'若您无法直接点击链接，也可以复制以下地址到浏览器地址栏中<br>'
+            .$url;
+        return $content;
+    }
+    private function email_check($data){
+        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']]);
+        $url = DN.'verifyemail?token='.$token;
+        $user_name = $data['user_name'];
+        $time = date('Y-m-d H:i:s', time());
+        $content ='亲爱的用户：'.$user_name.' 您好！<br>'
+            .'您在'.$time.'提交了邮箱验证的请求。<br>'
+            .'请在10分钟内点击下面的链接验证您的邮箱：<br><br>'
+            ."请点击该验证码链接 <a href=$url>验证邮箱</a> (该链接在10分钟内有效)<br><br><br>"
+            .'若您无法直接点击链接，也可以复制以下地址到浏览器地址栏中<br>'
+            .$url;
+        return $content;
+    }
+    private function send($data) {
+
+        $this->load->library('email');
+
+        $email = $data['email'];
+        $this->email->from('wuanlife@163.com','午安网团队');
+        $this->email->to($email);
+        if($data['num'] == 1)
+        {
+            $this->email->subject('午安网 - 找回密码');
+            $content = $this->email_psw($data);
+            $this->email->message($content);
+        }
+        else if($data['num'] == 2)
+        {
+            $this->email->subject('午安网 - 邮箱验证');
+            $content = $this->email_check($data);
+            $this->email->message($content);
+        }
+        if($this->email->send())
+        {
+            $re['code'] = 1;
+            $re['msg'] = "发送成功";
+        }else{
+            $re['code'] = 0;
+            $re['msg'] = "发送失败";
+        }
+        return $re;
+    }
+
+    /**
+     * 用于发送包含修改密码token的邮件
+     */
+    public function send_mail(){
          $data = array(
-            'user_email'    => $this->input->get('user_email'),
+            'email'    => $this->input->get('user_email'),
             'num'      => 1,
             );
-        
-        $re = array($data);
-        
-        $sql = $this->User_model->sendmail($data);
-
-        $this->code = 0;
+        $sql = $this->User_model->user_email($data);
         if(empty($sql)){
-            $this->msg = '您输入的账号不存在！';
+            $re['code'] = 0;
+            $re['msg'] = '您输入的账号不存在！';
         }
         else
-        { 
-            $data['email'] = '583239353@qq.com';
-            $msg = $this->User_model->send($data);
-            
+        {
+            $data['user_id'] = $sql['id'];
+            $data['user_name'] = $sql['nickname'];
+            $re = $this->send($data);
         }
-        return $this->response($re,200,$msg);
+        $this->response(['code'=>$re['code']],200,$re['msg']);
     }
-/**
- * 
- * @return [msg] [description]
- * msg  字符串 提示信息
-    code    整型  操作码，1表示重置成功，0表示重置失败
- */
-    public function re_psw($i_code=null,$password=null,$psw=null,$user_email=null){
+
+    /**
+     *
+     */
+    public function re_psw(){
         $data = array(
-            'i_code'    => $this->input->get('i_code'),
+            'user_id' =>$this->input->get('user_id'),
             'password'=>$this->input->get('password'),
             'psw'     =>$this->input->get('psw'),
-            'user_email'   =>$this->input->get('user_email'),
-            'num'     => 1,
             );
-        $re = array('code' =>0);
-        
-        $code = $this->User_model->code();//生成5位验证码
-        $rs = $this->User_model->userEmail($data);
-        if(!$rs)
-        {
-            $msg = '用户名不存在，请确认！';
-            
+        $re['code'] = 0;
+        if($data['password']==$data['psw']){
+            $data['password'] = md5($data['password']);
+            $this->User_model->re_psw($data); //更新密码
+            $msg = '密码修改成功！';
+            $re['code'] = 1;
+        }else{
+            $re['code'] = 0;
+            $msg = '两次密码不一致，请确认！';
         }
-        else
-        {
-            $row = $this->User_model->getcode($data);
-            $Boolean = time()-$row['get_pass_time']>90*10*60;
-
-            if(!$Boolean)
-            {
-                $msg = '验证码已过期，请重新获取！';
-                return $this->response($re,200,$msg);
-
-            }
-            else
-            {
-                if($data['i_code'] == $row['code'])
-                {
-                    if($data['password'] == $data['psw'])
-                    {
-                        $psw = array('password'=>md5($data['password']));
-                        $code_p = array('used'=>1);
-
-                        $this->User_model->repsw($data); //更新密码
-                        $this->User_model->updatecode($code_p,$data); //更新验证码
-                        $msg = '密码修改成功！';
-                        $re['code'] = 1;
-                        return $this->response($re,200,$msg);
-                    }
-                    else
-                    {
-                        $msg = '两次密码不一致，请确认！';
-                        return $this->response($re,200,$msg);
-                    }
-                }
-                else
-                {
-                    $msg = '验证码不正确，请确认！';
-                    return $this->response($re,200,$msg);
-                }
-            }
-        }
+        $this->response($re,200,$msg);
 
     }        
     
 
-/**
- * 修改密码接口-用于验证旧密码，修改新密码
- * code 整型  操作码，1表示修改成功，0表示修改失败
-   msg 字符串 提示信息
- */
-    public function change_pwd($user_id=null,$pwd=null,$new_pwd=null,$check_new_pwd=null){
+    public function change_pwd(){
         $data = array(
             'user_id'     => $this->input->get('user_id'),
             'pwd'         => $this->input->get('pwd'),
@@ -728,7 +716,8 @@ class User extends CI_Controller
                 {
                     $data['user_email'] = $info['email'];
                     $data['password'] = $data['new_pwd'];
-                    $this->User_model->repsw($data);
+                    $data['password'] = md5($data['password']);
+                    $this->User_model->re_psw($data);
                     $msg ='修改成功';
                 }
                 else
@@ -743,27 +732,24 @@ class User extends CI_Controller
                 $msg = "密码错误，请重试！";
             }
             $re['code'] = 1;
-            return $this->response($re,200,$msg);
+            $this->response($re,200,$msg);
         }
-        // $rs = $domain->changepwd($data);
-        //return $rs;
     }
 
-    public function get_mail_checked($user_id=null){
-
-        $rs = $this->User_model->getmailchecked($this->input->get('user_id'));
-        $msg ="";
-        if($rs==1)
-        {
-            $re = array('user_id' => $this->input->get('user_id'),
-                    'mail_checked'=>1);
-
+    public function get_mail_checked(){
+        $id = $this->input->get('user_id');
+        $rs = $this->User_model->get_mail_checked($id);
+        $re = [
+            'user_id' =>(int)$id,
+            'mail_check'=>0
+        ];
+        if($rs){
+            $re = [
+                'user_id' =>(int)$id,
+                'mail_check'=>1
+            ];
         }
-        elseif($rs==0)
-        {
-            $re = array('user_id' => $this->input->get('user_id'),
-                    'mail_checked'=>0);
-        }
-        return $this->response($re,200,$msg);
+        $this->response($re,200,NULL);
     }
+
 }

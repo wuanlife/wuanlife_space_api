@@ -68,10 +68,12 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
+		define('DN','http://dev.wuanlife.com/');
 	break;
 
 	case 'testing':
 	case 'production':
+	define('DN','http://www.wuanla.com/');
 		ini_set('display_errors', 0);
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
