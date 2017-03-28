@@ -4,9 +4,9 @@
 
 ## 接口调用请求说明
 
-接口URL：http://dev.wuanlife.com:800/?service=User.GetMailChecked
+接口URL：http://dev.wuanlife.com:800/user/get_mail_checked
 
-请求方式：POST
+请求方式：GET
 
 参数说明：
 
@@ -19,21 +19,21 @@
 |参数|类型|说明|
 |:--|:--|:--|
 |user_id|整型|用户ID|
-|mail_checked|字符串|是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
+|mail_check|整型|是否验证邮箱，0为未验证邮箱，1为已验证邮箱|
 
 
 ## 示例
 
 确认id=1用户是否已经验证邮箱（是）
 
-http://dev.wuanlife.com:800/?service=User.GetMailChecked&user_id=1
+http://dev.wuanlife.com:800/user/get_mail_checked?user_id=1
 
     JSON:
     {
     "ret": 200,
     "data": {
-        "userID": "1",
-        "mailChecked": "1"
+        "user_id": "1",
+        "mail_check": "1"
     },
     "msg": ""
     }
