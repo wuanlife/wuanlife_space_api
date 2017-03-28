@@ -12,6 +12,7 @@ class User extends CI_Controller
         $this->form_validation->set_message('required', '{field} 参数是必填选项.');
         $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
         $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
+        $this->form_validation->set_message('valid_email', '{field} 参数不是合法邮箱地址.');
 
     }
 	public function index(){
@@ -492,12 +493,12 @@ class User extends CI_Controller
      * 检测是否有新消息
      */
     public function check_new_info(){
-        $data['id'] = $this->input->get('user_id');
+        $data['user_id'] = $this->input->get('user_id');
         $this->form_validation->set_data($data);
-        if ($this->form_validation->run('check_new_info') == FALSE)
+        if ($this->form_validation->run('get_create') == FALSE)
             $this->response(null,400,validation_errors());
         $model = $this->User_model;
-        $num = $model->check_new_info($data['id']);
+        $num = $model->check_new_info($data['user_id']);
         $num_all = $num[0]+$num[1]+$num[2];
         if($num_all){
             $rs['num']=1;
@@ -558,6 +559,9 @@ class User extends CI_Controller
             'email' => $this->input->get('user_email'),
             'num'        => 2,
             );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('send_mail') == FALSE)
+            $this->response(null,400,validation_errors());
         $sql = $this->User_model->user_email($data);
         if(empty($sql)){
             $re['code'] = 0;
@@ -578,6 +582,9 @@ class User extends CI_Controller
         $data = array(
             'user_id' => $this->input->get('user_id'),
             );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
         if($this->User_model->check_mail($data))
         {
             $re['code'] = 1;
@@ -661,6 +668,9 @@ class User extends CI_Controller
             'email'    => $this->input->get('user_email'),
             'num'      => 1,
             );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('send_mail') == FALSE)
+            $this->response(null,400,validation_errors());
         $sql = $this->User_model->user_email($data);
         if(empty($sql)){
             $re['code'] = 0;
@@ -680,10 +690,13 @@ class User extends CI_Controller
      */
     public function re_psw(){
         $data = array(
-            'user_id' =>$this->input->get('user_id'),
-            'password'=>$this->input->get('password'),
-            'psw'     =>$this->input->get('psw'),
+            'user_id' =>$this->input->post('user_id'),
+            'password'=>$this->input->post('password'),
+            'psw'     =>$this->input->post('psw'),
             );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('re_psw') == FALSE)
+            $this->response(null,400,validation_errors());
         $re['code'] = 0;
         if($data['password']==$data['psw']){
             $data['password'] = md5($data['password']);
@@ -738,6 +751,9 @@ class User extends CI_Controller
 
     public function get_mail_checked(){
         $id = $this->input->get('user_id');
+        $this->form_validation->set_data($_GET);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
         $rs = $this->User_model->get_mail_checked($id);
         $re = [
             'user_id' =>(int)$id,

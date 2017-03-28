@@ -2,17 +2,41 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'send_mail'=>array(
+        array(
+            'field' => 'email',
+            'label' => 'user_email',
+            'rules' => 'required|valid_email'
+        )
+    ),
     'login'=>array(
         array(
             'field' => 'email',
             'label' => 'user_email',
-            'rules' => 'required'
+            'rules' => 'required|valid_email'
         ),
         array(
             'field' => 'password',
             'label' => 'password',
             'rules' => 'required|min_length[6]'
         )
+    ),
+    're_psw'=>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'password',
+            'rules' => 'required|min_length[6]'
+        ),
+        array(
+            'field' => 'psw',
+            'label' => 'psw',
+            'rules' => 'required|min_length[6]'
+        ),
     ),
     'reg'=>array(
         array(
@@ -23,7 +47,7 @@ $config = array(
         array(
             'field' => 'email',
             'label' => 'user_email',
-            'rules' => 'required'
+            'rules' => 'required|valid_email'
         ),
         array(
             'field' => 'password',
@@ -171,13 +195,6 @@ $config = array(
             'label' => 'member_id',
             'rules' => 'required|min_length[1]'
         )
-    ),
-    'check_new_info' =>array(
-        array(
-            'field' => 'id',
-            'label' => 'user_id',
-            'rules' => 'required'
-        ),
     ),
     'get_create' =>array(
         array(
