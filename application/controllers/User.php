@@ -172,6 +172,9 @@ class User extends CI_Controller
             'month'         =>$this->input->get('month'),
             'day'           =>$this->input->get('day'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
         $re=$this->User_model->alter_user_info($data);
         $this->response($re['code'],200,$re['msg']);
     }
