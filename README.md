@@ -10,10 +10,10 @@
 1.[注册](/wiki/User.Reg.md)<br>
 2.[登录](/wiki/User.Login.md)<br>
 3.[注销](/wiki/User.Logout.md)<br>
-4.[发送验证邮箱的验证码](/wiki/User.CheckMail.md)<br>
+4.[发送验证邮箱的邮件](/wiki/User.CheckMail.md)<br>
 5.[邮箱验证](/wiki/User.MailChecked.md)<br>
-6.[确认邮箱验证](/wiki/User.GetMailChecked.md)<br>
-7.[发送改密的验证码](/wiki/User.SendMail.md)<br>
+6.[获取邮箱验证状态](/wiki/User.GetMailChecked.md)<br>
+7.[发送重置密码的邮件](/wiki/User.SendMail.md)<br>
 8.[重置密码](/wiki/User.RePsw.md)<br>
 9.[是否登陆](/wiki/Group.UStatus.md)<br>
 10.[获取用户信息](/wiki/User.GetUserInfo.md)<br>
