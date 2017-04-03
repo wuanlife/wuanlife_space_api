@@ -233,6 +233,32 @@ class Post extends CI_Controller
         $re=$this->Post_model->post_image_limit($re);
         $re=$this->Post_model->delete_html_posts($re);
         $re=$this->Post_model->post_text_limit($re);
+        foreach($re['posts'] as $key=>$value){
+            $re['posts'][$key] = [
+                'posts' => [
+                    'post_id' => $value['post_id'],
+                    'p_title' => $value['p_title'],
+                     'p_text'  => $value['p_text'],
+                    'lock'    => $value['lock'],
+                    'create_time' => $value['create_time'],
+                    'approved'=> $value['approved'],
+                     'approved_num'  =>$value['approved_num'],
+                    'collected' => $value['collected'],
+                    'collected_num'     => $value['collected_num'],
+                    'replied'   => $value['replied'],
+                    'replied_num'   => $value['replied_num'],
+                    'image'      => $value['image'],
+                ],
+                'users' => [
+                    'profile_picture' =>$value['profile_picture'],
+                    'user_name'       =>$value['user_name'],
+                ],
+                'groups' => [
+                    'group_id'  => $value['group_id'],
+                    'g_name'    => $value['g_name'],
+                ],
+            ];
+        }
 
         $this->response($re,200,null);
     }
@@ -465,16 +491,10 @@ class Post extends CI_Controller
         $delete=$this->Common_model->ifexist_collect_post($data);
         if($delete){
             $rs=$this->Post_model->exist_collect_post($data);
-            if($rs){
-                $info['code']=1;
-                $msg="收藏成功！";
-            }else{
-                $info['code']=0;
-                $msg="操作过于频繁！";
-            }
-            $this->response($info,200,$msg);
+
         }else{
             $rs=$this->Post_model->collect_post($data);
+        }
             if($rs) {
                 $info['code']=1;
                 $msg="收藏成功！";
@@ -483,7 +503,6 @@ class Post extends CI_Controller
                 $msg="操作过于频繁！";
             }
             $this->response($info,200,$msg);
-        }
     }
 
     /**
