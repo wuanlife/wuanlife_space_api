@@ -19,18 +19,25 @@
 
 |参数|类型|说明|
 |:--|:--|:--|
+|page_count	|int|	总页数|
+|current_page|	int	|当前页|
 |posts.post_id	|	int|	帖子ID|
 |posts.p_title|	string|	标题|
 |posts.p_text	|string	|内容|
 |posts.create_time|	date|	发帖时间|
-|posts.user_name|	string	|发帖人|
-|posts.group_id|	int	|星球ID|
-|posts.lock|	int	|是否锁定|
+|posts.lock|	int	|是否锁定（不知道这个参数干嘛用的）|
 |posts.approved|	int	|是否点赞(0未点赞，1已点赞)|
-|posts.approvednum|	int	|点赞数|
-|posts.g_name|	string|	星球名称|
-|page_count	|int|	总页数|
-|current_page|	int	|当前页|
+|posts.approved_num|	int	|点赞数|
+|posts.collected|	int	|是否收藏(0未收藏，1已收藏)|
+|posts.collected_num|	int	|收藏数|
+|posts.replied|	int	|是否回复(0未回复，1已回复)|
+|posts.replied_num|	int	|回复数|
+|posts.image|array|帖子图片预览3张url地址|
+|users.user_name|	string	|发帖人|
+|users.profile_picture|string|用户头像图片url|
+|groups.group_id|	int	|星球ID|
+|groups.g_name|	string|	星球名称|
+
 
 ## 示例
 
