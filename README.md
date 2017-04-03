@@ -13,8 +13,8 @@
 4.[发送验证邮箱的邮件](/wiki/User.CheckMail.md)<br>
 5.[邮箱验证](/wiki/User.MailChecked.md)<br>
 6.[获取邮箱验证状态](/wiki/User.GetMailChecked.md)<br>
-7.[发送重置密码的邮件](/wiki/User.SendMail.md)<br>
-8.[重置密码](/wiki/User.RePsw.md)<br>
+7.[找回密码-发送邮件](/wiki/User.SendMail.md)<br>
+8.[找回密码-重置密码](/wiki/User.RePsw.md)<br>
 9.[是否登陆](/wiki/Group.UStatus.md)<br>
 10.[获取用户信息](/wiki/User.GetUserInfo.md)<br>
 11.[修改用户信息](/wiki/User.AlterUserInfo.md)<br>
@@ -33,20 +33,20 @@
 5.[星球列表](/wiki/group.lists.md)<br>
 6.[获取用户创建星球](/wiki/group.get_create.md)<br>
 7.[获取用户加入星球](/wiki/group.get_joined.md)<br>
-8.[获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
-9.[修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
+8.[星球设置-获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
+9.[星球设置-修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 10.[申请加入私密星球](/wiki/group.private_group.md)<br>
 11.[搜索接口](/wiki/group.search.md)<br>
 12.[星球成员管理](/wiki/group.user_manage.md)<br>
 13.[删除星球成员](/wiki/group.delete_group_member.md)<br>
 
 ### C.帖子相关<br>
-1.[发现页面帖子显示](/wiki/Post.GetIndexPost.md)<br>
+1.[主页](/wiki/Post.GetIndexPost.md)<br>
 2.[我的星球 页面帖子显示](/wiki/Post.GetMyGroupPost.md)<br>
-3.[每个星球页面帖子显示](/wiki/Post.GetGroupPost.md)<br>
+3.[星球详情](/wiki/Post.GetGroupPost.md)<br>
 4.[帖子详情 发帖内容](/wiki/post.get_post_base.md)<br>
 5.[帖子详情 回帖内容](/wiki/post.get_post_reply.md)<br>
-6.[帖子发布](/wiki/group.posts.md)<br>
+6.[发帖](/wiki/group.posts.md)<br>
 7.[帖子回复](/wiki/post.post_reply.md)<br>
 8.[帖子编辑](/wiki/post.edit_post.md)<br>
 9.[帖子删除](/wiki/Post.DeletePost.md)<br>
