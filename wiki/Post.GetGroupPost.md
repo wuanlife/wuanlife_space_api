@@ -20,6 +20,7 @@
 
 |参数|类型|说明|
 |:--|:--|:--|
+|msg|string|提示信息|
 |creator_id	|int|	星球创建者id|
 |creator_name  |string|   星球创建者名称|
 |group_id|int	|星球ID|
