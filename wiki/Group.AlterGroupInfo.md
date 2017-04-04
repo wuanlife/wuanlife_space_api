@@ -16,6 +16,7 @@
 |user_id|int|必须|用户ID|
 |g_introduction|string|可选|星球简介|
 |g_image|string|可选|星球图片|
+|private|int|可选|是否私密，0允许任何人加入，1需申请方可加入|
 
 ## 返回说明
 
