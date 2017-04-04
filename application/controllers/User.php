@@ -622,7 +622,7 @@ class User extends CI_Controller
     }
     private function email_check($data){
         $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']]);
-        $url = DN.'verifyemail?token='.$token;
+        $url = DN.'users/verifyusermail?token='.$token;
         $user_name = $data['user_name'];
         $time = date('Y-m-d H:i:s', time());
         $content ='亲爱的用户：'.$user_name.' 您好！<br>'
