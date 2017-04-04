@@ -42,8 +42,8 @@
 14.[获取用户创建和加入星球](/wiki/group.get_user_group.md)<br>
 
 ### C.帖子相关<br>
-1.[主页](/wiki/Post.GetIndexPost.md)<br>
-2.[我的星球 页面帖子显示](/wiki/Post.GetMyGroupPost.md)<br>
+1.[首页](/wiki/Post.GetIndexPost.md)<br>
+2.[首页-已登录](/wiki/Post.GetMyGroupPost.md)<br>
 3.[星球详情](/wiki/Post.GetGroupPost.md)<br>
 4.[帖子详情 发帖内容](/wiki/post.get_post_base.md)<br>
 5.[帖子详情 回帖内容](/wiki/post.get_post_reply.md)<br>
