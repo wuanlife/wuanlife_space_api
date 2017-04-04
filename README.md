@@ -39,6 +39,7 @@
 11.[搜索接口](/wiki/group.search.md)<br>
 12.[星球设置-成员管理](/wiki/group.user_manage.md)<br>
 13.[星球设置-成员管理-删除成员](/wiki/group.delete_group_member.md)<br>
+14.[获取用户创建和加入星球](/wiki/group.get_user_group.md)<br>
 
 ### C.帖子相关<br>
 1.[主页](/wiki/Post.GetIndexPost.md)<br>
