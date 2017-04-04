@@ -35,13 +35,14 @@ http://dev.wuanlife.com:800/group/get_group_info?group_id=1&user_id=2
 
     JSON
     {
-        "ret": 200,
-        "data": {
-            "group_id": "1",
-            "g_name": "装备2014中队",
-            "g_introduction": null,
-            "g_image": null,
-            "creator": 1
-        },
-        "msg": null
+    "ret": 200,
+    "data": {
+        "group_id": "1",
+        "g_name": "装备2014中队",
+        "g_introduction": null,
+        "g_image": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+        "private": "0",
+        "creator": 1
+    },
+    "msg": null
     }
