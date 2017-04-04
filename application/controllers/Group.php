@@ -494,10 +494,23 @@ class Group extends CI_Controller
             'group_id'=>$group_id,
             'user_id'=>$user_id,
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('private_group') == FALSE)
+            $this->response(null,400,validation_errors());
         $group_exist=$this->Group_model->judge_group_exist($group_id);
         $creator=$this->Group_model->judge_group_creator($data);
         if($group_exist){
-            $re=$this->Group_model->get_group_info($group_id);
+            $rs=$this->Group_model->get_group_infomation($group_id);
+            if(empty($rs['g_image'])){
+                $rs['g_image'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            }
+            $re = [
+                'group_id'=>$rs['id'],
+                'g_name'=>$rs['name'],
+                'g_introduction'=>$rs['g_introduction'],
+                'g_image'=>$rs['g_image'],
+                'private'=>$rs['private'],
+            ];
             if($creator){
                 $re['creator']=1;
             }else{
@@ -525,7 +538,11 @@ class Group extends CI_Controller
             'user_id'=>$user_id,
             'g_introduction'=>$g_introduction,
             'g_image'=>$g_image,
+            'private'=>$this->input->get('private'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('private_group') == FALSE)
+            $this->response(null,400,validation_errors());
         $group_exist=$this->Group_model->judge_group_exist($group_id);
         $creator=$this->Group_model->judge_group_creator($data);
         if($group_exist){

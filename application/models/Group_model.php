@@ -154,23 +154,11 @@ class Group_model extends CI_Model
         return $re;
     }
 
-    /**
-     * @param $group_id
-     * @return mixed
-     * 本模型已存在相同方法get_group_infomation
-     */
-    public function get_group_info($group_id){
-        $re=$this->db->select('id as group_id,name as g_name,g_introduction,g_image')
-            ->from('group_base')
-            ->where('id',$group_id)
-            ->get()
-            ->row_array();
-        return $re;
-    }
 
     public function alter_group_info($data){
         $re=$this->db->set('g_introduction',$data['g_introduction'])
             ->set('g_image',$data['g_image'])
+            ->set('private',$data['private'])
             ->where('id',$data['group_id'])
             ->update('group_base');
         return $re;
