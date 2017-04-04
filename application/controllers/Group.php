@@ -144,6 +144,7 @@ class Group extends CI_Controller
      */
     public function get_user_group(){
         $user_id = $this->input->get('user_id');
+        $data['user_id'] = $user_id;
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('get_create') == FALSE)
             $this->response(null,400,validation_errors());
