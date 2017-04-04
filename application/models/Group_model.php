@@ -233,34 +233,21 @@ class Group_model extends CI_Model
     /**
      * @param $user_id
      * @return int
-     * 获取用户创建星球数量
+     * 获取用户星球数量
      */
-    public function get_all_cgroup_num($user_id){
+    public function get_user_group_num($user_id){
         $this->db->from('group_detail')
             ->where('user_base_id', $user_id)
-            ->where('authorization','01')
             ->join('group_base','group_detail.group_base_id = group_base.id')
             ->where('delete',0);
         return $this->db->count_all_results();
     }
-    /**
-     * @param $user_id
-     * @return int
-     * 获取用户加入星球数量
-     */
-    public function get_all_jgroup_num($user_id){
-        $this->db->from('group_detail')
-            ->where('user_base_id', $user_id)
-            ->where('authorization','03')
-            ->join('group_base','group_detail.group_base_id = group_base.id')
-            ->where('delete',0);
-        return $this->db->count_all_results();
-    }
+
     /**
      * @param $limit_st
      * @param $page_num int 每页数量
      * @return mixed
-     * 获取星球列表
+     * 获取所有星球列表
      */
     public function lists($limit_st,$page_num){
         $sql='SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num FROM group_detail gd, group_base gb '
@@ -276,10 +263,10 @@ class Group_model extends CI_Model
      * @param $page_num
      * @param $user_id
      * @return mixed
-     * 获取用户创建星球
+     * 获取用户加入和创建星球
      */
-    public function get_create($limit_st,$page_num,$user_id){
-        $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '01'");
+    public function get_user_group($limit_st,$page_num,$user_id){
+        $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id");
         $re = $query->result_array();
         $row = array();
         foreach ($re as $key=>$value){
@@ -295,30 +282,7 @@ class Group_model extends CI_Model
         $re = $query->result_array();
         return $re;
     }
-    /**
-     * @param $limit_st
-     * @param $page_num
-     * @param $user_id
-     * @return mixed
-     * 获取用户加入星球
-     */
-    public function get_joined($limit_st,$page_num,$user_id){
-        $query = $this->db->query("SELECT `group_base_id` FROM `group_detail` WHERE  `user_base_id` = $user_id AND `authorization` = '03'");
-        $re = $query->result_array();
-        $row = array();
-        foreach ($re as $key=>$value){
-            $row[]=$value["group_base_id"];
-        }
-        $arr_string = join(',', $row);
-        $sql="SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
-            ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
-            .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-            .'ORDER BY COUNT(gd.group_base_id) DESC '
-            ."LIMIT $limit_st,$page_num";
-        $query = $this->db->query($sql);
-        $re = $query->result_array();
-        return $re;
-    }
+
     /**
      * @param $data
      * @param $user_id
@@ -458,16 +422,7 @@ class Group_model extends CI_Model
         $this->db->insert('post_detail',$d_data);
         return $d_data['post_base_id'];
     }
-/**
- * 判断用户是否登陆
- */
-public function u_status($user_id)
-{
-    if(isset($_COOKIE['user_name'])&&$_COOKIE['user_name'] = $data)
-    {
-        
-    }
-}
+
 
 
 

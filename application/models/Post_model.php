@@ -59,24 +59,21 @@ class Post_model extends CI_Model
         if(empty($user_id)){
             $user_id = 0;
         }
-        $sql = 'SELECT pb.id AS post_id,gb.id AS group_id,gb.name AS g_name,pb.title AS p_title,pd.text AS p_text,'
-            .'ub.id AS user_id,ub.nickname AS user_name,'
+        $sql = 'SELECT gb.id AS group_id,gb.name AS g_name,gb.g_image,gb.g_introduction,pb.id AS post_id,pb.title AS p_title,pd.text AS p_text,'
+            .'ub.id AS user_id,ub.nickname AS user_name,ud.profile_picture,'
             .'pd.create_time,pb.sticky,pb.`lock`,'
-            ."(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=$post_id AND floor=1) AS approved,"
-            ."(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=$post_id AND approved=1) AS approvednum "
-            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=$post_id AND floor=1) AS approved,"
+            ."(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=$post_id AND approved=1) AS approved_num,"
+            ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=$post_id AND `delete`=0) AS collected,"
+            ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=$post_id AND `delete`=0) AS collected_num "
+            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,user_detail ud '
             . 'WHERE pb.id=pd.post_base_id AND pb.`delete`=0 AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id '
-            ."AND pb.id=$post_id AND pd.floor=1" ;
-        $rs = $this->db->query($sql)->result_array();
-        foreach ($rs as $key => $value) {
-            if(empty($rs["$key"]['approved'])){
-                $rs["$key"]['approved'] = '0';
-            }
-        }
+            ."AND pb.id=$post_id AND pd.floor=1 AND ub.id=ud.user_base_id" ;
+        $rs = $this->db->query($sql)->row_array();
         if (!empty($rs)){
-            $rs[0]['sticky']=(int)$rs[0]['sticky'];
-            $rs[0]['lock']=(int)$rs[0]['lock'];
-            preg_match_all("(http://[-a-zA-Z0-9@:%_\+.~#?&//=]+[.jpg.gif.png])",$rs[0]['p_text'],$rs[0]['p_image']);
+            $rs['sticky']=(int)$rs['sticky'];
+            $rs['lock']=(int)$rs['lock'];
+            preg_match_all("(http://[-a-zA-Z0-9@:%_\+.~#?&//=]+[.jpg.gif.png])",$rs['p_text'],$rs['p_image']);
         }
         return $rs;
     }
@@ -138,27 +135,6 @@ class Post_model extends CI_Model
         $this->db->where('floor',1);
         $query = $this->db->get();
         return $query->row_array();
-    }
-    /**
-     * @param $post_id
-     * @param $user_id
-     * @return int
-     * 判断帖子是否被收藏
-     */
-    public function judge_collect_post($post_id,$user_id){
-        $sql=$this->db->select('*')
-            ->from('user_collection')
-            ->where('post_base_id',$post_id)
-            ->where('user_base_id',$user_id)
-            ->where('`delete`',0)
-            ->get()
-            ->row_array();
-        if($sql){
-            $collect=1;
-        }else{
-            $collect=0;
-        }
-        return $collect;
     }
 
     /**

@@ -101,17 +101,6 @@ class Common_model extends CI_Model
      * /
 
     /**
-     * @param $post_id
-     * @param $user_id
-     * @return int
-     * 判断用户是否收藏帖子
-     */
-    public function judge_collect_post($post_id,$user_id){
-        $re=$this->Post_model->judge_collect_post($post_id,$user_id);
-        return $re;
-    }
-
-    /**
      * @param $group_id
      * @return int
      * 判断星球是否存在

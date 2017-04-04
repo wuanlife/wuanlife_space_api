@@ -40,6 +40,8 @@ class Post extends CI_Controller
      * 单个帖子的内容详情，不包括回复列表
      */
     public function get_post_base(){
+        //$this->output->enable_profiler(TRUE);
+        //print_r($this->db->queries);
         $data = array(
             'post_id' =>$this->input->get('post_id'),
             'user_id' =>$this->input->get('user_id'),
@@ -50,26 +52,27 @@ class Post extends CI_Controller
         $model = $this->Post_model;
         $common_model = $this->Common_model;
         $rs = $model->get_post_base($data['post_id'],$data['user_id']);
-        $rs[0]['collect']=$common_model->judge_collect_post($data['post_id'],$data['user_id']);
+        $rs['creator_id'] = $this->Group_model->get_group_infomation($rs['group_id'])['user_base_id'];
+        $rs['creator_name'] = $this->User_model->get_user_information($rs['creator_id'])['nickname'];
         $group_id=$model->get_group_id($data['post_id']);
         $private_group = $common_model->judge_group_private($group_id);
-        $rs[0]['edit_right']=0;
-        $rs[0]['delete_right']=0;
-        $rs[0]['sticky_right']=0;
-        $rs[0]['lock_right']=0;
-        $rs[0]['code'] = 1;
+        $rs['edit_right']=0;
+        $rs['delete_right']=0;
+        $rs['sticky_right']=0;
+        $rs['lock_right']=0;
+        $rs['code'] = 1;
         $msg = '查看帖子成功';
         $re['group'] = $common_model->judge_group_exist($group_id);
         $re['post'] = $common_model->judge_post_exist($data['post_id']);
         if(!$re['post']){
             unset($rs);
-            $rs[0]['code'] = 0;
+            $rs['code'] = 0;
             if($re['group']){
                 $msg = "帖子已被删除，不可查看！";
             }else{
                 $msg = "帖子所属星球已关闭，不可查看！";
             }
-            $this->response($rs[0],200,$msg);
+            $this->response($rs,200,$msg);
         }
         if($private_group){
             if($data['user_id'] !=null){
@@ -78,40 +81,75 @@ class Post extends CI_Controller
                 if(empty($groupcreator)){
                     if(empty($groupuser)){
                         unset($rs);
-                        $rs[0]['code'] = 2;
-                        $rs[0]['group_id'] = $group_id;
+                        $rs['code'] = 2;
+                        $rs['group_id'] = $group_id;
                         $msg = "未加入，不可查看私密帖子！";
                     }
                 }
             }else{
                 unset($rs);
-                $rs[0]['code'] = 2;
-                $rs[0]['group_id'] = $group_id;
+                $rs['code'] = 2;
+                $rs['group_id'] = $group_id;
                 $msg = "未登录，不可查看私密帖子！";
             }
         }
         if ($data['user_id'] !=null){
-            $creater= $common_model->judge_group_creator($group_id,$data['user_id']);
+            $creator= $common_model->judge_group_creator($group_id,$data['user_id']);
             $poster = $common_model->judge_post_creator($data['user_id'],$data['post_id']);
             $admin = $common_model->judge_admin($data['user_id']);
             if($poster)
             {
-                $rs[0]['edit_right']=1;
-                $rs[0]['delete_right']=1;
-                $rs[0]['lock_right']=1;
+                $rs['edit_right']=1;
+                $rs['delete_right']=1;
+                $rs['lock_right']=1;
             }
-            if($creater){
-                $rs[0]['delete_right']=1;
-                $rs[0]['sticky_right']=1;
-                $rs[0]['lock_right']=1;
+            if($creator){
+                $rs['delete_right']=1;
+                $rs['sticky_right']=1;
+                $rs['lock_right']=1;
             }
             if($admin){
-                $rs[0]['delete_right']=1;
-                $rs[0]['sticky_right']=1;
-                $rs[0]['lock_right']=1;
+                $rs['delete_right']=1;
+                $rs['sticky_right']=1;
+                $rs['lock_right']=1;
             }
         }
-        $this->response($rs[0],200,$msg);
+        $array = [
+            'groups'=>[
+                'group_id' =>$rs['group_id'],
+                'g_name'   =>$rs['g_name'],
+                'g_image'  =>$rs['g_image'],
+                'g_introduction'=>$rs['g_introduction'],
+                'creator_id'  =>$rs['creator_id'],
+                'creator_name' =>$rs['creator_name']
+            ],
+            'posts'=>[
+                'post_id'=>$rs['post_id'],
+                'p_title'=>$rs['p_title'],
+                'p_text'=>$rs['p_text'],
+                'create_time'=>$rs['create_time'],
+                'sticky'=>$rs['sticky'],
+                'lock'=>$rs['lock'],
+                'approved'=>$rs['approved'],
+                'approved_num'=>$rs['approved_num'],
+                'collected'=>$rs['collected'],
+                'collected_num'=>$rs['collected_num'],
+                'p_image'=>$rs['p_image'],
+            ],
+            'users'=>[
+                'user_id'=>$rs['user_id'],
+                'user_name'=>$rs['user_name'],
+                'profile_picture'=>$rs['profile_picture'],
+            ],
+            'rights'=>[
+                'edit_right'=>$rs['edit_right'],
+                'delete_right'=>$rs['delete_right'],
+                'sticky_right'=>$rs['sticky_right'],
+                'lock_right'=>$rs['lock_right'],
+            ],
+            'code'=>$rs['code'],
+        ];
+        $this->response($array,200,$msg);
     }
     /**
      * 单个帖子的回复详情，不包括帖子内容
