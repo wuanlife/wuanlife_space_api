@@ -13,7 +13,7 @@
 |参数|类型|是否必须|说明|
 |:--|:--|:--|:--|
 |group_id|int|必须|星球id|
-|user_id|int|必须|用户ID|
+|user_id|int|必须|用户id|
 
 ## 返回说明
 
@@ -23,6 +23,7 @@
 |g_name|string|星球名称|
 |g_introduction|string|	星球介绍|
 |g_image|string|	星球图片链接|
+|private|int|是否私密，0允许任何人加入，1需申请方可加入|
 |creator|int|是否为创建者，1为创建者，0不是创建者|
 
 
