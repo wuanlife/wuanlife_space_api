@@ -31,8 +31,8 @@
 3.[退出星球](/wiki/Group.Quit.md)<br>
 4.[是否加入星球](/wiki/Group.GStatus.md)<br>
 5.[星球列表](/wiki/group.lists.md)<br>
-6.[获取用户创建星球](/wiki/group.get_create.md)<br>
-7.[获取用户加入星球](/wiki/group.get_joined.md)<br>
+6.[获取用户创建星球](/wiki/group.get_create.md)（废弃）<br>
+7.[获取用户加入星球](/wiki/group.get_joined.md)（废弃）<br>
 8.[星球设置-获取用户星球信息](/wiki/Group.GetGroupInfo.md)<br>
 9.[星球设置-修改用户星球信息](/wiki/Group.AlterGroupInfo.md)<br>
 10.[申请加入私密星球](/wiki/group.private_group.md)<br>
