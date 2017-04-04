@@ -318,16 +318,45 @@ class Post extends CI_Controller
      * @return string user_name 用户名
      */
     public function get_mygroup_post(){
-        $data   = array();
         $user_id=$this->input->get('user_id');
-        $page=$this->input->get('pn');
-
-        $data = $this->Post_model->get_mygroup_post($user_id,$page);
+        $pn=$this->input->get('pn');
+        $data['user_id'] = $user_id;
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
+        $data = $this->Post_model->get_mygroup_post($user_id,$pn);
         $data = $this->Post_model->get_image_url($data);
         $data = $this->Post_model->delete_image_gif($data);
         $data = $this->Post_model->post_image_limit($data);
         $data = $this->Post_model->delete_html_posts($data);
         $data = $this->Post_model->post_text_limit($data);
+        foreach($data['posts'] as $key=>$value){
+            $data['posts'][$key] = [
+                'posts' => [
+                    'post_id' => $value['post_id'],
+                    'p_title' => $value['p_title'],
+                    'p_text'  => $value['p_text'],
+                    'lock'    => $value['lock'],
+                    'create_time' => $value['create_time'],
+                    'approved'=> $value['approved'],
+                    'approved_num'  =>$value['approved_num'],
+                    'collected' => $value['collected'],
+                    'collected_num'     => $value['collected_num'],
+                    'replied'   => $value['replied'],
+                    'replied_num'   => $value['replied_num'],
+                    'image'      => $value['image'],
+                ],
+                'users' => [
+                    'profile_picture' =>$value['profile_picture'],
+                    'user_name'       =>$value['user_name'],
+                    'user_id'         =>$value['user_id'],
+                ],
+                'groups' => [
+                    'group_id'  => $value['group_id'],
+                    'g_name'    => $value['g_name'],
+                ],
+            ];
+        }
         $data['user_name']=$this->Post_model->get_user($user_id);
 
         $this->response($data,200,null);

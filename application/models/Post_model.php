@@ -75,6 +75,12 @@ class Post_model extends CI_Model
             $rs['lock']=(int)$rs['lock'];
             preg_match_all("(http://[-a-zA-Z0-9@:%_\+.~#?&//=]+[.jpg.gif.png])",$rs['p_text'],$rs['p_image']);
         }
+        if(empty($rs['profile_picture'])){
+            $rs['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+        }
+        if(empty($rs['g_image'])){
+            $rs['g_image'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+        }
         return $rs;
     }
     /**
@@ -176,15 +182,15 @@ class Post_model extends CI_Model
         }
         $user_id=$data['user_id'];
         $rs=array();
-        $sql = "SELECT ceil(count(*)/$num) AS pageCount "
+        $sql = "SELECT ceil(count(*)/$num) AS page_count "
             . "FROM post_base pb,group_base gb WHERE pb.delete=0 AND pb.group_base_id=gb.id AND gb.private='0' AND gb.delete='0'";
-        $pageCount=$this->db->query($sql)->result_array()[0];
-        $rs['pageCount'] = (int)$pageCount['pageCount'];
-        if ($rs['pageCount'] == 0 ){
-            $rs['pageCount']=1;
+        $page_count=$this->db->query($sql)->result_array()[0];
+        $rs['page_count'] = (int)$page_count['page_count'];
+        if ($rs['page_count'] == 0 ){
+            $rs['page_count']=1;
         }
-        if($data['page'] > $rs['pageCount']){
-            $data['page'] = $rs['pageCount'];
+        if($data['page'] > $rs['page_count']){
+            $data['page'] = $rs['page_count'];
         }elseif ($data['page']==null){
             $data['page']=1;
         }
@@ -336,34 +342,49 @@ class Post_model extends CI_Model
      * 我的星球帖子展示
      */
     public function get_mygroup_post($user_id,$page=null) {
-        $num=30;
+        $num=10;
         $rs   = array();
 
-        $sql = "SELECT ceil(count(*)/$num) AS pageCount "
+        $sql = "SELECT ceil(count(*)/$num) AS page_count "
             . 'FROM post_base pb,group_base gb,group_detail gd '
             . "WHERE pb.group_base_id=gb.id AND gb.id=gd.group_base_id AND gd.user_base_id=$user_id AND pb.delete=0 AND gb.delete=0 ";
-        $pageCount=$this->db->query($sql)->result_array()[0];
+        $page_count=$this->db->query($sql)->row_array();
 
-        $rs['pageCount'] = (int)$pageCount['pageCount'];
-        if ($rs['pageCount'] == 0 ){
-            $rs['pageCount']=1;
+        $rs['page_count'] = (int)$page_count['page_count'];
+        if ($rs['page_count'] == 0 ){
+            $rs['page_count']=1;
         }
-        if($page > $rs['pageCount']){
-            $page = $rs['pageCount'];
+        if($page > $rs['page_count']){
+            $page = $rs['page_count'];
         }elseif ($page==null){
             $page=1;
         }
         $start=($page-1)*$num;
-        $rs['currentPage'] = (int)$page;
-        $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,ub.nickname as user_name,gb.id AS group_id,gb.name AS g_name '
-            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
+        $rs['current_page'] = (int)$page;
+        $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,'
+            . 'ub.nickname as user_name,ub.id AS user_id,gb.id AS group_id,gb.name AS g_name,ud.profile_picture,'
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
+            .'(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approved_num,'
+            ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=pb.id AND `delete`=0) AS collected,"
+            ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=pb.id AND `delete`=0) AS collected_num,"
+            ."(SELECT count(user_base_id) FROM post_detail WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor>1 AND `delete`=0) AS replied,"
+            .'(SELECT count(user_base_id) FROM post_detail WHERE post_base_id=pb.id AND floor>1 AND `delete`=0) AS replied_num '
+            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,user_detail ud '
             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 AND gb.delete=0 '
-            . "AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =$user_id )"
+            . "AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =$user_id ) AND ub.id=ud.user_base_id "
             . 'GROUP BY pb.id '
             . 'ORDER BY MAX(pd.create_time) DESC '
             . "LIMIT $start,$num ";
         $this->db->flush_cache();
         $rs['posts']=$this->db->query($sql)->result_array();
+        foreach ($rs['posts'] as $key => $value) {
+            if($value['replied']>0){
+                $rs['posts']["$key"]['replied'] = '1';
+            }
+            if(empty($value['profile_picture'])){
+                $rs['posts']["$key"]['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            }
+        }
         return $rs;
     }
 
@@ -411,8 +432,8 @@ class Post_model extends CI_Model
         $sql = "SELECT ceil(count(*)/$num) AS page_count "
             . 'FROM post_base pb,group_base gb '
             . "WHERE pb.group_base_id=gb.id AND gb.id=$group_id AND pb.delete=0 ";
-        $pageCount = $this->db->query($sql)->row_array();
-        $rs['page_count'] = (int)$pageCount['page_count'];
+        $page_count = $this->db->query($sql)->row_array();
+        $rs['page_count'] = (int)$page_count['page_count'];
         if ($rs['page_count'] == 0 ){
             $rs['page_count']=1;
         }
@@ -597,12 +618,12 @@ class Post_model extends CI_Model
         }
         $user_id=$data['user_id'];
         $rs=array();
-        $sql = "SELECT ceil(count(*)/$num) AS pageCount "
+        $sql = "SELECT ceil(count(*)/$num) AS page_count "
              . 'FROM user_collection '
              . "WHERE user_collection.user_base_id='$user_id' AND user_collection.delete=0 ";
-        $pageCount=$this->db->query($sql)->result_array()[0];
+        $page_count=$this->db->query($sql)->result_array()[0];
 
-        $rs['page_count'] = (int)$pageCount['pageCount'];
+        $rs['page_count'] = (int)$page_count['page_count'];
         if ($rs['page_count'] == 0 ){
             $rs['page_count']=1;
         }
