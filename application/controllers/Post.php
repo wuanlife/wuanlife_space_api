@@ -516,7 +516,15 @@ class Post extends CI_Controller
             'user_id'=>$this->input->get('user_id'),
             'page'=>$this->input->get('page'),
         );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
         $re=$this->Post_model->get_collect_post($data);
+        //$re = $this->Post_model->get_image_url($re);
+        //$re = $this->Post_model->delete_image_gif($re);
+        //$re = $this->Post_model->post_image_limit($re);
+        $re = $this->Post_model->delete_html_posts($re);
+        $re = $this->Post_model->post_text_limit($re);
         $this->response($re,200,null);
     }
 

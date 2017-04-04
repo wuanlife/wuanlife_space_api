@@ -643,20 +643,20 @@ class Post_model extends CI_Model
              . "WHERE user_collection.user_base_id='$user_id' AND user_collection.delete=0 ";
         $pageCount=$this->db->query($sql)->result_array()[0];
 
-        $rs['pageCount'] = (int)$pageCount['pageCount'];
-        if ($rs['pageCount'] == 0 ){
-            $rs['pageCount']=1;
+        $rs['page_count'] = (int)$pageCount['pageCount'];
+        if ($rs['page_count'] == 0 ){
+            $rs['page_count']=1;
         }
-        if($data['page'] > $rs['pageCount']){
-            $data['page'] = $rs['pageCount'];
+        if($data['page'] > $rs['page_count']){
+            $data['page'] = $rs['page_count'];
         }elseif ($data['page']==null){
             $data['page']=1;
         }
         $start=($data['page']-1)*$num;
-        $rs['currentPage'] = (int)$data['page'];
-        $sql = 'SELECT pb.id AS post_id,uc.create_time,pb.title AS post_name,gb.id AS gb_id,gb.name AS group_name,ub.nickname AS user_name,pb.delete '
-             . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub '
-             . "WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=$user_id AND uc.delete=0 AND pb.user_base_id=ub.id "
+        $rs['current_page'] = (int)$data['page'];
+        $sql = 'SELECT pb.id AS post_id,uc.create_time,pb.title AS p_title,gb.id AS group_id,gb.name AS g_name,ub.nickname AS user_name,pb.delete,pd.text AS p_text '
+             . 'FROM user_collection uc,post_base pb,group_base gb,user_base AS ub,post_detail pd '
+             . "WHERE pb.id=uc.post_base_id AND pb.group_base_id=gb.id AND uc.delete=0 AND uc.user_base_id=$user_id AND uc.delete=0 AND pb.user_base_id=ub.id AND pd.post_base_id = uc.post_base_id AND pd.floor=1 "
               . "LIMIT $start,$num ";
         $this->db->flush_cache();
         $rs['posts']=$this->db->query($sql)->result_array();
