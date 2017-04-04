@@ -1,6 +1,6 @@
 # post.get_mygroup_post
 
-我的星球页面帖子显示
+首页-已登录，我的星球页面帖子显示
 
 ## 接口调用请求说明
 
@@ -12,22 +12,32 @@
 
 |参数|类型|是否必须|默认值|说明|
 |:--|:--|:--|:--|:--|
-|user_id	|int|	可选|	-|	用户ID|
+|user_id	|int|必须|	-|	用户ID|
 |pn|	int	|不必须	|1|	第几页|
 
 ## 返回说明
 
 |参数|类型|说明|
 |:--|:--|:--|
-|post.post_id	|	int	|帖子ID|
-|post.p_title	|string	|标题|
-|post.p_text	|string|	内容|
-|post.lock    |string|    是否被锁定 1被锁定|
-|post.create_time|	date|	发帖时间|
-|post.user_name	|string	|发帖人|
-|post.g_name	|string|	星球名称|
-|page_count	|int	|总页数|
-|current_page	|int	|当前页|
+|page_count	|int|	总页数|
+|current_page|	int	|当前页|
+|posts.post_id	|	int|	帖子ID|
+|posts.p_title|	string|	标题|
+|posts.p_text	|string	|内容|
+|posts.create_time|	date|	发帖时间|
+|posts.lock|	int	|是否锁定（不知道这个参数干嘛用的）|
+|posts.approved|	int	|是否点赞(0未点赞，1已点赞)|
+|posts.approved_num|	int	|点赞数|
+|posts.collected|	int	|是否收藏(0未收藏，1已收藏)|
+|posts.collected_num|	int	|收藏数|
+|posts.replied|	int	|是否回复(0未回复，1已回复)|
+|posts.replied_num|	int	|回复数|
+|posts.image|array|帖子图片预览3张url地址|
+|users.user_name|	string	|发帖人|
+|users.profile_picture|string|用户头像图片url|
+|users.user_id|int|发帖者id|
+|groups.group_id|	int	|星球ID|
+|groups.g_name|	string|	星球名称|
 |user_name   |string    |当前用户名|
 
 
@@ -39,35 +49,63 @@ http://dev.wuanlife.com:800/post/get_mygroup_post?user_id=1&pn=1
 
     JSON:
     {
-        "ret": 200,
-        "data": {
-            "pageCount": 1,
-            "currentPage": 1,
-            "posts": [
-                {
-                    "post_id": "3",
-                    "p_title": "sdfasd",
-                    "p_text": "fasdfsd",
+    "ret": 200,
+    "data": {
+        "page_count": 1,
+        "current_page": 1,
+        "posts": [
+            {
+                "posts": {
+                    "post_id": "42",
+                    "p_title": "1",
+                    "p_text": "1",
                     "lock": "0",
-                    "create_time": "2017",
-                    "user_name": "123123",
-                    "group_id": "355",
-                    "g_name": "一二三四五六七八九十一二三四五六七八九十",
+                    "create_time": "2017-03-16 11:09:13",
+                    "approved": "1",
+                    "approved_num": "3",
+                    "collected": "0",
+                    "collected_num": "0",
+                    "replied": "0",
+                    "replied_num": "0",
                     "image": []
                 },
-                {
-                    "post_id": "6",
-                    "p_title": "cs",
-                    "p_text": "cs",
-                    "lock": "0",
-                    "create_time": "2017",
-                    "user_name": "xjkui",
-                    "group_id": "29",
-                    "g_name": "测试29",
-                    "image": []
+                "users": {
+                    "profile_picture": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                    "user_name": "汪汪汪",
+                    "user_id": "2"
+                },
+                "groups": {
+                    "group_id": "1",
+                    "g_name": "装备2014中队"
                 }
-            ],
-            "user_name": "123123"
-        },
-        "msg": null
+            },
+            {
+                "posts": {
+                    "post_id": "41",
+                    "p_title": "1",
+                    "p_text": "1",
+                    "lock": "0",
+                    "create_time": "2017-03-13 22:06:15",
+                    "approved": "0",
+                    "approved_num": "0",
+                    "collected": "0",
+                    "collected_num": "0",
+                    "replied": "0",
+                    "replied_num": "0",
+                    "image": []
+                },
+                "users": {
+                    "profile_picture": "http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100",
+                    "user_name": "汪汪汪",
+                    "user_id": "2"
+                },
+                "groups": {
+                    "group_id": "1",
+                    "g_name": "装备2014中队"
+                }
+            }
+        ],
+        "user_name": "123"
+    },
+    "msg": null
     }
