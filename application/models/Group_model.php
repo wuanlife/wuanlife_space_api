@@ -61,7 +61,23 @@ class Group_model extends CI_Model
         return $re['id'];
     }
 
+    public function get_group_post_num($group_id)
+    {
+        $re=$this->db->select('id')
+            ->where('group_base_id',$group_id)
+            ->get('post_base')
+            ->result_array();
+        return count($re);
+    }
 
+    public function get_group_user_num($group_id)
+    {
+        $re=$this->db->select('user_base_id')
+            ->where('group_base_id',$group_id)
+            ->get('group_detail')
+            ->result_array();
+        return count($re);
+    }
 
     /*
      * 通过用户id获取用户nickname

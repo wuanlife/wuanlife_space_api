@@ -225,6 +225,13 @@ $config = array(
             'rules' => 'required'
         ),
     ),
+    'get_group_post' =>array(
+        array(
+            'field' => 'group_id',
+            'label' => 'group_id',
+            'rules' => 'required'
+        ),
+    ),
     'search' =>array(
         array(
             'field' => 'text',

@@ -20,10 +20,8 @@ class User_model extends CI_Model
        $re=false;
 
         $query = $this->db->query("select * from user_base where email=\"$email\"");
-        if($query->result_array()){
-           $re=$query->result_array()[0];
-        }
-        return $re;
+
+        return $query->row_array();
     }
 
     /**

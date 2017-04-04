@@ -252,6 +252,7 @@ class Post extends CI_Controller
                 'users' => [
                     'profile_picture' =>$value['profile_picture'],
                     'user_name'       =>$value['user_name'],
+                    'user_id'         =>$value['user_id'],
                 ],
                 'groups' => [
                     'group_id'  => $value['group_id'],
@@ -316,53 +317,90 @@ class Post extends CI_Controller
      * @return int private 是否私密(0为否，1为私密)
      */
     public function get_group_post(){
-        $data   = array();
         $group_id=$this->input->get('group_id');
         $user_id=$this->input->get('user_id');
         $page=$this->input->get('pn');
-
-        $data['creator_id']=$this->Post_model->get_creater_id($group_id)['user_base_id'];
-        $creatorName=$this->Post_model->get_creator($group_id);
-        $data['creator_name']=$creatorName;
         $data['group_id']=$group_id;
-        $rs = $this->Common_model->judge_group_exist($data['group_id']);
-        $data['g_name']=$this->Common_model->get_group_name($group_id);
-        $private=$this->Common_model->judge_group_private($group_id);
-        $data['private']=$private;
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_group_post') == FALSE)
+            $this->response(null,400,validation_errors());
+        $re = $this->Group_model->get_group_infomation($group_id);
+        if(empty($re['g_image'])){
+            $re['g_image'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+        }
+        $data = [
+            'group_id'=>$re['id'],
+            'g_name'=>$re['name'],
+            'g_introduction'=>$re['g_introduction'],
+            'g_image'=>$re['g_image'],
+            'private'=>$re['private'],
+            'creator_id'=>$re['user_base_id'],
+            'creator_name'=>$this->User_model->get_user_information($re['user_base_id'])['nickname'],
+            'post_num'=>$this->Group_model->get_group_post_num($group_id),
+            'user_num'=>$this->Group_model->get_group_user_num($group_id),
+
+        ];
         $user=$this->Common_model->judge_group_user($group_id,$user_id);
         $creator=$this->Common_model->judge_group_creator($group_id,$user_id);
         $applicate=$this->Common_model->judge_user_application($user_id,$group_id);
-        if(empty($rs)){
-            $data['posts']='星球已关闭，不显示帖子';
+        if($re['delete']){
+            $data['posts']=array();
             $data['pageCount']=1;
             $data['currentPage']=1;
-            $this->response($data,200,null);
+            $this->response($data,200,'星球已关闭，不显示帖子');
         }
         if(empty($user)&&empty($creator)){
             $data['identity']='03';
             $data['posts']=array();
-            if($private==1){
+            $msg = '您还没有加入该星球';
+            if($data['private']==1){
                 if(!empty($applicate)){
                     $data['identity']='04';
+                    $msg = '申请中，请等待星球主人审核！';
                 }
                 $data['posts']=array();
                 $data['pageCount']=1;
                 $data['currentPage']=1;
-                $this->response($data,200,null);
+                $this->response($data,200,$msg);
             }
         }elseif (!empty($user)) {
             $data['identity']='02';
         }elseif (!empty($creator)) {
             $data['identity']='01';
         }
-        $data =array_merge($data,$this->Post_model->get_group_post($group_id,$page));
+        $data =array_merge($data,$this->Post_model->get_group_post($group_id,$page,$user_id));
         $data = $this->Post_model->get_image_url($data);
         $data = $this->Post_model->delete_image_gif($data);
         $data = $this->Post_model->post_image_limit($data);
         $data = $this->Post_model->delete_html_posts($data);
         $data = $this->Post_model->post_text_limit($data);
 
-        $this->response($data,200,null);
+        foreach($data['posts'] as $key=>$value){
+            $data['posts'][$key] = [
+                'posts' => [
+                    'post_id' => $value['post_id'],
+                    'p_title' => $value['p_title'],
+                    'p_text'  => $value['p_text'],
+                    'lock'    => $value['lock'],
+                    'digest'  => $value['digest'],
+                    'sticky'  => $value['sticky'],
+                    'create_time'   => $value['create_time'],
+                    'approved'      => $value['approved'],
+                    'approved_num'  =>$value['approved_num'],
+                    'collected'     => $value['collected'],
+                    'collected_num' => $value['collected_num'],
+                    'replied'       => $value['replied'],
+                    'replied_num'   => $value['replied_num'],
+                    'image'         => $value['image'],
+                ],
+                'users' => [
+                    'profile_picture' =>$value['profile_picture'],
+                    'user_name'       =>$value['user_name'],
+                    'user_id'         =>$value['user_id'],
+                ],
+            ];
+        }
+        $this->response($data,200,'浏览帖子成功');
 
     }
 

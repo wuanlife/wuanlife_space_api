@@ -235,7 +235,7 @@ class Common_model extends CI_Model
 
     /**
      * 通过星球id获取星球名称
-     * Group_model已存在相同方法get_group_information
+     * Group_model已存在相同方法get_group_infomation
      */
     public function get_group_name($group_id){
         $sql=$this->db->select('name')
@@ -295,10 +295,9 @@ class Common_model extends CI_Model
     public function judge_user_application($user_id,$group_id){
         $sql=$this->db->select('*')
             ->where_in('status',array(0,1))
-            ->where('message_base_code','0001')
-            ->where('id_1',$user_id)
-            ->where('id_2',$group_id)
-            ->get('message_detail')
+            ->where('user_apply_id',$user_id)
+            ->where('group_base_id',$group_id)
+            ->get('message_apply')
             ->row_array();
         if(empty($sql)){
             $re=NULL;

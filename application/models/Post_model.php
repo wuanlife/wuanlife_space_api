@@ -194,7 +194,7 @@ class Post_model extends CI_Model
         return false;
     }
     public function get_index_post($data){
-        $num=30;
+        $num=10;
         if($data['user_id']==null){
             $data['user_id']=0;
         }
@@ -215,9 +215,9 @@ class Post_model extends CI_Model
         $start=($data['page']-1)*$num;
         $rs['currentPage'] = (int)$data['page'];
         $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.`lock`,pd.create_time,'
-            .'ud.profile_picture,'
+            .'ud.profile_picture,ub.id AS user_id,'
             .'ub.nickname as user_name,gb.id AS group_id,gb.`name` AS g_name,'
-            ."(SELECT approved FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
             .'(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approved_num,'
             ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=pb.id AND `delete`=0) AS collected,"
             ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=pb.id AND `delete`=0) AS collected_num,"
@@ -234,9 +234,6 @@ class Post_model extends CI_Model
         $this->db->flush_cache();
         $rs['posts']=$this->db->query($sql)->result_array();
         foreach ($rs['posts'] as $key => $value) {
-            if(empty($rs['posts']["$key"]['approved'])){
-                $rs['posts']["$key"]['approved'] = '0';
-            }
             if($value['replied']>0){
                 $rs['posts']["$key"]['replied'] = '1';
             }
@@ -410,19 +407,6 @@ class Post_model extends CI_Model
 
 
     /**
-     * 通过星球id查找创建者id
-     * Group_model已存在相同方法get_group_information
-     */
-    public function get_creater_id($group_id){
-        $re=$this->db->select('user_base_id')
-            ->where('group_base_id',$group_id)
-            ->where('authorization','01')
-            ->get('group_detail')
-            ->row_array();
-        return $re;
-    }
-
-    /**
      * 通过星球id返回星球创建者昵称
      * Group_model已存在相同方法get_group_information
      */
@@ -442,44 +426,36 @@ class Post_model extends CI_Model
     }
 
 
-    public function get_group_post($group_id,$page=null){
-
-        $num=30;
-        $rs   = array();
-
-        $groupData=$this->db->select('id as group_id,name as group_name')
-            ->where('id',$group_id)
-            ->get('group_base')
-            ->row_array();
-
-
-        if(empty($groupData)){
-            return null;
+    public function get_group_post($group_id,$page=null,$user_id){
+        if(empty($user_id)){
+            $user_id = 0;
         }
-        $rs['group_id'] = $groupData['group_id'];
-        $rs['group_name'] = $groupData['group_name'];
-
-
-        $sql = "SELECT ceil(count(*)/$num) AS pageCount "
+        $num=10;
+        $rs   = array();
+        $sql = "SELECT ceil(count(*)/$num) AS page_count "
             . 'FROM post_base pb,group_base gb '
             . "WHERE pb.group_base_id=gb.id AND gb.id=$group_id AND pb.delete=0 ";
-        $pageCount = $this->db->query($sql)->result_array();
-
-
-        $rs['pageCount'] = (int)$pageCount[0]['pageCount'];
-        if ($rs['pageCount'] == 0 ){
-            $rs['pageCount']=1;
+        $pageCount = $this->db->query($sql)->row_array();
+        $rs['page_count'] = (int)$pageCount['page_count'];
+        if ($rs['page_count'] == 0 ){
+            $rs['page_count']=1;
         }
-        if($page > $rs['pageCount']){
-            $page = $rs['pageCount'];
+        if($page > $rs['page_count']){
+            $page = $rs['page_count'];
         }elseif ($page==null){
             $page=1;
         }
-        $rs['currentPage'] = $page;
+        $rs['current_page'] = $page;
         $start=($page-1)*$num;
-        $sql = 'SELECT  pb.digest,pb.id AS post_id,pb.title,pd.text as p_text,pd.create_time,ub.id,ub.nickname as user_name,pb.sticky,pb.lock '
-            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
-            . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=$group_id AND pb.delete=0 "
+        $sql = 'SELECT  pb.id AS post_id,pb.title AS p_title,pd.text as p_text,pd.create_time,ub.id AS user_id,ub.nickname as user_name,pb.sticky,pb.lock,pb.digest,ud.profile_picture,'
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
+            .'(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approved_num,'
+            ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=pb.id AND `delete`=0) AS collected,"
+            ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=pb.id AND `delete`=0) AS collected_num,"
+            ."(SELECT count(user_base_id) FROM post_detail WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor>1 AND `delete`=0) AS replied,"
+            .'(SELECT count(user_base_id) FROM post_detail WHERE post_base_id=pb.id AND floor>1 AND `delete`=0) AS replied_num '
+            . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,user_detail ud '
+            . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.group_base_id=$group_id AND pb.delete=0 AND ub.id = ud.user_base_id "
             . 'GROUP BY pb.id '
             . 'ORDER BY pb.sticky DESC, '
             . 'MAX(pd.create_time) DESC '
@@ -487,7 +463,14 @@ class Post_model extends CI_Model
         $this->db->flush_cache();
 
         $rs['posts'] = $this->db->query($sql)->result_array();
-
+        foreach ($rs['posts'] as $key => $value) {
+            if($value['replied']>0){
+                $rs['posts']["$key"]['replied'] = '1';
+            }
+            if(empty($value['profile_picture'])){
+                $rs['posts']["$key"]['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            }
+        }
         return $rs;
 }
     public function post_reply_message($rs){
