@@ -33,9 +33,14 @@ $config = array(
             'rules' => 'required|min_length[6]'
         ),
         array(
-            'field' => 'psw',
-            'label' => 'psw',
-            'rules' => 'required|min_length[6]'
+            'field' => 'token',
+            'label' => 'token',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'exp',
+            'label' => 'exp',
+            'rules' => 'required'
         ),
     ),
     'reg'=>array(

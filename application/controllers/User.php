@@ -537,18 +537,22 @@ class User extends CI_Controller
         /**
          * 发送邮件测试接口，配置信息保存在config/email.php
          */
-        $this->load->library('email');
-        $this->email->from('wuanlife@163.com', 'xiaochao');
-        $this->email->to('1195417752@qq.com');
-        $this->email->subject('ssl模式发送');
-        $this->email->message('Testing s.');
-        var_dump($this->email->send());
+//        $this->load->library('email');
+//        $this->email->from('wuanlife@163.com', 'xiaochao');
+//        $this->email->to('1195417752@qq.com');
+//        $this->email->subject('ssl模式发送');
+//        $this->email->message('Testing s.');
+//        var_dump($this->email->send());
         /**
          * 验证码生成测试接口
          */
-        $this->load->helper('icode');
-        $cap = create_code(5,'123456789');
-        echo $cap;
+        //$this->load->helper('icode');
+        //$cap = create_code(5,'123456789');
+        //echo $cap;
+        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>'1','password'=>'123456']);
+        echo $token;
+        //$d = $this->jwt->decode($token);
+        //var_dump($d->exp);
 
     }
 
@@ -582,8 +586,19 @@ class User extends CI_Controller
  * 邮箱验证接口-用于检验验证码的正确性并验证邮箱
  */
     public function check_mail_2(){
+        try{
+            $token = $this->jwt->decode($this->input->get('token'));
+        }
+        catch(InvalidArgumentException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
+        catch(UnexpectedValueException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
         $data = array(
-            'user_id' => $this->input->get('user_id'),
+            'user_id' => $token->user_id,
             );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('get_create') == FALSE)
@@ -692,23 +707,33 @@ class User extends CI_Controller
      *
      */
     public function re_psw(){
+        try{
+            $token = $this->jwt->decode($this->input->post('token'));
+        }
+        catch(InvalidArgumentException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
+        catch(UnexpectedValueException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
         $data = array(
-            'user_id' =>$this->input->post('user_id'),
-            'password'=>$this->input->post('password'),
-            'psw'     =>$this->input->post('psw'),
+            'token' =>$this->input->post('token'),
+            'user_id' =>$token->user_id,
+            'password' =>md5($token->password),
+            'exp'=>$token->exp,
             );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('re_psw') == FALSE)
             $this->response(null,400,validation_errors());
-        $re['code'] = 0;
-        if($data['password']==$data['psw']){
-            $data['password'] = md5($data['password']);
-            $this->User_model->re_psw($data); //更新密码
+        if(time()<$token->exp){
             $msg = '密码修改成功！';
             $re['code'] = 1;
+            $this->User_model->re_psw($data); //更新密码
         }else{
+            $msg = 'token已经过期，请重新获取！';
             $re['code'] = 0;
-            $msg = '两次密码不一致，请确认！';
         }
         $this->response($re,200,$msg);
 

@@ -68,7 +68,7 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
-		define('DN','http://dev.wuanlife.com/');
+		define('DN','http://104.194.79.57/');
 	break;
 
 	case 'testing':
