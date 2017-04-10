@@ -12,7 +12,7 @@
 
 |参数名字  |  类型  |是否必须|    默认值    |范围  |      说明|
 |:--|:--|:--|:--|:--|:--|
-|user_id   |   字符串| 必须     |        |   最小：1 |   用户id，由token解密|
+|token   |   字符串| 必须  |     |   | 封装用户信息|
 
 
 ## 返回说明
@@ -26,7 +26,7 @@
 
 发送验证码到邮箱
 
-http://dev.wuanlife.com:800/user/check_mail_2?user_id=1
+http://dev.wuanlife.com:800/user/check_mail_2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTE4MjI1MTUsInVzZXJfaWQiOiI1OCJ9.s_ryW16YbD93k8ABLse2CnCR5bZ-oZ8m2lgLEZ9IDj0
 
     JSON
     {
