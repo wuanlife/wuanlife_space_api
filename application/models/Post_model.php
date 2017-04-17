@@ -373,7 +373,7 @@ class Post_model extends CI_Model
             . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete=0 AND gb.delete=0 '
             . "AND gb.id in (SELECT group_base_id FROM group_detail gd WHERE gd.user_base_id =$user_id ) AND ub.id=ud.user_base_id "
             . 'GROUP BY pb.id '
-            . 'ORDER BY MAX(pd.create_time) DESC '
+            . 'ORDER BY MIN(pd.create_time) DESC '
             . "LIMIT $start,$num ";
         $this->db->flush_cache();
         $rs['posts']=$this->db->query($sql)->result_array();

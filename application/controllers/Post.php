@@ -265,7 +265,13 @@ class Post extends CI_Controller
             'user_id'=>$this->input->get('user_id'),
             'page'=>$this->input->get('pn'),
         );
+        if(!empty($data['user_id'])){
+            $re = $this->Post_model->get_mygroup_post($data['user_id'],$data['page']);
+            //$re['user_name']=$this->Post_model->get_user($data['user_id']);
+        }
+        if(empty($re['posts'])){
         $re=$this->Post_model->get_index_post($data);
+        }
         $re=$this->Post_model->get_image_url($re);
         $re=$this->Post_model->delete_image_gif($re);
         $re=$this->Post_model->post_image_limit($re);
@@ -316,7 +322,7 @@ class Post extends CI_Controller
      * @return int pageCount 总页数
      * @return int currentPage 当前页
      * @return string user_name 用户名
-     */
+
     public function get_mygroup_post(){
         $user_id=$this->input->get('user_id');
         $pn=$this->input->get('pn');
@@ -361,6 +367,7 @@ class Post extends CI_Controller
 
         $this->response($data,200,null);
     }
+     */
 
 
 

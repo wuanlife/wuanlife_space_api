@@ -297,8 +297,8 @@ class Group extends CI_Controller
             $this->response(null,400,validation_errors());
         $pn = empty($data['pn'])?1:$data['pn'];
         $gn = empty($data['gn'])?1:$data['gn'];
-        $group=array();
-        $posts=array();
+        $group=array('group'=>null);
+        $posts=array('posts'=>null);
         if(!empty($data['gnum'])){
             $group = $this->search_group($data['text'],$data['gnum'],$gn);
         }
@@ -358,7 +358,7 @@ class Group extends CI_Controller
             $re['posts_page']=$page_all_num;
             $re['p_current_page']=(int)$pn;
         }else{
-            $re=array();
+            $re=array('posts'=>null);
         }
         return $re;
     }
@@ -387,41 +387,10 @@ class Group extends CI_Controller
             $re['group_page']=$page_all_num;
             $re['g_current_page']=(int)$gn;
         }else{
-            $re=array();
+            $re=array('group'=>null);
         }
         return $re;
     }
-    /**
-     * @param $data
-     * @return mixed
-     * 删除帖子的html标签
-     */
-    private function delete_html_posts($data){
-        $rs = $data;
-        if(!empty($rs)){
-            for ($i=0; $i<count($rs['posts']); $i++) {
-                $rs['posts'][$i]['text'] = strip_tags($rs['posts'][$i]['text']);
-            }
-        }
-        return $rs;
-    }
-    /**
-     * 测试接口，待完成所有接口之后删除
-     */
-    public function test(){
-        $data = array(
-            'text'=>$this->input->get('text'),
-            'gnum'=>$this->input->get('gnum'),
-            'pnum'=>$this->input->get('pnum'),
-            'gn'=>$this->input->get('gn'),
-            'pn'=>$this->input->get('pn')
-        );
-        $rs = $this->search_group($data['text'],$data['gnum'],$data['gn']);
-        $this->response($rs);
-
-    }
-
-
 
     /**
      * 判断用户是否加入该星球
