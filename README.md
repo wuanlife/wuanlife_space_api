@@ -9,7 +9,7 @@
 ### A.用户相关<br>
 1.[注册](/wiki/User.Reg.md)<br>
 2.[登录](/wiki/User.Login.md)<br>
-3.[注销](/wiki/User.Logout.md)<br>
+3.[注销](/wiki/User.Logout.md)（废弃）<br>
 4.[发送验证邮箱的邮件](/wiki/User.CheckMail.md)<br>
 5.[邮箱验证](/wiki/User.MailChecked.md)<br>
 6.[获取邮箱验证状态](/wiki/User.GetMailChecked.md)<br>
@@ -43,7 +43,7 @@
 
 ### C.帖子相关<br>
 1.[首页](/wiki/Post.GetIndexPost.md)<br>
-2.[首页-已登录](/wiki/Post.GetMyGroupPost.md)<br>
+2.[首页-已登录](/wiki/Post.GetMyGroupPost.md)（废弃）<br>
 3.[星球详情](/wiki/Post.GetGroupPost.md)<br>
 4.[帖子详情 发帖内容](/wiki/post.get_post_base.md)<br>
 5.[帖子详情 回帖内容](/wiki/post.get_post_reply.md)<br>
