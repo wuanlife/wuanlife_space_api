@@ -45,6 +45,7 @@
 |posts.collected_num|	int	|收藏数|
 |posts.replied|	int	|是否回复(0未回复，1已回复)|
 |posts.replied_num|	int	|回复数|
+|posts.image|array|图片url地址，最多3张|
 |-|-|-|
 |users.user_id|int|发帖人id|
 |users.user_name|string	|发帖人昵称|
