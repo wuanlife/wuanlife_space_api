@@ -15,7 +15,7 @@
 6.[获取邮箱验证状态](/wiki/User.GetMailChecked.md)<br>
 7.[找回密码-发送邮件](/wiki/User.SendMail.md)<br>
 8.[找回密码-重置密码](/wiki/User.RePsw.md)<br>
-9.[是否登陆](/wiki/Group.UStatus.md)<br>
+9.[是否登陆](/wiki/Group.UStatus.md)（废弃）<br>
 10.[获取用户信息](/wiki/User.GetUserInfo.md)<br>
 11.[修改用户信息](/wiki/User.AlterUserInfo.md)<br>
 12.[用户消息列表](/wiki/user.show_message.md)<br>
