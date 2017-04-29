@@ -273,14 +273,21 @@ class Group_model extends CI_Model
             $row[]=$value["group_base_id"];
         }
         $arr_string = join(',', $row);
-        $sql="SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
-            ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
-            .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
-            .'ORDER BY COUNT(gd.group_base_id) DESC '
-            ."LIMIT $limit_st,$page_num";
-        $query = $this->db->query($sql);
-        $re = $query->result_array();
-        return $re;
+        if(empty($arr_string))
+        {
+            return false;
+        }else
+        {
+            $sql="SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.group_base_id) AS num FROM group_base gb,group_detail gd "
+                ."WHERE gb.delete=0 AND gb.id IN($arr_string) AND gb.id=gd.group_base_id "
+                .'GROUP BY gb.id HAVING COUNT(gb.id)>=1 '
+                .'ORDER BY COUNT(gd.group_base_id) DESC '
+                ."LIMIT $limit_st,$page_num";
+            $query = $this->db->query($sql);
+            $re = $query->result_array();
+            return $re;
+        }
+
     }
 
     /**

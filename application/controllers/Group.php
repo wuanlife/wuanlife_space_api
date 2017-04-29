@@ -143,6 +143,7 @@ class Group extends CI_Controller
      * 获取用户创建和加入的星球
      */
     public function get_user_group(){
+        //$this->output->enable_profiler(TRUE);
         $user_id = $this->input->get('user_id');
         $data['user_id'] = $user_id;
         $this->form_validation->set_data($data);
@@ -163,14 +164,15 @@ class Group extends CI_Controller
         $pn         =(int)$pn;                              //安全强制转换
         $limit_st     =($pn-1)*$page_num;                     //起始数
         $re =  $model->get_user_group($limit_st,$page_num,$user_id);
-        $rs['groups']=$this->Common_model->judge_image_exist($re);
         $rs['page_count']  = $pageCount;
         $rs['current_page'] = $pn;
         $rs['num']=$all_num;
         $rs['user_name']=$this->User_model->get_user_information($user_id)['nickname'];
         if(empty($re)){
+            $rs['groups'] = NULL;
             $msg = '暂无星球';
         }else{
+            $rs['groups'] = $this->Common_model->judge_image_exist($re);
             $msg = '获取星球列表成功';
         }
         $this->response($rs,200,$msg);
@@ -547,7 +549,7 @@ class Group extends CI_Controller
 /**
  *
  * 判断用户登陆状态-判断是否登录
- */
+
     public function check_status($user_id=null){
         //setcookie('user_name','lwy_test');
         $rs = array();
@@ -575,6 +577,7 @@ class Group extends CI_Controller
         $this->response($rs,200,$msg);
        
     }
+ */
 
 
 
