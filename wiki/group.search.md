@@ -27,7 +27,6 @@
 |group.g_image           |字符型   |星球图片|
 |group.g_introduction           |字符型   |星球介绍|
 |group.group_id     |整型 |星球ID|
-|group.num           |整型 |星球成员数|
 |group_page          |整型 |星球总页数|
 |g_current_page|整型|星球当前页数|
 |posts.post_id   |   int|    帖子ID|
@@ -36,8 +35,8 @@
 |posts.create_time|  date|   发帖时间|
 |posts.user_name|    string  |发帖人|
 |posts.group_id| int |星球ID|
-|posts.lock|    int |是否锁定|
 |posts.g_name|   string| 星球名称|
+|posts.profile_picture|string|用户头像url|
 |posts_page          |整型 |帖子总页数|
 |p_current_page|整型|帖子当前页数|
 |msg|null|提示信息，此处NULL|
