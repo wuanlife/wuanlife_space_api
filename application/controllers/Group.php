@@ -357,6 +357,13 @@ class Group extends CI_Controller
         }
         $re['posts']=$model->search_posts($text,$pnum,$pn);
         if(!empty($re['posts'])){
+            foreach($re['posts'] as $key=>$value){
+                $profile_picture = $this->User_model->get_user_information($value['user_id'])['profile_picture'];
+                if(empty($profile_picture)){
+                    $profile_picture = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+                }
+                $re['posts'][$key]['profile_picture'] = $profile_picture;
+            }
             $re['posts_page']=$page_all_num;
             $re['p_current_page']=(int)$pn;
         }else{

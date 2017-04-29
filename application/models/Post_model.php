@@ -18,15 +18,15 @@ class Post_model extends CI_Model
     public function search_posts($text,$pnum,$pn){
         $text = strtolower($text);
         $num=($pn-1)*$pnum;
-        $sql = 'SELECT pb.id AS post_id,pb.title AS p_title,pd.text AS p_text,pb.lock,pd.create_time,ub.nickname AS user_name,gb.id AS group_id,gb.name AS g_name '
+        $sql = 'SELECT pb.id AS post_id,pb.title AS p_title,pd.text AS p_text,pd.create_time,ub.nickname AS user_name,ub.id AS user_id,gb.id AS group_id,gb.name AS g_name '
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub '
             . "WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id AND pb.delete='0' AND gb.delete='0' AND gb.private='0' "
             . "AND lower(pb.title) LIKE '%$text%' "
             . 'GROUP BY pb.id '
             . 'ORDER BY COUNT(pd.post_base_id) DESC '
             . "LIMIT $num,$pnum";
-        $query = $this->db->query($sql);
-        return $query->result_array();
+        $query = $this->db->query($sql)->result_array();
+        return $query;
     }
     /**
      * @param $text

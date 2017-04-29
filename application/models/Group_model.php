@@ -367,7 +367,7 @@ class Group_model extends CI_Model
     public function search_group($text,$gnum,$gn){
         $text = strtolower($text);
         $num=($gn-1)*$gnum;
-        $sql='SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction,COUNT(gd.user_base_id) AS num '
+        $sql='SELECT gb.name AS g_name,gb.id AS group_id,gb.g_image,gb.g_introduction '//,COUNT(gd.user_base_id) AS num '
             .'FROM group_detail gd, group_base gb '
             .'WHERE gb.id = gd.group_base_id AND gb.delete=0 '
             ."AND lower(gb.name) LIKE '%$text%' "
