@@ -399,6 +399,9 @@ class Post extends CI_Controller
         if ($this->form_validation->run('get_group_post') == FALSE)
             $this->response(null,400,validation_errors());
         $re = $this->Group_model->get_group_infomation($group_id);
+        if(empty($re['id'])){
+            $this->response(null,400,'星球不存在！');
+        }
         if(empty($re['g_image'])){
             $re['g_image'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
         }
