@@ -427,7 +427,7 @@ class Post_model extends CI_Model
         if(empty($user_id)){
             $user_id = 0;
         }
-        $num=10;
+        $num=9;
         $rs   = array();
         $sql = "SELECT ceil(count(*)/$num) AS page_count "
             . 'FROM post_base pb,group_base gb '
