@@ -206,6 +206,18 @@ $config = array(
             'rules' => 'required|min_length[1]|max_length[5000]'
         )
     ),
+    'collect_post' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => 'user_id',
+            'rules' => 'required|min_length[1]'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => 'post_id',
+            'rules' => 'required|min_length[1]'
+        ),
+    ),
     'delete_group_member' =>array(
         array(
             'field' => 'user_id',

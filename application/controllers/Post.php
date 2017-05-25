@@ -595,7 +595,7 @@ class Post extends CI_Controller
     /**
      * 收藏帖子
      * @desc 收藏帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return int code 操作码，1表示收藏成功，0表示操作失败，2表示取消收藏成功
      * @return string re 提示信息
      */
     public function collect_post(){
@@ -603,21 +603,23 @@ class Post extends CI_Controller
             'user_id'=>$this->input->get('user_id'),
             'post_id'=>$this->input->get('post_id'),
         );
-        $delete=$this->Common_model->ifexist_collect_post($data);
-        if($delete){
-            $rs=$this->Post_model->exist_collect_post($data);
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('collect_post') == FALSE)
+            $this->response(null,400,validation_errors());
+        $exist=$this->Common_model->ifexist_collect_post($data);
+        if($exist){
+            $rs=$this->Post_model->update_collect_post($data);
 
         }else{
-            $rs=$this->Post_model->collect_post($data);
-        }
-            if($rs) {
-                $info['code']=1;
-                $msg="收藏成功！";
+            if($this->Post_model->collect_post($data)){
+                $rs['code'] = 1;
+                $rs['msg'] = '收藏成功';
             }else{
-                $info['code']=0;
-                $msg="操作过于频繁！";
+                $rs['code'] = 0;
+                $rs['msg'] = '操作失败';
             }
-            $this->response($info,200,$msg);
+        }
+        $this->response(['code'=>$rs['code']],200,$rs['msg']);
     }
 
     /**
@@ -644,26 +646,26 @@ class Post extends CI_Controller
     }
 
     /**
-     * 删除收藏帖子
+     * 删除收藏帖子   已合并到收藏帖子接口
      * @desc 删除收藏帖子
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string re 提示信息
      */
-    public function delete_collect_post(){
-        $data=array(
-            'user_id'=>$this->input->get('user_id'),
-            'post_id'=>$this->input->get('post_id'),
-        );
-        $rs=$this->Post_model->delete_collect_post($data);
-        if($rs){
-            $info['code']=1;
-            $msg="删除收藏成功！";
-        }else{
-            $info['code']=0;
-            $msg="操作过于频繁！";
-        }
-        $this->response($info,200,$msg);
-    }
+//    public function delete_collect_post(){
+//        $data=array(
+//            'user_id'=>$this->input->get('user_id'),
+//            'post_id'=>$this->input->get('post_id'),
+//        );
+//        $rs=$this->Post_model->delete_collect_post($data);
+//        if($rs){
+//            $info['code']=1;
+//            $msg="删除收藏成功！";
+//        }else{
+//            $info['code']=0;
+//            $msg="操作过于频繁！";
+//        }
+//        $this->response($info,200,$msg);
+//    }
 
 	 /**
      * 点赞帖子
