@@ -121,7 +121,9 @@ class Post extends CI_Controller
                 'g_image'  =>$rs['g_image'],
                 'g_introduction'=>$rs['g_introduction'],
                 'creator_id'  =>$rs['creator_id'],
-                'creator_name' =>$rs['creator_name']
+                'creator_name' =>$rs['creator_name'],
+                'post_num'=>$this->Group_model->get_group_post_num($group_id),
+                'user_num'=>$this->Group_model->get_group_user_num($group_id),
             ],
             'posts'=>[
                 'post_id'=>$rs['post_id'],
@@ -223,16 +225,17 @@ class Post extends CI_Controller
      * 编辑帖子
      */
     public function edit_post(){
+        $re = $this->judge_authority($this->input->post('token'));
         $data = array(
-            'post_base_id' =>$this->input->post('post_id'),
-            'user_base_id' =>$this->input->post('user_id'),
+            'post_id' =>$re['post_id'],
+            'user_id' =>$re['user_id'],
             'text'  =>$this->input->post('p_text'),
             'title'=>$this->input->post('p_title')
         );
+        $this->form_validation->set_data($data);
         if ($this->form_validation->run('edit_post') == FALSE)
             $this->response(null,400,validation_errors());
-        $poster = $this->Common_model->judge_post_creator($data['user_base_id'],$data['post_base_id']);
-        if($poster){
+        if($re['edit_right']===1){
             $msg='编辑成功';
             $rs['code'] = 1;
             $rs['post_id']=$data['post_base_id'];
@@ -250,7 +253,7 @@ class Post extends CI_Controller
      * @return int posts.postID 帖子ID
      * @return string posts.title 标题
      * @return string posts.text 内容
-     * @return date posts.createTime 发帖时间
+     * @return string posts.createTime 发帖时间
      * @return string posts.nickname 发帖人
      * @return int posts.groupID 星球ID
      * @return int posts.lock 是否锁定
@@ -315,7 +318,7 @@ class Post extends CI_Controller
      * @return int posts.postID 帖子ID
      * @return string posts.title 标题
      * @return string posts.text 内容
-     * @return date posts.createTime 发帖时间
+     * @return string posts.createTime 发帖时间
      * @return string posts.nickname 发帖人
      * @return int posts.groupID 星球ID
      * @return string posts.groupName 星球名称
@@ -381,7 +384,7 @@ class Post extends CI_Controller
      * @return int post.digest 加精
      * @return string posts.title 标题
      * @return string posts.text 内容
-     * @return date posts.createTime 发帖时间
+     * @return string posts.createTime 发帖时间
      * @return int posts.postID 帖子ID
      * @return string posts.nickname 发帖人
      * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
@@ -488,16 +491,22 @@ class Post extends CI_Controller
      * @return string msg 提示信息
      */
     public function sticky_post(){
-        $rs = $this->Post_model->post_sticky();
-        if($rs)
-        {
-            $data['code'] = 1;
-            $msg = "置顶帖子成功!";
-        }
-        else
-        {
+        $re = $this->judge_authority($this->input->get('token'));
+        if($re['sticky_right']===1){
+            $rs = $this->Post_model->post_sticky();
+            if($rs)
+            {
+                $data['code'] = 1;
+                $msg = "置顶帖子成功!";
+            }
+            else
+            {
+                $data['code'] = 0;
+                $msg = "操作过于频繁!";
+            }
+        }else{
             $data['code'] = 0;
-            $msg = "操作过于频繁!";
+            $msg = "您没有操作权限!";
         }
         $this->response($data,200,$msg);
     }
@@ -508,17 +517,23 @@ class Post extends CI_Controller
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function unsticky_post(){        
-        $rs = $this->Post_model->post_unsticky();
-        if($rs)
-        {
-            $data['code'] = 1;
-            $msg = "取消置顶帖子成功!";
-        }
-        else
-        {
+    public function unsticky_post(){
+        $re = $this->judge_authority($this->input->get('token'));
+        if($re['sticky_right']===1){
+            $rs = $this->Post_model->post_unsticky();
+            if($rs)
+            {
+                $data['code'] = 1;
+                $msg = "取消置顶帖子成功!";
+            }
+            else
+            {
+                $data['code'] = 0;
+                $msg = "操作过于频繁!";
+            }
+        }else{
             $data['code'] = 0;
-            $msg = "操作过于频繁!";
+            $msg = "您没有操作权限!";
         }
         $this->response($data,200,$msg);
     }
@@ -531,22 +546,90 @@ class Post extends CI_Controller
      * @return string re 提示信息
      */
     public function delete_post(){
-        $data=array(
-            'user_id'=>$this->input->get('user_id'),
-            'post_id'=>$this->input->get('post_id'),
-        );
-        $sqla=$this->Post_model->get_group_id($data['post_id']);
-        $sqlb=$this->User_model->judge_create($data['user_id'],$sqla);
-        $sqlc=$this->Post_model->judge_poster($data['user_id'],$data['post_id'],$sqla);
-        $sqld=$this->User_model->judge_admin($data['user_id']);
-        if($sqlb||$sqlc||$sqld){
-            $re=$this->Post_model->delete_post($data);
-            $msg='成功删除帖子';
+        $re = $this->judge_authority($this->input->get('token'));
+        if($re['delete_right']===1){
+            $rs = $this->Post_model->delete_post($re);
+            if($rs)
+            {
+                $data['code'] = 1;
+                $msg = "成功删除帖子!";
+            }
+            else
+            {
+                $data['code'] = 0;
+                $msg = "操作过于频繁!";
+            }
         }else{
-            $re['code']=0;
-            $msg='仅星球创建者和发帖者和管理员能删除帖子!';
+            $data['code'] = 0;
+            $msg = "仅星球创建者和发帖者和管理员能删除帖子!";
         }
-        $this->response($re,200,$msg);
+        $this->response($data,200,$msg);
+    }
+//    public function delete_post(){
+//        $data=array(
+//            'user_id'=>$this->input->get('user_id'),
+//            'post_id'=>$this->input->get('post_id'),
+//        );
+//        $sqla=$this->Post_model->get_group_id($data['post_id']);
+//        $sqlb=$this->User_model->judge_create($data['user_id'],$sqla);
+//        $sqlc=$this->Post_model->judge_poster($data['user_id'],$data['post_id']);
+//        $sqld=$this->User_model->judge_admin($data['user_id']);
+//        if($sqlb||$sqlc||$sqld){
+//            $re=$this->Post_model->delete_post($data);
+//            $msg='成功删除帖子';
+//        }else{
+//            $re['code']=0;
+//            $msg='仅星球创建者和发帖者和管理员能删除帖子!';
+//        }
+//        $this->response($re,200,$msg);
+//    }
+    private function judge_authority($jwt){
+        try{
+            $token = $this->jwt->decode($jwt,$this->config->item('encryption_key'));
+        }
+        catch(InvalidArgumentException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
+        catch(UnexpectedValueException $e)
+        {
+            $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
+        }
+        $data = array(
+            'user_id' => $token->user_id,
+            'post_id' => $token->post_id,
+        );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('collect_post') == FALSE)
+            $this->response(null,400,validation_errors());
+        $creator= $this->Common_model->judge_group_creator($data['post_id'],$data['user_id']);
+        $poster = $this->Common_model->judge_post_creator($data['user_id'],$data['post_id']);
+        $admin = $this->Common_model->judge_admin($data['user_id']);
+        $rs = [
+            'edit_right'=>0,
+            'delete_right'=>0,
+            'sticky_right'=>0,
+            'lock_right'=>0,
+            'user_id'=>$data['user_id'],
+            'post_id'=>$data['post_id'],
+        ];
+        if($poster)
+        {
+            $rs['edit_right']=1;
+            $rs['delete_right']=1;
+            $rs['lock_right']=1;
+        }
+        if($creator){
+            $rs['delete_right']=1;
+            $rs['sticky_right']=1;
+            $rs['lock_right']=1;
+        }
+        if($admin){
+            $rs['delete_right']=1;
+            $rs['sticky_right']=1;
+            $rs['lock_right']=1;
+        }
+        return $rs;
     }
 
     /**
@@ -556,16 +639,22 @@ class Post extends CI_Controller
      * @return string re 提示信息
      */
     public function lock_post(){
-        $rs = $this->Post_model->lock_post();
-        if($rs)
-        {
-            $data['code'] = 1;
-            $msg = "锁定帖子成功!";
-        }
-        else
-        {
+        $re = $this->judge_authority($this->input->get('token'));
+        if($re['lock_right']===1){
+            $rs = $this->Post_model->lock_post();
+            if($rs)
+            {
+                $data['code'] = 1;
+                $msg = "锁定帖子成功!";
+            }
+            else
+            {
+                $data['code'] = 0;
+                $msg = "操作过于频繁!";
+            }
+        }else{
             $data['code'] = 0;
-            $msg = "操作过于频繁!";
+            $msg = "您没有操作权限!";
         }
         $this->response($data,200,$msg);
     }
@@ -577,16 +666,22 @@ class Post extends CI_Controller
      * @return string re 提示信息
      */
     public function unlock_post(){
-        $rs = $this->Post_model->unlock_post();
-        if($rs)
-        {
-            $data['code'] = 1;
-            $msg = "解除锁定帖子成功!";
-        }
-        else
-        {
+        $re = $this->judge_authority($this->input->get('token'));
+        if($re['lock_right']===1){
+            $rs = $this->Post_model->unlock_post();
+            if($rs)
+            {
+                $data['code'] = 1;
+                $msg = "解除锁定帖子成功!";
+            }
+            else
+            {
+                $data['code'] = 0;
+                $msg = "操作过于频繁!";
+            }
+        }else{
             $data['code'] = 0;
-            $msg = "操作过于频繁!";
+            $msg = "您没有操作权限!";
         }
         $this->response($data,200,$msg);
     }

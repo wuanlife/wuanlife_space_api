@@ -529,33 +529,6 @@ class User extends CI_Controller
         $this->response($re,200,$msg);
     }
 
-    /**
-     * 测试接口，待完成所有接口之后删除
-     */
-    public function test()
-    {
-        /**
-         * 发送邮件测试接口，配置信息保存在config/email.php
-         */
-//        $this->load->library('email');
-//        $this->email->from('wuanlife@163.com', 'xiaochao');
-//        $this->email->to('1195417752@qq.com');
-//        $this->email->subject('ssl模式发送');
-//        $this->email->message('Testing s.');
-//        var_dump($this->email->send());
-        /**
-         * 验证码生成测试接口
-         */
-        //$this->load->helper('icode');
-        //$cap = create_code(5,'123456789');
-        //echo $cap;
-        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>'1','password'=>'123456']);
-        echo $token;
-        //$d = $this->jwt->decode($token);
-        //var_dump($d->exp);
-
-    }
-
 
     /**
      * 邮箱验证接口-用于发送包含验证邮箱验证码的邮件
@@ -587,7 +560,7 @@ class User extends CI_Controller
  */
     public function check_mail_2(){
         try{
-            $token = $this->jwt->decode($this->input->get('token'));
+            $token = $this->jwt->decode($this->input->get('token'),$this->config->item('encryption_key'));
         }
         catch(InvalidArgumentException $e)
         {
@@ -623,7 +596,7 @@ class User extends CI_Controller
      */
     private function email_psw($data){
         $this->load->library('jwt');
-        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']]);
+        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']],$this->config->item('encryption_key'));
         $url = DN.'retrievepassword/reset?token='.$token;
         $user_name = $data['user_name'];
         $time = date('Y-m-d H:i:s', time());
@@ -636,7 +609,7 @@ class User extends CI_Controller
         return $content;
     }
     private function email_check($data){
-        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']]);
+        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']],$this->config->item('encryption_key'));
         $url = DN.'users/verifyusermail?token='.$token;
         $user_name = $data['user_name'];
         $time = date('Y-m-d H:i:s', time());
@@ -708,7 +681,7 @@ class User extends CI_Controller
      */
     public function re_psw(){
         try{
-            $token = $this->jwt->decode($this->input->post('token'));
+            $token = $this->jwt->decode($this->input->post('token'),$this->config->item('encryption_key'));
         }
         catch(InvalidArgumentException $e)
         {

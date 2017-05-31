@@ -77,7 +77,7 @@ class CI_Config {
 	/**
 	 * Class constructor
 	 *
-	 * Sets the $config data from the primary config.php file as a class variable.
+	 * Sets the $config data from the primary config-default.php file as a class variable.
 	 *
 	 * @return	void
 	 */

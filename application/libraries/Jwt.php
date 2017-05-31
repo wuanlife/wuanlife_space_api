@@ -18,7 +18,7 @@ class Jwt
         'RS256' => array('openssl', 'SHA256'),
     );
 
-    public function decode($jwt, $key='wuan_key', $allowed_algs = array('HS256'))
+    public function decode($jwt, $key, $allowed_algs = array('HS256'))
     {
         $timestamp = is_null(static::$timestamp) ? time() : static::$timestamp;
         if (empty($key)) {
@@ -145,7 +145,7 @@ class Jwt
         }
         return strlen($str);
     }
-    public function encode($payload, $key = 'wuan_key', $alg = 'HS256', $keyId = null, $head = null)
+    public function encode($payload, $key, $alg = 'HS256', $keyId = null, $head = null)
     {
         $header = array('typ' => 'JWT', 'alg' => $alg);
         if ($keyId !== null) {
