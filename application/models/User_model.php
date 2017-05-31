@@ -117,18 +117,22 @@ class User_model extends CI_Model
         extract($data);
         $sql="update user_detail set profile_picture=\"$profile_picture\",sex=\"$sex\",year=\"$year\",month=\"$month\",day=\"$day\" ".
             "where user_base_id=$user_id";
-        $query=$this->db->query($sql);
-        $username=$this->user_nickname($data);
-        if(empty($username)){
-            $query=$this->db->set('nickname',$nickname)
-                ->where('id',$user_id)
-                ->update('user_base');
-            $re['code']=1;
-            $re['msg']='修改成功!';
+        $this->db->query($sql);
+        if(!empty($nickname)){
+            $username=$this->user_nickname($data);
+            if(empty($username)){
+                $this->db->set('nickname',$nickname)
+                    ->where('id',$user_id)
+                    ->update('user_base');
+                $re['code']=1;
+                $re['msg']='修改成功!';
+            }
+            $re['code']=0;
+            $re['msg']='用户名被占用！';
             return $re;
         }
-        $re['code']=0;
-        $re['msg']='用户名被占用，其他资料修改成功！';
+        $re['code']=1;
+        $re['msg']='修改成功！';
         return $re;
     }
 
