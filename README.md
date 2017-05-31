@@ -58,5 +58,5 @@
 14.[帖子收藏](/wiki/Post.CollectPost.md)<br>
 15.[我的收藏帖子显示](/wiki/Post.GetCollectPost.md)<br>
 16.[删除帖子回复](/wiki/Post.DeletePostReply.md)<br>
-17.[取消收藏帖子](/wiki/Post.DeleteCollectPost.md)<br>
+17.[取消收藏帖子](/wiki/Post.DeleteCollectPost.md)（废弃）<br>
 18.[点赞帖子](/wiki/Post.ApprovePost.md)<br>
