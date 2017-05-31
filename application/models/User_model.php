@@ -126,9 +126,10 @@ class User_model extends CI_Model
                     ->update('user_base');
                 $re['code']=1;
                 $re['msg']='修改成功!';
+            }else{
+                $re['code']=0;
+                $re['msg']='用户名被占用！';
             }
-            $re['code']=0;
-            $re['msg']='用户名被占用！';
             return $re;
         }
         $re['code']=1;
