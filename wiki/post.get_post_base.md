@@ -28,6 +28,8 @@
 |g_introduction|string|星球简介|
 |creator_id|int|创建者id|
 |creator_name|string|创建者昵称|
+|post_num|int|星球帖子数|
+|user_num|int|星球成员数|
 |posts|-|-|
 |post_id	|	int	|帖子ID|
 |p_title	|string|	标题|
