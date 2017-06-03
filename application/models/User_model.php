@@ -188,10 +188,6 @@ class User_model extends CI_Model
         if(!empty($num)){
             $this->db->where('status',0);
         }
-        if($table=='message_reply'){
-            $this->db->where('status',0);
-            $this->db->or_where('status',1);
-        }
         return $this->db->count_all_results();
 
     }
