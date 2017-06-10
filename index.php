@@ -314,4 +314,5 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+date_default_timezone_set("Asia/Shanghai");
 require_once BASEPATH.'core/CodeIgniter.php';
