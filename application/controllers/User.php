@@ -64,12 +64,10 @@ class User extends CI_Controller
         }elseif(md5($data['password'])!=$model['password']){
             $msg='密码错误，请重试！';
         }else{
-            $re['info']= array('user_id' => $model['id'], 'user_name' => $model['nickname'], 'user_email' => $model['email']);
+            $re['info']= array('Access-Token'=>$this->get_user_token($model['id'],time()+604800),'user_id' => $model['id'], 'user_name' => $model['nickname'], 'user_email' => $model['email']);
             $re['code']='1';
             $msg='登录成功！';
         }
-        $token = $this->get_user_token($model['id'],time()+604800);
-        $this->output->set_header("Access-Token: $token");
         return $this->response($re,200,$msg);
     }
 
@@ -121,9 +119,8 @@ class User extends CI_Controller
         }else{
             $re['info']=$this->User_model->reg($data);
             $re['code']=1;
-            $token = $this->get_user_token($re['info']['user_id'],time()+604800);
-            $this->output->set_header("Access-Token: $token");
-            $msg='注册成功，并自动登录！';
+            $re['info']['Access-Token'] = $this->get_user_token($re['info']['user_id'],time()+604800);
+           $msg='注册成功，并自动登录！';
         }
         $this->response($re,200,$msg);
     }
