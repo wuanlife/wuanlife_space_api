@@ -12,7 +12,7 @@ class Post extends CI_Controller
         $this->load->model('Group_model');
         $this->load->model('Common_model');
         $this->load->helper(array('form', 'url','url_helper'));
-        $this->load->library('form_validation');
+        $this->load->library(array('form_validation','jwt'));
         $this->form_validation->set_message('required', '{field} 参数是必填选项.');
         $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
         $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
@@ -225,7 +225,15 @@ class Post extends CI_Controller
      * 编辑帖子
      */
     public function edit_post(){
-        $re = $this->judge_authority($this->input->post('token'));
+        $access_token = $this->input->request_headers();
+        if(empty($access_token['Access-Token'])){
+            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+        }
+//        $this->response($access_token);
+
+        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->post('post_id'));
+        $this->form_validation->reset_validation();
+        $this->form_validation->set_message('required', '{field} 参数是必填选项.');
         $data = array(
             'post_id' =>$re['post_id'],
             'user_id' =>$re['user_id'],
@@ -234,11 +242,13 @@ class Post extends CI_Controller
         );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('edit_post') == FALSE)
+        {
             $this->response(null,400,validation_errors());
+        }
         if($re['edit_right']===1){
             $msg='编辑成功';
             $rs['code'] = 1;
-            $rs['post_id']=$data['post_base_id'];
+            $rs['post_id']=$data['post_id'];
             $this->Post_model->edit_post($data);
         }else{
             $msg='您没有权限操作！';
@@ -487,56 +497,54 @@ class Post extends CI_Controller
     /**
      * 置顶帖子
      * @desc 帖子置顶
-     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return int code 操作码，2表示取消置顶成功，1表示置顶成功，0表示操作失败
      * @return string msg 提示信息
      */
     public function sticky_post(){
-        $re = $this->judge_authority($this->input->get('token'));
-        if($re['sticky_right']===1){
-            $rs = $this->Post_model->post_sticky();
-            if($rs)
-            {
-                $data['code'] = 1;
-                $msg = "置顶帖子成功!";
-            }
-            else
-            {
-                $data['code'] = 0;
-                $msg = "操作过于频繁!";
-            }
-        }else{
-            $data['code'] = 0;
-            $msg = "您没有操作权限!";
+        $access_token = $this->input->request_headers();
+        if(empty($access_token['Access-Token'])){
+            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
         }
-        $this->response($data,200,$msg);
+        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
+        if($re['sticky_right']===1){
+            $rs = $this->Post_model->sticky_post();
+        }else{
+            $rs['code'] = 0;
+            $rs['msg'] = "您没有操作权限!";
+        }
+        $this->response($rs['code'],200,$rs['msg']);
     }
 
     /**
-     * 取消置顶帖子
+     * 取消置顶帖子           ***已合并***
      * @desc 帖子取消置顶
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string msg 提示信息
      */
-    public function unsticky_post(){
-        $re = $this->judge_authority($this->input->get('token'));
-        if($re['sticky_right']===1){
-            $rs = $this->Post_model->post_unsticky();
-            if($rs)
-            {
-                $data['code'] = 1;
-                $msg = "取消置顶帖子成功!";
-            }
-            else
-            {
-                $data['code'] = 0;
-                $msg = "操作过于频繁!";
-            }
-        }else{
-            $data['code'] = 0;
-            $msg = "您没有操作权限!";
-        }
-        $this->response($data,200,$msg);
-    }
+//    public function unsticky_post(){
+//        $access_token = $this->input->request_headers();
+//        if(empty($access_token['Access-Token'])){
+//            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+//        }
+//        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
+//        if($re['sticky_right']===1){
+//            $rs = $this->Post_model->post_unsticky();
+//            if($rs)
+//            {
+//                $data['code'] = 1;
+//                $msg = "取消置顶帖子成功!";
+//            }
+//            else
+//            {
+//                $data['code'] = 0;
+//                $msg = "操作过于频繁!";
+//            }
+//        }else{
+//            $data['code'] = 0;
+//            $msg = "您没有操作权限!";
+//        }
+//        $this->response($data,200,$msg);
+//    }
 
 
     /**
@@ -546,7 +554,11 @@ class Post extends CI_Controller
      * @return string re 提示信息
      */
     public function delete_post(){
-        $re = $this->judge_authority($this->input->get('token'));
+        $access_token = $this->input->request_headers();
+        if(empty($access_token['Access-Token'])){
+            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+        }
+        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
         if($re['delete_right']===1){
             $rs = $this->Post_model->delete_post($re);
             if($rs)
@@ -583,7 +595,8 @@ class Post extends CI_Controller
 //        }
 //        $this->response($re,200,$msg);
 //    }
-    private function judge_authority($jwt){
+    private function parsing_token($jwt)
+    {
         try{
             $token = $this->jwt->decode($jwt,$this->config->item('encryption_key'));
         }
@@ -595,6 +608,50 @@ class Post extends CI_Controller
         {
             $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
         }
+        return $token;
+    }
+    private function judge_authority1($jwt,$post_id){
+        $token = $this->parsing_token($jwt);
+        $data = array(
+            'user_id' => $token->user_id,
+            'post_id' => $post_id,
+        );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('collect_post') == FALSE)
+            $this->response(null,400,validation_errors());
+        $creator= $this->Common_model->judge_group_creator($data['post_id'],$data['user_id']);
+        $poster = $this->Common_model->judge_post_creator($data['user_id'],$data['post_id']);
+        $admin = $this->Common_model->judge_admin($data['user_id']);
+        $rs = [
+            'edit_right'=>0,
+            'delete_right'=>0,
+            'sticky_right'=>0,
+            'lock_right'=>0,
+            'user_id'=>$data['user_id'],
+            'post_id'=>$data['post_id'],
+        ];
+        if($poster)
+        {
+            $rs['edit_right']=1;
+            $rs['delete_right']=1;
+            $rs['lock_right']=1;
+        }
+        if($creator){
+            $rs['delete_right']=1;
+            $rs['sticky_right']=1;
+            $rs['lock_right']=1;
+        }
+        if($admin){
+            $rs['delete_right']=1;
+            $rs['sticky_right']=1;
+            $rs['lock_right']=1;
+        }
+        return $rs;
+    }
+
+
+    private function judge_authority($jwt){
+        $token = $this->parsing_token($jwt);
         $data = array(
             'user_id' => $token->user_id,
             'post_id' => $token->post_id,
@@ -635,56 +692,54 @@ class Post extends CI_Controller
     /**
      * 锁定帖子
      * @desc 锁定帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return int code 操作码，2表示取消锁定成功，1表示锁定成功，0表示操作失败
      * @return string re 提示信息
      */
     public function lock_post(){
-        $re = $this->judge_authority($this->input->get('token'));
+        $access_token = $this->input->request_headers();
+        if(empty($access_token['Access-Token'])){
+            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+        }
+        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
         if($re['lock_right']===1){
             $rs = $this->Post_model->lock_post();
-            if($rs)
-            {
-                $data['code'] = 1;
-                $msg = "锁定帖子成功!";
-            }
-            else
-            {
-                $data['code'] = 0;
-                $msg = "操作过于频繁!";
-            }
         }else{
-            $data['code'] = 0;
-            $msg = "您没有操作权限!";
+            $rs['code'] = 0;
+            $rs['msg'] = "您没有操作权限!";
         }
-        $this->response($data,200,$msg);
+        $this->response($rs['code'],200,$rs['msg']);
     }
 
     /**
-     * 解锁帖子
+     * 解锁帖子             ***已合并***
      * @desc 解锁帖子
      * @return int code 操作码，1表示操作成功，0表示操作失败
      * @return string re 提示信息
      */
-    public function unlock_post(){
-        $re = $this->judge_authority($this->input->get('token'));
-        if($re['lock_right']===1){
-            $rs = $this->Post_model->unlock_post();
-            if($rs)
-            {
-                $data['code'] = 1;
-                $msg = "解除锁定帖子成功!";
-            }
-            else
-            {
-                $data['code'] = 0;
-                $msg = "操作过于频繁!";
-            }
-        }else{
-            $data['code'] = 0;
-            $msg = "您没有操作权限!";
-        }
-        $this->response($data,200,$msg);
-    }
+//    public function unlock_post(){
+//        $access_token = $this->input->request_headers();
+//        if(empty($access_token['Access-Token'])){
+//            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+//        }
+//        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
+//        if($re['lock_right']===1){
+//            $rs = $this->Post_model->unlock_post();
+//            if($rs)
+//            {
+//                $data['code'] = 1;
+//                $msg = "解除锁定帖子成功!";
+//            }
+//            else
+//            {
+//                $data['code'] = 0;
+//                $msg = "操作过于频繁!";
+//            }
+//        }else{
+//            $data['code'] = 0;
+//            $msg = "您没有操作权限!";
+//        }
+//        $this->response($data,200,$msg);
+//    }
 
 
     /**

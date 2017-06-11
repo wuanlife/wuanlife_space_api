@@ -296,9 +296,9 @@ class Post_model extends CI_Model
             'text' => $data['text'],
             'create_time' => time(),
         );
-        $this->db->where('id', $data['post_base_id'])
+        $this->db->where('id', $data['post_id'])
             ->update('post_base',$b_data);
-        $this->db->where('post_base_id', $data['post_base_id'])
+        $this->db->where('post_base_id', $data['post_id'])
             ->where('floor',1)
             ->update('post_detail',$d_data);
     }
@@ -489,23 +489,22 @@ class Post_model extends CI_Model
         $this->db->insert('message_reply',$data);
     }
 
-    public function post_sticky(){
+    public function sticky_post(){
         $data = array(
             'post_id' => $this->input->get('post_id'),
         );
-        $param = array(
-            'sticky' => 1,
-        );
-        if(!empty($data['post_id']))
-        {
-            $this->db->where('id',$data['post_id']);
-            $re=$this->db->update('post_base', $param);
-            return $re;
+        $sticky = $this->get_post_information($data['post_id'])['sticky'];
+        if($sticky==0){
+            $param['sticky'] = 1;
+            $re['code'] = 1;
+            $re['msg'] = "置顶帖子成功!";
+        }else{
+            $param['sticky'] = 0;
+            $re['code'] = 2;
+            $re['msg'] = "取消置顶成功!";
         }
-        else
-        {
-            return FALSE;
-        }
+        $this->db->where('id',$data['post_id'])->update('post_base', $param);
+        return $re;
     }
 
     public function post_unsticky(){
@@ -557,19 +556,18 @@ class Post_model extends CI_Model
         $data = array(
             'post_id' => $this->input->get('post_id'),
         );
-        $param = array(
-            'lock' => 1,
-        );
-        if(!empty($data['post_id']))
-        {
-            $this->db->where('id',$data['post_id']);
-            $re=$this->db->update('post_base', $param);
-            return $re;
+        $lock = $this->get_post_information($data['post_id'])['lock'];
+        if($lock==0){
+            $param['lock'] = 1;
+            $re['code'] = 1;
+            $re['msg'] = "锁定帖子成功!";
+        }else{
+            $param['lock'] = 0;
+            $re['code'] = 2;
+            $re['msg'] = "解锁帖子成功!";
         }
-        else
-        {
-            return FALSE;
-        }
+        $this->db->where('id',$data['post_id'])->update('post_base', $param);
+        return $re;
     }
 
     public function unlock_post(){

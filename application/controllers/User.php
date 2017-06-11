@@ -68,7 +68,9 @@ class User extends CI_Controller
             $re['code']='1';
             $msg='登录成功！';
         }
-        $this->response($re,200,$msg);
+        $token = $this->get_user_token($model['id'],time()+604800);
+        $this->output->set_header("Access-Token: $token");
+        return $this->response($re,200,$msg);
     }
 
 
@@ -119,6 +121,8 @@ class User extends CI_Controller
         }else{
             $re['info']=$this->User_model->reg($data);
             $re['code']=1;
+            $token = $this->get_user_token($re['info']['user_id'],time()+604800);
+            $this->output->set_header("Access-Token: $token");
             $msg='注册成功，并自动登录！';
         }
         $this->response($re,200,$msg);
@@ -589,6 +593,12 @@ class User extends CI_Controller
 
         $this->response($re,200,$msg);
     }
+    private function get_user_token($user_id,$exp = NULL)
+    {
+        $exp = $exp?$exp:time()+600;
+        $token = $this->jwt->encode(['exp'=>$exp,'user_id'=>$user_id],$this->config->item('encryption_key'));
+        return $token;
+    }
 
     /**
      * @param $data
@@ -596,7 +606,7 @@ class User extends CI_Controller
      */
     private function email_psw($data){
         $this->load->library('jwt');
-        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']],$this->config->item('encryption_key'));
+        $token = $this->get_user_token($data['user_id']);
         $url = DN.'retrievepassword/reset?token='.$token;
         $user_name = $data['user_name'];
         $time = date('Y-m-d H:i:s', time());
@@ -609,7 +619,7 @@ class User extends CI_Controller
         return $content;
     }
     private function email_check($data){
-        $token = $this->jwt->encode(['exp'=>time()+600,'user_id'=>$data['user_id']],$this->config->item('encryption_key'));
+        $token = $this->get_user_token($data['user_id']);
         $url = DN.'users/verifyusermail?token='.$token;
         $user_name = $data['user_name'];
         $time = date('Y-m-d H:i:s', time());

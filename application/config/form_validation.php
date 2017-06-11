@@ -179,12 +179,12 @@ $config = array(
             'rules' => 'required|min_length[1]'
         ),
         array(
-            'field' => 'p_text',
+            'field' => 'text',
             'label' => 'p_text',
             'rules' => 'required|min_length[1]|max_length[5000]'
         ),
         array(
-            'field' => 'p_title',
+            'field' => 'title',
             'label' => 'p_title',
             'rules' => 'required|min_length[1]|max_length[60]'
         )

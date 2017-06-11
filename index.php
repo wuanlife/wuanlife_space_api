@@ -68,7 +68,7 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
-		define('DN','http://104.194.79.57/');
+		define('DN','http://104.199.245.21/');//服务器地址用于发送邮件
 	break;
 
 	case 'testing':
