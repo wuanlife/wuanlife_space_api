@@ -27,7 +27,7 @@
 |info.user_id  | 整型  | 用户ID|
 |info.user_name| 字符串| 用户昵称|
 |info.user_email   | 字符串| 用户邮箱|
-|Access-Token|字符串|用户口令|
+|info.Access-Token|字符串|用户口令|
 
 ## 示例
 
