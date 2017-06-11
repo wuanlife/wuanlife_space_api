@@ -52,9 +52,9 @@
 8.[帖子编辑](/wiki/post.edit_post.md)<br>
 9.[帖子删除](/wiki/Post.DeletePost.md)<br>
 10.[帖子置顶](/wiki/Post.StickyPost.md)<br>
-11.[帖子置顶取消](/wiki/Post.UnStickyPost.md)<br>
+11.[帖子置顶取消](/wiki/Post.UnStickyPost.md)（废弃）<br>
 12.[帖子锁定](/wiki/Post.LockPost.md)<br>
-13.[帖子解锁](/wiki/Post.UnlockPost.md)<br>
+13.[帖子解锁](/wiki/Post.UnlockPost.md)（废弃）<br>
 14.[帖子收藏](/wiki/Post.CollectPost.md)<br>
 15.[我的收藏帖子显示](/wiki/Post.GetCollectPost.md)<br>
 16.[删除帖子回复](/wiki/Post.DeletePostReply.md)<br>
