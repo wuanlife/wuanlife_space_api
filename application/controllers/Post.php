@@ -51,6 +51,9 @@ class Post extends CI_Controller
             $this->response(null,400,validation_errors());
         $model = $this->Post_model;
         $common_model = $this->Common_model;
+        if(empty($model->get_post_information($data['post_id']))){
+            $this->response(null,400,'帖子不存在！');
+        }
         $rs = $model->get_post_base($data['post_id'],$data['user_id']);
         $rs['creator_id'] = $this->Group_model->get_group_infomation($rs['group_id'])['user_base_id'];
         $rs['creator_name'] = $this->User_model->get_user_information($rs['creator_id'])['nickname'];
