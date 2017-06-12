@@ -199,7 +199,7 @@ class Post_model extends CI_Model
         $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.`lock`,pd.create_time,'
             .'ud.profile_picture,ub.id AS user_id,'
             .'ub.nickname as user_name,gb.id AS group_id,gb.`name` AS g_name,'
-            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1 AND approved=1) AS approved,"
             .'(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approved_num,'
             ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=pb.id AND `delete`=0) AS collected,"
             ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=pb.id AND `delete`=0) AS collected_num,"
@@ -363,7 +363,7 @@ class Post_model extends CI_Model
         $rs['current_page'] = (int)$page;
         $sql = 'SELECT pb.id AS post_id,pb.title as p_title,pd.text as p_text,pb.lock,pd.create_time,'
             . 'ub.nickname as user_name,ub.id AS user_id,gb.id AS group_id,gb.name AS g_name,ud.profile_picture,'
-            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1) AS approved,"
+            ."(SELECT count(approved) FROM post_approved WHERE user_base_id=$user_id AND post_base_id=pb.id AND floor=1 AND approved=1) AS approved,"
             .'(SELECT count(approved) FROM post_approved WHERE floor=1 AND post_base_id=pb.id AND approved=1) AS approved_num,'
             ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=pb.id AND `delete`=0) AS collected,"
             ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=pb.id AND `delete`=0) AS collected_num,"

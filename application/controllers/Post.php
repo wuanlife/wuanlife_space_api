@@ -274,16 +274,22 @@ class Post extends CI_Controller
      * @return int currentPage 当前页
      */
     public function get_index_post(){
+        $access_token = $this->input->request_headers();
+        if(!empty($access_token['Access-Token'])){
+            $token = $this->parsing_token($access_token['Access-Token']);
+//            $data = [] ;
+        }
         $data=array(
-            'user_id'=>$this->input->get('user_id'),
+            'user_id'=> @$token->user_id,
+            'latest'=>$this->input->get('latest'),
             'page'=>$this->input->get('pn'),
         );
-        if(!empty($data['user_id'])){
+        if(!empty($data['user_id'])&&!$data['latest']){
             $re = $this->Post_model->get_mygroup_post($data['user_id'],$data['page']);
             //$re['user_name']=$this->Post_model->get_user($data['user_id']);
         }
-        if(empty($re['posts'])){
-        $re=$this->Post_model->get_index_post($data);
+        if($data['latest']||empty($re['posts'])){
+            $re=$this->Post_model->get_index_post($data);
         }
         $re=$this->Post_model->get_image_url($re);
         $re=$this->Post_model->delete_image_gif($re);
@@ -512,7 +518,7 @@ class Post extends CI_Controller
             $rs['code'] = 0;
             $rs['msg'] = "您没有操作权限!";
         }
-        $this->response($rs['code'],200,$rs['msg']);
+        $this->response(['code'=>$rs['code']],200,$rs['msg']);
     }
 
     /**
@@ -707,7 +713,7 @@ class Post extends CI_Controller
             $rs['code'] = 0;
             $rs['msg'] = "您没有操作权限!";
         }
-        $this->response($rs['code'],200,$rs['msg']);
+        $this->response(['code'=>$rs['code']],200,$rs['msg']);
     }
 
     /**
