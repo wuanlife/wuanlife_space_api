@@ -76,7 +76,7 @@ class Post extends CI_Controller
             }else{
                 $msg = "帖子所属星球已关闭，不可查看！";
             }
-            $this->response($rs,200,$msg);
+            $this->response($rs,404,$msg);
         }
         if($private_group){
             if($data['user_id'] !=null){
