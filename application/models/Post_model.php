@@ -67,7 +67,7 @@ class Post_model extends CI_Model
             ."(SELECT count(user_base_id) FROM user_collection WHERE user_base_id=$user_id AND post_base_id=$post_id AND `delete`=0) AS collected,"
             ."(SELECT count(user_base_id) FROM user_collection WHERE post_base_id=$post_id AND `delete`=0) AS collected_num "
             . 'FROM post_detail pd,post_base pb ,group_base gb,user_base ub,user_detail ud '
-            . 'WHERE pb.id=pd.post_base_id AND pb.`delete`=0 AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id '
+            . 'WHERE pb.id=pd.post_base_id AND pb.user_base_id=ub.id AND pb.group_base_id=gb.id '
             ."AND pb.id=$post_id AND pd.floor=1 AND ub.id=ud.user_base_id" ;
         $rs = $this->db->query($sql)->row_array();
         if (!empty($rs)){
@@ -548,6 +548,8 @@ class Post_model extends CI_Model
         );
         $this->db->where('id', $data['post_id'])
             ->update('post_base',$d_data);
+        $data['floor'] = 1;
+        $this->delete_post_reply($data);
         $rs['code']=1;
         return $rs;
     }
