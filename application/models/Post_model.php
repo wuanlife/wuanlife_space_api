@@ -681,9 +681,9 @@ class Post_model extends CI_Model
         return $sql;
     }
 
-    public function update_collect_post($data){
+    public function update_collect_post($data,$post_exist){
         $delete = $this->check_collect_post($data)['delete'];
-        if($delete){
+        if($post_exist&&$delete){
             $field['delete'] = 0;
             $rs['code'] = 1;
             $rs['msg'] = '收藏成功';
@@ -691,6 +691,10 @@ class Post_model extends CI_Model
             $field['delete'] = 1;
             $rs['code'] = 2;
             $rs['msg'] = '取消收藏成功';
+        }
+        if(!$post_exist&&$delete){
+            $rs['code'] = 0;
+            $rs['msg'] = '操作失败，可能帖子不存在！';
         }
         $field['create_time'] = time();
         $re=$this->db->where('post_base_id',$data['post_id'])

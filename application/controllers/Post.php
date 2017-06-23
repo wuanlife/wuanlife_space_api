@@ -766,17 +766,17 @@ class Post extends CI_Controller
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('collect_post') == FALSE)
             $this->response(null,400,validation_errors());
+        $post_exist = $this->Common_model->judge_post_exist($data['post_id']);
         $exist=$this->Common_model->ifexist_collect_post($data);
         if($exist){
-            $rs=$this->Post_model->update_collect_post($data);
-
+            $rs=$this->Post_model->update_collect_post($data,$post_exist);
         }else{
-            if($this->Post_model->collect_post($data)){
+            if($post_exist&&$this->Post_model->collect_post($data)){
                 $rs['code'] = 1;
                 $rs['msg'] = '收藏成功';
             }else{
                 $rs['code'] = 0;
-                $rs['msg'] = '操作失败';
+                $rs['msg'] = '操作失败，可能帖子不存在';
             }
         }
         $this->response(['code'=>$rs['code']],200,$rs['msg']);

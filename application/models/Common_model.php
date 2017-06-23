@@ -106,8 +106,12 @@ class Common_model extends CI_Model
      * 判断星球是否存在
      */
     public function judge_group_exist($group_id){
-        $re=$this->Group_model->get_group_infomation($group_id)['delete'];
-        return !$re;
+        $delete=$this->Group_model->get_group_infomation($group_id)['delete'];
+        if($delete==='0')
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -120,12 +124,9 @@ class Common_model extends CI_Model
         $rs=$this->judge_group_exist($group_id);
         if($rs){
             $sql=!$this->Post_model->get_post_information($post_id)['delete'];
+            return $sql;
         }
-        if(!empty($sql)){
-            return true;
-        }else{
-            return false;
-        }
+        return false;
     }
 
     /**
