@@ -69,7 +69,7 @@ class Post extends CI_Controller
         $re['group'] = $common_model->judge_group_exist($group_id);
         $re['post'] = $common_model->judge_post_exist($data['post_id']);
         if(!$re['post']){
-            unset($rs);
+            $rs = null;
             $rs['code'] = 0;
             if($re['group']){
                 $msg = "帖子已被删除，不可查看！";
@@ -77,25 +77,6 @@ class Post extends CI_Controller
                 $msg = "帖子所属星球已关闭，不可查看！";
             }
             $this->response($rs,404,$msg);
-        }
-        if($private_group){
-            if($data['user_id'] !=null){
-                $groupuser = $common_model->check_group($data['user_id'],$group_id);
-                $groupcreator = $common_model->judge_group_creator($group_id,$data['user_id']);
-                if(empty($groupcreator)){
-                    if(empty($groupuser)){
-                        unset($rs);
-                        $rs['code'] = 2;
-                        $rs['group_id'] = $group_id;
-                        $msg = "未加入，不可查看私密帖子！";
-                    }
-                }
-            }else{
-                unset($rs);
-                $rs['code'] = 2;
-                $rs['group_id'] = $group_id;
-                $msg = "未登录，不可查看私密帖子！";
-            }
         }
         if ($data['user_id'] !=null){
             $creator= $common_model->judge_group_creator($group_id,$data['user_id']);
@@ -155,6 +136,25 @@ class Post extends CI_Controller
             ],
             'code'=>$rs['code'],
         ];
+        if($private_group){
+            if($data['user_id'] !=null){
+                $groupuser = $common_model->check_group($data['user_id'],$group_id);
+                $groupcreator = $common_model->judge_group_creator($group_id,$data['user_id']);
+                if(empty($groupcreator)){
+                    if(empty($groupuser)){
+                        unset($array);
+                        $array['code'] = 2;
+                        $array['group_id'] = $group_id;
+                        $msg = "未加入，不可查看私密帖子！";
+                    }
+                }
+            }else{
+                unset($array);
+                $array['code'] = 2;
+                $array['group_id'] = $group_id;
+                $msg = "未登录，不可查看私密帖子！";
+            }
+        }
         $this->response($array,200,$msg);
     }
     /**
