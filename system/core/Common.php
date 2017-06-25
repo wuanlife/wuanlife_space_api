@@ -227,7 +227,7 @@ if ( ! function_exists('is_loaded'))
 if ( ! function_exists('get_config'))
 {
 	/**
-	 * Loads the main config-default.php file
+	 * Loads the main config.php file
 	 *
 	 * This function lets us grab the config file even if the Config class
 	 * hasn't been instantiated yet
@@ -241,7 +241,7 @@ if ( ! function_exists('get_config'))
 
 		if (empty($config))
 		{
-			$file_path = APPPATH.'config/config-default.php';
+			$file_path = APPPATH.'config/config.php';
 			$found = FALSE;
 			if (file_exists($file_path))
 			{
@@ -250,7 +250,7 @@ if ( ! function_exists('get_config'))
 			}
 
 			// Is the config file in the environment folder?
-			if (file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config-default.php'))
+			if (file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config.php'))
 			{
 				require($file_path);
 			}
