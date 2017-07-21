@@ -34,3 +34,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /.editorconfig
 /contributing.md
 /readme.rst
+/application/config/database.php
+/application/config/config.php
+/application/config/email.php
