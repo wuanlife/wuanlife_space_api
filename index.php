@@ -1,4 +1,10 @@
 <?php
+function dump($str)
+{
+    echo '<pre>';
+    var_dump($str);
+    echo '</pre>';
+}
 /**
  * CodeIgniter
  *
@@ -68,10 +74,12 @@ switch (ENVIRONMENT)
 	case 'development':
 		error_reporting(-1);
 		ini_set('display_errors', 1);
+		define('DN','http://104.199.245.21/');//服务器地址用于发送邮件
 	break;
 
 	case 'testing':
 	case 'production':
+	define('DN','http://www.wuanla.com/');
 		ini_set('display_errors', 0);
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
@@ -312,4 +320,5 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+date_default_timezone_set('Asia/Shanghai');
 require_once BASEPATH.'core/CodeIgniter.php';

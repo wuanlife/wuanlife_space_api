@@ -2,73 +2,92 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'message' => array(
+        array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'limit',
+            'label' => '每页数量',
+            'rules' => 'is_natural_no_zero'
+        ),
+        array(
+            'field' => 'offset',
+            'label' => '起始值',
+            'rules' => 'is_natural'
+        )
+    ),
+    'check_token'=>array(
+        array(
+            'field' => 'token',
+            'label' => '身份信息',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required'
+        )
+    ),
     'send_mail'=>array(
         array(
             'field' => 'email',
-            'label' => 'user_email',
+            'label' => '邮箱',
             'rules' => 'required|valid_email'
         )
     ),
     'login'=>array(
         array(
             'field' => 'email',
-            'label' => 'user_email',
+            'label' => '邮箱',
             'rules' => 'required|valid_email'
         ),
         array(
             'field' => 'password',
-            'label' => 'password',
+            'label' => '密码',
             'rules' => 'required|min_length[6]'
         )
     ),
     're_psw'=>array(
         array(
-            'field' => 'user_id',
-            'label' => 'user_id',
-            'rules' => 'required'
-        ),
-        array(
             'field' => 'password',
-            'label' => 'password',
+            'label' => '密码',
             'rules' => 'required|min_length[6]'
         ),
         array(
             'field' => 'token',
-            'label' => 'token',
+            'label' => '身份信息',
             'rules' => 'required'
-        ),
-        array(
-            'field' => 'exp',
-            'label' => 'exp',
-            'rules' => 'required'
-        ),
+        )
     ),
     'reg'=>array(
         array(
             'field' => 'nickname',
-            'label' => 'user_name',
+            'label' => '昵称',
             'rules' => 'required'
         ),
         array(
             'field' => 'email',
-            'label' => 'user_email',
+            'label' => '邮箱',
             'rules' => 'required|valid_email'
         ),
         array(
             'field' => 'password',
-            'label' => 'password',
+            'label' => '密码',
             'rules' => 'required|min_length[6]'
         ),
         array(
             'field' => 'code',
-            'label' => 'i_code',
+            'label' => '邀请码',
             'rules' => 'required'
         ),
     ),
     'show_message' => array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required'
         ),
         array(
@@ -92,24 +111,24 @@ $config = array(
     'process_apply' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required'
         ),
         array(
             'field' => 'm_id',
-            'label' => 'm_id',
+            'label' => '消息ID',
             'rules' => 'required'
         ),
-        array(
-            'field' => 'mark',
-            'label' => 'mark',
-            'rules' => 'required'
-        )
+//        array(
+//            'field' => 'mark',
+//            'label' => '操作码',
+//            'rules' => 'in_list[true,false]'
+//        )
     ),
     'private_group' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -126,7 +145,7 @@ $config = array(
     'posts' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -148,29 +167,24 @@ $config = array(
     'change_pwd' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
             'field' => 'password',
-            'label' => 'password',
+            'label' => '原密码',
             'rules' => 'required|min_length[6]'
         ),
         array(
             'field' => 'psw',
-            'label' => 'psw',
-            'rules' => 'required|min_length[6]'
-        ),
-        array(
-            'field' => 'check_psw',
-            'label' => 'check_psw',
+            'label' => '新密码',
             'rules' => 'required|min_length[6]'
         )
     ),
     'edit_post' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -192,7 +206,7 @@ $config = array(
     'post_reply' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -209,7 +223,7 @@ $config = array(
     'collect_post' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -221,7 +235,7 @@ $config = array(
     'delete_group_member' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
@@ -238,7 +252,7 @@ $config = array(
     'get_create' =>array(
         array(
             'field' => 'user_id',
-            'label' => 'user_id',
+            'label' => '用户ID',
             'rules' => 'required'
         ),
     ),
@@ -258,9 +272,14 @@ $config = array(
     ),
     'delete_message' =>array(
         array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required|is_natural_no_zero'
+        ),
+        array(
             'field' => 'id',
-            'label' => 'm_id',
-            'rules' => 'required'
+            'label' => '消息ID',
+            'rules' => 'required|is_natural_no_zero'
         ),
     ),
     'email' => array(

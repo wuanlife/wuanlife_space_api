@@ -16,11 +16,18 @@ class User_model extends CI_Model
      * 判断邮箱是否已注册
      */
     public function user_email($data){
-       $email=$data['email'];
-       $re=false;
+//       $email=$data['email'];
+//       $re=false;
+//
+//        $query = $this->db->query("select * from user_base where email=\"$email\"");
+//
+//        return $query->row_array();
 
-        $query = $this->db->query("select * from user_base where email=\"$email\"");
-
+        $this->db->select('*');
+        $this->db->from('user_base');
+        $this->db->where('email',$data['email']);
+//        $this->db->join('user_detail', 'user_detail.user_base_id = user_base.id');
+        $query = $this->db->get();
         return $query->row_array();
     }
 
@@ -29,14 +36,21 @@ class User_model extends CI_Model
      * @return bool
      * 判断用户昵称是否已使用
      */
-    public function user_nickname($data){
-        $nickname=$data['nickname'];
-        $re=false;
-        $query=$this->db->query("select nickname from user_base where nickname=\"$nickname\"");
-        if($query->result_array()){
-            $re=$query->result_array();
-        }
-        return $re;
+    public function user_nickname($nickname){
+//        $nickname=$data['nickname'];
+//        $re=false;
+//        $query=$this->db->query("select nickname from user_base where nickname=\"$nickname\"");
+//        if($query->result_array()){
+//            $re=$query->result_array();
+//        }
+//        return $re;
+
+        $this->db->select('nickname');
+        $this->db->from('user_base');
+        $this->db->where('nickname',$nickname);
+//        $this->db->join('user_detail', 'user_detail.user_base_id = user_base.id');
+        $query = $this->db->get();
+        return $query->row_array();
 
     }
     /**
@@ -52,17 +66,17 @@ class User_model extends CI_Model
     /**
      * @param $user_id
      * @return mixed
-     * 查找用户邀请码
+     * 从数据库查询用户邀请码
      */
     public function show_code($user_id){
-        $this->db->select('code as i_code,used as num')->from('user_code')->where('user_base_id',$user_id)->where('difference',3);
+        $this->db->select('code,used as num')->from('user_code')->where('user_base_id',$user_id)->where('difference',3);
         $query = $this->db->get()->row_array();
         return $query;
     }
     /**
      * @param $user_id
      * @param $i_code
-     * 生成邀请码
+     * 将生成的邀请码存入数据库
      */
     public function create_code($user_id,$i_code){
         $data = array(
@@ -76,24 +90,36 @@ class User_model extends CI_Model
     }
 
     public function reg($data){
-        extract($data);
-        $password=md5($password);
-        $regtime=time();
-        $sql='insert into user_base (password,nickname,email,regtime) '.
-            "values (\"$password\",\"$nickname\",\"$email\",\"$regtime\")";
-        $query=$this->db->query($sql);
-        if($query){
-            $sql2="select id as user_id,nickname as user_name,email as user_email from user_base where nickname=\"$nickname\"";
-            $query2=$this->db->query($sql2);
-            $re=$query2->result_array()[0];
-            $user_id=$re['user_id'];
-            $sql1='insert into user_detail (user_base_id,authorization) '.
-                "values (\"$user_id\",'01')";
-            $this->db->query($sql1);
-        }else{
-            $re=false;
+//        extract($data);
+//        $password=md5($password);
+//        $regtime=time();
+//        $sql='insert into user_base (password,nickname,email,regtime) '.
+//            "values (\"$password\",\"$nickname\",\"$email\",\"$regtime\")";
+//        $query=$this->db->query($sql);
+//        if($query){
+//            $sql2="select id as user_id,nickname as user_name,email as user_email from user_base where nickname=\"$nickname\"";
+//            $query2=$this->db->query($sql2);
+//            $re=$query2->result_array()[0];
+//            $user_id=$re['user_id'];
+//            $sql1='insert into user_detail (user_base_id,authorization) '.
+//                "values (\"$user_id\",'01')";
+//            $this->db->query($sql1);
+//        }else{
+//            $re=false;
+//        }
+//        return $re;
+
+        $data['regtime'] = time();
+
+        if($this->db->insert('user_base', $data)){
+            if($this->db->insert('user_detail',[
+                'user_base_id'=>$this->db->insert_id(),
+                'authorization'=>'01'
+            ])){
+                return $this->db->insert_id();
+            }
         }
-        return $re;
+        return FALSE;
     }
 
     public function get_user_info($user_id){
@@ -114,27 +140,42 @@ class User_model extends CI_Model
 
 
     public function alter_user_info($data){
-        extract($data);
-        $sql="update user_detail set profile_picture=\"$profile_picture\",sex=\"$sex\",year=\"$year\",month=\"$month\",day=\"$day\" ".
-            "where user_base_id=$user_id";
-        $this->db->query($sql);
+//        extract($data);
+//        $sql="update user_detail set profile_picture=\"$profile_picture\",sex=\"$sex\",year=\"$year\",month=\"$month\",day=\"$day\" ".
+//            "where user_base_id=$user_id";
+//        $this->db->query($sql);
+//        if(!empty($nickname)){
+//            $username=$this->user_nickname($data);
+//            if(empty($username)){
+//                $this->db->set('nickname',$nickname)
+//                    ->where('id',$user_id)
+//                    ->update('user_base');
+//                $re['code']=1;
+//                $re['msg']='修改成功!';
+//            }else{
+//                $re['code']=0;
+//                $re['msg']='用户名被占用！';
+//            }
+//            return $re;
+//        }
+//        $re['code']=1;
+//        $re['msg']='修改成功！';
+//        return $re;
+        $nickname = $data['nickname'];
+        unset($data['nickname']);
+        $this->db->where('user_base_id', $data['user_base_id']);
+        $this->db->update('user_detail', $data)?$msg['m']=1:$msg['m']=2;
         if(!empty($nickname)){
-            $username=$this->user_nickname($data);
+            $username=$this->user_nickname($nickname);
             if(empty($username)){
                 $this->db->set('nickname',$nickname)
-                    ->where('id',$user_id)
-                    ->update('user_base');
-                $re['code']=1;
-                $re['msg']='修改成功!';
+                    ->where('id',$data['user_base_id'])
+                    ->update('user_base')?$msg['n']=1:$msg['n']=2;
             }else{
-                $re['code']=0;
-                $re['msg']='用户名被占用！';
+                $msg['n'] = 3;
             }
-            return $re;
         }
-        $re['code']=1;
-        $re['msg']='修改成功！';
-        return $re;
+        return $msg;
     }
 
     /**
@@ -177,16 +218,19 @@ class User_model extends CI_Model
     /**
      * @param $user_id
      * @param $table string 数据表名称
-     * @param null $num
+     * @param null $status
      * @return int
      * 获取消息的数量
      */
-    public function get_num_message($user_id,$table,$num=NULL)
+    public function get_num_message($user_id,$table,$status=NULL)
     {
         $this->db->from($table);
         $this->db->where('user_base_id',$user_id);
-        if(!empty($num)){
+        if($status===TRUE){
             $this->db->where('status',0);
+        }
+        if($status===FALSE){
+            $this->db->where_in('status',[0,1]);
         }
         return $this->db->count_all_results();
 
@@ -208,55 +252,52 @@ class User_model extends CI_Model
         }
         return $re;
     }
+
     /**
-     * @param $data
-     * @param $page_num int 每页数量
-     * @return mixed
-     * 获取帖子通知
+     * @param $user_id      int     用户ID
+     * @param $limit        int     每页显示数
+     * @param $offset       int     起始数
+     * @return mixed 获取帖子通知
      */
-    public function show_reply_message($data,$page_num){
-        $user_id = $data['user_id'];
-        $limsit_st = ($data['pn']-1)*$page_num;
+    public function show_reply_message($user_id,$limit,$offset){
         $sql='SELECT ub.id AS user_id,mr.id AS m_id,mr.reply_floor,ud.profile_picture,ub.nickname AS user_name,pb.title AS p_title,pb.id AS post_id '
             .'FROM user_base ub,post_base pb,message_reply mr,user_detail ud '
-            ."WHERE mr.user_base_id = \"$user_id\" AND mr.user_reply_id = ub.id AND mr.post_base_id = pb.id AND ud.user_base_id = ub.id "
-            .'AND mr.status = 1 '
+            ."WHERE mr.user_base_id = {$user_id} AND mr.user_reply_id = ub.id AND mr.post_base_id = pb.id AND ud.user_base_id = ub.id "
+            .'AND mr.status = 1 '       //帖子可能被删除，相应的通知也会被删除，所以这里不是数据库所有数据返回
             .'ORDER BY mr.create_time DESC '
-            ."LIMIT $limsit_st,$page_num";
+            ."LIMIT $offset,$limit";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
     /**
-     * @param $data
-     * @param $page_num int 每页数量
-     * @return mixed
-     * 获取私密星球申请通知
+     * @param $user_id
+     * @param $limit
+     * @param $offset
+     * @return mixed 获取私密星球申请通知
      */
-    public function show_apply_message($data,$page_num){
-        $user_id = $data['user_id'];
-        $limsit_st = ($data['pn']-1)*$page_num;
+    public function show_apply_message($user_id,$limit,$offset){
         $sql='SELECT ub.id AS user_id,ma.id AS m_id,ma.text,ud.profile_picture,ub.nickname AS user_name,gb.name AS g_name,gb.id AS group_id,ma.status '
             .'FROM user_base ub,group_base gb,message_apply ma,user_detail ud '
-            ."WHERE ma.user_base_id = \"$user_id\" AND ma.user_apply_id = ub.id AND ma.group_base_id = gb.id AND ud.user_base_id = ub.id "
+            ."WHERE ma.user_base_id = {$user_id} AND ma.user_apply_id = ub.id AND ma.group_base_id = gb.id AND ud.user_base_id = ub.id "
             .'ORDER BY ma.create_time DESC '
-            ."LIMIT $limsit_st,$page_num";
+            ."LIMIT $offset,$limit";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
     /**
-     * @param $data
-     * @param $page_num
-     * @return mixed
-     * 获取星球通知
+     * @param $user_id      int     用户ID
+     * @param $limit        int     每页显示数
+     * @param $offset       int     起始数
+     * @return mixed    获取星球通知
      */
-    public function show_notice_message($data,$page_num){
-        $user_id = $data['user_id'];
-        $limsit_st = ($data['pn']-1)*$page_num;
+    public function show_notice_message($user_id,$limit,$offset){
         $sql='SELECT ub.id AS user_id,mn.id AS m_id,mn.type,ub.nickname AS user_name,gb.name AS g_name,gb.id AS group_id,mn.status '
             .'FROM user_base ub,group_base gb,message_notice mn '
-            ."WHERE mn.user_base_id = \"$user_id\" AND mn.user_notice_id = ub.id AND mn.group_base_id = gb.id "
+            ."WHERE mn.user_base_id = {$user_id} AND mn.user_notice_id = ub.id AND mn.group_base_id = gb.id "
             .'ORDER BY mn.create_time DESC '
-            ."LIMIT $limsit_st,$page_num";
+            ."LIMIT $offset,$limit";
         $query = $this->db->query($sql);
         return $query->result_array();
     }
@@ -286,19 +327,25 @@ class User_model extends CI_Model
         $table = array('message_notice','message_apply','message_reply');
         $num = array();
         for($i=0;$i<3;$i++){
-            $num[$i] = $this->get_num_message($id,$table[$i],1);
+            $num[$i] = $this->get_num_message($id,$table[$i],TRUE);
         }
         return $num;
     }
 
     /**
- * 重置密码
+     * 重置密码
      * @param $data
- */
+     * @return CI_DB_active_record|CI_DB_result
+     */
     public function re_psw($data){
-        $password = $data['password'];
-        $id = $data['user_id'];
-        $this->db->query("update user_base set password = '$password' where id = $id");
+//        $password = $data['password'];
+//        $id = $data['user_id'];
+//        $this->db->query("update user_base set password = '{$password}' where id = '{$id}'");
+
+        $this->db->where('id', $data['user_id']);
+        return $this->db->update('user_base', [
+            'password'=>$data['password']
+        ]);
     }
 
     /**
@@ -321,11 +368,11 @@ class User_model extends CI_Model
      * @return mixed
      * 将用户邮箱状态更新为已验证
      */
-    public function check_mail($data)
+    public function check_mail($id)
     {
-        $this->db->where('user_base_id', $data['user_id']);
+        $this->db->where('user_base_id', $id);
         $this->db->update('user_detail', ['mail_checked' => 1]);
-        return $this->get_mail_checked($data['user_id']);
+        return $this->get_mail_checked($id);
     }
 
     /**
