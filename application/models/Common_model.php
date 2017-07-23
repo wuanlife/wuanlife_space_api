@@ -20,17 +20,18 @@ class Common_model extends CI_Model
 
 
     /**
-      * 判断是否为私密
-      */
-    public function judgePrivate($private){
-        if($private==1){
-            $private=1;
-        }else{
-            $private=0;
-        }
-
-        return $private;
-    }
+     * 判断是否为私密
+     * 多余方法，后续会移除
+     */
+//    public function judgePrivate($private){
+//        if($private==1){
+//            $private=1;
+//        }else{
+//            $private=0;
+//        }
+//
+//        return $private;
+//    }
 
     /**
      *判断用户是否在线(调用前端接口)
@@ -65,8 +66,8 @@ class Common_model extends CI_Model
      */
     public function judge_image_exist($lists){
         for($i=0;$i<count($lists);$i++){
-            if(empty($lists[$i]["g_image"])||$lists[$i]["g_image"]==null){
-                $lists[$i]["g_image"]='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            if(empty($lists[$i]["image_url"])||$lists[$i]["image_url"]==null){
+                $lists[$i]["image_url"]='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
             }
         }
         return $lists;
@@ -81,29 +82,12 @@ class Common_model extends CI_Model
         $re =$this->Group_model->get_group_infomation($group_id)['private'];
         return $re;
     }
-    /*
-     * @param $group_id
-     * @return int
-     * 已存在相同函数
-    public function judge_group_exist($group_id){
-        $sql=$this->db->select('id')
-            ->where('id',$group_id)
-            ->where('`delete`','0')
-            ->get('group_base')
-            ->row_array();
-        if(!empty($sql)){
-            $rs=1;
-        }else{
-            $rs=0;
-        }
-        return $rs;
-    }
-     * /
+
 
     /**
+     * 判断星球是否存在
      * @param $group_id
      * @return int
-     * 判断星球是否存在
      */
     public function judge_group_exist($group_id){
         $delete=$this->Group_model->get_group_infomation($group_id)['delete'];
@@ -224,18 +208,6 @@ class Common_model extends CI_Model
 
 
     /**
-     * 通过星球id获取星球名称
-     * Group_model已存在相同方法get_group_infomation
-     */
-    public function get_group_name($group_id){
-        $sql=$this->db->select('name')
-            ->where('id',$group_id)
-            ->get('group_base')
-            ->row_array();
-        return $sql['name'];
-    }
-
-    /**
      * 判断用户是否为星球成员
      */
     public function judge_group_user($group_id,$user_id){
@@ -246,36 +218,13 @@ class Common_model extends CI_Model
             ->get('group_detail')
             ->row_array();
         if(empty($sql)){
-            $re=NULL;
+            return FALSE;
         }else{
-            $re=1;
+            return TRUE;
         }
-        return $re;
     }
 
-    /*
-    判断用户是否为星球创建者
-    */
-    /*
-     * @param $group_id
-     * @param $user_id
-     * @return int|null
-     * 已存在相同函数
-    public function judge_group_creator($group_id,$user_id){
-        $sql=$this->db->select('*')
-            ->where('group_base_id',$group_id)
-            ->where('user_base_id',$user_id)
-            ->where('authorization',01)
-            ->get('group_detail')
-            ->row_array();
-        if(empty($sql)){
-            $re=NULL;
-        }else{
-            $re=1;
-        }
-        return $re;
-    }
-    */
+
     /**
      * @param $user_id
      * @param $group_id

@@ -767,11 +767,11 @@ class User extends REST_Controller
         }
         catch(InvalidArgumentException $e)
         {
-            $this->response(['error'=>'身份信息已失效，请重新获取'],401);
+            return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
         }
         catch(UnexpectedValueException $e)
         {
-            $this->response(['error'=>'身份信息已失效，请重新获取'],401);
+            return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
         }
 
     }

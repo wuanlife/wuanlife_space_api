@@ -122,21 +122,7 @@ class User_model extends CI_Model
         return FALSE;
     }
 
-    public function get_user_info($user_id){
-        $sql='select user_base_id as user_id,sex,year,month,day,mail_checked,profile_picture from user_detail '.
-            "where user_base_id=$user_id";
-        $sqlb="select email as user_email,nickname from user_base where id=$user_id";
-        $query=$this->db->query($sql)->result_array()[0];
-        $queryb=$this->db->query($sqlb)->result_array()[0];
-        if(empty($query['profile_picture'])){
-            //给无头像用户加上默认头像
-            $query['profile_picture']='http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-        }
-        $query['user_email']=$queryb['user_email'];
-        $query['user_name']=$queryb['nickname'];
-        return $query;
 
-    }
 
 
     public function alter_user_info($data){

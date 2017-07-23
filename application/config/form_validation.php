@@ -2,6 +2,47 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'lists'      =>array(
+        array(
+            'field' => 'limit',
+            'label' => '每页数量',
+            'rules' => 'is_natural_no_zero'
+        ),
+        array(
+            'field' => 'offset',
+            'label' => '起始值',
+            'rules' => 'is_natural'
+        )
+    ),
+    'join_group' =>array(
+        array(
+            'field' => 'group_id',
+            'label' => '星球名称',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        )
+    ),
+    'create_group' =>array(
+        array(
+            'field' => 'g_name',
+            'label' => '星球名称',
+            'rules' => 'required|min_length[1]|max_length[80]|regex_match[/^[0-9a-zA-Z_\x{4e00}-\x{9fa5}]{1,20}+$/u]|is_string'
+        ),
+        array(
+            'field' => 'g_introduction',
+            'label' => '星球简介',
+            'rules' => 'min_length[1]|max_length[50]'
+        ),
+        array(
+            'field' => 'g_image',
+            'label' => '星球图片',
+            'rules' => 'valid_url'
+        )
+    ),
     'message' => array(
         array(
             'field' => 'user_id',
@@ -129,12 +170,12 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
             'field' => 'group_id',
             'label' => 'group_id',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
             'field' => 'text',
@@ -234,18 +275,13 @@ $config = array(
     ),
     'delete_group_member' =>array(
         array(
-            'field' => 'user_id',
-            'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
-        ),
-        array(
             'field' => 'group_id',
-            'label' => 'group_id',
+            'label' => '星球ID',
             'rules' => 'required|min_length[1]'
         ),
         array(
             'field' => 'member_id',
-            'label' => 'member_id',
+            'label' => '成员ID',
             'rules' => 'required|min_length[1]'
         )
     ),
@@ -259,7 +295,7 @@ $config = array(
     'get_group_post' =>array(
         array(
             'field' => 'group_id',
-            'label' => 'group_id',
+            'label' => '星球ID',
             'rules' => 'required'
         ),
     ),
