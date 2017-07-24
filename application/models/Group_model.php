@@ -61,7 +61,7 @@ class Group_model extends CI_Model
     }
 
     /**
-     * 获得星球的帖子总数
+     * 获得星球的帖子总数，旧式方法 *2017/7/24 0024
      * @param $group_id
      * @return int
      */
@@ -69,6 +69,7 @@ class Group_model extends CI_Model
     {
         $re=$this->db->select('id')
             ->where('group_base_id',$group_id)
+            ->where('delete',0)
             ->get('post_base')
             ->result_array();
         return count($re);

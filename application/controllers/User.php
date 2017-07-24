@@ -56,7 +56,7 @@ class User extends REST_Controller
      */
     public function login_post(){
         $data=array(
-            'email' => $this->post('email'),
+            'email' => $this->post('mail'),
             'password' => $this->post('password'),
         );
         $this->form_validation->set_data($data);

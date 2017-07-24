@@ -54,6 +54,9 @@ $route['default_controller'] = 'User';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+//测试接口路由
+//$route['test']['get'] = 'post/test';
+
 //用户相关路由
 $route['users/signin']['post'] = 'user/login';
 $route['users']['post'] = 'user/reg';
@@ -82,5 +85,7 @@ $route['groups/(:num)/members/(:num)']['get'] = 'group/status/$1/$2';
 $route['groups/(:num)/members/(:num)']['delete'] = 'group/member/$1/$2';
 
 //帖子相关路由
-$route['post']['get'] = 'post/index';
-$route['posts/(:num)/approval']['post'] = 'post/approve';
+$route['posts']['get'] = 'post/index';
+$route['posts/(:num)/approval']['post'] = 'post/approve/$1';
+$route['posts/(:num)']['get'] = 'post/index';
+$route['groups/(:num)/posts']['get'] = 'post/post_content/$1';

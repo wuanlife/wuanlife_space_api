@@ -298,6 +298,16 @@ $config = array(
             'label' => '星球ID',
             'rules' => 'required'
         ),
+        array(
+            'field' => 'limit',
+            'label' => '每页数量',
+            'rules' => 'is_natural_no_zero'
+        ),
+        array(
+            'field' => 'offset',
+            'label' => '起始值',
+            'rules' => 'is_natural'
+        )
     ),
     'search' =>array(
         array(

@@ -16,143 +16,259 @@ class Post extends REST_Controller
         $this->form_validation->set_message('required', '{field} 参数是必填选项.');
         $this->form_validation->set_message('min_length', '{field} 参数长度不小于{param}.');
         $this->form_validation->set_message('max_length', '{field} 参数长度不大于{param}.');
+        $this->form_validation->set_message('is_natural_no_zero', '{field}不是正整数.');
+        $this->form_validation->set_message('is_natural', '{field}不是自然数.');
     }
-    /**
-     * @param $data
-     * @param int $ret
-     * @param null $msg
-     * 返回JSON数据到前端
-     */
-    // public function response($data,$ret=200,$msg=null){
-    //     $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
-    //     $this->output
-    //         ->set_status_header($ret)
-    //         ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
-    //         ->set_header('Pragma: no-cache')
-    //         ->set_header('Expires: 0')
-    //         ->set_content_type('application/json', 'utf-8')
-    //         ->set_output(json_encode($response))
-    //         ->_display();
-    //     exit;
-    // }
-
 
     /**
-     * 主页
-     * @desc 主页面帖子显示
-     * @return int posts.postID 帖子ID
-     * @return string posts.title 标题
-     * @return string posts.text 内容
-     * @return string posts.createTime 发帖时间
-     * @return string posts.nickname 发帖人
-     * @return int posts.groupID 星球ID
-     * @return int posts.lock 是否锁定
-     * @return int posts.approved 是否点赞(0未点赞，1已点赞)
-     * @return int posts.approvednum 点赞数
-     * @return string posts.groupName 星球名称
-     * @return int pageCount 总页数
-     * @return int currentPage 当前页
+     * 首页帖子接口
      */
     public function index_get(){
-        $access_token = $this->input->request_headers();
-        if(!empty($access_token['Access-Token'])){
-            $token = $this->parsing_token($access_token['Access-Token']);
-//            $data = [] ;
+        //校验权限
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $user_id = NULL;
+        }else{
+            $token = $this->parsing_token($jwt);
+            $user_id = $token->user_id;
         }
-        $data=array(
-            'user_id'=> @$token->user_id,
-            'latest'=>$this->input->get('latest'),
-            'page'=>$this->input->get('pn'),
+
+        //输入参数验证
+        $data = array(
+            'user_id'   => $user_id?:0,
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
+            'latest'    => $this->get('latest')=='false'?FALSE:TRUE
         );
-        if(!empty($data['user_id'])&&!$data['latest']){
-            $re = $this->Post_model->get_mygroup_post($data['user_id'],$data['page']);
-            //$re['user_name']=$this->Post_model->get_user($data['user_id']);
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('lists') === FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+        $re['data'] = $this->Post_model->get_post($data);
+
+        if(empty($re['data'])){
+            $this->response('',204);
         }
-        if($data['latest']||empty($re['posts'])){
-            $re=$this->Post_model->get_index_post($data);
-        }
-        $re=$this->Post_model->get_image_url($re);
-        $re=$this->Post_model->delete_image_gif($re);
-        $re=$this->Post_model->post_image_limit($re);
-        $re=$this->Post_model->delete_html_posts($re);
-        $re=$this->Post_model->post_text_limit($re);
-        foreach($re['posts'] as $key=>$value){
-            $re['posts'][$key] = [
+        $re=$this->Post_model->get_image_url($re);              //解析帖子内容，获得帖子中包含的图片
+        $re=$this->Post_model->delete_image_gif($re);           //删除帖子中gif格式的图片
+        $re=$this->Post_model->post_image_limit($re);           //展示图片限制，目前是显示三张
+        $re=$this->Post_model->delete_html_posts($re);          //从帖子内容去除 HTML 和 PHP 标记
+        $re=$this->Post_model->post_text_limit($re);            //帖子内容长度显示，目前是300字符
+
+        foreach($re['data'] as $key=>$value){
+            $re['data'][$key] = [
                 'post' => [
-                    'id' => $value['post_id'],
-                    'title' => $value['p_title'],
-                    'content' => $value['p_text'],
+                    'id' => $value['id'],
+                    'title' => $value['title'],
+                    'content' => $value['content'],
                     // 'lock'    => $value['lock'],
                     'create_time' => $value['create_time'],
-                    'approved' => $value['approved'],
+                    'approved' => $value['approved']?TRUE:FALSE,
                     'approved_num' => $value['approved_num'],
-                    'collected' => $value['collected'],
+                    'collected' => $value['collected']?TRUE:FALSE,
                     'collected_num'     => $value['collected_num'],
-                    'replied'   => $value['replied'],
-                    'replied_num'   => $value['replied_num'],
+                    /*此处待修改*/     'replied'   => $value['replied']?TRUE:FALSE,
+                    /*此处待修改*/     'replied_num'   => $value['replied_num'],
                     'image_url'      => $value['image'],
                 ],
                 'user' => [
-                    'avatar_url' =>$value['profile_picture'],
-                    'name'       =>$value['user_name'],
-                    'id'         =>$value['user_id'],
+                    'avatar_url' =>$value['profile_picture']?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
+                    'name'       =>$value['nickname'],
+                    'id'         =>$value['user_base_id'],
                 ],
                 'group' => [
-                    'id'  => $value['group_id'],
-                    'name'    => $value['g_name'],
+                    'id'  => $value['group_base_id'],
+                    'name'    => $value['name'],
                 ],
             ];
         }
 
-        $this->response($re,200,null);
+        //分页
+        $all_num = $this->Post_model->get_post($data,TRUE);
+        $offset = $data['offset'];
+        $limit = $data['limit'];
+        $page_count  = (ceil($all_num/$limit)-1);                   //比总页数小 1
+        $finallyo = $page_count * $limit;
+        $lasto = ($offset-$limit)>0?($offset-$limit):0;
+        $nexto = ($offset+$limit)<$finallyo?($offset+$limit):$finallyo;
+        $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ?
+            $_SERVER['HTTP_X_FORWARDED_HOST'] :
+            (isset($_SERVER['HTTP_HOST']) ?
+                $_SERVER['HTTP_HOST'] :
+                ''
+            );
+
+        $re['paging'] = [
+            'first'=> "{$host}/posts?limit={$limit}&offset=0",
+            'previous'=>"{$host}/posts?limit={$limit}&offset={$lasto}",
+            'next'=> "{$host}/posts?limit={$limit}&offset={$nexto}",
+            'final'=> "{$host}/posts?limit={$limit}&offset={$finallyo}"
+        ];
+
+        $this->response($re);
     }
 
     /**
      * 点赞帖子
-     * @desc 点赞帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
      */
-    public function approve_post(){
+    public function approve_post($post_id){
+        //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
+
+        //输入参数校验
         $data=array(
             'user_id'=>$token->user_id,
-            'post_id'=>$token->post_id,
-            'floor'=>$token->floor
+            'post_id'=>$post_id,
+            'floor'=>$this->get('floor')?:1
         );
-        print_r($data);
-        exit;
-        // $data=array(
-        //     'user_id'=>$this->input->get('user_id'),
-        //     'post_id'=>$this->input->get('post_id'),
-        //     'floor'=>$this->input->get('floor'),
-        // );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_post_base') === FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
         $rs=$this->Post_model->get_approve_post($data);
         if($rs){
-            $rs=$this->Post_model->update_approve_post($data);
+            $this->Post_model->update_approve_post($data)?
+                $this->response('',204):
+                $this->response(['error'=>'操作失败'],400);
         }else{
-            $rs=$this->Post_model->add_approve_post($data);
+            $this->Post_model->add_approve_post($data)?
+                $this->response('',204):
+                $this->response(['error'=>'操作失败'],400);
         }
-        $this->response($rs,200,null);
+
     }
 
+    /**
+     * 每个星球页面帖子显示
+     */
+    public function group_post_get($group_id){
+        //校验权限
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $user_id = NULL;
+        }else{
+            $token = $this->parsing_token($jwt);
+            $user_id = $token->user_id;
+        }
 
+        //输入参数校验
+        $data = [
+            'user_id' => $user_id?:0,
+            'group_id' => $group_id,
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
 
+        ];
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('get_group_post') == FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+        $group_info = $this->Group_model->get_group_infomation($group_id);
+//        $this->response($group_info);
+
+        if(empty($group_info)){
+            $this->response(['error'=>'星球不存在'],404);
+        }
+
+        if($group_info['delete']){
+            $this->response(['error'=>'星球已关闭'],410);
+        }
+        if($group_info['private']){
+            $member=$this->Common_model->judge_group_user($group_id,$user_id);
+            if(!$member&&$user_id!=$group_info['user_base_id']){
+                $this->response(['error'=>'私密星球，帖子已隐藏'],403);
+            }
+        }
+
+        $re['data'] = $this->Post_model->get_group_post($data);
+        $re = $this->Post_model->get_image_url($re);              //解析帖子内容，获得帖子中包含的图片
+        $re = $this->Post_model->delete_image_gif($re);           //删除帖子中gif格式的图片
+        $re = $this->Post_model->post_image_limit($re);           //展示图片限制，目前是显示三张
+        $re = $this->Post_model->delete_html_posts($re);          //从帖子内容去除 HTML 和 PHP 标记
+        $re = $this->Post_model->post_text_limit($re);            //帖子内容长度显示，目前是300字符
+
+        foreach($re['data'] as $key=>$value){
+            $re['data'][$key] = [
+                'post' => [
+                    'id' => $value['id'],
+                    'title' => $value['title'],
+                    'content'  => $value['content'],
+//                    'lock'    => $value['lock'],
+                    'digest'  => $value['digest']?TRUE:FALSE,
+                    'sticky'  => $value['sticky']?TRUE:FALSE,
+                    'create_time'   => $value['create_time'],
+                    'approved'      => $value['approved']?TRUE:FALSE,
+                    'approved_num'  =>$value['approved_num'],
+                    'collected'     => $value['collected']?TRUE:FALSE,
+                    'collected_num' => $value['collected_num'],
+                    /*此处待修改*/       'replied'       => $value['replied']?TRUE:FALSE,
+                    /*此处待修改*/       'replied_num'   => $value['replied_num'],
+                    'image_url'         => $value['image'],
+                ],
+                'user' => [
+                    'avatar_url' =>$value['profile_picture']?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',
+                    'name'       =>$value['nickname'],
+                    'id'         =>$value['user_base_id'],
+                ],
+            ];
+        }
+
+        //分页
+        $all_num = $this->Post_model->get_group_post($data,TRUE);
+        $offset = $data['offset'];
+        $limit = $data['limit'];
+        $page_count  = (ceil($all_num/$limit)-1);                   //比总页数小 1
+        $finallyo = $page_count * $limit;
+        $lasto = ($offset-$limit)>0?($offset-$limit):0;
+        $nexto = ($offset+$limit)<$finallyo?($offset+$limit):$finallyo;
+        $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ?
+            $_SERVER['HTTP_X_FORWARDED_HOST'] :
+            (isset($_SERVER['HTTP_HOST']) ?
+                $_SERVER['HTTP_HOST'] :
+                ''
+            );
+
+        $re['paging'] = [
+            'first'=> "{$host}/groups/{$group_id}/posts?limit={$limit}&offset=0",
+            'previous'=>"{$host}/groups/{$group_id}/posts?limit={$limit}&offset={$lasto}",
+            'next'=> "{$host}/groups/{$group_id}/posts?limit={$limit}&offset={$nexto}",
+            'final'=> "{$host}/groups/{$group_id}/posts?limit={$limit}&offset={$finallyo}"
+        ];
+
+        $this->response($re);
+
+    }
 
     /**
      * 单个帖子的内容详情，不包括回复列表
      */
-    public function get_post_base_get(){
-        //$this->output->enable_profiler(TRUE);
-        //print_r($this->db->queries);
+    public function post_content_get($group_id){
+       /**
+        * 输出调试
+        * $this->output->enable_profiler(TRUE);
+        * print_r($this->db->queries);
+        */
+
+        //校验权限
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $user_id = NULL;
+        }else{
+            $token = $this->parsing_token($jwt);
+            $user_id = $token->user_id;
+        }
+
+        //输入参数验证
         $data = array(
-            'post_id' =>$this->input->get('post_id'),
-            'user_id' =>$this->input->get('user_id'),
+            'post_id' =>$group_id,
+            'user_id' =>$user_id,
         );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('get_post_base') == FALSE)
-            $this->response(null,400,validation_errors());
+            $this->response(['error'=>validation_errors()],422);
+
+
         $model = $this->Post_model;
         $common_model = $this->Common_model;
         $post_info = $model->get_post_information($data['post_id']);
@@ -365,177 +481,7 @@ class Post extends REST_Controller
         $this->response($rs,200,$msg);
     }
 
-    /**
-     * 我的星球
-     * @desc 我的星球页面帖子显示
-     * @return int posts.postID 帖子ID
-     * @return string posts.title 标题
-     * @return string posts.text 内容
-     * @return string posts.createTime 发帖时间
-     * @return string posts.nickname 发帖人
-     * @return int posts.groupID 星球ID
-     * @return string posts.groupName 星球名称
-     * @return int pageCount 总页数
-     * @return int currentPage 当前页
-     * @return string user_name 用户名
 
-    public function get_mygroup_post(){
-        $user_id=$this->input->get('user_id');
-        $pn=$this->input->get('pn');
-        $data['user_id'] = $user_id;
-        $this->form_validation->set_data($data);
-        if ($this->form_validation->run('get_create') == FALSE)
-            $this->response(null,400,validation_errors());
-        $data = $this->Post_model->get_mygroup_post($user_id,$pn);
-        $data = $this->Post_model->get_image_url($data);
-        $data = $this->Post_model->delete_image_gif($data);
-        $data = $this->Post_model->post_image_limit($data);
-        $data = $this->Post_model->delete_html_posts($data);
-        $data = $this->Post_model->post_text_limit($data);
-        foreach($data['posts'] as $key=>$value){
-            $data['posts'][$key] = [
-                'posts' => [
-                    'post_id' => $value['post_id'],
-                    'p_title' => $value['p_title'],
-                    'p_text'  => $value['p_text'],
-                    'lock'    => $value['lock'],
-                    'create_time' => $value['create_time'],
-                    'approved'=> $value['approved'],
-                    'approved_num'  =>$value['approved_num'],
-                    'collected' => $value['collected'],
-                    'collected_num'     => $value['collected_num'],
-                    'replied'   => $value['replied'],
-                    'replied_num'   => $value['replied_num'],
-                    'image'      => $value['image'],
-                ],
-                'users' => [
-                    'profile_picture' =>$value['profile_picture'],
-                    'user_name'       =>$value['user_name'],
-                    'user_id'         =>$value['user_id'],
-                ],
-                'groups' => [
-                    'group_id'  => $value['group_id'],
-                    'g_name'    => $value['g_name'],
-                ],
-            ];
-        }
-        $data['user_name']=$this->Post_model->get_user($user_id);
-
-        $this->response($data,200,null);
-    }
-     */
-
-
-
-    /**
-     * 每个星球页面帖子显示
-     * @desc 星球页面帖子显示
-     * @return int creatorID 星球创建者ID
-     * @return string creatorName 星球创建者名称
-     * @return int groupID 星球ID
-     * @return string groupName 星球名称
-     * @return int post.digest 加精
-     * @return string posts.title 标题
-     * @return string posts.text 内容
-     * @return string posts.createTime 发帖时间
-     * @return int posts.postID 帖子ID
-     * @return string posts.nickname 发帖人
-     * @return int posts.sticky 是否置顶（0为未置顶，1置顶）
-     * @return int pageCount 总页数
-     * @return int currentPage 当前页
-     * @return int identity 用户身份(01为创建者，02为成员，03非成员)
-     * @return int private 是否私密(0为否，1为私密)
-     */
-    public function get_group_post(){
-        $group_id=$this->input->get('group_id');
-        $user_id=$this->input->get('user_id');
-        $page=$this->input->get('pn');
-        $data['group_id']=$group_id;
-        $this->form_validation->set_data($data);
-        if ($this->form_validation->run('get_group_post') == FALSE)
-            $this->response(null,400,validation_errors());
-        $re = $this->Group_model->get_group_infomation($group_id);
-        if(empty($re['id'])){
-            $this->response(null,400,'星球不存在！');
-        }
-        if(empty($re['g_image'])){
-            $re['g_image'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-        }
-        $data = [
-            'group_id'=>$re['id'],
-            'g_name'=>$re['name'],
-            'g_introduction'=>$re['g_introduction'],
-            'g_image'=>$re['g_image'],
-            'private'=>$re['private'],
-            'creator_id'=>$re['user_base_id'],
-            'creator_name'=>$this->User_model->get_user_information($re['user_base_id'])['nickname'],
-            'post_num'=>$this->Group_model->get_group_post_num($group_id),
-            'user_num'=>$this->Group_model->get_group_user_num($group_id),
-
-        ];
-        $user=$this->Common_model->judge_group_user($group_id,$user_id);
-        $creator=$this->Common_model->judge_group_creator($group_id,$user_id);
-        $applicate=$this->Common_model->judge_user_application($user_id,$group_id);
-        if($re['delete']){
-            $data['posts']=array();
-            $data['pageCount']=1;
-            $data['currentPage']=1;
-            $this->response($data,200,'星球已关闭，不显示帖子');
-        }
-        if(empty($user)&&empty($creator)){
-            $data['identity']='03';
-            $data['posts']=array();
-            $msg = '您还没有加入该星球';
-            if($data['private']==1){
-                if(!empty($applicate)){
-                    $data['identity']='04';
-                    $msg = '申请中，请等待星球主人审核！';
-                }
-                $data['posts']=array();
-                $data['pageCount']=1;
-                $data['currentPage']=1;
-                $this->response($data,200,$msg);
-            }
-        }elseif (!empty($user)) {
-            $data['identity']='02';
-        }elseif (!empty($creator)) {
-            $data['identity']='01';
-        }
-        $data =array_merge($data,$this->Post_model->get_group_post($group_id,$page,$user_id));
-        $data = $this->Post_model->get_image_url($data);
-        $data = $this->Post_model->delete_image_gif($data);
-        $data = $this->Post_model->post_image_limit($data);
-        $data = $this->Post_model->delete_html_posts($data);
-        $data = $this->Post_model->post_text_limit($data);
-
-        foreach($data['posts'] as $key=>$value){
-            $data['posts'][$key] = [
-                'posts' => [
-                    'post_id' => $value['post_id'],
-                    'p_title' => $value['p_title'],
-                    'p_text'  => $value['p_text'],
-                    'lock'    => $value['lock'],
-                    'digest'  => $value['digest'],
-                    'sticky'  => $value['sticky'],
-                    'create_time'   => $value['create_time'],
-                    'approved'      => $value['approved'],
-                    'approved_num'  =>$value['approved_num'],
-                    'collected'     => $value['collected'],
-                    'collected_num' => $value['collected_num'],
-                    'replied'       => $value['replied'],
-                    'replied_num'   => $value['replied_num'],
-                    'image'         => $value['image'],
-                ],
-                'users' => [
-                    'profile_picture' =>$value['profile_picture'],
-                    'user_name'       =>$value['user_name'],
-                    'user_id'         =>$value['user_id'],
-                ],
-            ];
-        }
-        $this->response($data,200,'浏览帖子成功');
-
-    }
 
     /**
      * 置顶帖子
@@ -557,37 +503,6 @@ class Post extends REST_Controller
         }
         $this->response(['code'=>$rs['code']],200,$rs['msg']);
     }
-
-    /**
-     * 取消置顶帖子           ***已合并***
-     * @desc 帖子取消置顶
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string msg 提示信息
-     */
-//    public function unsticky_post(){
-//        $access_token = $this->input->request_headers();
-//        if(empty($access_token['Access-Token'])){
-//            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
-//        }
-//        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
-//        if($re['sticky_right']===1){
-//            $rs = $this->Post_model->post_unsticky();
-//            if($rs)
-//            {
-//                $data['code'] = 1;
-//                $msg = "取消置顶帖子成功!";
-//            }
-//            else
-//            {
-//                $data['code'] = 0;
-//                $msg = "操作过于频繁!";
-//            }
-//        }else{
-//            $data['code'] = 0;
-//            $msg = "您没有操作权限!";
-//        }
-//        $this->response($data,200,$msg);
-//    }
 
 
     /**
@@ -642,6 +557,7 @@ class Post extends REST_Controller
     {
         try{
             $token = $this->jwt->decode($jwt,$this->config->item('encryption_key'));
+            return $token;
         }
         catch(InvalidArgumentException $e)
         {
@@ -651,7 +567,6 @@ class Post extends REST_Controller
         {
             $this->response(null,400,'token解析失败，原因：'.$e->getMessage());
         }
-        return $token;
     }
     private function judge_authority1($jwt,$post_id){
         $token = $this->parsing_token($jwt);
