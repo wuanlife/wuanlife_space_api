@@ -80,3 +80,7 @@ $route['groups/(:num)/members']['post'] = 'group/join/$1';
 $route['groups/(:num)/members']['delete'] = 'group/quit/$1';
 $route['groups/(:num)/members/(:num)']['get'] = 'group/status/$1/$2';
 $route['groups/(:num)/members/(:num)']['delete'] = 'group/member/$1/$2';
+
+//帖子相关路由
+$route['post']['get'] = 'post/index';
+$route['posts/(:num)/approval']['post'] = 'post/approve';
