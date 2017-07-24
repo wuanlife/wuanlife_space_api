@@ -2,14 +2,14 @@
 
 
 
-class Post extends CI_Controller
+class Post extends REST_Controller
 {
     public function __construct()
     {
         parent::__construct();
         $this->load->model('Post_model');
-        $this->load->model('User_model');
-        $this->load->model('Group_model');
+        // $this->load->model('User_model');
+        // $this->load->model('Group_model');
         $this->load->model('Common_model');
         $this->load->helper(array('form', 'url','url_helper'));
         $this->load->library(array('form_validation','jwt'));
@@ -23,23 +23,127 @@ class Post extends CI_Controller
      * @param null $msg
      * 返回JSON数据到前端
      */
-    public function response($data,$ret=200,$msg=null){
-        $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
-        $this->output
-            ->set_status_header($ret)
-            ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
-            ->set_header('Pragma: no-cache')
-            ->set_header('Expires: 0')
-            ->set_content_type('application/json', 'utf-8')
-            ->set_output(json_encode($response))
-            ->_display();
-        exit;
+    // public function response($data,$ret=200,$msg=null){
+    //     $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
+    //     $this->output
+    //         ->set_status_header($ret)
+    //         ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
+    //         ->set_header('Pragma: no-cache')
+    //         ->set_header('Expires: 0')
+    //         ->set_content_type('application/json', 'utf-8')
+    //         ->set_output(json_encode($response))
+    //         ->_display();
+    //     exit;
+    // }
+
+
+    /**
+     * 主页
+     * @desc 主页面帖子显示
+     * @return int posts.postID 帖子ID
+     * @return string posts.title 标题
+     * @return string posts.text 内容
+     * @return string posts.createTime 发帖时间
+     * @return string posts.nickname 发帖人
+     * @return int posts.groupID 星球ID
+     * @return int posts.lock 是否锁定
+     * @return int posts.approved 是否点赞(0未点赞，1已点赞)
+     * @return int posts.approvednum 点赞数
+     * @return string posts.groupName 星球名称
+     * @return int pageCount 总页数
+     * @return int currentPage 当前页
+     */
+    public function index_get(){
+        $access_token = $this->input->request_headers();
+        if(!empty($access_token['Access-Token'])){
+            $token = $this->parsing_token($access_token['Access-Token']);
+//            $data = [] ;
+        }
+        $data=array(
+            'user_id'=> @$token->user_id,
+            'latest'=>$this->input->get('latest'),
+            'page'=>$this->input->get('pn'),
+        );
+        if(!empty($data['user_id'])&&!$data['latest']){
+            $re = $this->Post_model->get_mygroup_post($data['user_id'],$data['page']);
+            //$re['user_name']=$this->Post_model->get_user($data['user_id']);
+        }
+        if($data['latest']||empty($re['posts'])){
+            $re=$this->Post_model->get_index_post($data);
+        }
+        $re=$this->Post_model->get_image_url($re);
+        $re=$this->Post_model->delete_image_gif($re);
+        $re=$this->Post_model->post_image_limit($re);
+        $re=$this->Post_model->delete_html_posts($re);
+        $re=$this->Post_model->post_text_limit($re);
+        foreach($re['posts'] as $key=>$value){
+            $re['posts'][$key] = [
+                'post' => [
+                    'id' => $value['post_id'],
+                    'title' => $value['p_title'],
+                    'content' => $value['p_text'],
+                    // 'lock'    => $value['lock'],
+                    'create_time' => $value['create_time'],
+                    'approved' => $value['approved'],
+                    'approved_num' => $value['approved_num'],
+                    'collected' => $value['collected'],
+                    'collected_num'     => $value['collected_num'],
+                    'replied'   => $value['replied'],
+                    'replied_num'   => $value['replied_num'],
+                    'image_url'      => $value['image'],
+                ],
+                'user' => [
+                    'avatar_url' =>$value['profile_picture'],
+                    'name'       =>$value['user_name'],
+                    'id'         =>$value['user_id'],
+                ],
+                'group' => [
+                    'id'  => $value['group_id'],
+                    'name'    => $value['g_name'],
+                ],
+            ];
+        }
+
+        $this->response($re,200,null);
     }
+
+    /**
+     * 点赞帖子
+     * @desc 点赞帖子
+     * @return int code 操作码，1表示操作成功，0表示操作失败
+     * @return string re 提示信息
+     */
+    public function approve_post(){
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        $data=array(
+            'user_id'=>$token->user_id,
+            'post_id'=>$token->post_id,
+            'floor'=>$token->floor
+        );
+        print_r($data);
+        exit;
+        // $data=array(
+        //     'user_id'=>$this->input->get('user_id'),
+        //     'post_id'=>$this->input->get('post_id'),
+        //     'floor'=>$this->input->get('floor'),
+        // );
+        $rs=$this->Post_model->get_approve_post($data);
+        if($rs){
+            $rs=$this->Post_model->update_approve_post($data);
+        }else{
+            $rs=$this->Post_model->add_approve_post($data);
+        }
+        $this->response($rs,200,null);
+    }
+
+
+
 
     /**
      * 单个帖子的内容详情，不包括回复列表
      */
-    public function get_post_base(){
+    public function get_post_base_get(){
         //$this->output->enable_profiler(TRUE);
         //print_r($this->db->queries);
         $data = array(
@@ -260,77 +364,6 @@ class Post extends CI_Controller
         }
         $this->response($rs,200,$msg);
     }
-
-    /**
-     * 主页
-     * @desc 主页面帖子显示
-     * @return int posts.postID 帖子ID
-     * @return string posts.title 标题
-     * @return string posts.text 内容
-     * @return string posts.createTime 发帖时间
-     * @return string posts.nickname 发帖人
-     * @return int posts.groupID 星球ID
-     * @return int posts.lock 是否锁定
-     * @return int posts.approved 是否点赞(0未点赞，1已点赞)
-     * @return int posts.approvednum 点赞数
-     * @return string posts.groupName 星球名称
-     * @return int pageCount 总页数
-     * @return int currentPage 当前页
-     */
-    public function get_index_post(){
-        $access_token = $this->input->request_headers();
-        if(!empty($access_token['Access-Token'])){
-            $token = $this->parsing_token($access_token['Access-Token']);
-//            $data = [] ;
-        }
-        $data=array(
-            'user_id'=> @$token->user_id,
-            'latest'=>$this->input->get('latest'),
-            'page'=>$this->input->get('pn'),
-        );
-        if(!empty($data['user_id'])&&!$data['latest']){
-            $re = $this->Post_model->get_mygroup_post($data['user_id'],$data['page']);
-            //$re['user_name']=$this->Post_model->get_user($data['user_id']);
-        }
-        if($data['latest']||empty($re['posts'])){
-            $re=$this->Post_model->get_index_post($data);
-        }
-        $re=$this->Post_model->get_image_url($re);
-        $re=$this->Post_model->delete_image_gif($re);
-        $re=$this->Post_model->post_image_limit($re);
-        $re=$this->Post_model->delete_html_posts($re);
-        $re=$this->Post_model->post_text_limit($re);
-        foreach($re['posts'] as $key=>$value){
-            $re['posts'][$key] = [
-                'posts' => [
-                    'post_id' => $value['post_id'],
-                    'p_title' => $value['p_title'],
-                     'p_text'  => $value['p_text'],
-                    'lock'    => $value['lock'],
-                    'create_time' => $value['create_time'],
-                    'approved'=> $value['approved'],
-                     'approved_num'  =>$value['approved_num'],
-                    'collected' => $value['collected'],
-                    'collected_num'     => $value['collected_num'],
-                    'replied'   => $value['replied'],
-                    'replied_num'   => $value['replied_num'],
-                    'image'      => $value['image'],
-                ],
-                'users' => [
-                    'profile_picture' =>$value['profile_picture'],
-                    'user_name'       =>$value['user_name'],
-                    'user_id'         =>$value['user_id'],
-                ],
-                'groups' => [
-                    'group_id'  => $value['group_id'],
-                    'g_name'    => $value['g_name'],
-                ],
-            ];
-        }
-
-        $this->response($re,200,null);
-    }
-
 
     /**
      * 我的星球
@@ -758,7 +791,7 @@ class Post extends CI_Controller
      * @return int code 操作码，1表示收藏成功，0表示操作失败，2表示取消收藏成功
      * @return string re 提示信息
      */
-    public function collect_post(){
+    public function collect_post_put(){
         $data=array(
             'user_id'=>$this->input->get('user_id'),
             'post_id'=>$this->input->get('post_id'),
@@ -827,26 +860,7 @@ class Post extends CI_Controller
 //        $this->response($info,200,$msg);
 //    }
 
-	 /**
-     * 点赞帖子
-     * @desc 点赞帖子
-     * @return int code 操作码，1表示操作成功，0表示操作失败
-     * @return string re 提示信息
-     */
-    public function approve_post(){
-        $data=array(
-            'user_id'=>$this->input->get('user_id'),
-            'post_id'=>$this->input->get('post_id'),
-            'floor'=>$this->input->get('floor'),
-        );
-        $rs=$this->Post_model->get_approve_post($data);
-        if($rs){
-            $rs=$this->Post_model->update_approve_post($data);
-        }else{
-            $rs=$this->Post_model->add_approve_post($data);
-        }
-        $this->response($rs,200,null);
-    }
+	
 
     /**
      * 删除帖子回复
