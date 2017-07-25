@@ -87,5 +87,12 @@ $route['groups/(:num)/members/(:num)']['delete'] = 'group/member/$1/$2';
 //帖子相关路由
 $route['posts']['get'] = 'post/index';
 $route['posts/(:num)/approval']['post'] = 'post/approve/$1';
-$route['posts/(:num)']['get'] = 'post/index';
-$route['groups/(:num)/posts']['get'] = 'post/post_content/$1';
+$route['groups/(:num)/posts']['get'] = 'post/group_post/$1';
+$route['posts/(:num)']['get'] = 'post/content/$1';
+$route['posts/(:num)/comments']['get'] = 'post/comment/$1';
+$route['groups/(:num)/posts']['post'] = 'post/create/$1';
+$route['posts/(:num)/comments']['post'] = 'post/reply/$1';
+$route['posts/(:num)']['put'] = 'post/edit/$1';
+$route['posts/(:num)']['delete'] = 'post/content/$1';
+$route['posts/(:num)/tops']['put'] = 'post/sticky/$1';
+$route['posts/(:num)/comments']['delete'] = 'post/comment/$1';

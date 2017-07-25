@@ -159,12 +159,13 @@ class Group_model extends CI_Model
     }
 
     /**
-     * 判断用户是否已加入星球
+     * 判断用户是否已加入星球，存在相同方法，后续会移除*2017/7/25 0025
      * @param $user_id
      * @param $group_id
      * @return bool
      */
-    public function check_group($user_id,$group_id){
+    /**
+     * public function check_group($user_id,$group_id){
         $re =  $this->db->where('group_base_id',$group_id)
             ->where('user_base_id',$user_id)
             ->where('authorization','03')
@@ -176,7 +177,7 @@ class Group_model extends CI_Model
         }else{
             return false;
         }
-    }
+    }*/
 
     /**
      * 获取星球列表
@@ -292,7 +293,7 @@ class Group_model extends CI_Model
      * @return bool
      */
     public function delete_group_member($data){
-        $boolean = $this->check_group($data['member_id'],$data['group_id']);
+        $boolean = $this->Common_model->judge_group_user($data['group_id'],$data['member_id']);
         if($boolean == NULL){
             return false;
         }else{
@@ -321,29 +322,7 @@ class Group_model extends CI_Model
         return $this->db->insert('message_notice',$field);
     }
 
-    /**
-     * 发表帖子
-     * @param $data
-     * @return mixed
-     */
-    public function posts($data){
-        $b_data = array(
-            'user_base_id'  => $data['user_id'],
-            'group_base_id' => $data['group_id'],
-            'title'         => $data['p_title'],
-        );
-        $time = date('Y-m-d H:i:s',time());
-        $this->db->insert('post_base',$b_data);
-        $d_data = array(
-            'post_base_id' => $this->db->insert_id('post_base'),
-            'user_base_id' => $data['user_id'],
-            'text' => $data['p_text'],
-            'floor'=> '1',
-            'create_time' => $time,
-        );
-        $this->db->insert('post_detail',$d_data);
-        return $d_data['post_base_id'];
-    }
+
 
 
 }
