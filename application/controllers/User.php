@@ -31,24 +31,25 @@ class User extends REST_Controller
 	}
 
     /**
-     * 返回JSON数据到前端
+     * 返回JSON数据到前端  已有相同方法，后续会移除这里的代码*2017/7/25 0025
      * @param $data
      * @param int $ret
      * @param null $msg
-     * 已有相同方法，后续会移除这里的代码
+     *
      */
-//    public function response($data=NULL,$ret=200,$msg=NULL){
-//        $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
-//        $this->output
-//            ->set_status_header($ret)
-//            ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
-//            ->set_header('Pragma: no-cache')
-//            ->set_header('Expires: 0')
-//            ->set_content_type('application/json', 'utf-8')
-//            ->set_output(json_encode($response))
-//            ->_display();
-//        exit;
-//    }
+    /**
+ *    public function response($data=NULL,$ret=200,$msg=NULL){
+        $response=array('ret'=>$ret,'data'=>$data,'msg'=>$msg);
+        $this->output
+            ->set_status_header($ret)
+            ->set_header('Cache-Control: no-store, no-cache, must-revalidate')
+            ->set_header('Pragma: no-cache')
+            ->set_header('Expires: 0')
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($response))
+            ->_display();
+        exit;
+    }*/
 
     /**
      * 登录接口
@@ -137,18 +138,19 @@ class User extends REST_Controller
     }
 
     /**
-     * 注销接口
+     * 注销接口     注销交给前端，后续会移除这里的代码*2017/7/25 0025
      * @desc 用于清除用户登录状态
      * @return int code 操作码，1表示注销成功，0表示注销失败
      * @return string msg 提示信息
-     * 注销交给前端，后续会移除这里的代码
+     *
      *
      */
-//    public function logout(){
-//        $re['code']='1';
-//        $msg='注销成功！';
-//        $this->response($re,200,$msg);
-//    }
+    /**
+ *    public function logout(){
+        $re['code']='1';
+        $msg='注销成功！';
+        $this->response($re,200,$msg);
+    }*/
 
     /**
      * 获取用户信息
@@ -189,7 +191,6 @@ class User extends REST_Controller
         ]);
 
     }
-
 
     /**
      * 修改用户信息接口
@@ -562,7 +563,7 @@ class User extends REST_Controller
      * @param $value
      * @param $status int 0未读 1已读 2删除/同意 3拒绝
      * @param $table string 数据表名称
-     * @return CI_DB_active_record
+     * @return bool
      */
     private function alter_status($value,$status,$table){
         $model = $this->User_model;
@@ -597,7 +598,7 @@ class User extends REST_Controller
         $info = $this->get_message_info($data['m_id']);
         $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];
         if($founder_id==$data['user_id']){
-            if($this->Common_model->check_group($info['user_apply_id'],$info['group_base_id'])){
+            if($this->Common_model->judge_group_user($info['group_base_id'],$info['user_apply_id'])){
                 $this->response(['error'=>'操作失败！该用户已加入此星球！'],400);
             }else{
                 if($data['mark'] === TRUE) {
@@ -780,10 +781,15 @@ class User extends REST_Controller
      * 邮箱验证接口-用于检验验证码的正确性并验证邮箱
      */
     public function check2mail_post(){
-        $this->post('token')?
-            $token = $this->parsing_token($this->post('token')):
+        if($this->post('token')){
+            $token = $this->parsing_token($this->post('token'));
+            $user_id = $token->user_id;
+        }else{
+            $user_id = NULL;
             $this->response(['error'=>'用户身份信息不能为空'],422);
-        if($this->User_model->check_mail($token->user_id))
+        }
+
+        if($this->User_model->check_mail($user_id))
         {
             $this->response(['success'=>'验证成功']);
         }
@@ -958,27 +964,28 @@ class User extends REST_Controller
     }
 
     /**
-     * 获取用户邮箱验证状态，
+     * 获取用户邮箱验证状态，后续会移除这里的代码*2017/7/25 0025
      * 原接口已合并在获取用户信息接口，
-     * 后续会移除这里的代码
+     *
      */
-//    public function get_mail_checked(){
-//        $id = $this->get('user_id');
-//        $this->form_validation->set_data($_GET);
-//        if ($this->form_validation->run('get_create') == FALSE)
-//            $this->response(null,400,validation_errors());
-//        $rs = $this->User_model->get_mail_checked($id);
-//        $re = [
-//            'user_id' =>(int)$id,
-//            'mail_check'=>0
-//        ];
-//        if($rs){
-//            $re = [
-//                'user_id' =>(int)$id,
-//                'mail_check'=>1
-//            ];
-//        }
-//        $this->response($re,200,NULL);
-//    }
+    /**
+ *    public function get_mail_checked(){
+        $id = $this->get('user_id');
+        $this->form_validation->set_data($_GET);
+        if ($this->form_validation->run('get_create') == FALSE)
+            $this->response(null,400,validation_errors());
+        $rs = $this->User_model->get_mail_checked($id);
+        $re = [
+            'user_id' =>(int)$id,
+            'mail_check'=>0
+        ];
+        if($rs){
+            $re = [
+                'user_id' =>(int)$id,
+                'mail_check'=>1
+            ];
+        }
+        $this->response($re,200,NULL);
+    }*/
 
 }

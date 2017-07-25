@@ -2,6 +2,45 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'comment_delete' =>array(
+        array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => '帖子ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'floor',
+            'label' => '楼层数',
+            'rules' => 'required|greater_than_equal_to[2]|is_natural_no_zero'
+        ),
+    ),
+    'post_comment'=>array(
+        array(
+            'field' => 'limit',
+            'label' => '每页数量',
+            'rules' => 'is_natural_no_zero'
+        ),
+        array(
+            'field' => 'offset',
+            'label' => '起始值',
+            'rules' => 'is_natural'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => '帖子ID',
+            'rules' => 'required'
+        ),
+        array(
+            'field' => 'reply_floor',
+            'label' => '楼层数',
+            'rules' => 'is_natural_no_zero'
+        )
+    ),
     'lists'      =>array(
         array(
             'field' => 'limit',
@@ -145,7 +184,7 @@ $config = array(
     'get_post_base' => array(
         array(
             'field' => 'post_id',
-            'label' => 'post_id',
+            'label' => '帖子ID',
             'rules' => 'required'
         )
     ),
@@ -187,21 +226,21 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
             'field' => 'group_id',
-            'label' => 'group_id',
-            'rules' => 'required|min_length[1]'
+            'label' => '星球ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
-            'field' => 'p_text',
-            'label' => 'p_text',
-            'rules' => 'required|min_length[1]|max_length[5000]'
+            'field' => 'content',
+            'label' => '帖子内容',
+            'rules' => 'required|min_length[1]|max_length[49999]'
         ),
         array(
-            'field' => 'p_title',
-            'label' => 'p_title',
+            'field' => 'title',
+            'label' => '帖子标题',
             'rules' => 'required|min_length[1]|max_length[60]'
         )
     ),
@@ -226,38 +265,38 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
             'field' => 'post_id',
-            'label' => 'post_id',
-            'rules' => 'required|min_length[1]'
+            'label' => '帖子ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
-            'field' => 'text',
-            'label' => 'p_text',
-            'rules' => 'required|min_length[1]|max_length[5000]'
+            'field' => 'content',
+            'label' => '帖子内容',
+            'rules' => 'required|min_length[1]|max_length[49999]'
         ),
         array(
             'field' => 'title',
-            'label' => 'p_title',
+            'label' => '标题',
             'rules' => 'required|min_length[1]|max_length[60]'
         )
     ),
     'post_reply' =>array(
         array(
-            'field' => 'user_id',
+            'field' => 'user_base_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
-            'field' => 'post_id',
-            'label' => 'post_id',
-            'rules' => 'required|min_length[1]'
+            'field' => 'post_base_id',
+            'label' => '帖子ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
-            'field' => 'p_text',
-            'label' => 'p_text',
+            'field' => 'comment',
+            'label' => '回复内容',
             'rules' => 'required|min_length[1]|max_length[5000]'
         )
     ),
@@ -265,12 +304,12 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]'
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
         array(
             'field' => 'post_id',
-            'label' => 'post_id',
-            'rules' => 'required|min_length[1]'
+            'label' => '帖子ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
         ),
     ),
     'delete_group_member' =>array(

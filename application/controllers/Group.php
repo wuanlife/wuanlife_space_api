@@ -512,32 +512,7 @@ class Group extends REST_Controller
 //        return $re;
 //    }
 
-    /**
-     * 发表帖子
-     */
-    public function posts(){
-        $data = array(
-            'user_id' =>$this->post('user_id'),
-            'group_id' =>$this->post('group_id'),
-            'p_title' =>$this->post('p_title'),
-            'p_text' =>$this->post('p_text'),
-        );
-        //$this->form_validation->set_data($data);
-        if ($this->form_validation->run('posts') == FALSE)
-            $this->response(null,400,validation_errors());
-        $boola = $this->Common_model->check_group($data['user_id'],$data['group_id']);
-        $boolb = $this->Common_model->judge_group_creator($data['group_id'],$data['user_id']);
-        $rs['code'] = 0;
-        if ($boola||$boolb) {
-            $post_id = $this->Group_model->posts($data);
-            $rs['post_id'] = $post_id;
-            $rs['code'] = 1;
-            $msg = '发表成功';
-        }else{
-            $msg = '未加入该星球';
-        }
-        $this->response($rs,200,$msg);
-    }
+
 
 
 }

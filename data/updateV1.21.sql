@@ -78,11 +78,12 @@ WHERE
 DROP TABLE IF EXISTS `post_comment`;
 CREATE TABLE `post_comment` (
   `post_base_id` int(5) unsigned NOT NULL COMMENT '帖子id',
-  `user_base_id` int(5) unsigned NOT NULL COMMENT '回帖人id',
+  `user_base_id` int(5) unsigned NOT NULL COMMENT '回复人id',
   `comment` varchar(5000) COLLATE utf8_bin NOT NULL COMMENT '评论内容',
   `floor` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '楼层',
   `create_time` int(10) unsigned NOT NULL COMMENT '评论时间',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `reply_id` int(5) unsigned DEFAULT NULL COMMENT '被评论的用户ID',
   `reply_floor` int(5) unsigned NOT NULL DEFAULT '1' COMMENT '评论楼层',
   PRIMARY KEY (`post_base_id`,`floor`),
   KEY `user_base_id` (`user_base_id`),
@@ -91,7 +92,7 @@ CREATE TABLE `post_comment` (
   KEY `reply_floor` (`reply_floor`),
   CONSTRAINT `post_comment_ibfk_1` FOREIGN KEY (`post_base_id`) REFERENCES `post_base` (`id`),
   CONSTRAINT `post_comment_ibfk_2` FOREIGN KEY (`user_base_id`) REFERENCES `user_base` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子评论表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子评论表';
 
 # 将原有数据导入帖子回复表 9:50 2017/7/24
 INSERT INTO `post_comment` (
@@ -101,6 +102,7 @@ INSERT INTO `post_comment` (
 	`floor`,
 	`create_time`,
 	`delete`,
+	`reply_id`,
 	`reply_floor`
 ) SELECT
 	post_detail.post_base_id,
@@ -109,6 +111,7 @@ INSERT INTO `post_comment` (
 	post_detail.floor,
 	UNIX_TIMESTAMP(post_detail.create_time),
 	post_detail.`delete`,
+	post_detail.`reply_id`,
 	post_detail.reply_floor
 FROM
 	post_detail

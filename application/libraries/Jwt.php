@@ -7,10 +7,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Jwt
 {
+    /**
+     * @var int
+     */
     public static $leeway = 0;
 
+    /**
+     * @var null
+     */
     public static $timestamp = null;
 
+    /**
+     * @var array
+     */
     public static $supported_algs = array(
         'HS256' => array('hash_hmac', 'SHA256'),
         'HS512' => array('hash_hmac', 'SHA512'),
@@ -18,6 +27,12 @@ class Jwt
         'RS256' => array('openssl', 'SHA256'),
     );
 
+    /**
+     * @param $jwt
+     * @param $key
+     * @param array $allowed_algs
+     * @return mixed
+     */
     public function decode($jwt, $key, $allowed_algs = array('HS256'))
     {
         $timestamp = is_null(static::$timestamp) ? time() : static::$timestamp;
@@ -76,6 +91,14 @@ class Jwt
         }
         return $payload;
     }
+
+    /**
+     * @param $msg
+     * @param $signature
+     * @param $key
+     * @param $alg
+     * @return bool
+     */
     private static function verify($msg, $signature, $key, $alg)
     {
         if (empty(static::$supported_algs[$alg])) {
@@ -105,6 +128,11 @@ class Jwt
                 return ($status === 0);
         }
     }
+
+    /**
+     * @param $input
+     * @return mixed
+     */
     public static function jsonDecode($input)
     {
         if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
@@ -129,6 +157,11 @@ class Jwt
         }
         return $obj;
     }
+
+    /**
+     * @param $input
+     * @return bool|string
+     */
     public static function urlsafeB64Decode($input)
     {
         $remainder = strlen($input) % 4;
@@ -138,6 +171,11 @@ class Jwt
         }
         return base64_decode(strtr($input, '-_', '+/'));
     }
+
+    /**
+     * @param $str
+     * @return int
+     */
     private static function safeStrlen($str)
     {
         if (function_exists('mb_strlen')) {
@@ -145,6 +183,15 @@ class Jwt
         }
         return strlen($str);
     }
+
+    /**
+     * @param $payload
+     * @param $key
+     * @param string $alg
+     * @param null $keyId
+     * @param null $head
+     * @return string
+     */
     public function encode($payload, $key, $alg = 'HS256', $keyId = null, $head = null)
     {
         $header = array('typ' => 'JWT', 'alg' => $alg);
@@ -165,6 +212,12 @@ class Jwt
         return implode('.', $segments);
     }
 
+    /**
+     * @param $msg
+     * @param $key
+     * @param string $alg
+     * @return string
+     */
     public static function sign($msg, $key, $alg = 'HS256')
     {
         if (empty(static::$supported_algs[$alg])) {
@@ -184,6 +237,11 @@ class Jwt
                 }
         }
     }
+
+    /**
+     * @param $input
+     * @return string
+     */
     public static function jsonEncode($input)
     {
         $json = json_encode($input);
@@ -195,6 +253,10 @@ class Jwt
         return $json;
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     public static function urlsafeB64Encode($input)
     {
         return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
@@ -202,9 +264,7 @@ class Jwt
 
     /**
      * Helper method to create a JSON error.
-     *
      * @param int $errno An error number from json_last_error()
-     *
      * @return void
      */
     private static function handleJsonError($errno)
