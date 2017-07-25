@@ -89,3 +89,6 @@ $route['posts']['get'] = 'post/index';
 $route['posts/(:num)/approval']['post'] = 'post/approve/$1';
 $route['posts/(:num)']['get'] = 'post/index';
 $route['groups/(:num)/posts']['get'] = 'post/post_content/$1';
+$route['posts/(:num)/locks']['put'] = 'post/locks/$i';
+$route['users/(:num)/collections']['put'] = 'post/collections/$1';
+$route['users/(:num)/collections']['get'] = 'post/collections/$1';

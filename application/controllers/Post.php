@@ -653,12 +653,17 @@ class Post extends REST_Controller
      * @return int code 操作码，2表示取消锁定成功，1表示锁定成功，0表示操作失败
      * @return string re 提示信息
      */
-    public function lock_post(){
-        $access_token = $this->input->request_headers();
-        if(empty($access_token['Access-Token'])){
-            $this->response(NULL,400,'没有获取到Access-Token，请尝试重新登录！');
+    public function locks_put($post_id){
+
+         $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $user_id = NULL;
+        }else{
+            $token = $this->parsing_token($jwt);
+            $user_id = $token->user_id;
         }
-        $re = $this->judge_authority1($access_token['Access-Token'],$this->input->get('post_id'));
+        
+        $re = $this->judge_authority1($access_token['Access-Token'],$user_id);
         if($re['lock_right']===1){
             $rs = $this->Post_model->lock_post();
         }else{
