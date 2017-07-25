@@ -30,6 +30,8 @@ class Post extends REST_Controller
     public function index_get(){
         //校验权限
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        dump($jwt);
+        exit;
         if(empty($jwt)){
             $user_id = NULL;
         }else{
@@ -877,7 +879,6 @@ class Post extends REST_Controller
 
         //判断锁定权限并锁定帖子
         $re = $this->judge_authority($token->user_id,$post_id);
->>>>>>> 49171823af486279bac7acad8a99ed50ae7bf0d2
         if($re['lock_right']===1){
             $this->Post_model->lock_post($post_id)?
                 $this->response('',204):

@@ -122,6 +122,8 @@ class User extends REST_Controller
         }elseif(empty($invite_code)||$invite_code['used']==0){
             $this->response(['error'=>'邀请码已过期或不存在！'],422);
         }else{
+            unset($data['code']);
+            $data['password'] = md5($data['password']);
             $user_id=$this->User_model->reg($data);
             if($user_id){
                 $this->response([

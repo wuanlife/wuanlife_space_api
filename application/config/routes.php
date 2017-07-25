@@ -96,4 +96,3 @@ $route['posts/(:num)']['put'] = 'post/edit/$1';
 $route['posts/(:num)']['delete'] = 'post/content/$1';
 $route['posts/(:num)/tops']['put'] = 'post/sticky/$1';
 $route['posts/(:num)/comments']['delete'] = 'post/comment/$1';
->>>>>>> 49171823af486279bac7acad8a99ed50ae7bf0d2

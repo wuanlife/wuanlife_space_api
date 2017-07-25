@@ -91,8 +91,9 @@ class User_model extends CI_Model
             if($this->db->insert('user_detail',[
                 'user_base_id'=>$this->db->insert_id(),
                 'authorization'=>'01'
-            ])){
-                return $this->db->insert_id();
+            ]))
+            {
+                return $data;
             }
         }
         return FALSE;
