@@ -2,6 +2,28 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'user_info'     =>array(
+        array(
+            'field' => 'name',
+            'label' => '用户昵称',
+            'rules' => 'regex_match[/^[0-9a-zA-Z_\x{4e00}-\x{9fa5}]{1,20}+$/u]'
+        ),
+        array(
+            'field' => 'avatar_url',
+            'label' => '用户头像',
+            'rules' => 'regex_match[/([http|https]):\/\/.*?\.([gif|jpg|png])/]'
+        ),
+        array(
+            'field' => 'sex',
+            'label' => '性别',
+            'rules' => 'in_list[man,woman,secret]'
+        ),
+//        array(
+//            'field' => 'birthday',
+//            'label' => '生日',
+//            'rules' => ''
+//        ),
+    ),
     'comment_delete' =>array(
         array(
             'field' => 'user_id',
@@ -97,6 +119,11 @@ $config = array(
             'field' => 'offset',
             'label' => '起始值',
             'rules' => 'is_natural'
+        ),
+        array(
+            'field' => 'type',
+            'label' => '消息分类',
+            'rules' => 'in_list[home,apply,group,post]'
         )
     ),
     'check_token'=>array(
@@ -108,7 +135,7 @@ $config = array(
         array(
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required'
+            'rules' => 'required|is_natural_no_zero'
         )
     ),
     'send_mail'=>array(

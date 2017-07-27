@@ -52,10 +52,19 @@ class User extends REST_Controller
     }*/
 
     /**
+     * 登录成功后更新用户的信息状态，尤其是加密密码
+     * @param $data
+     */
+    private function update_user_status($password,$user_id){
+        $user_info = $this->User_model->get_user_information($user_id);
+        $profile_picture = $user_info['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100';
+    }
+    /**
      * 登录接口
      * @desc 用于验证并登录用户
      */
     public function login_post(){
+        //输入参数校验
         $data=array(
             'email' => $this->post('mail'),
             'password' => $this->post('password'),
@@ -63,12 +72,15 @@ class User extends REST_Controller
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('login') === FALSE)
             $this->response(['error'=>validation_errors()],422);
+
+        //校验身份并登录
         $model= $this->User_model->user_email($data);
         if(!$model){
             $this->response(['error'=>'该邮箱尚未注册！'],400);
         }elseif(md5($data['password'])!=$model['password']){
             $this->response(['error'=>'密码错误，请重试！'],401);
         }else{
+//            $this->update_user_status($data['password'],$model['id']);
             $this->response([
                     'Access-Token'=>$this->get_user_token($model['id'],time()+604800),
                     'id' => $model['id'],
@@ -103,6 +115,7 @@ class User extends REST_Controller
      * 注册接口-用于验证并注册用户
      */
     public function reg_post(){
+        //输入参数校验
         $data=array(
             'nickname'=>$this->post('name'),
             'email'=>$this->post('mail'),
@@ -112,6 +125,8 @@ class User extends REST_Controller
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('reg') === FALSE)
             $this->response(['error'=>validation_errors()],422);
+
+        //注册信息正确性校验
         $user_email=$this->User_model->user_email($data);
         $user_nickname=$this->User_model->user_nickname($data['nickname']);
         $invite_code = $this->User_model->invite_code($data['code']);
@@ -159,14 +174,21 @@ class User extends REST_Controller
      * @param $user_id
      */
     public function user_info_get($user_id){
+        //判断是否是单独获取用户邀请码
+        $code = $this->get('field')=='code'?$this->show_code($user_id):$this->show_code($user_id,TRUE);
+
+        //身份信息校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
         if($token->user_id!=$user_id)
         {
             $this->response(['error'=>'您没有权限'],403);
         }
+
+        //获取用户信息
         $user = $this->User_model->get_user_information($user_id);
-        $code = $this->get('field')=='code'?$this->show_code($user_id):$this->show_code($user_id,TRUE);
+
+        //数据库性别信息转换
         switch ((int)$user['sex']) {
             case 0:
                 $sex = 'secret';
@@ -186,7 +208,7 @@ class User extends REST_Controller
             'sex'=>$sex,
             'birthday'=>date('Y-m-d\TH:i:s\Z',strtotime("{$user['year']}-{$user['month']}-{$user['day']}")),
             'mail_checked'=>$user['mail_checked']?TRUE:FALSE,
-            'avatar_url'=>$user['profile_picture']?$user['profile_picture']:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100',
+            'avatar_url'=>$user['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100',
             'mail'=>$user['email'],
             'name'=>$user['nickname'],
             'code'=>$code['code'],
@@ -200,12 +222,28 @@ class User extends REST_Controller
      * @param $user_id
      */
     public function user_info_put($user_id){
+        //用户身份信息校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
         if($token->user_id!=$user_id)
         {
             $this->response(['error'=>'您没有权限'],403);
         }
+
+        //输入参数校验
+        $data = [
+            'name'      =>$this->put('name'),
+            'avatar_url'    =>$this->put('avatar_url'),
+            'sex'       =>$this->put('sex'),
+            'birthday'  =>$this->put('birthday')
+        ];
+        $this->form_validation->set_message('regex_match', '{field}格式不正确.');
+        $this->form_validation->set_message('in_list', '{field}必须包含{param}其中一个.');
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('user_info') === FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+        //性别信息输入量转换
         switch ($this->put('sex')) {
             case 'secret':
                 $sex = 0;
@@ -219,11 +257,13 @@ class User extends REST_Controller
             default:
                 $sex = 0;
         }
+
+        //获取用户信息
         $user = $this->User_model->get_user_information($user_id);
         $data = array(
-            'user_base_id'    =>$user_id,
-            'nickname'      =>$this->put('name')?$this->put('name'):$user['nickname'],
-            'profile_picture'   =>$this->put('avatar_url')?$this->put('avatar_url'):$user['profile_picture'],
+            'user_base_id'          =>$user_id,
+            'nickname'              =>$this->put('name')?$this->put('name'):$user['nickname'],
+            'profile_picture'       =>$this->put('avatar_url')?$this->put('avatar_url'):$user['profile_picture'],
             'sex'           =>$this->put('sex')?$sex:$user['sex'],
             'year'          =>$this->put('birthday')?date('Y',strtotime($this->put('birthday'))):$user['year'],
             'month'         =>$this->put('birthday')?date('m',strtotime($this->put('birthday'))):$user['month'],
@@ -291,27 +331,23 @@ class User extends REST_Controller
         $limit = $data['limit'];
         $offset = $data['offset'];
         $model= $this->User_model;
-        $re = array();
-            //帖子可能被删除，相应的通知也会被删除，所以这里不是数据库所有数据返回
+        //帖子可能被删除，相应的通知也会被删除，所以这里不是数据库所有数据返回
         $rs['data'] = $model->show_reply_message($data['user_id'],$limit,$offset);
         foreach($rs['data'] as $key=>$value){
-            //没有头像给默认头像
-            if(empty($value['profile_picture'])){
-                $value['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-            }
-            $re['data'][$key]['users']=array(
+
+            $re['data'][$key]['user']=array(
                 'id'=>$value['user_id'],
                 'name'=>$value['user_name'],
             );
-            $re['data'][$key]['posts']=array(
+            $re['data'][$key]['post']=array(
                 'id'=>$value['post_id'],
                 'title'=>$value['p_title'],
                 'reply_floor'=>$value['reply_floor'],
                 'page'=>$this->Common_model->get_post_reply_page($value['post_id'],$value['reply_floor']),
             );
-            $re['data'][$key]['messages']=array(
+            $re['data'][$key]['message']=array(
                 'id'=>$value['m_id'],
-                'image_url'=>$value['profile_picture'],
+                'image_url'=>$value['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100', //没有头像给默认头像
             );
         }
 
@@ -359,28 +395,29 @@ class User extends REST_Controller
         $rs['data'] = $model->show_notice_message($data['user_id'],$limit,$offset);
         foreach($rs['data'] as $key => $value){
             $re['data'][$key]['content'] = $this->message_array($value['type'],$value['user_name'],$value['g_name']);
+
+            //判断应该给星球头像还是用户头像
             if(in_array($value['type'],array(4,5))){
                 $image = $model->get_user_information($value['user_id'])['profile_picture'];
             }elseif(in_array($value['type'],array(1,2,3))){
                 $image = $this->Group_model->get_group_infomation($value['group_id'])['g_image'];
+            }else{
+                $image = FALSE;
             }
-            //没有头像给默认头像
-            if(empty($image)){
-                $image = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-            }
-            $re['data'][$key]['users']=array(
+
+            $re['data'][$key]['user']=array(
                 'id'=>$value['user_id'],
                 'name'=>$value['user_name'],
             );
-            $re['data'][$key]['groups']=array(
+            $re['data'][$key]['group']=array(
                 'id'=>$value['group_id'],
                 'name'=>$value['g_name'],
             );
-            $re['data'][$key]['messages']=array(
+            $re['data'][$key]['message']=array(
                 'id'=>$value['m_id'],
                 'type'=>$value['type'],
                 'status'=>$value['status'],
-                'image_url'=>$image,
+                'image_url'=>$image or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
             );
         }
 
@@ -426,22 +463,19 @@ class User extends REST_Controller
         $re = array();
         $rs['data'] = $model->show_apply_message($data['user_id'],$limit,$offset);
         foreach($rs['data'] as $key=>$value){
-            //没有头像给默认头像
-            if(empty($value['profile_picture'])){
-                $value['profile_picture'] = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
-            }
-            $re['data'][$key]['users']=array(
+
+            $re['data'][$key]['user']=array(
                 'id'=>$value['user_id'],
                 'name'=>$value['user_name'],
             );
-            $re['data'][$key]['groups']=array(
+            $re['data'][$key]['group']=array(
                 'id'=>$value['group_id'],
                 'name'=>$value['g_name'],
             );
-            $re['data'][$key]['messages']=array(
+            $re['data'][$key]['message']=array(
                 'id'=>$value['m_id'],
                 'status'=>$value['status'],
-                'image_url'=>$value['profile_picture'],
+                'image_url'=>$value['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
                 'text'=>$value['text'],
             );
         }
@@ -521,6 +555,7 @@ class User extends REST_Controller
             'offset'    => $this->get('offset')?:0,     //每页起始数
             'type'      => $this->get('type')?:'home'   //消息类型
         );
+        $this->form_validation->set_message('in_list', '{field}必须包含{param}其中一个.');
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('message') === FALSE)
             $this->response(['error'=>validation_errors()],422);
@@ -538,7 +573,7 @@ class User extends REST_Controller
         if(!empty($rs['data'])){
             $this->response($rs,200);
         }else{
-            $this->response($rs,200);
+            $this->response('',204);
         }
     }
 
@@ -598,6 +633,9 @@ class User extends REST_Controller
 
         //处理申请信息
         $info = $this->get_message_info($data['m_id']);
+        $info['status'] !=1 and $this->response(['error'=>'无需重复处理'],409);
+
+
         $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];
         if($founder_id==$data['user_id']){
             if($this->Common_model->judge_group_user($info['group_base_id'],$info['user_apply_id'])){
@@ -609,7 +647,7 @@ class User extends REST_Controller
                         'user_base_id'  => $info['user_apply_id'],
                         'authorization' => "03",
                     );
-                    $this->Group_model->join($field);//将用户id加入对应的私密星球
+                    $this->Group_model->join_group($field);//将用户id加入对应的私密星球
                     $m_type = 1;
                     $msg = '操作成功！您已同意该成员的申请！';
                     $status = 2;
@@ -719,8 +757,9 @@ class User extends REST_Controller
 
         //判断是否是用户帖子
         $message = $this->db->get_where('message_reply',['id'=>$mid])->row_array();
-        $message['user_base_id'] == $id?TRUE:$this->response(['error'=>'您无权删除他人的消息'],403);
-        $message['status'] == 2?$this->response(['error'=>'消息已被删除，无需再次操作'],409):FALSE;
+        $message['user_base_id'] == $id or $this->response(['error'=>'您无权删除他人的消息'],403);
+        $message['status'] == 2 and $this->response(['error'=>'消息已被删除，无需再次操作'],409);
+
         //执行删除
         $rs = $this->alter_status($data,2,'message_reply');
         if($rs){
@@ -735,21 +774,21 @@ class User extends REST_Controller
      * @param $id
      */
     public function check_mail_post($id){
+        //输入参数校验
         $data = array(
             'user_id' => $id,
             'num'        => 2,
             'token'     =>$this->input->get_request_header('Access-Token', TRUE)
             );
-        $token = $this->parsing_token($data['token']);
-        if($token->user_id!=$id)
-        {
-            $this->response(['error'=>'您没有权限'],403);
-        }
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('check_token') === FALSE)
             $this->response(['error'=>validation_errors()],422);
-        else
-        {
+
+        //解析身份信息，判断是否发送邮件
+        $token = $this->parsing_token($data['token']);
+        if($token->user_id!=$id){
+            $this->response(['error'=>'您没有权限'],403);
+        }else{
             $data['email'] = $this->User_model->get_user_information($id)['email'];
             $this->send($data)?
                 $this->response(NULL,204):
@@ -776,7 +815,10 @@ class User extends REST_Controller
         {
             return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
         }
-
+        catch(DomainException $e)
+        {
+            return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
+        }
     }
 
     /**
@@ -790,6 +832,7 @@ class User extends REST_Controller
             $user_id = NULL;
             $this->response(['error'=>'用户身份信息不能为空'],422);
         }
+        $this->User_model->get_mail_checked($user_id) and $this->response(['error'=>'无需再次验证'],409);
 
         if($this->User_model->check_mail($user_id))
         {
@@ -914,20 +957,25 @@ class User extends REST_Controller
     /**
      * 校验用户token并找回密码
      */
-    public function re_psw_put(){
+    public function repassword_put(){
+        //用户身份信息校验
         $jwt = $this->put('token');
         $token = $this->parsing_token($jwt);
+
+        //输入参数校验
         $data = array(
             'token' =>$jwt,
-            'password' =>md5($this->put('password')),
+            'password' =>$this->put('password'),
             'user_id' =>$token->user_id
         );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('re_psw') == FALSE){
             $this->response(['error'=>validation_errors()],422);
         }else{
-            $this->User_model->re_psw($data); //更新密码
-            $this->response(['success'=>'重置密码成功！']);
+            $data['password'] = md5($data['password']);
+            $this->User_model->re_psw($data)? //更新密码
+                $this->response(['success'=>'重置密码成功！']):
+                $this->response(['error'=>'重置失败，请重试'],400);
         }
     }
 
@@ -954,6 +1002,8 @@ class User extends REST_Controller
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('change_pwd') == FALSE)
             $this->response(['error'=>validation_errors()],422);
+
+
         $password = $this->User_model->get_user_information($data['user_id'])['password'];
         if(md5($data['password']) === $password){
             $data['password'] = md5($data['psw']);
@@ -961,7 +1011,7 @@ class User extends REST_Controller
                 $this->response(['success'=>'修改成功']):
                 $this->response(['error'=>'修改失败'],400);
         }else{
-            $this->response(['error'=>'原密码不正确，请重试'],400);
+            $this->response(['error'=>'原密码不正确，请重试'],403);
         }
     }
 

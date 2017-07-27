@@ -153,7 +153,7 @@ class Group_model extends CI_Model
      * @param $data
      * @return bool
      */
-    public function join($data){
+    public function join_group($data){
         $re=$this->db->insert('group_detail', $data);
         return $re;
     }

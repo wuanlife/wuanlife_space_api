@@ -107,7 +107,7 @@ class Group extends REST_Controller
                 'user_base_id'  => $data['user_id'],
                 'authorization' => "03",
             );
-            $this->Group_model->join($field);
+            $this->Group_model->join_group($field);
             $this->Group_model->join_message($field);
             $this->response(['success'=>'加入成功！并通知星球创建者']);
         }

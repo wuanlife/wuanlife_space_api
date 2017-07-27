@@ -30,8 +30,6 @@ class Post extends REST_Controller
     public function index_get(){
         //校验权限
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        dump($jwt);
-        exit;
         if(empty($jwt)){
             $user_id = NULL;
         }else{

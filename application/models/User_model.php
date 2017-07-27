@@ -88,12 +88,16 @@ class User_model extends CI_Model
     public function reg($data){
         $data['regtime'] = time();
         if($this->db->insert('user_base', $data)){
+            $user_id = $this->db->insert_id('user_base');
             if($this->db->insert('user_detail',[
-                'user_base_id'=>$this->db->insert_id(),
-                'authorization'=>'01'
+                'user_base_id'=>$user_id,
+                'authorization'=>'01',
+                'last_logtime' =>$data['regtime'],
+                'mail_checked'  =>0,
+                'profile_picture'   =>'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100'
             ]))
             {
-                return $data;
+                return $user_id;
             }
         }
         return FALSE;
@@ -310,7 +314,7 @@ class User_model extends CI_Model
     /**
      * 查看邮箱是否被验证
      * @param $user_id
-     * @return mixed
+     * @return bool
      *
      */
     public function get_mail_checked($user_id){
@@ -319,20 +323,19 @@ class User_model extends CI_Model
             ->from('user_detail')
             ->get()
             ->row_array();
-        return $query['mail_checked'];
+        return $query['mail_checked']?TRUE:FALSE;
 
     }
 
     /**
      * 将用户邮箱状态更新为已验证
      * @param $id
-     * @return mixed
+     * @return bool
      */
     public function check_mail($id)
     {
         $this->db->where('user_base_id', $id);
-        $this->db->update('user_detail', ['mail_checked' => 1]);
-        return $this->get_mail_checked($id);
+        return $this->db->update('user_detail', ['mail_checked' => 1]);
     }
 
     /**
