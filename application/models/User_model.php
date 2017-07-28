@@ -137,6 +137,7 @@ class User_model extends CI_Model
         $this->db->from('user_base');
         $this->db->where('id',$user_id);
         $this->db->join('user_detail', 'user_detail.user_base_id = user_base.id');
+        $this->db->join('user_password', 'user_password.user_base_id = user_base.id');
         $query = $this->db->get();
         return $query->row_array();
     }
@@ -362,12 +363,13 @@ class User_model extends CI_Model
     }
 
     /**
-     * 判断用户是否是管理员 user_detail
+     * 判断用户是否是管理员 user_detail  Common_model存在相同方法  后续会移除 *2017/7/28 0028
      * @param $user_id
      * @return int
      *
      */
-    public function judge_admin($user_id){
+    /**
+     * public function judge_admin($user_id){
         $sql=$this->db->select('authorization')
             ->from('user_detail')
             ->where('user_base_id',$user_id)
@@ -380,7 +382,7 @@ class User_model extends CI_Model
             $rs=0;
         }
         return $rs;
-    }
+    }*/
 
 
 

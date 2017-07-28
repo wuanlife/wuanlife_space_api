@@ -169,6 +169,16 @@ class Group extends REST_Controller
      * 星球列表
      */
     public function lists_get(){
+        //校验权限
+
+        if(!empty($this->get('user_id'))){
+            $jwt = $this->input->get_request_header('Access-Token', TRUE);
+            $token = $this->parsing_token($jwt);
+            $user_id = $token->user_id;
+            if($user_id!=$this->get('user_id')){
+                $this->response(['error'=>'您没有权限查看其他人的星球'],403);
+            }
+        }
         //输入参数验证
         $data=array(
             'limit'     => $this->get('limit')?:20,     //每页显示数

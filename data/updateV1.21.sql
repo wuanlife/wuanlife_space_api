@@ -80,7 +80,7 @@ CREATE TABLE `post_comment` (
   `post_base_id` int(5) unsigned NOT NULL COMMENT '帖子id',
   `user_base_id` int(5) unsigned NOT NULL COMMENT '回复人id',
   `comment` varchar(5000) COLLATE utf8_bin NOT NULL COMMENT '评论内容',
-  `floor` int(4) unsigned NOT NULL AUTO_INCREMENT COMMENT '楼层',
+  `floor` int(4) unsigned NOT NULL COMMENT '楼层',
   `create_time` int(10) unsigned NOT NULL COMMENT '评论时间',
   `delete` int(1) NOT NULL DEFAULT '0' COMMENT '是否删除',
   `reply_id` int(5) unsigned DEFAULT NULL COMMENT '被评论的用户ID',
@@ -92,7 +92,7 @@ CREATE TABLE `post_comment` (
   KEY `reply_floor` (`reply_floor`),
   CONSTRAINT `post_comment_ibfk_1` FOREIGN KEY (`post_base_id`) REFERENCES `post_base` (`id`),
   CONSTRAINT `post_comment_ibfk_2` FOREIGN KEY (`user_base_id`) REFERENCES `user_base` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子评论表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='帖子评论表';
 
 # 将原有数据导入帖子回复表 9:50 2017/7/24
 INSERT INTO `post_comment` (
@@ -119,7 +119,47 @@ WHERE
 	post_detail.floor > 1;
 
 # 更新帖子回复表中的错误数据
+/* UPDATE post_comment,
+ post_base
+SET post_comment.reply_id = post_base.user_base_id
+WHERE
+	post_comment.post_base_id = post_base.id
+AND post_comment.reply_id IS NULL; */
 UPDATE post_comment
 SET post_comment.reply_floor = 1
 WHERE
 	post_comment.reply_floor = 0;
+	
+# 用户详情表增加生日字段  201707280900
+ALTER TABLE `user_detail`
+ADD COLUMN `birthday`  int NULL AFTER `sex`;
+
+# 更新已有的生日字段数据  201707280901
+UPDATE user_detail
+SET birthday = UNIX_TIMESTAMP(
+	concat(
+		user_detail.`year`,
+		'-',
+		user_detail.`month`,
+		'-',
+		user_detail.`day`
+	)
+)
+WHERE `year` <> ''
+
+# 创建哈希密码表  为以后防止拖库做准备 201707280903
+DROP TABLE IF EXISTS `user_password`;
+CREATE TABLE `user_password` (
+  `user_base_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `new_password` varchar(60) COLLATE utf8_bin NOT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `modify_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_base_id`),
+  CONSTRAINT `user_password_ibfk_1` FOREIGN KEY (`user_base_id`) REFERENCES `user_base` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户密码表，加强版';
+
+# 更新哈希密码表  201707281103
+INSERT INTO user_password (user_base_id) SELECT
+	id
+FROM
+	user_base

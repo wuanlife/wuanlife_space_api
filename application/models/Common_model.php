@@ -183,9 +183,9 @@ class Common_model extends CI_Model
     public function judge_admin($user_id){
         $re=$this->User_model->get_user_information($user_id)['authorization'];
         if(in_array($re,array(02,03))){
-            return true;
+            return TRUE;
         }else{
-            return false;
+            return FALSE;
         }
     }
 

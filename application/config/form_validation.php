@@ -2,6 +2,23 @@
 $config = array(
     'error_prefix' =>'',
     'error_suffix' =>'',
+    'approve_post'  =>array(
+        array(
+            'field' => 'user_id',
+            'label' => '用户ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'post_id',
+            'label' => '帖子ID',
+            'rules' => 'required|min_length[1]|is_natural_no_zero'
+        ),
+        array(
+            'field' => 'floor',
+            'label' => '楼层数',
+            'rules' => 'required|greater_than_equal_to[1]|is_natural_no_zero'
+        ),
+    ),
     'user_info'     =>array(
         array(
             'field' => 'name',

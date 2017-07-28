@@ -27,7 +27,7 @@ class User extends REST_Controller
      */
 	public function index_get(){
 		echo '接口测试<br>登录接口url：<br>';
-		echo 'index.php/user/login';
+		echo 'POST /users/signin';
 	}
 
     /**
@@ -53,11 +53,34 @@ class User extends REST_Controller
 
     /**
      * 登录成功后更新用户的信息状态，尤其是加密密码
-     * @param $data
+     * @param $password
+     * @param $user_id
      */
-    private function update_user_status($password,$user_id){
+    private function update_user_status($password,$user_id,$update = FALSE){
         $user_info = $this->User_model->get_user_information($user_id);
-        $profile_picture = $user_info['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100';
+        if(empty($user_info['profile_picture'])){
+            $profile_picture = 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100';
+            $this->db->update('user_detail',['profile_picture' => $profile_picture],"user_base_id = {$user_id}");
+//            $this->db->set('profile_picture', $profile_picture);
+//            $this->db->where('user_base_id', $user_id);
+//            $this->db->update('user_detail');
+        }
+        date_default_timezone_set('Asia/Shanghai');
+        if(empty($user_info['new_password'])){
+            $password = password_hash($password,PASSWORD_DEFAULT);
+            $this->db->replace('user_password',[
+                'user_base_id'      =>$user_id,
+                'new_password'      =>$password,
+                'create_time'       =>date('Y-m-d H:i:s')
+            ]);
+        }elseif($update){
+            $password = password_hash($password,PASSWORD_DEFAULT);
+            $this->db->update('user_password',[
+                'new_password'      =>$password,
+                'modify_time'       =>date('Y-m-d H:i:s')
+            ],['user_base_id'=>$user_id,]);
+        }
+
     }
     /**
      * 登录接口
@@ -80,7 +103,7 @@ class User extends REST_Controller
         }elseif(md5($data['password'])!=$model['password']){
             $this->response(['error'=>'密码错误，请重试！'],401);
         }else{
-//            $this->update_user_status($data['password'],$model['id']);
+            $this->update_user_status($data['password'],$model['id']);
             $this->response([
                     'Access-Token'=>$this->get_user_token($model['id'],time()+604800),
                     'id' => $model['id'],
@@ -206,9 +229,10 @@ class User extends REST_Controller
         $this->response([
             'id'=>$user['id'],
             'sex'=>$sex,
-            'birthday'=>date('Y-m-d\TH:i:s\Z',strtotime("{$user['year']}-{$user['month']}-{$user['day']}")),
+//            'birthday'=>date('Y-m-d\TH:i:s\Z',strtotime("{$user['year']}-{$user['month']}-{$user['day']}")),
+            'birthday'=>date('Y-m-d\TH:i:s\Z',$user['birthday']),
             'mail_checked'=>$user['mail_checked']?TRUE:FALSE,
-            'avatar_url'=>$user['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100',
+            'avatar_url'=>$user['profile_picture']?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1b34pfog9v161kdlkkm1kt41f697.jpg?imageView2/1/w/100/h/100',
             'mail'=>$user['email'],
             'name'=>$user['nickname'],
             'code'=>$code['code'],
@@ -260,14 +284,17 @@ class User extends REST_Controller
 
         //获取用户信息
         $user = $this->User_model->get_user_information($user_id);
+        date_default_timezone_set('UTC');
+
         $data = array(
             'user_base_id'          =>$user_id,
             'nickname'              =>$this->put('name')?$this->put('name'):$user['nickname'],
             'profile_picture'       =>$this->put('avatar_url')?$this->put('avatar_url'):$user['profile_picture'],
             'sex'           =>$this->put('sex')?$sex:$user['sex'],
-            'year'          =>$this->put('birthday')?date('Y',strtotime($this->put('birthday'))):$user['year'],
-            'month'         =>$this->put('birthday')?date('m',strtotime($this->put('birthday'))):$user['month'],
-            'day'           =>$this->put('birthday')?date('d',strtotime($this->put('birthday'))):$user['day'],
+            'birthday'      =>strtotime($data['birthday']),
+//            'year'          =>$this->put('birthday')?date('Y',strtotime($this->put('birthday'))):$user['year'],
+//            'month'         =>$this->put('birthday')?date('m',strtotime($this->put('birthday'))):$user['month'],
+//            'day'           =>$this->put('birthday')?date('d',strtotime($this->put('birthday'))):$user['day'],
         );
         $msg=$this->User_model->alter_user_info($data);
 //        switch ($msg)
@@ -347,7 +374,7 @@ class User extends REST_Controller
             );
             $re['data'][$key]['message']=array(
                 'id'=>$value['m_id'],
-                'image_url'=>$value['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100', //没有头像给默认头像
+                'image_url'=>$value['profile_picture']?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100', //没有头像给默认头像
             );
         }
 
@@ -417,7 +444,7 @@ class User extends REST_Controller
                 'id'=>$value['m_id'],
                 'type'=>$value['type'],
                 'status'=>$value['status'],
-                'image_url'=>$image or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
+                'image_url'=>$image?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
             );
         }
 
@@ -475,7 +502,7 @@ class User extends REST_Controller
             $re['data'][$key]['message']=array(
                 'id'=>$value['m_id'],
                 'status'=>$value['status'],
-                'image_url'=>$value['profile_picture'] or 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
+                'image_url'=>$value['profile_picture']?:'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100',//没有头像给默认头像
                 'text'=>$value['text'],
             );
         }
@@ -973,6 +1000,7 @@ class User extends REST_Controller
             $this->response(['error'=>validation_errors()],422);
         }else{
             $data['password'] = md5($data['password']);
+            $this->update_user_status($data['password'],$data['user_id'],TRUE);
             $this->User_model->re_psw($data)? //更新密码
                 $this->response(['success'=>'重置密码成功！']):
                 $this->response(['error'=>'重置失败，请重试'],400);
@@ -1007,6 +1035,7 @@ class User extends REST_Controller
         $password = $this->User_model->get_user_information($data['user_id'])['password'];
         if(md5($data['password']) === $password){
             $data['password'] = md5($data['psw']);
+            $this->update_user_status($data['psw'],$data['user_id'],TRUE);
             $this->User_model->re_psw($data)?
                 $this->response(['success'=>'修改成功']):
                 $this->response(['error'=>'修改失败'],400);

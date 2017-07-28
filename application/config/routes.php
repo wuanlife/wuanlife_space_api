@@ -72,6 +72,7 @@ $route['users/(:num)/messages/(:num)']['delete'] = 'user/message/$1/$2';
 $route['users/(:num)/messages/new']['get'] = 'user/check_info/$1';
 $route['users/(:num)/password']['put'] = 'user/password/$1';
 
+
 //星球相关路由
 $route['groups']['get'] = 'group/lists';
 $route['groups']['post'] = 'group/create';
@@ -85,14 +86,17 @@ $route['groups/(:num)/members/(:num)']['get'] = 'group/status/$1/$2';
 $route['groups/(:num)/members/(:num)']['delete'] = 'group/member/$1/$2';
 
 //帖子相关路由
-$route['posts']['get'] = 'post/index';
-$route['posts/(:num)/approval']['post'] = 'post/approve/$1';
 $route['groups/(:num)/posts']['get'] = 'post/group_post/$1';
-$route['posts/(:num)']['get'] = 'post/content/$1';
-$route['posts/(:num)/comments']['get'] = 'post/comment/$1';
 $route['groups/(:num)/posts']['post'] = 'post/create/$1';
-$route['posts/(:num)/comments']['post'] = 'post/reply/$1';
+$route['posts']['get'] = 'post/index';
 $route['posts/(:num)']['put'] = 'post/edit/$1';
 $route['posts/(:num)']['delete'] = 'post/content/$1';
+$route['posts/(:num)']['get'] = 'post/content/$1';
+$route['posts/(:num)/approval']['post'] = 'post/approve/$1';
 $route['posts/(:num)/tops']['put'] = 'post/sticky/$1';
+$route['posts/(:num)/locks']['put'] = 'post/lock/$1';
+$route['posts/(:num)/comments']['get'] = 'post/comment/$1';
+$route['posts/(:num)/comments']['post'] = 'post/reply/$1';
 $route['posts/(:num)/comments']['delete'] = 'post/comment/$1';
+$route['users/(:num)/collections']['put'] = 'post/collect/$1';
+$route['users/(:num)/collections']['get'] = 'post/collect/$1';
