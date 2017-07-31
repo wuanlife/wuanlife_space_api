@@ -145,7 +145,7 @@ SET birthday = UNIX_TIMESTAMP(
 		user_detail.`day`
 	)
 )
-WHERE `year` <> ''
+WHERE `year` <> '';
 
 # 创建哈希密码表  为以后防止拖库做准备 201707280903
 DROP TABLE IF EXISTS `user_password`;

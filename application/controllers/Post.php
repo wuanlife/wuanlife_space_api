@@ -42,7 +42,8 @@ class Post extends REST_Controller
             'user_id'   => $user_id?:0,
             'limit'     => $this->get('limit')?:20,     //每页显示数
             'offset'    => $this->get('offset')?:0,     //每页起始数
-            'latest'    => $this->get('latest')=='false'?FALSE:TRUE
+            'latest'    => $this->get('latest')=='false'?FALSE:TRUE,
+            'name'      => $this->get('name')
         );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('lists') === FALSE)
