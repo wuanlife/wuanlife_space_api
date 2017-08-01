@@ -195,6 +195,9 @@ class Group extends REST_Controller
         $name = $this->get('name');
         $user_id = $this->get('user_id');
         $group = $this->Group_model->lists($offset,$limit,$name,$user_id);
+        if(empty($group)){
+            $this->response('',204);
+        }
         $all_num = $this->Group_model->get_group_num($name,$user_id);         //消息总数
         $rs['data']=$this->Common_model->judge_image_exist($group);
 

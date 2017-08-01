@@ -101,12 +101,16 @@ class Post extends REST_Controller
                 $_SERVER['HTTP_HOST'] :
                 ''
             );
-
+        if($data['name']){
+            $field = "&name={$data['name']}";
+        }else{
+            $field = '';
+        }
         $re['paging'] = [
-            'first'=> "{$host}/posts?limit={$limit}&offset=0",
-            'previous'=>"{$host}/posts?limit={$limit}&offset={$lasto}",
-            'next'=> "{$host}/posts?limit={$limit}&offset={$nexto}",
-            'final'=> "{$host}/posts?limit={$limit}&offset={$finallyo}"
+            'first'=> "{$host}/posts?limit={$limit}&offset=0{$field}",
+            'previous'=>"{$host}/posts?limit={$limit}&offset={$lasto}{$field}",
+            'next'=> "{$host}/posts?limit={$limit}&offset={$nexto}{$field}",
+            'final'=> "{$host}/posts?limit={$limit}&offset={$finallyo}{$field}"
         ];
 
         $this->response($re);

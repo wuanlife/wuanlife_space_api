@@ -660,46 +660,41 @@ class User extends REST_Controller
 
         //处理申请信息
         $info = $this->get_message_info($data['m_id']);
-        $info['status'] !=1 and $this->response(['error'=>'无需重复处理'],409);
-
-
         $founder_id = $this->Group_model->get_group_infomation($info['group_base_id'])['user_base_id'];
-        if($founder_id==$data['user_id']){
-            if($this->Common_model->judge_group_user($info['group_base_id'],$info['user_apply_id'])){
-                $this->response(['error'=>'操作失败！该用户已加入此星球！'],400);
-            }else{
-                if($data['mark'] === TRUE) {
-                    $field = array(
-                        'group_base_id' => $info['group_base_id'],
-                        'user_base_id'  => $info['user_apply_id'],
-                        'authorization' => "03",
-                    );
-                    $this->Group_model->join_group($field);//将用户id加入对应的私密星球
-                    $m_type = 1;
-                    $msg = '操作成功！您已同意该成员的申请！';
-                    $status = 2;
-                }else{
-                    $m_type = 2;
-                    $msg = '操作成功！您已拒绝该成员的申请！';
-                    $status = 3;
-                }
-                $this->process_app_info($m_type,$info);//加入私密星球的申请的结果返回给申请者
-                $values['id'] = $data['m_id'];
-                $table = 'message_apply';
-                $this->alter_status($values,$status,$table);//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
-                $this->response(['success'=>$msg]);
+        $founder_id != $data['user_id'] and $this->response(['error'=>'您不是创建者，没有权限！'],403);
+
+        empty($info) and $this->response(['error'=>'操作失败！消息不存在！'],404);
+        in_array($info['status'],[2,3]) and $this->response(['error'=>'操作失败！您已同意/拒绝该成员的申请！'],409);
+        $info['status'] ==0 and $this->response(['error'=>'操作失败！请查看申请内容后再操作！'],400);
+        if($this->Common_model->judge_group_user($info['group_base_id'],$info['user_apply_id']))
+        {
+            $this->alter_status(['id'=>$data['m_id']],2,'message_apply');
+            $this->response(['error'=>'操作失败！该用户已加入此星球！'],400);
+        }
+        if(strtolower($data['mark']) === 'true') {
+            $field = array(
+                'group_base_id' => $info['group_base_id'],
+                'user_base_id'  => $info['user_apply_id'],
+                'authorization' => "03",
+            );
+            $this->Group_model->join_group($field);//将用户id加入对应的私密星球
+            $m_type = 1;
+            $msg = '操作成功！您已同意该成员的申请！';
+            $status = 2;
+        }else{
+            $m_type = 2;
+            $msg = '操作成功！您已拒绝该成员的申请！';
+            $status = 3;
+        }
+        $this->process_app_info($m_type,$info);//加入私密星球的申请的结果返回给申请者
+        $this->alter_status(['id'=>$data['m_id']],$status,'message_apply');//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
+        $this->response(['success'=>$msg]);
 
 //                $re=$this->Common_model->judgeUserOnline($info['user_apply_id']);
 //                if(empty($re)){
 //                    $rs['code']=2;
 //                }
 //                调用前端接口
-
-            }
-
-        }else{
-            $this->response(['error'=>'您不是创建者，没有权限！'],403);
-        }
     }
 
     /**

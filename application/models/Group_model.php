@@ -237,8 +237,9 @@ class Group_model extends CI_Model
             ];
         }
         $this->db->where($where);
-//        $this->db->join('group_detail', 'group_detail.group_base_id = group_base.id');
+        $this->db->join('group_detail', 'group_detail.group_base_id = group_base.id');
         $this->db->from('group_base');
+        $this->db->group_by("group_base.id");
         return $this->db->count_all_results();
     }
 
