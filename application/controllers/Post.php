@@ -147,11 +147,11 @@ class Post extends REST_Controller
         $rs=$this->Post_model->get_approve_post($data);
         if($rs){
             $this->Post_model->update_approve_post($data)?
-                $this->response('',204):
+                $this->response(['success'=>'(取消)点赞成功'],200):
                 $this->response(['error'=>'操作失败'],400);
         }else{
             $this->Post_model->add_approve_post($data)?
-                $this->response('',204):
+                $this->response(['success'=>'点赞成功'],200):
                 $this->response(['error'=>'操作失败'],400);
         }
 
@@ -202,6 +202,9 @@ class Post extends REST_Controller
         }
 
         $re['data'] = $this->Post_model->get_group_post($data);
+        if(empty($re['data'])){
+            $this->response('',204);
+        }
         $re = $this->Post_model->get_image_url($re);              //解析帖子内容，获得帖子中包含的图片
         $re = $this->Post_model->delete_image_gif($re);           //删除帖子中gif格式的图片
         $re = $this->Post_model->post_image_limit($re);           //展示图片限制，目前是显示三张
@@ -327,14 +330,9 @@ class Post extends REST_Controller
             'approved_num'=>$post_info['approved_num'],
             'collected'=>$post_info['collected']?TRUE:FALSE,
             'collected_num'=>$post_info['collected_num'],
-            'p_image'=>$post_info['image_url'],
+            'image_url'=>$post_info['image_url'],
             'group'=>[
                 'id' =>$post_info['group_base_id'],
-                'name'   =>$post_info['name'],
-                'image_url'  =>$post_info['g_image'],
-                'introduction'=>$post_info['g_introduction'],
-                'creator_id'  =>$post_info['creator_id'],
-                'creator_name' =>$post_info['creator_name'],
             ],
             'author'=>[
                 'id'=>$post_info['user_base_id'],
@@ -394,7 +392,7 @@ class Post extends REST_Controller
             'user_id' =>$user_id?:0,
             'limit'     => $this->get('limit')?:20,                 //每页显示数
             'offset'    => $this->get('offset')?:0,                 //每页起始数
-            'reply_floor'       =>$this->get('floor')?:1            //楼层所在位置
+            'reply_floor'       =>1//本版本默认为1$this->get('floor')?:1            //楼层所在位置
         );
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('post_comment') == FALSE)
@@ -716,7 +714,7 @@ class Post extends REST_Controller
         $re = $this->judge_authority($token->user_id,$post_id);
         if($re['delete_right']===1){
             $this->Post_model->delete_post($re)?
-                $this->response('',204):
+                $this->response(['success'=>'删除成功'],200):
                 $this->response(['error'=>'删除失败'],400);
         }else{
             $this->response(['error'=>'仅星球创建者和发帖者和管理员能删除帖子!'],403);
@@ -896,7 +894,7 @@ class Post extends REST_Controller
         $re = $this->judge_authority($token->user_id,$post_id);
         if($re['lock_right']===1){
             $this->Post_model->lock_post($post_id)?
-                $this->response('',204):
+                $this->response(['success'=>'锁定成功'],200):
                 $this->response(['error'=>'锁定失败'],400);
         }else{
             $this->response(['error'=>'仅星球创建者和发帖者和管理员能锁定帖子!'],403);
