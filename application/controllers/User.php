@@ -813,7 +813,7 @@ class User extends REST_Controller
         }else{
             $data['email'] = $this->User_model->get_user_information($id)['email'];
             $this->send($data)?
-                $this->response(NULL,204):
+                $this->response(['success'=>'发送成功，请注意查收'],200):
                 $this->response(['error'=>'发送邮件失败'],400);
         }
     }
@@ -970,7 +970,7 @@ class User extends REST_Controller
             $data['user_id'] = $sql['id'];
             $data['user_name'] = $sql['nickname'];
             $this->send($data)?
-                $this->response(NULL,204):
+                $this->response(['success'=>'发送成功，请注意查收'],200):
                 $this->response(['error'=>'发送邮件失败'],400);
         }
 

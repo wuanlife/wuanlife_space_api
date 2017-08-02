@@ -98,19 +98,19 @@ class Group extends REST_Controller
             $this->response(['error'=>validation_errors()],422);
 
         //判断用户是否为星球成员
-        if($this->Common_model->judge_group_user($group_id,$token->user_id))
-        {
-            $this->response(['error'=>'您已在该星球'],400);
-        }else{
-            $field = array(
-                'group_base_id' => $data['group_id'],
-                'user_base_id'  => $data['user_id'],
-                'authorization' => "03",
-            );
-            $this->Group_model->join_group($field);
-            $this->Group_model->join_message($field);
-            $this->response(['success'=>'加入成功！并通知星球创建者']);
-        }
+        $this->Common_model->judge_group_user($group_id,$token->user_id) and $this->response(['error'=>'您已在该星球'],400);
+        //判断用户是否是星球创建者
+        $this->Common_model->judge_group_creator($group_id,$token->user_id) and $this->response(['error'=>'您已在该星球'],400);
+
+        $field = array(
+            'group_base_id' => $data['group_id'],
+            'user_base_id'  => $data['user_id'],
+            'authorization' => "03",
+        );
+        $this->Group_model->join_group($field);
+        $this->Group_model->join_message($field);
+        $this->response(['success'=>'加入成功！并通知星球创建者']);
+
     }
 
     /**
