@@ -20,11 +20,15 @@
     yum -y update
 #### 5.安装git、vim、unzip等必要组件
     yum -y install git vim unzip wget
+#### 6.更新yum安装包
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/epel-release.rpm
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 ### 二、安装PHP环境
 #### 1.安装MariaDB
     yum -y install mariadb mariadb-server net-tools
-#### 2.安装PHP
-    yum -y install php-fpm php-cli php-mysql php-gd php-ldap php-odbc php-pdo php-pecl-memcache php-pear php-mbstring php-xml php-xmlrpc php-mbstring php-snmp php-soap php-devel
+#### 2.安装PHP7
+    yum -y install php70w.x86_64 php70w-cli.x86_64 php70w-common.x86_64 php70w-gd.x86_64 php70w-ldap.x86_64 php70w-mbstring.x86_64 php70w-mcrypt.x86_64 php70w-mysql.x86_64 php70w-pdo.x86_64
+    yum -y install php70w-fpm
 #### 3.安装nginx
     yum -y install nginx
 #### 4.启动环境并设置自启
