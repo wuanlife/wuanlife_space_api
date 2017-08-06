@@ -203,7 +203,7 @@ class Post extends REST_Controller
 
         $re['data'] = $this->Post_model->get_group_post($data);
         if(empty($re['data'])){
-            $this->response('',204);
+            $this->response($re,200);
         }
         $re = $this->Post_model->get_image_url($re);              //解析帖子内容，获得帖子中包含的图片
         $re = $this->Post_model->delete_image_gif($re);           //删除帖子中gif格式的图片
