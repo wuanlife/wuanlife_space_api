@@ -55,6 +55,7 @@ class User extends REST_Controller
      * 登录成功后更新用户的信息状态，尤其是加密密码
      * @param $password
      * @param $user_id
+     * @param bool $update
      */
     private function update_user_status($password,$user_id,$update = FALSE){
         $user_info = $this->User_model->get_user_information($user_id);
@@ -101,7 +102,7 @@ class User extends REST_Controller
         if(!$model){
             $this->response(['error'=>'该邮箱尚未注册！'],400);
         }elseif(md5($data['password'])!=$model['password']){
-            $this->response(['error'=>'密码错误，请重试！'],401);
+            $this->response(['error'=>'密码错误，请重试！'],422);
         }else{
             $this->update_user_status($data['password'],$model['id']);
             $this->response([

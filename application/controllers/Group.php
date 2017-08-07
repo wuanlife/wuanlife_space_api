@@ -42,7 +42,10 @@ class Group extends REST_Controller
         {
             return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
         }
-
+        catch(DomainException $e)
+        {
+            return $this->response(['error'=>'身份信息已失效，请重新获取'],401);
+        }
     }
 
     /**
