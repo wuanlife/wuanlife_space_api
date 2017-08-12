@@ -233,6 +233,10 @@ class Post extends REST_Controller
                     'name'       =>$value['nickname'],
                     'id'         =>$value['user_base_id'],
                 ],
+                'group' => [
+                    'id'  => $group_id,
+                    'name'    => $group_info['name'],
+                ],
             ];
         }
 
@@ -605,7 +609,7 @@ class Post extends REST_Controller
         }
 
         //判断编辑权限并编辑帖子
-        $re = $this->judge_authority($token->user_id,$post_id);
+        $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
         if($re['edit_right']===1){
 
             $this->Post_model->edit_post($data)?
@@ -657,7 +661,7 @@ class Post extends REST_Controller
             }
         }
 
-        $re = $this->judge_authority($token->user_id,$post_id);
+        $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
         if($re['sticky_right']===1){
             $this->Post_model->sticky_post($post_id)?
                 $this->response('',204):
@@ -709,7 +713,7 @@ class Post extends REST_Controller
         }
 
         //判断删除权限并删除帖子
-        $re = $this->judge_authority($token->user_id,$post_id);
+        $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
         if($re['delete_right']===1){
             $this->Post_model->delete_post($re)?
                 $this->response(['success'=>'删除成功'],200):
@@ -817,10 +821,11 @@ class Post extends REST_Controller
      * 判断权限
      * @param $user_id
      * @param $post_id
+     * @param $group_id
      * @return array
      */
-    private function judge_authority($user_id,$post_id){
-        $creator= $this->Common_model->judge_group_creator($post_id,$user_id);
+    private function judge_authority($user_id,$post_id,$group_id){
+        $creator= $this->Common_model->judge_group_creator($group_id,$user_id);
         $poster = $this->Common_model->judge_post_creator($user_id,$post_id);
         $admin = $this->Common_model->judge_admin($user_id);
         $rs = [
@@ -893,7 +898,7 @@ class Post extends REST_Controller
         }
 
         //判断锁定权限并锁定帖子
-        $re = $this->judge_authority($token->user_id,$post_id);
+        $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
         if($re['lock_right']===1){
             $this->Post_model->lock_post($post_id)?
                 $this->response(['success'=>'锁定成功'],200):
