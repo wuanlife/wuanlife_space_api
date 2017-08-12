@@ -233,6 +233,10 @@ class Post extends REST_Controller
                     'name'       =>$value['nickname'],
                     'id'         =>$value['user_base_id'],
                 ],
+                'group' => [
+                    'id'  => $value['group_base_id'],
+                    'name'    => $value['name'],
+                ],
             ];
         }
 
