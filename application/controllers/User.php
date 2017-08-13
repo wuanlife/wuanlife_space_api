@@ -1,5 +1,6 @@
 <?php
 
+use Qiniu\Auth;
 
 class User extends REST_Controller
 {
@@ -29,6 +30,25 @@ class User extends REST_Controller
 		echo '接口测试<br>登录接口url：<br>';
 		echo 'POST /users/signin';
 	}
+
+	public function qiniu_get()
+    {
+        //身份信息校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $this->parsing_token($jwt);
+
+        //加载七牛配置文件
+        $this->config->load('qiniu');
+        $accessKey = $this->config->item('accessKey');
+        $secretKey = $this->config->item('secretKey');
+        require APPPATH.'libraries/Qiniu.php';
+        // 初始化签权对象
+        $auth = new Auth($accessKey, $secretKey);
+        $bucket = $this->config->item('bucket');
+        // 生成上传Token
+        $token = $auth->uploadToken($bucket);
+        $this->response(['uploadToken'=>$token]);
+    }
 
     /**
      * 返回JSON数据到前端  已有相同方法，后续会移除这里的代码*2017/7/25 0025

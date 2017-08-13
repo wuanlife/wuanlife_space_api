@@ -57,6 +57,9 @@ $route['translate_uri_dashes'] = FALSE;
 //测试接口路由
 //$route['test']['get'] = 'post/test';
 
+//七牛相关路由
+$route['qiniu/token']['get'] = 'user/qiniu';
+
 //用户相关路由
 $route['users/signin']['post'] = 'user/login';
 $route['users']['post'] = 'user/reg';
