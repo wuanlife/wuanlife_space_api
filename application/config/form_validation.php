@@ -243,11 +243,11 @@ $config = array(
             'label' => '消息ID',
             'rules' => 'required'
         ),
-//        array(
-//            'field' => 'mark',
-//            'label' => '操作码',
-//            'rules' => 'in_list[true,false]'
-//        )
+        array(
+            'field' => 'mark',
+            'label' => '操作码',
+            'rules' => 'is_bool'
+        )
     ),
     'private_group' =>array(
         array(

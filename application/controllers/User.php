@@ -26,12 +26,13 @@ class User extends REST_Controller
     /**
      * 测试接口是否畅通
      */
-	public function index_get(){
-		echo '接口测试<br>登录接口url：<br>';
-		echo 'POST /users/signin';
-	}
+    public function index_get(){
+        echo '接口测试<br>登录接口url：<br>';
+        echo 'POST /users/signin';
 
-	public function qiniu_get()
+    }
+
+    public function qiniu_get()
     {
         //身份信息校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
@@ -673,8 +674,9 @@ class User extends REST_Controller
         $data = array(
             'user_id'       => $id,
             'm_id'   => $mid,
-            'mark'            => $this->post('is_apply'),
+            'mark'            => $this->post('is_apply')?:FALSE,
         );
+        $this->form_validation->set_message('is_bool', '{field}必须为布尔型.');
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('process_apply') == FALSE)
             $this->response(['error'=>validation_errors()],422);
@@ -692,7 +694,7 @@ class User extends REST_Controller
             $this->alter_status(['id'=>$data['m_id']],2,'message_apply');
             $this->response(['error'=>'操作失败！该用户已加入此星球！'],400);
         }
-        if(strtolower($data['mark']) === 'true') {
+        if($data['mark'] === TRUE) {
             $field = array(
                 'group_base_id' => $info['group_base_id'],
                 'user_base_id'  => $info['user_apply_id'],
@@ -702,10 +704,15 @@ class User extends REST_Controller
             $m_type = 1;
             $msg = '操作成功！您已同意该成员的申请！';
             $status = 2;
-        }else{
+        }elseif($data['mark'] === FALSE){
             $m_type = 2;
             $msg = '操作成功！您已拒绝该成员的申请！';
             $status = 3;
+        }else{
+            $m_type = '';
+            $msg = '';
+            $status = '';
+            $this->response(['error'=>'操作异常'],400);
         }
         $this->process_app_info($m_type,$info);//加入私密星球的申请的结果返回给申请者
         $this->alter_status(['id'=>$data['m_id']],$status,'message_apply');//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
