@@ -92,5 +92,6 @@ $db['default'] = array(
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
-	'save_queries' => TRUE
+	'save_queries' => TRUE,
+    'native'    => TRUE  //自定义变量  ..\system\database\drivers\mysqli\mysqli_driver.php
 );
