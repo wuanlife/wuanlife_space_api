@@ -27,7 +27,7 @@
 #### 1.安装MariaDB
     yum -y install mariadb mariadb-server net-tools
 #### 2.安装PHP7
-    yum -y install php70w.x86_64 php70w-cli.x86_64 php70w-common.x86_64 php70w-gd.x86_64 php70w-ldap.x86_64 php70w-mbstring.x86_64 php70w-mcrypt.x86_64 php70w-mysql.x86_64 php70w-pdo.x86_64
+    yum -y install php70w.x86_64 php70w-cli.x86_64 php70w-common.x86_64 php70w-gd.x86_64 php70w-ldap.x86_64 php70w-mbstring.x86_64 php70w-mcrypt.x86_64 php70w-mysqlnd.x86_64 php70w-pdo.x86_64
     yum -y install php70w-fpm
 #### 3.安装nginx
     yum -y install nginx
