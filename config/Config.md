@@ -75,46 +75,13 @@
     cd /home/www/html/
     git clone https://github.com/wuanlife/wuanlife.git
 
-#### 3.配置MongoDB
-追加yum源
-
-    vim /etc/yum.repos.d/mongodb.repo
-
-追加如下内容后保存
-
-    [mongodb-org-2.6]
-    name=MongoDB 2.6 Repository
-    baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/x86_64/
-    gpgcheck=0
-    enabled=1
-
-安装mongodb
-
-    yum -y install mongodb-org
-
-配置mongo
-
-    systemctl start mongod
-    /sbin/chkconfig mongod on
-
-指定mongo数据文件位置
-    
-    cd /home/www/html/wuanlife
-    mkdir db
-    mongod --dbpath db
-    
-#### 4.配置node.js
+#### 3.配置node.js
     npm install
-    set DEBUG=myapp & npm start
-ctrl+c退出
+    // 编译,编译前你可能需要修改config文件夹中的地址。生产环境prod
+    npm run build:prod  //部署生产环境
+#### 4.配置nginx
+dist文件夹下的是生产环境代码
 
-    npm install forever -g
-    export PORT=80
-    PORT=80 node app.js
-
-    forever start --uid wuanlife bin/www
-
-访问下http://YourIP，应该可以访问了。
     
 ### 四、修改配置
 其中，API代码需修改数据库配置，前端代码需修改接口地址，修改后重启node。
