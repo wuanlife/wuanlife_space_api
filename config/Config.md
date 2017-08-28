@@ -77,9 +77,9 @@
 
 #### 3.配置node.js
     npm install
-    // 编译,编译前你可能需要修改config文件夹中的地址。生产环境prod
+    // 编译,编译前你可能需要修改config文件夹中的地址。生产环境prod
+    npm run build:prod  //部署生产环境
     
-    npm run build:prod  //部署生产环境
 #### 4.配置nginx
 dist文件夹下的是生产环境代码
 
