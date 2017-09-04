@@ -112,6 +112,9 @@ class Group extends REST_Controller
         );
         $this->Group_model->join_group($field);
         $this->Group_model->join_message($field);
+        $this->Common_model->push_to_websocket([
+            'user_id'=>$this->Group_model->get_group_infomation($group_id)['user_base_id']
+        ]);
         $this->response(['success'=>'加入成功！并通知星球创建者']);
 
     }
@@ -142,6 +145,9 @@ class Group extends REST_Controller
         if($member){
             $this->Group_model->quit($data);
             $this->Group_model->quit_message($data);
+            $this->Common_model->push_to_websocket([
+                'user_id'=>$this->Group_model->get_group_infomation($group_id)['user_base_id']
+            ]);
             $this->response(['success'=>'退出成功！并通知星球创建者']);
         }else{
             $this->response(['error'=>'您不是星球成员，无需退出'],400);
@@ -350,13 +356,17 @@ class Group extends REST_Controller
 
         //申请加入私密星球
         if($this->Common_model->judge_group_private($group_id)){
+            $creator = $this->Group_model->get_group_infomation($data['group_id'])['user_base_id'];
             if($this->Group_model->private_group(
-                $data,$this->Group_model->get_group_infomation($data['group_id'])['user_base_id']
+                $data,$creator
             )){
                 /**
                  * 调用前端接口  待测试
                  *  $this->Common_model->judgeUserOnline($user_id);
                  */
+                $this->Common_model->push_to_websocket([
+                    'user_id'=>$creator
+                ]);
                 $this->response(NULL,204);
             }else{
                 $this->response(['error'=>'申请失败'],400);
@@ -457,6 +467,9 @@ class Group extends REST_Controller
             $rs = $model->delete_group_member($data);
             if($rs) {
                 $model->dgm_message($data);
+                $this->Common_model->push_to_websocket(
+                    ['user_id'=>$m_id]
+                );
                 $this->response(NULL,204);
             }else {
                 $this->Common_model->judge_group_creator($group_id,$data['user_id'])?

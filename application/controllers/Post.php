@@ -567,6 +567,9 @@ class Post extends REST_Controller
         $this->response($rs,200,TRUE);
 
         $this->Post_model->post_reply_message($data,$post_info);
+        $this->Common_model->push_to_websocket(
+            ['user_id'=>$data['reply_id']?:$post_info['user_base_id']]
+        );
 
 
     }

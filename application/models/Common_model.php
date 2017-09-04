@@ -92,7 +92,7 @@ class Common_model extends CI_Model
      */
     public function judge_group_exist($group_id){
         $delete=$this->Group_model->get_group_infomation($group_id)['delete'];
-        if($delete==='0')
+        if($delete===0)
         {
             return true;
         }
@@ -273,6 +273,18 @@ class Common_model extends CI_Model
         }else{
             return FALSE;
         }
+    }
+
+    public function push_to_websocket($data){
+        $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '');
+        // 建立socket连接到内部推送端口
+        $client = stream_socket_client("tcp://{$host}:5678", $errno, $errmsg, 1);
+// 推送的数据，包含uid字段，表示是给这个uid推送
+        $field = array('uid'=>$data['user_id'], 'new_info'=>true);
+// 发送数据，注意5678端口是Text协议的端口，Text协议需要在数据末尾加上换行符
+        fwrite($client, json_encode($field)."\n");
+// 读取推送结果
+        echo fread($client, 8192);
     }
 
 
