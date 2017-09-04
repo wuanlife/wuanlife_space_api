@@ -718,6 +718,8 @@ class User extends REST_Controller
         $this->alter_status(['id'=>$data['m_id']],$status,'message_apply');//将消息列表已读转化为处理之后的标记(已同意或者已拒绝)
         $this->response(['success'=>$msg]);
 
+
+        $this->Common_model->push_to_websocket(['user_id'=>$info['user_apply_id']]);
 //                $re=$this->Common_model->judgeUserOnline($info['user_apply_id']);
 //                if(empty($re)){
 //                    $rs['code']=2;
