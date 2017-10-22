@@ -142,3 +142,13 @@ ALTER TABLE post_approved CHANGE post_id post_base_id int(11);
 -- ----------------------------
 ALTER TABLE `user_code`
 ADD PRIMARY KEY (`user_base_id`, `code`, `difference`);
+
+-- ----------------------------
+-- 仅适用于1.1.6迁移数据到1.2.0版本 修复帖子删除问题  仅执行一次
+-- ----------------------------
+UPDATE post_detail,
+ post_base
+SET post_detail.`delete` = post_base.`delete`
+WHERE
+	post_detail.post_base_id = post_base.id
+AND post_detail.floor = 1;
