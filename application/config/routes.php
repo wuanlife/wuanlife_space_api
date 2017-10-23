@@ -100,6 +100,6 @@ $route['posts/(:num)/tops']['put'] = 'post/sticky/$1';
 $route['posts/(:num)/locks']['put'] = 'post/lock/$1';
 $route['posts/(:num)/comments']['get'] = 'post/comment/$1';
 $route['posts/(:num)/comments']['post'] = 'post/reply/$1';
-$route['posts/(:num)/comments']['delete'] = 'post/comment/$1';
+$route['posts/(:num)/comments/(:num)']['delete'] = 'post/comment/$1/$2';
 $route['users/(:num)/collections']['put'] = 'post/collect/$1';
 $route['users/(:num)/collections']['get'] = 'post/collect/$1';

@@ -23,8 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = ' ';
-$config['base_url'] = "http://dev.wuanlife.com:800/";
+$config['base_url'] = "http://47.88.58.119:800"; //后端服务器ip和端口
 $config['index_page']       = "";
 $config['uri_protocol']     = "REQUEST_URI";
 /*
@@ -326,7 +325,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'wuan_key';
+$config['encryption_key'] = 'wuan_key';   //jwt密钥，定期修改，和前端改成一致的
 
 /*
 |--------------------------------------------------------------------------

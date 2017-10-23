@@ -217,7 +217,7 @@ class Post extends REST_Controller
                 'id' => $value['id'],
                 'title' => $value['title'],
                 'content'  => $value['content'],
-//                    'lock'    => $value['lock'],
+                'lock'    => $value['lock']?TRUE:FALSE,
                 'digest'  => $value['digest']?TRUE:FALSE,
                 'sticky'  => $value['sticky']?TRUE:FALSE,
                 'create_time'=>date('Y-m-d\TH:i:s\Z',$value['create_time']),
@@ -567,6 +567,7 @@ class Post extends REST_Controller
         $this->response($rs,200,TRUE);
 
         $this->Post_model->post_reply_message($data,$post_info);
+        if($data['user_base_id']!=$post_info['user_base_id'])
         $this->Common_model->push_to_websocket(
             ['user_id'=>$data['reply_id']?:$post_info['user_base_id']]
         );
@@ -1030,7 +1031,7 @@ class Post extends REST_Controller
      * 删除帖子回复
      * @param $post_id
      */
-    public function comment_delete($post_id){
+    public function comment_delete($post_id,$floor){
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
@@ -1039,7 +1040,7 @@ class Post extends REST_Controller
         $data = array(
             'post_id' =>$post_id,
             'user_id' =>$token->user_id,
-            'floor'  =>$this->delete('floor')
+            'floor'  =>$floor
         );
         $this->form_validation->set_message('greater_than_equal_to', '{field}必须不小于{param}.');
         $this->form_validation->set_data($data);

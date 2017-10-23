@@ -93,5 +93,5 @@ $db['default'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE,
-    'native'    => TRUE  //自定义变量  ..\system\database\drivers\mysqli\mysqli_driver.php
+    'native'    => TRUE  //resolve MySQL integer field is returned as string in PHP ..\system\database\drivers\mysqli\mysqli_driver.php
 );
