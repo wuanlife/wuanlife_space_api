@@ -170,7 +170,7 @@ class Group extends REST_Controller
             $this->response(['error'=>validation_errors()],422);
 
         $this->response([
-            'success'=>$this->Common_model->judge_group_user($group_id,$m_id)
+            'success'=>$this->Common_model->judge_group_user($group_id,$m_id)||$this->Common_model->judge_group_creator($group_id,$m_id)
         ]);
     }
 
