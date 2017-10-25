@@ -303,7 +303,7 @@ class Post extends REST_Controller
 
         //获取帖子详情
         $post_info = $this->Post_model->get_post_base($data);
-//        $this->response($post_info);
+        // $this->response($post_info);
 
         $post_info['p_delete']?
             $this->response(['error'=>'帖子已被删除'],410):
@@ -315,7 +315,7 @@ class Post extends REST_Controller
 
         if($post_info['g_private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$user_id);
-            if(!$member&&$user_id!=$post_info['user_base_id']){
+            if(!$member&&$user_id!=$post_info['creator_id']){
                 $this->response(['error'=>'私密星球，申请加入后方可查看帖子'],403);
             }
         }
