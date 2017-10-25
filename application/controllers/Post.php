@@ -303,7 +303,7 @@ class Post extends REST_Controller
 
         //获取帖子详情
         $post_info = $this->Post_model->get_post_base($data);
-        // $this->response($post_info);
+//        $this->response($post_info);
 
         $post_info['p_delete']?
             $this->response(['error'=>'帖子已被删除'],410):
@@ -406,10 +406,6 @@ class Post extends REST_Controller
             $this->response(['error'=>'帖子不存在！'],404);
         }
 
-        // 获取帖子详情
-        $post_info = $this->Post_model->get_post_base($data);
-        // $this->response($post_info);
-
         $post_info['p_delete']?
             $this->response(['error'=>'帖子已被删除'],410):
             FALSE;
@@ -418,9 +414,10 @@ class Post extends REST_Controller
             $this->response(['error'=>'帖子所属星球已关闭，不可查看！'],410):
             FALSE;
 
-        if($post_info['g_private']){
+        if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$user_id);
-            if(!$member&&$user_id!=$post_info['creator_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$user_id);
+            if(!$member&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可查看帖子回复'],403);
             }
         }
@@ -541,8 +538,9 @@ class Post extends REST_Controller
             FALSE;
 
         if($post_info['private']){
-            $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_base_id']);
-            if(!$member&&$data['user_base_id']!=$post_info['user_base_id']){
+            $member = $this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_base_id']);
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$user_id);
+            if(!$member&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可回复'],403);
             }
         }
@@ -611,7 +609,8 @@ class Post extends REST_Controller
 
         if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_base_id']);
-            if(!$member&&$data['user_base_id']!=$post_info['user_base_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$user_id);
+            if(!$member&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可编辑帖子'],403);
             }
         }
@@ -662,9 +661,10 @@ class Post extends REST_Controller
             FALSE;
 
         if($post_info['private']){
-            $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_id']);
+            // $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_id']);
             $admin = $this->Common_model->judge_admin($data['user_id']);
-            if(!$member&&!$admin&&$data['user_base_id']!=$post_info['user_base_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_id']);
+            if(/**!$member&&**/!$admin&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可置顶帖子'],403);
             }
         }
@@ -715,7 +715,8 @@ class Post extends REST_Controller
         if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_id']);
             $admin = $this->Common_model->judge_admin($data['user_id']);
-            if(!$member&&!$admin&&$data['user_base_id']!=$post_info['user_base_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_id']);
+            if(!$member&&!$admin&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可删除帖子'],403);
             }
         }
@@ -900,7 +901,8 @@ class Post extends REST_Controller
         if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_id']);
             $admin = $this->Common_model->judge_admin($data['user_id']);
-            if(!$member&&!$admin&&$data['user_base_id']!=$post_info['user_base_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_id']);
+            if(!$member&&!$admin&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可锁定帖子'],403);
             }
         }
@@ -1069,7 +1071,8 @@ class Post extends REST_Controller
         if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_id']);
             $admin = $this->Common_model->judge_admin($data['user_id']);
-            if(!$member&&!$admin&&$data['user_id']!=$post_info['user_base_id']){
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_id']);
+            if(!$member&&!$admin&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可删除回复'],403);
             }
         }
