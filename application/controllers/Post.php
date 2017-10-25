@@ -539,7 +539,7 @@ class Post extends REST_Controller
 
         if($post_info['private']){
             $member = $this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_base_id']);
-            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$user_id);
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_base_id']);
             if(!$member&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可回复'],403);
             }
@@ -609,7 +609,7 @@ class Post extends REST_Controller
 
         if($post_info['private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$data['user_base_id']);
-            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$user_id);
+            $creator = $this->Common_model->judge_group_creator($post_info['group_base_id'],$data['user_base_id']);
             if(!$member&&!$creator){
                 $this->response(['error'=>'私密星球，申请加入后方可编辑帖子'],403);
             }
