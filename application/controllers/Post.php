@@ -316,7 +316,12 @@ class Post extends REST_Controller
         if($post_info['g_private']){
             $member=$this->Common_model->judge_group_user($post_info['group_base_id'],$user_id);
             if(!$member&&$user_id!=$post_info['creator_id']){
-                $this->response(['error'=>'私密星球，申请加入后方可查看帖子'],403);
+                $this->response([
+                    'error'=>'私密星球，申请加入后方可查看帖子',
+                    'group'=>[
+                        'id' =>$post_info['group_base_id'],
+                    ],
+                ],300);
             }
         }
         preg_match_all("(http://[-a-zA-Z0-9@:%_\+.~#?&//=]+[.jpg.gif.png])",$post_info['content'],$post_info['image_url']);
