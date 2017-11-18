@@ -13,8 +13,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `wuan`
 --
-CREATE DATABASE IF NOT EXISTS `wuan` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
-USE `wuan`;
+-- CREATE DATABASE IF NOT EXISTS `wuan` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+-- USE `wuan`;
 
 -- --------------------------------------------------------
 
@@ -346,7 +346,7 @@ ALTER TABLE `user_detail` CHANGE `lastLogTime` `lastLogTime` INT (10) NOT NULL C
 ALTER TABLE `user_detail` ADD `profile_picture` VARCHAR (255) CHARACTER
 SET utf8 COLLATE utf8_bin NULL COMMENT '用户头像';
 
-INSERT INTO `wuan`.`message_base` (`code`, `type`, `content`)
+INSERT INTO `message_base` (`code`, `type`, `content`)
 VALUES
 	('0004','3','{0}已将你从{1}中移除'),
 	('0005','3','{0}已从你的{1}中退出'),

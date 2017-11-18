@@ -49,6 +49,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+//保留路由
 $route['default_controller'] = 'User';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+//测试接口路由
+//$route['test']['get'] = 'post/test';
+
+//七牛相关路由
+$route['qiniu/token']['get'] = 'user/qiniu';
+
+//用户相关路由
+$route['users/signin']['post'] = 'user/login';
+$route['users']['post'] = 'user/reg';
+$route['users/(:num)/checkmail']['post'] = 'user/check_mail/$1';
+$route['users/checkmail']['post'] = 'user/check2mail';
+$route['users/resetpsw']['post'] = 'user/send_mail';
+$route['users/resetpsw']['put'] = 'user/repassword';
+$route['users/(:num)']['get'] = 'user/user_info/$1';
+$route['users/(:num)']['put'] = 'user/user_info/$1';
+$route['users/(:num)/messages']['get'] = 'user/show_message/$1';
+$route['users/(:num)/messages/(:num)']['post'] = 'user/process_apply/$1/$2';
+$route['users/(:num)/messages/(:num)']['delete'] = 'user/message/$1/$2';
+$route['users/(:num)/messages/new']['get'] = 'user/check_info/$1';
+$route['users/(:num)/password']['put'] = 'user/password/$1';
+
+
+//星球相关路由
+$route['groups']['get'] = 'group/lists';
+$route['groups']['post'] = 'group/create';
+$route['groups/(:num)']['get'] = 'group/group_info/$1';
+$route['groups/(:num)']['put'] = 'group/group_info/$1';
+$route['groups/(:num)/private']['post'] = 'group/private_group/$1';
+$route['groups/(:num)/members']['get'] = 'group/member/$1';
+$route['groups/(:num)/members']['post'] = 'group/join/$1';
+$route['groups/(:num)/members']['delete'] = 'group/quit/$1';
+$route['groups/(:num)/members/(:num)']['get'] = 'group/status/$1/$2';
+$route['groups/(:num)/members/(:num)']['delete'] = 'group/member/$1/$2';
+
+//帖子相关路由
+$route['groups/(:num)/posts']['get'] = 'post/group_post/$1';
+$route['groups/(:num)/posts']['post'] = 'post/create/$1';
+$route['posts']['get'] = 'post/index';
+$route['posts/(:num)']['put'] = 'post/edit/$1';
+$route['posts/(:num)']['delete'] = 'post/content/$1';
+$route['posts/(:num)']['get'] = 'post/content/$1';
+$route['posts/(:num)/approval']['post'] = 'post/approve/$1';
+$route['posts/(:num)/tops']['put'] = 'post/sticky/$1';
+$route['posts/(:num)/locks']['put'] = 'post/lock/$1';
+$route['posts/(:num)/comments']['get'] = 'post/comment/$1';
+$route['posts/(:num)/comments']['post'] = 'post/reply/$1';
+$route['posts/(:num)/comments/(:num)']['delete'] = 'post/comment/$1/$2';
+$route['users/(:num)/collections']['put'] = 'post/collect/$1';
+$route['users/(:num)/collections']['get'] = 'post/collect/$1';

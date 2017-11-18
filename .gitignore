@@ -4,13 +4,11 @@ application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
 
-application/config/config.php
-application/config/database.php
-application/config/email.php
-
 application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
+
+composer.lock
 
 user_guide_src/build/*
 user_guide_src/cilexer/build/*
@@ -29,4 +27,14 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.stTheme.cache
 *.sublime-workspace
 *.sublime-project
-.idea
+/CI_phpStorm.php
+/DB_query_builder.php
+/my_models.php
+/user_guide
+/.editorconfig
+/contributing.md
+/readme.rst
+/application/config/database.php
+/application/config/config.php
+/application/config/email.php
+/.idea
