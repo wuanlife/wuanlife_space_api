@@ -86,6 +86,14 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	public $stricton;
 
+    /**
+     * MySQL integer field is returned as itself or string in PHP
+     *
+     * Convert integer and float columns back to PHP numbers. Only valid for mysqlnd.
+     * @var bool
+     */
+	public $native;
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -112,8 +120,8 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * Database connection
 	 *
 	 * @param	bool	$persistent
-	 * @return	object
-	 */
+	 * @return bool|object
+     */
 	public function db_connect($persistent = FALSE)
 	{
 		// Do we have a socket path?
@@ -135,6 +143,11 @@ class CI_DB_mysqli_driver extends CI_DB {
 		$this->_mysqli = mysqli_init();
 
 		$this->_mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 10);
+
+		if(isset($this->native))
+        {
+            $this->_mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, $this->native);
+        }
 
 		if (isset($this->stricton))
 		{
@@ -210,7 +223,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 				$this->_mysqli->close();
 				$message = 'MySQLi was configured for an SSL connection, but got an unencrypted connection instead!';
 				log_message('error', $message);
-				return ($this->db->db_debug) ? $this->db->display_error($message, '', TRUE) : FALSE;
+				return ($this->db_debug) ? $this->display_error($message, '', TRUE) : FALSE;
 			}
 
 			return $this->_mysqli;
@@ -381,7 +394,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Platform-dependant string escape
+	 * Platform-dependent string escape
 	 *
 	 * @param	string
 	 * @return	string
