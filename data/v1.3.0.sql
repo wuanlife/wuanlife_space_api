@@ -16,6 +16,16 @@ CREATE TABLE IF NOT EXISTS users_base
   KEY login_index(mail,password)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基础信息表';
 
+-- 用户头像表
+-- 储存用户头像
+CREATE TABLE IF NOT EXISTS avatar_url
+(
+  user_id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '用户id',
+  url VARCHAR(255) COLLATE utf8_bin NOT NULL COMMENT '图片url',
+  delete_flg TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '图片是否已删除',
+  KEY image_user_id(user_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin  COMMENT='用户头像url表';
+
 -- 用户权限表
 -- 用于实现管理员功能，
 -- 因为取消了group功能，所以身份关系是唯一的，但是考虑到日后的可扩展性，
@@ -62,7 +72,7 @@ CREATE TABLE IF NOT EXISTS articles_content (
   title VARCHAR(32) COLLATE utf8_bin NOT NULL COMMENT '文章标题', -- 是否使用CHAR有待商榷
   content TEXT COLLATE utf8_bin NOT NULL COMMENT '文章内容',
   PRIMARY KEY (id),
-  FULLTEXT content_index(title,content)
+  FULLTEXT KEY content_index(title,content)
 )ENGINE=MyIsam DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='文章内容表';
 
 -- 文章状态表
