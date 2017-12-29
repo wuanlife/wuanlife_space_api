@@ -14,7 +14,10 @@ class Articles extends REST_Controller
 
     }
 
-    public function search_post()
+    /**
+     * 搜索文章
+     */
+    public function search_post(): void
     {
         // 加载搜索模版
         $this->load->model('search_model');

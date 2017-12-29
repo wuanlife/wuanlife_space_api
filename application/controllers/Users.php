@@ -13,7 +13,10 @@ class Users extends REST_Controller
         parent::__construct($config);
     }
 
-    public function search_post()
+    /**
+     * 搜索用户
+     */
+    public function search_post(): void
     {
         // 加载搜索模版
         $this->load->model('search_model');
