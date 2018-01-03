@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS user_collections
 (
   user_id INT UNSIGNED NOT NULL COMMENT '用户id',
   article_id INT UNSIGNED NOT NULL COMMENT '文章id',
+  create_at TIMESTAMP NOT NULL COMMENT '评论创建时间',
   PRIMARY KEY (user_id,article_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='文章收藏表';
 
