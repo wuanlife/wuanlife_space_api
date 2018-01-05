@@ -83,11 +83,7 @@ class Search_model extends CI_Model
             $result[$i++]['name'] = $row->name;
         }
 
-        $total =
-            $this->db
-                ->like('name', $data['keyword'])
-                ->from('users_base')
-                ->count_all_results();
+        $total = $res->num_rows();
 
         return ['users' => $result, 'total' => $total];
     }
@@ -118,11 +114,7 @@ class Search_model extends CI_Model
             $result[$i++]['create_at'] = $row->create_at;
         }
 
-        $total =
-            $this->db
-                ->or_like(['title' => $data['keyword'], 'content' => $data['keyword']])
-                ->from('articles_content')
-                ->count_all_results();
+        $total = $res->num_rows();
 
         return ['articles' => $result, 'total' => $total];
     }
