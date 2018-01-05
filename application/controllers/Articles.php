@@ -24,7 +24,7 @@ class Articles extends REST_Controller
         // 获取url参数列表
         $param = $this->search_model->getSearchParam();
         // 判断参数列表是否完整
-        $this->search_model->validate($param) or $this->response(['error' => '缺少必要的参数'], 400);
+        $this->search_model->validateSearchParam($param) or $this->response(['error' => '缺少必要的参数'], 400);
         // 获取相匹配的数据
         $data = $this->search_model->search($param, 'articles');
         // 返回数据
