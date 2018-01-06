@@ -1,16 +1,53 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tacer
- * Date: 2017/12/28
- * Time: 19:33
- */
 
 class Users extends REST_Controller
 {
     public function __construct(string $config = 'rest')
     {
         parent::__construct($config);
+    }
+
+    /**
+     * 注册
+     */
+    public function signin_post(): void
+    {
+
+    }
+
+    /**
+     * 登录
+     */
+    public function signup_post(): void
+    {
+
+    }
+
+    /**
+     * 获取用户信息
+     * @param $id
+     */
+    public function users_get($id): void
+    {
+
+    }
+
+    /**
+     * 修改用户信息
+     * @param $id
+     */
+    public function users_put($id): void
+    {
+
+    }
+
+    /**
+     * 修改用户密码
+     * @param $id
+     */
+    public function password_put($id): void
+    {
+
     }
 
     /**
