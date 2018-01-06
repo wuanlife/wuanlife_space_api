@@ -59,6 +59,10 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 //用户相关路由
+$route['users']['post'] = 'users/signup';
+$route['users/(:num)']['get'] = 'users/users/$1';
+$route['users/(:num)']['put'] = 'users/users/$1';
+$route['users/(:num)/password']['put'] = 'users/password/$1';
 
 //帖子相关路由
 
