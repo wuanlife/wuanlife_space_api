@@ -8,7 +8,7 @@ class Users extends REST_Controller
     }
 
     /**
-     * 注册
+     * 登录
      */
     public function signin_post(): void
     {
@@ -16,7 +16,7 @@ class Users extends REST_Controller
     }
 
     /**
-     * 登录
+     * 注册
      */
     public function signup_post(): void
     {
