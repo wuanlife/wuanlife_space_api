@@ -44,12 +44,12 @@ class Users extends REST_Controller
      */
     public function signup_post(): void
     {
-        $data = $this->users_model->getParam(
+        $data =
             [
                 'name'     => $this->post('name'),
                 'mail'     => $this->post('mail'),
                 'password' => $this->post('password')
-            ]);
+            ];
 
         $this->form_validation->set_data($data);
         if ($this->form_validation->run('register') === false) {
