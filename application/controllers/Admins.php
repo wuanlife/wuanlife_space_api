@@ -8,8 +8,6 @@
 
 /**
  * 管理员管理
- * @property string $s_name 用户名
- * @property string $s_password 密码
  * Class Admins
  */
 //class Admins extends REST_Controller
@@ -35,7 +33,7 @@ class Admins extends REST_Controller
 
     }
 
-    private function index()
+    public function index()
     {
         switch ($_SERVER['REQUEST_TYPE']):
             //获取管理员
