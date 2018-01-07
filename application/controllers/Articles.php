@@ -12,6 +12,7 @@ class Articles extends REST_Controller
     {
         parent::__construct($config);
         $this->load->model('articles_model');
+        $this->load->model('users_model');
         $this->load->library(array('form_validation','jwt'));
     }
 
@@ -43,6 +44,7 @@ class Articles extends REST_Controller
         //校验权限
         $token = $this->input->get_request_header('Access-Token', TRUE);
         $user_info = $this->parsing_token($token);
+        $userArr = $this->users_model->getUserInfo($user_info->user_id);
 
         //处理URL变量
         $aid_null = is_null($aid);
@@ -68,8 +70,8 @@ class Articles extends REST_Controller
 
             //组合数据
             $data = [
-                'user_id'=>$user_info->user_id,
-                'user_name'=>$user_info->user_name,
+                'user_id'=>$userArr['id'],
+                'user_name'=>$userArr['name'],
                 'title'=>$title,
                 'content'=>$content,
                 'resume'=>substr($content_txt,0,90).'...',
@@ -98,8 +100,8 @@ class Articles extends REST_Controller
             ];
             $result = $this->articles_model->commentsAdd($data);
             if($result){
-                $result['user']['id'] = $user_info->user_id;
-                $result['user']['name'] = $user_info->user_name;
+                $result['user']['id'] = $userArr['id'];
+                $result['user']['name'] = $userArr['name'];
                 $this->response($result, 200);
             }else{
                 $this->response(['error'=>'评论失败'], 400);
