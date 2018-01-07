@@ -22,10 +22,44 @@ class Articles_model extends CI_Model
     {
         parent::__construct();
     }
-    public function test(): array
+
+    public function articleOne()
     {
-        $res = $this->db->select('*')->from($this->a_base)->get();
-        return $res->result_array();
+
+    }
+    /**
+     * 获得文章内容
+     * @param $data
+     * @param string $field
+     * @return array
+     */
+    public function articleInfo($data, $field='*'):array
+    {
+        $res = $this->db
+            ->select($field)
+            ->from($this->a_base)
+            ->where($data)
+            ->get()
+            ->result_array();
+        return $res;
+    }
+
+    /**
+     * 获得文章内容及权限
+     * @param $data
+     * @param string $field
+     * @return array
+     */
+    public function articleInfoStatus($data, $field='*'):array
+    {
+        $res = $this->db
+            ->select($field)
+            ->from($this->a_base.' ab')
+            ->join($this->a_status.' as', 'ab.id = as.id', 'left')
+            ->where($data)
+            ->get()
+            ->result_array();
+        return $res;
     }
 
     /**
@@ -131,19 +165,20 @@ class Articles_model extends CI_Model
     }
 
     /**
-     * 获得评论id
+     * 获得评论
      * @param $data
-     * @return int
+     * @param string $field
+     * @return array
      */
-    public function commentsOneId($data):int
+    public function commentsInfo($data, $field='*'):array
     {
-        $res = $this->db->select('comment_id')->from($this->a_comments)->where($data)->get();
-        $result = $res->row();
-        if(empty($result)){
-            return 0;
-        }else{
-            return $result->comment_id;
-        }
+        $res = $this->db
+            ->select($field)
+            ->from($this->a_comments)
+            ->where($data)
+            ->get()
+            ->result_array();
+        return $res;
     }
 
     /**
@@ -193,7 +228,11 @@ class Articles_model extends CI_Model
         }
     }
 
-
+    /**
+     * 删除评论
+     * @param $id
+     * @return bool
+     */
     public function commentsDel($id)
     {
         //回滚 start
