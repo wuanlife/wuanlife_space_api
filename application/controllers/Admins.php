@@ -33,28 +33,28 @@ class Admins extends REST_Controller
 
     }
 
-    public function index()
+    //获取管理员
+    public function index_get()
     {
-        switch ($_SERVER['REQUEST_TYPE']):
-            //获取管理员
-            case 'GET':
-                $this->getAdmins();
-                break;
-            //登录
-            case 'POST':
-                $this->signin();
-                break;
-            //删除管理员
-            case 'DELETE':
-                $this->deleteAdmin();
-                break;
-        endswitch;
+        $this->getAdmins();
+    }
+
+    //新增管理员
+    public function index_post()
+    {
+        $this->addAdmin();
+    }
+
+    //删除管理员
+    public function index_delete()
+    {
+        $this->deleteAdmin();
     }
 
     /**
      * 管理员登录接口
      */
-    public function signin()
+    public function signin_post()
     {
         //验证用户名和密码
         $this->form_validation->set_rules([
@@ -81,7 +81,8 @@ class Admins extends REST_Controller
                 //登录成功
                 $s_jwt = $this->jwt->encode(
                     [
-                        'user_id' => $a_user['id']
+                        'user_id' => $a_user['id'],
+                        'expire_time' => time() + 3600 * 3
                     ], $this->config->item('encryption_key')
                 );
                 $this->response([
@@ -100,7 +101,7 @@ class Admins extends REST_Controller
     /**
      * 新增管理员
      */
-    public function addAdmin()
+    private function addAdmin()
     {
         //验证身份
         $a_payload = $this->validate();
@@ -121,14 +122,14 @@ class Admins extends REST_Controller
             endif;
             //todo 验证权限
 
-            if ($this->auth('addAdmin', $a_payload['user_id'])):
+            if ($this->auth('addAdmin', $a_payload->user_id)):
                 if ($this->Admins_model->addAdmin([
                     'name' => $this->input->post('name'),
                     'password' => md5('123456'),
                     'mail' => '',
-                    'create_at' => $_SERVER['REQUEST_TIME'],
+                    'create_at' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']),
                 ])):
-                    $this->respone(['success' => '添加成功'], 201);
+                    $this->response(['success' => '添加成功'], 201);
                 else:
                     $this->response(['error' => "添加失败"], 400);
                 endif;
@@ -149,12 +150,12 @@ class Admins extends REST_Controller
             $this->response(['error' => '参数错误'], 400);
         else:
             //todo 验证权限
-            if ($this->auth('deleteAdmin', $a_payload['user_id'])):
+            if ($this->auth('deleteAdmin', $a_payload->user_id)):
                 //管理员不存在
-                if (!$this->Admins_model->userIsExists($this->input->get('id'))):
+                if (!$this->Admins_model->userIsById($i_id)):
                     $this->response(['error' => '要删除的管理员不存在'], 400);
                 endif;
-                if ($this->Admins_model->deleteAdmin($this->input->get('id'))):
+                if ($this->Admins_model->deleteAdmin($i_id)):
                     $this->response(['success' => '已删除管理员'], 200);
                 else:
                     $this->response(['error' => '删除失败'], 400);
@@ -172,12 +173,12 @@ class Admins extends REST_Controller
     {
         $a_payload = $this->validate();
         //todo 验证权限
-        if ($this->auth('getAdmin', $a_payload['user_id'])):
+        if ($this->auth('getAdmins', $a_payload->user_id)):
             //获取的字段
             $a_fields = ['id', 'name'];
             $a_admins = $this->db
                 ->select($a_fields)
-                ->get_where('username', ['identify' => '管理员'])
+                ->get_where('users_auth')
                 ->result_array();
             return $this->response($a_admins, 200);
         else:
@@ -191,6 +192,9 @@ class Admins extends REST_Controller
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         try {
             $token = $this->jwt->decode($jwt, $this->config->item('encryption_key'));
+            if (time() > $token->expire_time):
+                return $this->response(['error' => '身份信息已过期，请重新获取'], 401);
+            endif;
             return $token;
         } catch (InvalidArgumentException $e) {
             return $this->response(['error' => '身份信息已失效，请重新获取'], 401);
@@ -210,9 +214,9 @@ class Admins extends REST_Controller
     private function auth(string $s_identity, int $i_id)
     {
         //获取用户权限码
-        $i_auth = $this->db->select('auth')->get_where('user_auth', ['id' => $i_id], 1)->result_array()[0]['auth'] ?? false;
+        $i_auth = $this->db->select('auth')->get_where('users_auth', ['id' => $i_id], 1)->result_array()[0]['auth'] ?? false;
         //获取对应权限偏移
-        $i_authOffset = $this->db->select('id')->get_where('auth_detail', ['identity' => $s_identity], 1)
+        $i_authOffset = $this->db->select('id')->get_where('auth_detail', ['indentity' => $s_identity], 1)
                 ->result_array()[0]['id'] ?? false;
         if ($i_auth && $i_authOffset):
             //比较权限
