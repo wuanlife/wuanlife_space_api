@@ -16,6 +16,26 @@ CREATE TABLE IF NOT EXISTS users_base
   KEY login_index(mail,password)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户基础信息表';
 
+-- 用户详细信息表
+-- 储存登陆用的基本信息，日后可扩展一张详细信息表
+CREATE TABLE IF NOT EXISTS users_detail
+(
+  id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '用户id',
+  sex  TINYINT UNSIGNED NOT NULL COMMENT '性别',
+  birthday DATE NOT NULL COMMENT '用户生日',
+  PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户详细信息表';
+
+-- 性别对应关系表
+-- 储存登陆用的基本信息，日后可扩展一张详细信息表
+CREATE TABLE IF NOT EXISTS sex_detail
+(
+  id TINYINT UNSIGNED NOT NULL COMMENT '性别标识',
+  sex VARCHAR(10) COLLATE utf8_bin NOT NULL COMMENT '性别类型',
+  PRIMARY KEY (id),
+  KEY sex_detail_index(sex)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='性别对应关系表';
+
 -- 用户头像表
 -- 储存用户头像
 CREATE TABLE IF NOT EXISTS avatar_url
@@ -43,7 +63,7 @@ CREATE TABLE IF NOT EXISTS users_auth
 -- 使用 << 运算符来得到不同的状态码
 CREATE TABLE IF NOT EXISTS auth_detail
 (
-  id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '权限id',
+  id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '权限id(偏移量)',
   indentity VARCHAR(30) COLLATE utf8_bin NOT NULL COMMENT '权限类型',
   PRIMARY KEY (id),
   UNIQUE KEY (indentity)

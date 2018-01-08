@@ -95,13 +95,15 @@ class Users extends REST_Controller
         $data =
             [
                 'name'       => $this->put('name'),
-                'avatar_url' => $this->put('avatar_url')
+                'url' => $this->put('avatar_url'),
+                'birthday'   => $this->put('birthday'),
+                'sex'        => $this->put('sex')
             ];
 
-        if ($message = $this->users_model->modifyInfo($id, $data)) {
-            $this->response(['error' => $message], 400);
-        } else {
+        if ($this->users_model->modifyInfo($id, $data)) {
             $this->response([], 204);
+        } else {
+            $this->response(['error' => '修改用户信息失败'], 400);
         }
 
     }
