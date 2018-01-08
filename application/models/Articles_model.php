@@ -255,4 +255,95 @@ class Articles_model extends CI_Model
 
         return ($res1&&$res2);
     }
+
+
+    /*
+     * 获得用户点赞
+     * @param $data
+     * @return mixed
+     */
+    public function get_approval_post($data)
+    {
+        //查询数据库中对应文章点赞情况
+        $sql=$this->db->select('*')
+            ->from('articles_approval')
+            ->where('article_id',$data['article_id'])
+            ->where('user_id',$data['user_id'])
+            ->get()
+            ->row_array();           
+      return $sql;
+    }
+
+
+
+    /**
+     * 更新点赞
+     * @param $data
+     * @return bool
+     */
+    public function update_approval_post($data)
+    {
+        //获取点赞状态
+        $approved = $this->get_approval_post($data);
+        
+        if($approved['user_id']){
+
+            //文章总赞数减一
+            $res1 = $this->db->set('count','count-1',false)
+                         ->where('article_id',$data['article_id'])
+                         ->update('articles_approval_count');
+            //取消用户对应文章点赞
+            $res2 = $this->db->delete('articles_approval',$approved);
+            //返回点赞成功
+            return true;                   
+        }else{
+            //调用时，无user_id时，操作失败
+            return $this->response(['error'=>'操作失败'],400);
+        }
+
+    }
+
+    /**
+     * 增加点赞
+     * @param $data
+     * @return bool
+     */
+    public function add_approval_post($data)
+    {
+        $field = array(
+            'user_id' => $data['user_id'],
+            'article_id' => $data['article_id'],
+        );
+        //在articles_approval表中添加点赞数据：user_id和文章_id
+        return $this->db->insert('articles_approval',$field);
+    }
+
+    /*
+     * 锁定文章(A10)
+     * @param $data
+     * @return mixed
+     */
+    public function get_lock_post($data)
+    {
+        $sql=$this->db->select('*')
+            ->from('articles_approval')
+            ->where('articles_id',$data['article_id'])
+            ->where('user_id',$data['user_id'])
+            ->get()
+            ->row_array();
+        return $sql;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

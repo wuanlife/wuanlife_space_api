@@ -70,3 +70,5 @@ $route['articles/search']['post'] = 'search/articles';
 
 //帖子相关路由
 
+// 文章状态相关路由
+$route['articles/(:num)/approval']['post'] = 'articles/approval/$1';

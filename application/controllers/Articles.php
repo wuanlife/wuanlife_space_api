@@ -204,4 +204,91 @@ class Articles extends REST_Controller
 
     }
 
+
+    /**
+     * 点赞文章
+     * @param $post_id
+     */
+    public function approval_post($article_id): void
+    {
+        echo $article_id;
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            // 'user_id'=>3,
+            'article_id'=>$article_id,
+        );
+
+        if($data['user_id']){
+
+            //获取文章点赞状态，并点赞，取消点赞，点赞数目
+            $rs = $this->articles_model->get_approval_post($data);
+
+       
+            if($rs){
+                $this->articles_model->update_approval_post($data)?
+                    $this->response(['success'=>'(取消)点赞成功'],200):
+                    $this->response(['error'=>'操作失败'],400);
+            }else{
+                $this->articles_model->add_approval_post($data)?
+                    $this->response(['success'=>'点赞成功'],204):
+                    $this->response(['error'=>'点赞失败'],400);
+            }            
+        }else{
+            $this->response(['error'=>'未登录，不能操作'],401);
+        }
+    }
+
+
+    /**
+     * 锁定文章(A10)
+     * @param $post_id
+     * POST /articles/:id/lock
+     */
+    public function lock_post($article_id)
+    {
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$article_id,
+        );
+
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('post_reply') == FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
