@@ -51,7 +51,8 @@ class Users_model extends CI_Model
             return '用户名已被占用';
         }
 
-        $res = $this->db->insert(
+        $this->db->trans_start();
+        $this->db->insert(
             'users_base',
             [
                 'mail'     => $data['mail'],
@@ -64,7 +65,7 @@ class Users_model extends CI_Model
                 'url' => 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100'
             ]);
         $this->db->insert(
-            'users_detailed',
+            'users_detail',
             [
                 'id'       => $this->db->insert_id(),
                 'sex'      => 3,
@@ -76,7 +77,9 @@ class Users_model extends CI_Model
         $this->password = $data['password'];
         $this->id       = $this->db->insert_id();
 
-        if ($res) {
+        @$this->db->trans_complete();
+
+        if ($this->db->trans_status()) {
             return '';
         } else {
             return '注册失败';
@@ -93,10 +96,11 @@ class Users_model extends CI_Model
     public function getUserInfo(int $id): array
     {
         $res = $this->db
-            ->select('id,url,mail,name')
+            ->select('users_base.id,url,mail,name,sex,birthday')
             ->from('users_base')
             ->join('avatar_url', 'users_base.id = avatar_url.user_id', 'left')
-            ->where(['id' => $id, 'url' => 0])
+            ->join('users_detail', 'users_base.id = users_detail.id', 'left')
+            ->where(['users_base.id' => $id, 'url' => 0])
             ->get();
 
         $result = $res->result()[0];
@@ -106,7 +110,9 @@ class Users_model extends CI_Model
                 'id'         => $result->id,
                 'avatar_url' => $result->url,
                 'mail'       => $result->mail,
-                'name'       => $result->name
+                'name'       => $result->name,
+                'sex'        => $result->sex,
+                'birthday'   => $result->birthday
             ];
     }
 
@@ -123,13 +129,14 @@ class Users_model extends CI_Model
         $this->db->trans_start();
         foreach ($data as $item => $value) {
             if ($value !== null) {
-                $res = $this->${'modify' . ucfirst($value)};
-                if (!$res){
+                $method = 'modify' . ucfirst($item);
+                $res = $this->$method($id,$value);
+                if ( ! $res) {
                     return false;
                 }
             }
         }
-        @$this->db->trans_complate();
+        @$this->db->trans_complete();;
 
         return $this->db->trans_status();
     }
@@ -202,12 +209,13 @@ class Users_model extends CI_Model
 
     /**
      * 修改用户名
+     *
      * @param $id
      * @param $name
      *
      * @return bool
      */
-    private function modifyName($id, $name): bool
+    public function modifyName($id, $name): bool
     {
         if ($this->usernameExists($name)) {
             return false;
@@ -224,6 +232,7 @@ class Users_model extends CI_Model
 
     /**
      * 修改性别
+     *
      * @param $id
      * @param $sex
      *
@@ -231,15 +240,27 @@ class Users_model extends CI_Model
      */
     private function modifySex($id, $sex): bool
     {
+        $get_sex_code =
+            $this->db
+                ->select('id')
+                ->from('sex_detail')
+                ->where(['sex' => $sex])
+                ->get();
+        if (!$get_sex_code->num_rows()){
+            return false;
+        }
+        $sex_code = $get_sex_code->result()[0]->id;
         $this->db->where(['id' => $id])
                  ->update(
                      'users_detail',
-                     ['sex' => $sex]);
+                     ['sex' => $sex_code]);
+
         return true;
     }
 
     /**
      * 修改生日
+     *
      * @param $id
      * @param $birthday
      *
@@ -253,11 +274,13 @@ class Users_model extends CI_Model
                      [
                          'birthday' => $birthday
                      ]);
+
         return true;
     }
 
     /**
      * 修改用户头像
+     *
      * @param $id
      * @param $url
      *
@@ -271,6 +294,7 @@ class Users_model extends CI_Model
                      [
                          'url' => $url
                      ]);
+
         return true;
     }
 
