@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS sex_detail
 (
   id TINYINT UNSIGNED NOT NULL COMMENT '性别标识',
   sex VARCHAR(10) COLLATE utf8_bin NOT NULL COMMENT '性别类型',
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  KEY sex_detail_index(sex)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='性别对应关系表';
 
 -- 用户头像表
