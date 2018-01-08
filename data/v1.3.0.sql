@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS users_auth
 -- 使用 << 运算符来得到不同的状态码
 CREATE TABLE IF NOT EXISTS auth_detail
 (
-  id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '权限id',
+  id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '权限id(偏移量)',
   indentity VARCHAR(30) COLLATE utf8_bin NOT NULL COMMENT '权限类型',
   PRIMARY KEY (id),
   UNIQUE KEY (indentity)
