@@ -171,14 +171,14 @@ $config = [
         [
             'field' => 'password',
             'label' => '密码',
-            'rules' => 'required|min_length[6]'
+            'rules' => 'required|min_length[8]|max_length[20]'
         ]
     ],
     're_psw'              => [
         [
             'field' => 'password',
             'label' => '密码',
-            'rules' => 'required|min_length[6]'
+            'rules' => 'required|min_length[8]|max_length[20]'
         ],
         [
             'field' => 'token',
@@ -200,7 +200,7 @@ $config = [
         [
             'field' => 'password',
             'label' => '密码',
-            'rules' => 'required|min_length[6]'
+            'rules' => 'required|min_length[8]|max_length[60]'
         ]
     ],
     'show_message'        => [
@@ -287,12 +287,12 @@ $config = [
         [
             'field' => 'old_psd',
             'label' => '旧密码',
-            'rules' => 'required|min_length[6]'
+            'rules' => 'required|min_length[8]|max_length[20]'
         ],
         [
             'field' => 'new_psd',
             'label' => '新密码',
-            'rules' => 'required|min_length[6]'
+            'rules' => 'required|min_length[8]|max_length[20]'
         ]
     ],
     'edit_post'           => [
