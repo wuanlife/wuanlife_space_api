@@ -69,7 +69,7 @@ class Users_model extends CI_Model
             [
                 'id'       => $this->db->insert_id(),
                 'sex'      => 3,
-                'birthday' => '0000-00-00'
+                'birthday' => '1970-01-01'
             ]);
 
         $this->mail     = $data['mail'];
