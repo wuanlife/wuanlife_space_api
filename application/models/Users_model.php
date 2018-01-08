@@ -63,6 +63,13 @@ class Users_model extends CI_Model
             [
                 'url' => 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100'
             ]);
+        $this->db->insert(
+            'users_detailed',
+            [
+                'id'       => $this->db->insert_id(),
+                'sex'      => 3,
+                'birthday' => '0000-00-00'
+            ]);
 
         $this->mail     = $data['mail'];
         $this->name     = $data['name'];
@@ -109,29 +116,22 @@ class Users_model extends CI_Model
      * @param int   $id
      * @param array $data
      *
-     * @return string
+     * @return bool
      */
-    public function modifyInfo(int $id, array $data): string
+    public function modifyInfo(int $id, array $data): bool
     {
-        $res = '缺少需要修改的参数';
-
-        if ( ! empty($data['name'])) {
-            if ($this->usernameExists($data['name'])) {
-                return '用户名已存在';
+        $this->db->trans_start();
+        foreach ($data as $item => $value) {
+            if ($value !== null) {
+                $res = $this->${'modify' . ucfirst($value)};
+                if (!$res){
+                    return false;
+                }
             }
-            $res1 = $this->db
-                ->where(['id' => $id])
-                ->update('users_base', ['name' => $data['name']]);
-            $res  = $res1 ? '' : '用户名修改失败';
         }
-        if ( ! empty($data['avatar_url'])) {
-            $res2 = $this->db
-                ->where(['user_id' => $id])
-                ->update('avatar_url', ['url' => $data['avatar_url']]);
-            $res  .= $res2 ? '' : ',用户头像修改失败';
-        }
+        @$this->db->trans_complate();
 
-        return $res;
+        return $this->db->trans_status();
     }
 
     /**
@@ -200,4 +200,136 @@ class Users_model extends CI_Model
         return (bool)$res->num_rows();
     }
 
+    /**
+     * 修改用户名
+     * @param $id
+     * @param $name
+     *
+     * @return bool
+     */
+    private function modifyName($id, $name): bool
+    {
+        if ($this->usernameExists($name)) {
+            return false;
+        }
+        $this->db->where(['id' => $id])
+                 ->update(
+                     'users_base',
+                     [
+                         'name' => $name
+                     ]);
+
+        return true;
+    }
+
+    /**
+     * 修改性别
+     * @param $id
+     * @param $sex
+     *
+     * @return bool
+     */
+    private function modifySex($id, $sex): bool
+    {
+        $this->db->where(['id' => $id])
+                 ->update(
+                     'users_detail',
+                     ['sex' => $sex]);
+        return true;
+    }
+
+    /**
+     * 修改生日
+     * @param $id
+     * @param $birthday
+     *
+     * @return bool
+     */
+    private function modifyBirthday($id, $birthday): bool
+    {
+        $this->db->where(['id' => $id])
+                 ->update(
+                     'users_detail',
+                     [
+                         'birthday' => $birthday
+                     ]);
+        return true;
+    }
+
+    /**
+     * 修改用户头像
+     * @param $id
+     * @param $url
+     *
+     * @return bool
+     */
+    public function modifyUrl($id, $url): bool
+    {
+        $this->db->where(['user_id' => $id])
+                 ->update(
+                     'avatar_url',
+                     [
+                         'url' => $url
+                     ]);
+        return true;
+    }
+
 }
+
+
+
+//
+///**
+// * 修改用户信息
+// *
+// * @param int   $id
+// * @param array $data
+// *
+// * @return bool
+// */
+//public function modifyInfo(int $id, array $data): bool
+//{
+//    $this->db->trans_start();
+//
+//    // 修改用户昵称
+//    if ( ! empty($data['name'])) {
+//        if ($this->usernameExists($data['name'])) {
+//            return '用户名已存在';
+//        }
+//        $this->db->where(['id' => $id])
+//                 ->update(
+//                     'users_base',
+//                     [
+//                         'name' => $data['name']
+//                     ]);
+//    }
+//    // 修改用户性别
+//    if ( ! empty($data['sex'])) {
+//        $this->db->where(['id' => $id])
+//                 ->update(
+//                     'users_detail',
+//                     ['sex' => $data['sex']]);
+//    }
+//    // 修改用户生日
+//    if ( ! empty($data['birthday'])) {
+//        $this->db->where(['id' => $id])
+//                 ->update(
+//                     'users_detail',
+//                     [
+//                         'birthday' => $data['birthday']
+//                     ]);
+//    }
+//    // 修改用户头像
+//    if ( ! empty($data['avatar_url'])) {
+//        $this->db->where(['user_id' => $id])
+//                 ->update(
+//                     'avatar_url',
+//                     [
+//                         'url' => $data['avatar_url']
+//                     ]);
+//    }
+//
+//    @$this->db->trans_complate();
+//
+//    return $this->db->trans_status();
+//}
