@@ -64,5 +64,9 @@ $route['users/(:num)']['get'] = 'users/users/$1';
 $route['users/(:num)']['put'] = 'users/users/$1';
 $route['users/(:num)/password']['put'] = 'users/password/$1';
 
+//搜索相关路由
+$route['users/search']['post'] = 'search/users';
+$route['articles/search']['post'] = 'search/articles';
+
 //帖子相关路由
 

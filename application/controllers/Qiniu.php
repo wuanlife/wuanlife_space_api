@@ -31,6 +31,7 @@ class Qiniu extends REST_Controller
         } catch (Exception $e) {
             $this->response(['error' => '身份信息已失效，请重新获取'], 401);
         }
+
         // 获取七牛 Token
         $token = $this->qiniu_model->getToken();
         // 返回 Token
