@@ -298,7 +298,7 @@ class Users_model extends CI_Model
         return true;
     }
 
-}
+
 
 
 
@@ -357,3 +357,72 @@ class Users_model extends CI_Model
 //
 //    return $this->db->trans_status();
 //}
+/**
+     *  A13 获取用户收藏列表
+     * @param $data
+     * @param bool $paging
+     * @return int|mixed
+     */
+    public function get_collect_articles($data){
+
+        //articles_status.status       文章状态（是否被删除）
+        //user_collections.article_id  文章id
+        //articles_content.title       文章标题
+        //articles_content.content     文章内容
+        //ser_collections.create_at    收藏时间
+        //
+        $select = ' user_collections.create_at,
+                    user_collections.article_id,
+                    articles_content.title,
+                    articles_content.content,
+                    articles_status.status,
+                    
+                    ';
+        $this->db->select($select);
+        $this->db->from('user_collections');
+        $this->db->join('articles_content','articles_content.id = user_collections.article_id');
+        $this->db->join('articles_status','articles_status.id = user_collections.article_id');
+        $this->db->where("user_collections.user_id = {$data['user_id']}");
+        $re['article'] =  $this->db->get()->result_array();
+
+        //获取用户收藏总数
+        $this->db->select('users_collections_count.count');
+        $this->db->from('users_collections_count');
+        $this->db->where("user_id = {$data['user_id']}");
+        $re['total'] = $this->db->get()->row()->count;
+        //$this->db->select();
+        //$re['title'] = 
+        return $re;
+
+        // $select = 'pb.title,pc.content,uc.create_time,gb.`name`,pb.`delete`,gb.`delete` AS g_delete,uc.post_base_id,pb.group_base_id';
+        // $this->db->select($select);
+        // $this->db->join('post_base AS pb','uc.post_base_id = pb.id');
+        // $this->db->join('post_content AS pc','pc.post_base_id = uc.post_base_id');
+        // $this->db->join('group_base AS gb','pb.group_base_id = gb.id');
+        // $this->db->order_by('uc.create_time ','DESC');
+        // $this->db->where("uc.user_base_id = {$data['user_id']} ");
+        // $this->db->where('uc.delete = 0');
+        // if($paging){
+        //     return $this->db->count_all_results('user_collection AS uc');
+        // }else{
+        //     return $this->db->get('user_collection AS uc',$data['limit'],$data['offset'])->result_array();
+        // }
+    }
+
+
+    /**
+     * 用文章id搜索文章对应的图片
+     * @param  [array] $data [description]
+     * @return [array]       [description]
+     */
+    public function get_article_img($data)
+    {
+        $this->db->select('image_url.url');
+        $this->db->from('image_url');
+        $this->db->where("image_url.article_id = {$data['article_id']}");
+        $this->db->where("image_url.delete_flg = 0");
+        $re= $this->db->get()->result_array();
+        return $re;
+
+    }
+}

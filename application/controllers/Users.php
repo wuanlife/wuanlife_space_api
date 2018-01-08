@@ -191,4 +191,106 @@ class Users extends REST_Controller
         ]);
     }
 
+    /**
+     * A13 获取用户收藏列表
+     * 
+     */
+
+    public function collections_get($user_id)
+    {
+        $data['user_id'] = $user_id;
+
+        $re = $this->users_model->get_collect_articles($data);
+
+        for ($i=0; $i < count($re['article']); $i++) {
+            $data['article_id'] = $re['article'][$i]['article_id'];
+            $re['article'][$i]['image_url'] = $this->Users_model->get_article_img($data);
+        }
+        // foreach ($re['article'] as $key => $value) {
+
+        //     $ree['article'][$key]=[
+        //         'create_time'=>$value['create_at'],
+        //         'id'=>$value['article_id'],
+        //         'title'=>$value['content'],
+        //         'delete'=>$value['status'],
+
+
+        //     ];
+        //     # code...
+        // }
+
+        $this->response($re); 
+//         //权限校验
+//         // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+//         // $token = $this->parsing_token($jwt);
+//         // if($token->user_id!=$user_id)
+//         // {
+//         //     $this->response(['error'=>'您没有权限'],403);
+//         // }
+//         // $user_id = $this->get('id');
+//         // 
+//            $data = array(
+//             'user_id'   => $token->user_id,
+//             'limit'     => $this->get('limit')?:20,     //每页显示数
+//             'offset'    => $this->get('offset')?:0,     //每页起始数
+//         );
+//         $this->form_validation->set_data($data);
+//         if ($this->form_validation->run('lists') == FALSE)
+//             $this->response(validation_errors(),422);
+
+//         //获得用户收藏帖子
+//         $re['data']=$this->Post_model->get_collect_post($data);
+//         if(empty($re['data'])){
+//             $this->response('',204);
+//         }
+//         $re = $this->Post_model->get_image_url($re);        //解析帖子内容，获得帖子中包含的图片
+//         $re = $this->Post_model->delete_image_gif($re);     //删除帖子中gif格式的图片
+//         $re = $this->Post_model->post_image_limit($re);     //展示图片限制，目前是显示三张
+//         $re = $this->Post_model->delete_html_posts($re);    //从帖子内容去除 HTML 和 PHP 标记
+//         $re = $this->Post_model->post_text_limit($re);      //帖子内容长度显示，目前是300字符
+// //        $this->response($re);
+//         date_default_timezone_set('UTC');
+//         foreach($re['data'] as $key=>$value){
+//             $re['data'][$key] = [
+//                 'id' => $value['articles_content.id'],
+//                 'title' => $value['articles_content.title'],
+//                 'content' => $value['articles_content.content'],
+//                 'author' => [
+//                     'name'       =>$value['nickname'],
+//                     'id'         =>$value['user_base_id'],
+// //                ],
+//                 'group' => [
+//                     'id'  => $value['group_base_id'],
+//                     'name'    => $value['name'],
+//                 ],
+//             ];
+//         }
+
+//         //分页
+//         $all_num = $this->Post_model->get_collect_post($data,TRUE);
+//         $offset = $data['offset'];
+//         $limit = $data['limit'];
+//         $page_count  = (ceil($all_num/$limit)-1);                   //比总页数小 1
+//         $finallyo = $page_count * $limit;
+//         $lasto = ($offset-$limit)>0?($offset-$limit):0;
+//         $nexto = ($offset+$limit)<$finallyo?($offset+$limit):$finallyo;
+//         $host = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ?
+//             $_SERVER['HTTP_X_FORWARDED_HOST'] :
+//             (isset($_SERVER['HTTP_HOST']) ?
+//                 $_SERVER['HTTP_HOST'] :
+//                 ''
+//             );
+
+//         $re['paging'] = [
+//             'first'=> "{$host}/users/{$user_id}/collections?limit={$limit}&offset=0",
+//             'previous'=>"{$host}/users/{$user_id}/collections?limit={$limit}&offset={$lasto}",
+//             'next'=> "{$host}/users/{$user_id}/collections?limit={$limit}&offset={$nexto}",
+//             'final'=> "{$host}/users/{$user_id}/collections?limit={$limit}&offset={$finallyo}"
+//         ];
+
+//         $this->response($re);
+//     }
+
+     }
+
 }
