@@ -16,6 +16,11 @@ class Articles extends REST_Controller
         $this->load->library(array('form_validation','jwt'));
     }
 
+    public function index_get()
+    {
+        echo "123";
+    }
+
     /**
      * 解析jwt，获得用户id（旧的拷贝过来的）
      * @param $jwt
@@ -202,6 +207,98 @@ class Articles extends REST_Controller
             }
         }
 
+    }
+
+    /**
+     *  A1 首页文章接口 用于展示首页文章
+     * @param  [type] $offset 当前起始数
+     * @param  [type] $limit 每页数量
+     */
+    public function articles_get()
+    {
+        //校验权限00
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $user_id = NULL;
+        // }else{
+        //     $token = $this->parsing_token($jwt);
+        //     $user_id = $token->user_id;
+        // }
+
+        // $data = array(
+        //   //  'user_id'   => $user_id?:0,
+        //     'limit'     => $this->get('limit')?:20,     //每页显示数
+        //     'offset'    => $this->get('offset')?:0,     //每页起始数
+        // );
+
+         $re['data'] = $this->articles_model->get_Articles();
+        // $this->Articles_model->get_Articles();
+         $this->response($re);
+
+
+    }
+
+
+    /**
+     * A4 文章详情 文章详情-文章内容 GET /articles/:id
+
+     * @param  [type] $article_id [description]
+     * @return [type]             [description]
+     */
+    public function article_get($article_id)
+    {
+        $re = $this->articles_model->get_article($article_id);
+        if(!isset($re))
+        {
+            $this->response(['error'=>'查看文章详情失败']);
+        }
+
+        if ($re['articles']['approved_num'] > 0 )
+        {
+            $re['articles']['approved'] = TRUE;
+        }
+        else
+        {
+            $re['articles']['approved'] = False;
+        }
+
+        if ($re['articles']['collected_num'] > 0 )
+        {
+            $re['articles']['collected'] = TRUE;
+        }
+        else
+        {
+            $re['articles']['collected'] = False;
+        }
+
+        //判断文章状态  0正常  1被锁定  2被删除
+        if ($re['articles']['status'] == '1')
+        {
+            $re['articles']['lock'] = TRUE;
+        }
+        elseif ($re['articles']['status'] == '2' )
+        {
+            $this->response(['error'=>'文章已被删除'],410);
+        }
+        else
+        {
+            $re['articles']['lock'] = False;
+        }
+        unset($re['articles']['status']);
+
+
+         $this->response($re);
+        
+    }
+    /**
+     * A5 文章评论列表
+     */
+
+    public function comments_get($article_id)
+    {
+        //$data['article_id'] = $article_id;
+        $re = $this->Articles_model->get_comments($article_id);
+        $this->response($re);
     }
 
 }
