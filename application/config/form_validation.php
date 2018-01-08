@@ -237,11 +237,6 @@ $config = [
             'field' => 'm_id',
             'label' => '消息ID',
             'rules' => 'required'
-        ],
-        [
-            'field' => 'mark',
-            'label' => '操作码',
-            'rules' => 'is_bool'
         ]
     ],
     'private_group'       => [
@@ -265,11 +260,6 @@ $config = [
         [
             'field' => 'user_id',
             'label' => '用户ID',
-            'rules' => 'required|min_length[1]|is_natural_no_zero'
-        ],
-        [
-            'field' => 'group_id',
-            'label' => '星球ID',
             'rules' => 'required|min_length[1]|is_natural_no_zero'
         ],
         [
@@ -346,41 +336,12 @@ $config = [
             'rules' => 'required|min_length[1]|is_natural_no_zero'
         ],
     ],
-    'delete_group_member' => [
-        [
-            'field' => 'group_id',
-            'label' => '星球ID',
-            'rules' => 'required|min_length[1]'
-        ],
-        [
-            'field' => 'member_id',
-            'label' => '成员ID',
-            'rules' => 'required|min_length[1]'
-        ]
-    ],
     'get_create'          => [
         [
             'field' => 'user_id',
             'label' => '用户ID',
             'rules' => 'required'
         ],
-    ],
-    'get_group_post'      => [
-        [
-            'field' => 'group_id',
-            'label' => '星球ID',
-            'rules' => 'required'
-        ],
-        [
-            'field' => 'limit',
-            'label' => '每页数量',
-            'rules' => 'is_natural_no_zero'
-        ],
-        [
-            'field' => 'offset',
-            'label' => '起始值',
-            'rules' => 'is_natural'
-        ]
     ],
     'search'              => [
         [
