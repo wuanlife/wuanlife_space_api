@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users_base
 (
   id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '用户id',
   mail VARCHAR(30) COLLATE utf8_bin NOT NULL COMMENT '用户邮箱',
-  name CHAR(14) COLLATE utf8_bin NOT NULL COMMENT '用户名',
+  name CHAR(20) COLLATE utf8_bin NOT NULL COMMENT '用户名',
   password CHAR(32) COLLATE utf8_bin NOT NULL COMMENT '用户密码',
   create_at TIMESTAMP NOT NULL COMMENT '注册时间',
   PRIMARY KEY (id),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS avatar_url
 CREATE TABLE IF NOT EXISTS users_auth
 (
   id INT UNSIGNED NOT NULL COMMENT '用户id',
-  name CHAR(14) COLLATE utf8_bin NOT NULL COMMENT '用户名',
+  name CHAR(20) COLLATE utf8_bin NOT NULL COMMENT '用户名',
   auth INT UNSIGNED NOT NULL COMMENT '用户权限',
   PRIMARY KEY (id),
   KEY auth(auth)
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS articles_base
 (
   id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '文章id',
   author_id INT UNSIGNED NOT NULL COMMENT '作者id',
-  author_name VARCHAR(16) COLLATE utf8_bin NOT NULL COMMENT '作者名',
-  content_digest CHAR(100) COLLATE utf8_bin NOT NULL COMMENT '文章摘要',
+  author_name CHAR(20) COLLATE utf8_bin NOT NULL COMMENT '作者名',
+  content_digest CHAR(90) COLLATE utf8_bin NOT NULL COMMENT '文章摘要',
   update_at TIMESTAMP NOT NULL COMMENT '文章更新时间',
   create_at TIMESTAMP NOT NULL COMMENT '文章创建时间',
   PRIMARY KEY (id),
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS articles_base
 -- 使用一张MyIsam引擎的表储存，以便实现全文索引
 CREATE TABLE IF NOT EXISTS articles_content (
   id INT UNSIGNED NOT NULL COMMENT '文章id',
-  title VARCHAR(32) COLLATE utf8_bin NOT NULL COMMENT '文章标题', -- 是否使用CHAR有待商榷
+  title CHAR(55) COLLATE utf8_bin NOT NULL COMMENT '文章标题', -- 是否使用CHAR有待商榷
   content TEXT COLLATE utf8_bin NOT NULL COMMENT '文章内容',
   PRIMARY KEY (id),
   FULLTEXT KEY content_index(title,content)
