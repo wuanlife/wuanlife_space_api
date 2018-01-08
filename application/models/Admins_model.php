@@ -22,6 +22,7 @@ class Admins_model extends CI_Model
     {
         return $this->db->get_where('users_base', ['name' => $s_username], 1)->result_array()[0] ?? false;
     }
+
     /**
      * 通过id判断用户是否存在
      * @param int id
@@ -31,6 +32,7 @@ class Admins_model extends CI_Model
     {
         return $this->db->get_where('users_base', ['id' => $i_id], 1)->result_array()[0] ?? false;
     }
+
     /**
      * 添加管理员
      * @param array $a_adminData
@@ -52,7 +54,28 @@ class Admins_model extends CI_Model
         $this->db->delete('users_base', ['id' => $id]);
         if ($this->db->affected_rows()):
             //删除对应权限
-            $this->db->delete('users_auth',['id' => $id]);
+            $this->db->delete('users_auth', ['id' => $id]);
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+    /**
+     * 判断是否是最高管理员或管理员
+     * @param int $i_id 用户Id
+     * @return bool
+     */
+    public function isAdmin(int $i_id)
+    {
+        $i_auth = $this->db
+                ->select("auth")
+                ->get_where('users_auth', ['id' => $i_id], 1)
+                ->result_array()[0]['auth'] ?? false;
+
+        if($i_auth === false)return false;
+        //判断是否是最高管理员或管理员
+        if (($i_auth & (1 << 1)) || ($i_auth & (1 << 2))):
             return true;
         else:
             return false;

@@ -78,6 +78,10 @@ class Admins extends REST_Controller
                 if (md5($this->input->post('password')) !== $a_user['password']):
                     $this->response(['error' => "密码错误"], 401);
                 endif;
+                //判断是否管理员
+                if (!$this->Admins_model->isAdmin($a_user['id'])):
+                    $this->response(["error" => "身份非管理员"], 401);
+                endif;
                 //登录成功
                 $s_jwt = $this->jwt->encode(
                     [
@@ -215,6 +219,11 @@ class Admins extends REST_Controller
     {
         //获取用户权限码
         $i_auth = $this->db->select('auth')->get_where('users_auth', ['id' => $i_id], 1)->result_array()[0]['auth'] ?? false;
+        //判断是否为最高管理员,偏移为1
+        if ($i_auth & (1 << 1)):
+            return true;
+        endif;
+
         //获取对应权限偏移
         $i_authOffset = $this->db->select('id')->get_where('auth_detail', ['indentity' => $s_identity], 1)
                 ->result_array()[0]['id'] ?? false;
