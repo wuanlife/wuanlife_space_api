@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS users_base
 
 -- 用户详细信息表
 -- 储存登陆用的基本信息，日后可扩展一张详细信息表
-CREATE TABLE IF NOT EXISTS users_detailed
+CREATE TABLE IF NOT EXISTS users_detail
 (
   id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '用户id',
   sex  TINYINT UNSIGNED NOT NULL COMMENT '性别',
-  birthdy DATETIME NOT NULL COMMENT '用户生日',
+  birthday DATE NOT NULL COMMENT '用户生日',
   PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户详细信息表';
 
