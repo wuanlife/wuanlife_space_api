@@ -539,8 +539,16 @@ class Articles_model extends CI_Model
         $this->db->from('articles_comments');
         $this->db->join('comment_contents','comment_contents.id = articles_comments.comment_id');
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
+        $this->db->where("articles_comments.article_id ={$article_id}");
         $data['reply'] = $this->db->get()->result_array();
         $data['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$article_id)->get()->num_rows();
+        // for ($i=0; $i < $data['total']; $i++) { 
+        //     $data['reply'][$i]['comment'] = $data['reply'][$i]['content'];
+        //     $data['reply'][$i]['user_name'] = $data['reply'][$i]['name'];
+        //     unset($data['reply'][$i]['content']);
+        //     unset($data['reply'][$i]['name']);
+        // }
+        
         return $data;
 
     }

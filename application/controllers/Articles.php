@@ -60,10 +60,10 @@ class Articles extends REST_Controller
 
         if($aid_null && $type_null && $floor_null){      //发表文章
             /* 获取POST数据 */
-            $title = trim($this->input->post('title'));
-            $content = trim($this->input->post('content'));
+            $title = trim($this->post('title'));
+            $content = trim($this->post('content'));
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
-            $image_urls = $this->input->post('image_urls');
+            $image_urls = $this->post('image_urls');
             $image_urls_arr = explode(',', $image_urls);
 
             //验证POST数据
@@ -91,7 +91,7 @@ class Articles extends REST_Controller
             }
         }else if(!$aid_null && $type=='comments' && $floor_null){      //评论文章
             /* 获取POST数据 */
-            $comment = trim($this->input->post('comment'));
+            $comment = trim($this->post('comment'));
 
             //验证POST数据
             !empty($comment) or $this->response(['error'=>'回复内容不能为空'], 400);
@@ -135,8 +135,8 @@ class Articles extends REST_Controller
 
         if(!$aid_null && $type_null && $floor_null){      //编辑文章
             /* 获取POST数据 */
-            $title = trim($this->input->input_stream('title'));
-            $content = trim($this->input->input_stream('content'));
+            $title = trim($this->put('title'));
+            $content = trim($this->put('content'));
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
 
             //验证POST数据
@@ -492,7 +492,7 @@ class Articles extends REST_Controller
     public function comments_get($article_id)
     {
         //$data['article_id'] = $article_id;
-        $re = $this->Articles_model->get_comments($article_id);
+        $re = $this->articles_model->get_comments($article_id);
         $this->response($re);
     }
 
