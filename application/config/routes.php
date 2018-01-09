@@ -63,6 +63,7 @@ $route['users']['post'] = 'users/signup';
 $route['users/(:num)']['get'] = 'users/users/$1';
 $route['users/(:num)']['put'] = 'users/users/$1';
 $route['users/(:num)/password']['put'] = 'users/password/$1';
+$route['users/(:num)/collections']['get'] = 'users/collections/$1';
 
 //搜索相关路由
 $route['users/search']['post'] = 'search/users';

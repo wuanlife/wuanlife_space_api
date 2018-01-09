@@ -390,23 +390,21 @@ class Users_model extends CI_Model
         $this->db->from('users_collections_count');
         $this->db->where("user_id = {$data['user_id']}");
         $re['total'] = $this->db->get()->row()->count;
+        for ($i=0; $i <$re['total'] ; $i++) { 
+            $re['article'][$i]['id'] = $re['article'][$i]['article_id'];
+            if ($re['article'][$i]['status'] == '2') {
+                $re['article'][$i]['delete'] = true;
+            }
+            else
+            {
+                $re['article'][$i]['delete'] = false;
+            }
+            //unset($re['article'][$i]['article_id']); 不知道为什么不能删
+            unset($re['article'][$i]['status']);
+        }
         //$this->db->select();
         //$re['title'] = 
         return $re;
-
-        // $select = 'pb.title,pc.content,uc.create_time,gb.`name`,pb.`delete`,gb.`delete` AS g_delete,uc.post_base_id,pb.group_base_id';
-        // $this->db->select($select);
-        // $this->db->join('post_base AS pb','uc.post_base_id = pb.id');
-        // $this->db->join('post_content AS pc','pc.post_base_id = uc.post_base_id');
-        // $this->db->join('group_base AS gb','pb.group_base_id = gb.id');
-        // $this->db->order_by('uc.create_time ','DESC');
-        // $this->db->where("uc.user_base_id = {$data['user_id']} ");
-        // $this->db->where('uc.delete = 0');
-        // if($paging){
-        //     return $this->db->count_all_results('user_collection AS uc');
-        // }else{
-        //     return $this->db->get('user_collection AS uc',$data['limit'],$data['offset'])->result_array();
-        // }
     }
 
 
