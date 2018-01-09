@@ -299,9 +299,9 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
         
-        $this->form_validation->set_data($data);
-        if ($this->form_validation->run('post_reply') == FALSE)
-            $this->response(['error'=>validation_errors()],422);
+        // $this->form_validation->set_data($data);
+        // if ($this->form_validation->run('post_reply') == FALSE)
+        //     $this->response(['error'=>validation_errors()],422);
 
         //判断数据库中是否有记录
         $article_info = $this->articles_model->get_status_post($data['article_id']);
@@ -338,7 +338,51 @@ class Articles extends REST_Controller
 
     }
 
- 
+     /**
+     * 删除文章(A11)
+     * @param $article_id
+     * DELETE /articles/:id
+     */
+    public function articles_delete($article_id): void
+    {
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$article_id,
+        );
+        // var_dump($this->delete());
+        // var_dump($data);exit;
+        
+        // $this->form_validation->set_data($data);
+        // if ($this->form_validation->run('post_reply') == FALSE)
+        //     $this->response(['error'=>validation_errors()],422);
+
+        //判断数据库中是否有记录
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+
+        if(empty($article_info)){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+
+        if($article_info['status'] == 1){
+            $this->response(['error'=>'该文章已被锁定！'],409);
+        } 
+
+        if($article_info['status'] == 2){
+            $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
+        if($article_info['status'] == 0){
+            $this->articles_model->delete_post($data['article_id'])?
+            $this->response(['success'=>'删除成功'],204):
+            $this->response(['error'=>'删除失败'],400);
+        }
+
+    }
 
     /**
      * 收藏帖子

@@ -357,14 +357,15 @@ class Articles_model extends CI_Model
 
 
     /**
-     * 删除帖子
+     * 删除文章
      * @param $data
      * @return bool
      */
     public function delete_post($data){
-        $d_data['delete'] = 1;
-        return $this->db->where('id', $data['post_id'])
-            ->update('post_base',$d_data)?
+        
+        return $this->db->set('status',2,false)
+            ->where('id', $data)
+            ->update('articles_status')?
             TRUE:
             FALSE;
     }
