@@ -385,9 +385,10 @@ class Articles extends REST_Controller
     }
 
     /**
-     * 收藏帖子
+     * 收藏文章
      */
-    public function collect_put($user_id){
+    public function collections_put($user_id) :void
+    {
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
@@ -399,23 +400,29 @@ class Articles extends REST_Controller
         //输入参数校验
         $data=array(
             'user_id'=>$token->user_id,
-            'post_id'=>$this->put('post_id'),
+            'article_id'=>$this->put('article_id'),
         );
-        $this->form_validation->set_data($data);
-        if ($this->form_validation->run('collect_post') == FALSE)
-            $this->response(['error'=>validation_errors()],422);
+        
+        // $this->form_validation->set_data($data);
+        // if ($this->form_validation->run('collect_post') == FALSE)
+        //     $this->response(['error'=>validation_errors()],422);
 
-        $post_exist = $this->Common_model->judge_post_exist($data['post_id']);
-        $exist=$this->Common_model->ifexist_collect_post($data);
+        // $post_exist = $this->Common_model->judge_post_exist($data['article_id']);
+        $article_exist = $this->articles_model->exist_article_post($data);
+        if(!$article_exist){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+        $exist = $this->articles_model->check_collections_post($data);
+
         if($exist){
-            $this->Post_model->update_collect_post($data,$post_exist)?
-                $this->response(['success'=>'(取消)收藏成功']):
+            $this->articles_model->delete_collections_post($exist)?
+                $this->response(['success'=>'(取消)收藏成功'],203):
                 $this->response(['error'=>'(取消)收藏失败']);
         }else{
-            if($post_exist&&$this->Post_model->collect_post($data)){
-                $this->response(['success'=>'收藏成功']);
+            if($article_exist&&$this->articles_model->collections_post($data)){
+                $this->response(['success'=>'收藏成功'],204);
             }else{
-                $this->response(['error'=>'收藏失败，帖子可能不存在']);
+                $this->response(['error'=>'收藏失败，文章可能不存在']);
             }
         }
     }

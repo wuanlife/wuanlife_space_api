@@ -74,4 +74,4 @@ $route['articles/search']['post'] = 'search/articles';
 $route['articles/(:num)/approval']['post'] = 'articles/approval/$1';
 $route['articles/(:num)/lock']['post'] = 'articles/lock/$1';
 $route['articles/(:num)']['delete'] = 'articles/articles/$1';
-$route['users/(:num)/collections']['put'] = 'users/collections/$1';
+$route['users/(:num)/collections']['put'] = 'articles/collections/$1';

@@ -371,35 +371,66 @@ class Articles_model extends CI_Model
     }
 
     /**
-     * 判断用户是否收藏帖子
+     * 判断文章是否存在
      * @param $data
      * @return mixed
      */
-    public function check_collect_post($data){
+
+    public function exist_article_post($data){
+        
         $sql=$this->db->select('*')
-            ->from('user_collection')
-            ->where('post_base_id',$data['post_id'])
-            ->where('user_base_id',$data['user_id'])
+            ->from('articles_content')
+            ->where('id',$data['article_id'])
             ->get()
             ->row_array();
+
         return $sql;
     }
 
     /**
-     * 收藏帖子
+     * 判断用户是否收藏该文章
      * @param $data
-     * @return bool
+     * @return mixed
      */
-    public function collect_post($data){
-        $i_data=array(
-            'post_base_id'=>$data['post_id'],
-            'user_base_id'=>$data['user_id'],
-            'create_time'=>time(),
-        );
-        return $this->db->insert('user_collection',$i_data);
+
+    public function check_collections_post($data){
+        
+        $sql=$this->db->select('*')
+            ->from('user_collections')
+            ->where('user_id',$data['user_id'])
+            ->where('article_id',$data['article_id'])
+            ->get()
+            ->row_array();
+
+        return $sql;
     }
 
 
+    /**
+     * 收藏文章
+     * @param $data
+     * @return bool
+     */
+    public function collections_post($data){
+
+        $i_data=array(
+            'user_id'=>$data['user_id'],
+            'article_id'=>$data['article_id']
+        );
+        return $this->db->insert('user_collections',$i_data);
+    }
+
+    /**
+     * 取消收藏文章
+     * @param $data
+     * @return bool
+     */
+    public function delete_collections_post($data){
+        
+        $sql=$this->db->delete('user_collections',$data);
+       
+        return $sql;
+    }
 
 
 
