@@ -297,7 +297,7 @@ class Articles extends REST_Controller
     public function comments_get($article_id)
     {
         //$data['article_id'] = $article_id;
-        $re = $this->Articles_model->get_comments($article_id);
+        $re = $this->articles_model->get_comments($article_id);
         $this->response($re);
     }
 

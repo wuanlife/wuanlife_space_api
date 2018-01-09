@@ -69,4 +69,7 @@ $route['users/search']['post'] = 'search/users';
 $route['articles/search']['post'] = 'search/articles';
 
 //帖子相关路由
+$route['articles/(:num)']['get'] = 'articles/article/$1';
+$route['articles']['get'] = 'articles/articles';
+$route['articles/(:num)/comments']['get'] = 'articles/comments/$1';
 
