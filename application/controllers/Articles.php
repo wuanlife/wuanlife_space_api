@@ -60,10 +60,10 @@ class Articles extends REST_Controller
 
         if($aid_null && $type_null && $floor_null){      //发表文章
             /* 获取POST数据 */
-            $title = trim($this->input->post('title'));
-            $content = trim($this->input->post('content'));
+            $title = trim($this->post('title'));
+            $content = trim($this->post('content'));
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
-            $image_urls = $this->input->post('image_urls');
+            $image_urls = $this->post('image_urls');
             $image_urls_arr = explode(',', $image_urls);
 
             //验证POST数据
@@ -91,7 +91,7 @@ class Articles extends REST_Controller
             }
         }else if(!$aid_null && $type=='comments' && $floor_null){      //评论文章
             /* 获取POST数据 */
-            $comment = trim($this->input->post('comment'));
+            $comment = trim($this->post('comment'));
 
             //验证POST数据
             !empty($comment) or $this->response(['error'=>'回复内容不能为空'], 400);
@@ -135,8 +135,8 @@ class Articles extends REST_Controller
 
         if(!$aid_null && $type_null && $floor_null){      //编辑文章
             /* 获取POST数据 */
-            $title = trim($this->input->input_stream('title'));
-            $content = trim($this->input->input_stream('content'));
+            $title = trim($this->put('title'));
+            $content = trim($this->put('content'));
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
 
             //验证POST数据
@@ -209,12 +209,54 @@ class Articles extends REST_Controller
 
     }
 
+
+
+    /**
+     * 点赞文章
+     * @param $post_id
+     */
+    public function approval_post($article_id): void
+    {
+        echo $article_id;
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            // 'user_id'=>3,
+            'article_id'=>$article_id,
+        );
+
+        if($data['user_id']){
+
+            //获取文章点赞状态，并点赞，取消点赞，点赞数目
+            $rs = $this->articles_model->get_approval_post($data);
+
+       
+            if($rs){
+                $this->articles_model->update_approval_post($data)?
+                    $this->response(['success'=>'(取消)点赞成功'],200):
+                    $this->response(['error'=>'操作失败'],400);
+            }else{
+                $this->articles_model->add_approval_post($data)?
+                    $this->response(['success'=>'点赞成功'],204):
+                    $this->response(['error'=>'点赞失败'],400);
+            }            
+        }else{
+            $this->response(['error'=>'未登录，不能操作'],401);
+        }
+    }
+
+
     /**
      *  A1 首页文章接口 用于展示首页文章
      * @param  [type] $offset 当前起始数
      * @param  [type] $limit 每页数量
      */
-    public function articles_get()
+    public function articles_get(): void
     {
         //校验权限00
         // $jwt = $this->input->get_request_header('Access-Token', TRUE);
@@ -236,10 +278,112 @@ class Articles extends REST_Controller
          $this->response($re);
 
 
+
     }
 
 
     /**
+     * 锁定文章(A10)
+     * @param $post_id
+     * POST /articles/:id/lock
+     */
+    public function lock_post($article_id): void
+    {
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$article_id,
+        );
+        
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('post_reply') == FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+        //判断数据库中是否有记录
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+
+        if(empty($article_info)){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+
+        if($article_info['status'] == 1){
+            $this->response(['error'=>'该文章已被锁定！'],409);
+        } 
+
+        if($article_info['status'] == 2){
+            $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
+        if($article_info['status'] == 0){
+            $this->articles_model->lock_post($data['article_id'])?
+            $this->response(['success'=>'锁定成功'],204):
+            $this->response(['error'=>'锁定失败'],400);
+        }
+
+        
+
+        //判断锁定权限并锁定文章，未写 未确定锁定需要管理员权限类别
+        // $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
+        // if($re['lock_right']===1){
+        //     $this->Post_model->lock_post($post_id)?
+        //         $this->response(['success'=>'锁定成功'],200):
+        //         $this->response(['error'=>'锁定失败'],400);
+        // }else{
+        //     $this->response(['error'=>'仅星球创建者和发帖者和管理员能锁定帖子!'],403);
+        // }
+
+    }
+
+ 
+
+    /**
+     * 收藏帖子
+     */
+    public function collect_put($user_id){
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        if($token->user_id!=$user_id)
+        {
+            $this->response(['error'=>'您没有权限'],403);
+        }
+
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'post_id'=>$this->put('post_id'),
+        );
+        $this->form_validation->set_data($data);
+        if ($this->form_validation->run('collect_post') == FALSE)
+            $this->response(['error'=>validation_errors()],422);
+
+        $post_exist = $this->Common_model->judge_post_exist($data['post_id']);
+        $exist=$this->Common_model->ifexist_collect_post($data);
+        if($exist){
+            $this->Post_model->update_collect_post($data,$post_exist)?
+                $this->response(['success'=>'(取消)收藏成功']):
+                $this->response(['error'=>'(取消)收藏失败']);
+        }else{
+            if($post_exist&&$this->Post_model->collect_post($data)){
+                $this->response(['success'=>'收藏成功']);
+            }else{
+                $this->response(['error'=>'收藏失败，帖子可能不存在']);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    /*
      * A4 文章详情 文章详情-文章内容 GET /articles/:id
 
      * @param  [type] $article_id [description]
@@ -300,5 +444,6 @@ class Articles extends REST_Controller
         $re = $this->articles_model->get_comments($article_id);
         $this->response($re);
     }
+
 
 }

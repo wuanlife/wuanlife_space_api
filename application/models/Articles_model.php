@@ -256,6 +256,155 @@ class Articles_model extends CI_Model
         return ($res1&&$res2);
     }
 
+
+
+    /*
+     * 获得用户点赞
+     * @param $data
+     * @return mixed
+     */
+    public function get_approval_post($data)
+    {
+        //查询数据库中对应文章点赞情况
+        $sql=$this->db->select('*')
+            ->from('articles_approval')
+            ->where('article_id',$data['article_id'])
+            ->where('user_id',$data['user_id'])
+            ->get()
+            ->row_array();           
+      return $sql;
+    }
+
+
+
+    /**
+     * 更新点赞
+     * @param $data
+     * @return bool
+     */
+    public function update_approval_post($data)
+    {
+        //获取点赞状态
+        $approved = $this->get_approval_post($data);
+        
+        if($approved['user_id']){
+
+            //文章总赞数减一
+            $res1 = $this->db->set('count','count-1',false)
+                         ->where('article_id',$data['article_id'])
+                         ->update('articles_approval_count');
+            //取消用户对应文章点赞
+            $res2 = $this->db->delete('articles_approval',$approved);
+            //返回点赞成功
+            return true;                   
+        }else{
+            //调用时，无user_id时，操作失败
+            return $this->response(['error'=>'操作失败'],400);
+        }
+
+    }
+
+    /**
+     * 增加点赞
+     * @param $data
+     * @return bool
+     */
+    public function add_approval_post($data)
+    {
+        $field = array(
+            'user_id' => $data['user_id'],
+            'article_id' => $data['article_id'],
+        );
+        //在articles_approval表中添加点赞数据：user_id和文章_id
+        return $this->db->insert('articles_approval',$field);
+    }
+
+
+
+
+    /*
+     * 获得文章状态，为（A10）（A11）（A12）做准备 
+     * @param $data
+     * @return mixed
+     */
+
+    public function get_status_post($data)
+    {
+        //获取文章的状态
+        $sql=$this->db->select('*')
+            ->from('articles_status')
+            ->where('id',$data)
+            ->get()
+            ->row_array(); 
+        return $sql;
+    }
+
+
+    /*
+     * 锁定文章(A10)  
+     * @param $data
+     * @return mixed
+     */
+    public function lock_post($data)
+    {
+        //锁定文章
+        $sql=$this->db->set('status',1,false)
+            ->where('id',$data)
+            ->update('articles_status');
+        return $sql;
+    }
+
+
+
+    /**
+     * 删除帖子
+     * @param $data
+     * @return bool
+     */
+    public function delete_post($data){
+        $d_data['delete'] = 1;
+        return $this->db->where('id', $data['post_id'])
+            ->update('post_base',$d_data)?
+            TRUE:
+            FALSE;
+    }
+
+    /**
+     * 判断用户是否收藏帖子
+     * @param $data
+     * @return mixed
+     */
+    public function check_collect_post($data){
+        $sql=$this->db->select('*')
+            ->from('user_collection')
+            ->where('post_base_id',$data['post_id'])
+            ->where('user_base_id',$data['user_id'])
+            ->get()
+            ->row_array();
+        return $sql;
+    }
+
+    /**
+     * 收藏帖子
+     * @param $data
+     * @return bool
+     */
+    public function collect_post($data){
+        $i_data=array(
+            'post_base_id'=>$data['post_id'],
+            'user_base_id'=>$data['user_id'],
+            'create_time'=>time(),
+        );
+        return $this->db->insert('user_collection',$i_data);
+    }
+
+
+
+
+
+
+
+
     /**
      *获取页面文章数据     //没有完成
      * @param array $data 
@@ -371,4 +520,5 @@ class Articles_model extends CI_Model
         return $data;
 
     }
+
 }
