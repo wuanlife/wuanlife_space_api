@@ -72,3 +72,6 @@ $route['articles/search']['post'] = 'search/articles';
 
 // 文章状态相关路由
 $route['articles/(:num)/approval']['post'] = 'articles/approval/$1';
+$route['articles/(:num)/lock']['post'] = 'articles/lock/$1';
+$route['articles/(:num)']['delete'] = 'articles/$1';
+$route['users/(:num)/collections']['put'] = 'users/collections/$1';

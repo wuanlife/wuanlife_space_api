@@ -319,27 +319,84 @@ class Articles_model extends CI_Model
         return $this->db->insert('articles_approval',$field);
     }
 
+
+
+
     /*
-     * 锁定文章(A10)  //未测试完成
+     * 获得文章状态，为（A10）（A11）（A12）做准备 
      * @param $data
      * @return mixed
      */
-    public function get_lock_post($data)
+
+    public function get_status_post($data)
     {
+        //获取文章的状态
         $sql=$this->db->select('*')
-            ->from('articles_approval')
-            ->where('articles_id',$data['article_id'])
-            ->where('user_id',$data['user_id'])
+            ->from('articles_status')
+            ->where('id',$data)
             ->get()
-            ->row_array();
+            ->row_array(); 
+        return $sql;
+    }
+
+
+    /*
+     * 锁定文章(A10)  
+     * @param $data
+     * @return mixed
+     */
+    public function lock_post($data)
+    {
+        //锁定文章
+        $sql=$this->db->set('status',1,false)
+            ->where('id',$data)
+            ->update('articles_status');
         return $sql;
     }
 
 
 
+    /**
+     * 删除帖子
+     * @param $data
+     * @return bool
+     */
+    public function delete_post($data){
+        $d_data['delete'] = 1;
+        return $this->db->where('id', $data['post_id'])
+            ->update('post_base',$d_data)?
+            TRUE:
+            FALSE;
+    }
 
+    /**
+     * 判断用户是否收藏帖子
+     * @param $data
+     * @return mixed
+     */
+    public function check_collect_post($data){
+        $sql=$this->db->select('*')
+            ->from('user_collection')
+            ->where('post_base_id',$data['post_id'])
+            ->where('user_base_id',$data['user_id'])
+            ->get()
+            ->row_array();
+        return $sql;
+    }
 
-
+    /**
+     * 收藏帖子
+     * @param $data
+     * @return bool
+     */
+    public function collect_post($data){
+        $i_data=array(
+            'post_base_id'=>$data['post_id'],
+            'user_base_id'=>$data['user_id'],
+            'create_time'=>time(),
+        );
+        return $this->db->insert('user_collection',$i_data);
+    }
 
 
 
