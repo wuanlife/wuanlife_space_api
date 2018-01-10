@@ -73,9 +73,9 @@ class Admins extends REST_Controller
         if ($this->form_validation->run() === false):
             $this->response(['error' => $this->validation_errors()], 400);
         else:
-            if ($a_user = $this->Admins_model->userIsExists($this->input->post('name'))):
+            if ($a_user = $this->Admins_model->userIsExists($this->post('name'))):
                 //判断密码是否正确
-                if (md5($this->input->post('password')) !== $a_user['password']):
+                if (md5($this->post('password')) !== $a_user['password']):
                     $this->response(['error' => "密码错误"], 401);
                 endif;
                 //判断是否管理员
@@ -121,14 +121,14 @@ class Admins extends REST_Controller
             $this->response(['error' => $this->validation_errors()], 400);
         else:
             //管理员名称存在
-            if ($this->Admins_model->userIsExists($this->input->post('name'))):
+            if ($this->Admins_model->userIsExists($this->post('name'))):
                 $this->response(['error' => "管理员名称已存在"], 400);
             endif;
             //todo 验证权限
 
             if ($this->auth('addAdmin', $a_payload->user_id)):
                 if ($this->Admins_model->addAdmin([
-                    'name' => $this->input->post('name'),
+                    'name' => $this->post('name'),
                     'password' => md5('123456'),
                     'mail' => '',
                     'create_at' => date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']),
