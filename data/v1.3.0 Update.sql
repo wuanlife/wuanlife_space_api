@@ -1,4 +1,3 @@
-USE wuan_api_new;
 
 -- 设置文章状态对应关系
 INSERT INTO articles_status_detail VALUES (1, '锁定'), (2, '删除');
