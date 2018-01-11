@@ -433,42 +433,109 @@ class Articles_model extends CI_Model
     }
 
 
-
-
-
-
     /**
-     *获取页面文章数据     //没有完成
+     * A1 获取页面文章数据
      * @param array $data 
      * @param bool $spaging
      * @return array 
      */
     public function get_articles()
     {
-        $select = ' articles_base.id,
+    {
+          $select = ' articles_base.id,
                     articles_content.title,
                     articles_content.content,
                     articles_base.update_at,
                     articles_base.create_at,
-                    articles_approval_count.count,
-                    user_collections.user_id,
-                    articles_comments_count.count,
                     articles_base.author_name,
-                    articles_status.status,
-                    articles_status.create_at
+                    articles_base.author_id,
+                    articles_status.status
         ';
-        $this->db->select($select);
+        $this->db->select("$select");
         $this->db->from('articles_base');
-        // $this->db->where('articles_content.id',$articles_id);
-        $this->db->join('articles_approval','articles_approval.article_id = articles_base.id');
-        $this->db->join('articles_approval_count','articles_approval.article_id = articles_base.id');
-        // $this->db->join('articles_comments','articles_comments.article_id = articles_base.id');
-        $this->db->join('articles_comments_count','articles_comments_count.articles_id = articles_base.id');
-        $this->db->join('articles_content',' articles_base.id = articles_content.id');
-        $this->db->join('articles_status','articles_status.id = articles_content.id');
-        $this->db->join('user_collections','user_collections.article_id = articles_base.id');
-        $query = $this->db->get();
-        return $query->result_array();
+        
+        $this->db->join('articles_content',' articles_content.id = articles_base.id');
+        $this->db->join('users_base','users_base.name = articles_base.author_name');     
+        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $re['articles'] = $this->db->get()->result_array();
+
+        // if (!$re['articles']) {
+        //     return 0;
+        // }
+
+
+        foreach ($re['articles'] as $key => $value) {
+            
+            //获取文章评论数
+            $re['articles'][$key]['replied_num'] = $this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+
+            //获取文章点赞数
+            $re['articles'][$key]['approved_num'] = $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+        
+            //获取文章收藏数
+            $re['articles'][$key]['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$re['articles'][$key]['id']}")->get()->num_rows();
+            
+            //获取文章作者id name avatar_url
+            $re['articles'][$key]['author']['id'] = $re['articles'][$key]['author_id'];
+            $re['articles'][$key]['author']['name'] = $re['articles'][$key]['author_name'];
+            $re['articles'][$key]['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['articles'][$key]['author_id']}")->get()->row()->url; 
+            
+            if ($re['articles'][$key]['approved_num'] > 0 )
+            {
+                $re['articles'][$key]['approved'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['approved'] = False;
+            }
+
+            if ($re['articles'][$key]['collected_num'] > 0 )
+            {
+                $re['articles'][$key]['collected'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['collected'] = False;
+            }
+            
+            if ($re['articles'][$key]['replied_num'] > 0 )
+            {
+                $re['articles'][$key]['replied'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['replied'] = False;
+            }
+            $data['article_id'] = $re['articles'][$key]['id'];
+            $re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+        }
+        $query = "select user_id,max(count) from users_articles_count";
+        
+        $this->db->select(['user_id','max(count)']);
+        $this->db->from('users_articles_count');
+        $re['au'] = $this->db->get()->row_array();
+        $re['au']['id'] = $re['au']['user_id'];
+        $re['au']['name'] = $this->db->select('author_name')->from('articles_base')->where("id = {$re['au']['id']}")->get()->row()->author_name;
+        $re['au']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au']['id']}")->get()->row()->url; 
+
+        $re['total'] = $re['au']['max(count)'];
+        unset($re['au']['user_id']);
+        unset($re['au']['max(count)']);
+
+
+
+        // $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
+        // $re['author']['name'] = $re['articles'][0]['author_name'];
+        // $re['author']['id'] = $user_id;
+
+        foreach ($re['articles'] as $key => $value) {
+            unset($re['articles'][$key]['author_name']);
+            unset($re['articles'][$key]['status']);
+        }
+        
+        return $re;
+
+    }
     }
 
 

@@ -15,12 +15,6 @@ class Articles extends REST_Controller
         $this->load->model('users_model');
         $this->load->library(array('form_validation','jwt'));
     }
-
-    public function index_get()
-    {
-        echo "123";
-    }
-
     /**
      * 解析jwt，获得用户id（旧的拷贝过来的）
      * @param $jwt
@@ -258,23 +252,11 @@ class Articles extends REST_Controller
      */
     public function articles_get(): void
     {
-        //校验权限00
-        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        // if(empty($jwt)){
-        //     $user_id = NULL;
-        // }else{
-        //     $token = $this->parsing_token($jwt);
-        //     $user_id = $token->user_id;
-        // }
+        $re['data'] = $this->articles_model->get_articles();
+        if (!$re['data']) {
+            $this->response(['error'=>'获取用户文章列表失败'], 400);
+        }
 
-        // $data = array(
-        //   //  'user_id'   => $user_id?:0,
-        //     'limit'     => $this->get('limit')?:20,     //每页显示数
-        //     'offset'    => $this->get('offset')?:0,     //每页起始数
-        // );
-
-         $re['data'] = $this->articles_model->get_Articles();
-        // $this->Articles_model->get_Articles();
          $this->response($re);
 
 

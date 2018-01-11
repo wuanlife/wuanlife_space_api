@@ -357,6 +357,92 @@ class Users_model extends CI_Model
 //
 //    return $this->db->trans_status();
 //}
+
+
+
+    /**
+     * A3 获取用户文章列表
+     * @param  [type] $user_id [description]
+     * @return [type]          [description]
+     */
+    public function get_user_articles($user_id)
+    {
+          $select = ' articles_base.id,
+                    articles_content.title,
+                    articles_content.content,
+                    articles_base.update_at,
+                    articles_base.create_at,
+                    articles_base.author_name,
+                    articles_status.status
+        ';
+        $this->db->select($select);
+        $this->db->from('articles_base');
+        
+        $this->db->join('articles_content',' articles_content.id = articles_base.id');
+        $this->db->join('users_base','users_base.name = articles_base.author_name');     
+        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->where("articles_base.author_id = {$user_id}");
+        $re['articles'] = $this->db->get()->result_array();
+        
+        if (!$re['articles']) {
+            return 0;
+        }
+
+        foreach ($re['articles'] as $key => $value) {
+                //获取文章评论数
+            $re['articles'][$key]['replied_num'] = $this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+
+            //获取文章点赞数
+            $re['articles'][$key]['approved_num'] = $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+        
+            //获取文章收藏数
+            $re['articles'][$key]['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$re['articles'][$key]['id']}")->get()->num_rows();
+            
+            if ($re['articles'][$key]['approved_num'] > 0 )
+            {
+                $re['articles'][$key]['approved'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['approved'] = False;
+            }
+
+            if ($re['articles'][$key]['collected_num'] > 0 )
+            {
+                $re['articles'][$key]['collected'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['collected'] = False;
+            }
+            
+            if ($re['articles'][$key]['replied_num'] > 0 )
+            {
+                $re['articles'][$key]['replied'] = TRUE;
+            }
+            else
+            {
+                $re['articles'][$key]['replied'] = False;
+            }
+            $data['article_id'] = $re['articles'][$key]['id'];
+            $re['articles'][$key]['image_urls'] = $this->get_article_img($data);
+            unset($data['author_id']);
+        }
+
+
+        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
+        $re['author']['name'] = $re['articles'][0]['author_name'];
+        $re['author']['id'] = $user_id;
+
+        foreach ($re['articles'] as $key => $value) {
+            unset($re['articles'][$key]['author_name']);
+            unset($re['articles'][$key]['status']);
+        }
+        
+        return $re;
+
+    }
+
 /**
      *  A13 获取用户收藏列表
      * @param $data
