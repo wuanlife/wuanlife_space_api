@@ -13,6 +13,7 @@ class Articles extends REST_Controller
         parent::__construct($config);
         $this->load->model('articles_model');
         $this->load->model('users_model');
+        $this->load->model('admins_model');
         $this->load->library(array('form_validation','jwt'));
     }
     /**
@@ -90,6 +91,9 @@ class Articles extends REST_Controller
             //验证POST数据
             !empty($comment) or $this->response(['error'=>'回复内容不能为空'], 400);
             mb_strlen($comment) <= 5000 or $this->response(['error'=>'回复内容不能超过5000个字符'], 400);
+            //验证文章权限
+            $status = $this->articles_model->get_status_post($aid);
+            (1&$status['status']) or $this->response(['error'=>'文章已关闭评论'], 403);
 
             //组合数据
             $data = [
@@ -143,8 +147,7 @@ class Articles extends REST_Controller
             $oinfo = $this->articles_model->articleInfoStatus(['ab.id'=>$aid], 'ab.author_id, as.status');
             count($oinfo) > 0 or $this->response(['error'=>'文章不存在'], 404);
             $user_info->user_id == $oinfo['author_id'] or $this->response(['error'=>'没有权限操作'], 403);
-            !(1&$oinfo['status']) or $this->response(['error'=>'没有权限操作'], 403);
-            !(2&$oinfo['status']) or $this->response(['error'=>'文章已被删除'], 410);
+            (2&$oinfo['status']) or $this->response(['error'=>'文章已被删除'], 410);
 
             //组合数据
             $data = [
@@ -158,7 +161,7 @@ class Articles extends REST_Controller
             if($result['id'] > 0){
                 $this->response($result, 200);
             }else{
-                $this->response(['error'=>'修改失败'], 400);
+                $this->response(['error'=>'编辑失败'], 400);
             }
         }
     }
@@ -189,11 +192,15 @@ class Articles extends REST_Controller
             ];
 
             //权限验证
-            $comments_info  = $this->articles_model->commentsInfo($data, 'comment_id,user_id')[0];
+            $comments_info  = $this->articles_model->commentsInfo($data, 'comment_id,user_id');
             count($comments_info) > 0 or $this->response(['error'=>'评论不存在'], 404);
-            $user_info->user_id == $comments_info['user_id'] or $this->response(['error'=>'没有权限操作'], 403);
+            $article_info = $this->articles_model->articleInfo(['id'=>$aid],'author_id');
+            count($article_info) > 0 or $this->response(['error'=>'没有权限操作'], 403);
+            if(!$this->admins_model->isAdmin($user_info->user_id) && $user_info->user_id != $comments_info[0]['user_id'] && $user_info->user_id != $article_info[0]['user_id']){
+                $this->response(['error'=>'没有权限操作'], 403);
+            }
 
-            $result = $result['id'] = $this->articles_model->commentsDel($comments_info['comment_id']);
+            $result = $this->articles_model->commentsDel($comments_info[0]['comment_id']);
             if($result){
                 $this->response(['error'=>'删除成功'], 200);
             }else{
