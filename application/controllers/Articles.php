@@ -252,15 +252,25 @@ class Articles extends REST_Controller
      */
     public function articles_get(): void
     {
-        $re['data'] = $this->articles_model->get_articles();
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(!empty($jwt)){
+            $this->response(['error'=>'jwt为空']);
+        }else{
+            $token = $this->parsing_token($jwt);
+            $offset = $token->offset;
+            $limit = $token->limit;
+        }
+        $data = [
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
+        ];
+
+        $re['data'] = $this->articles_model->get_articles($data);
         if (!$re['data']) {
             $this->response(['error'=>'获取用户文章列表失败'], 400);
         }
 
          $this->response($re);
-
-
-
     }
 
 
@@ -424,6 +434,15 @@ class Articles extends REST_Controller
      */
     public function article_get($article_id)
     {
+
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(!empty($jwt)){
+            $this->response(['error'=>'查看文章详情失败']);
+        }else{
+            $token = $this->parsing_token($jwt);
+           // $article_id = $token->article_id;
+        }
+
         $re = $this->articles_model->get_article($article_id);
         if(!isset($re))
         {
@@ -473,8 +492,23 @@ class Articles extends REST_Controller
 
     public function comments_get($article_id)
     {
-        //$data['article_id'] = $article_id;
-        $re = $this->articles_model->get_comments($article_id);
+        
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(!empty($jwt)){
+            $this->response(['error'=>'jwt为空']);
+        }else{
+            $token = $this->parsing_token($jwt);
+            $offset = $token->offset;
+            $limit = $token->limit;
+        }
+        $data = [
+            'article_id' => $article_id,
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
+        ];
+
+
+        $re = $this->articles_model->get_comments($data);
         $this->response($re);
     }
 

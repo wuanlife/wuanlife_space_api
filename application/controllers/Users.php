@@ -16,6 +16,23 @@ class Users extends REST_Controller
         $this->form_validation->set_message('is_natural', '{field}不是自然数.');
     }
 
+        /**
+     * 解析jwt，获得用户id（旧的拷贝过来的）
+     * @param $jwt
+     * @return mixed
+     */
+    private function parsing_token($jwt)
+    {
+        try{
+            $token = $this->jwt->decode($jwt,$this->config->item('encryption_key'));
+            return $token;
+        }
+        catch(Exception $e)
+        {
+            return $this->response(['error'=>'未登录，不能操作'],401);
+        }
+    }
+
     /**
      * 登录
      */
@@ -201,7 +218,25 @@ class Users extends REST_Controller
      */
     public function articles_get($user_id)
     {
-        $data = $this->users_model->get_user_articles($user_id);
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(!empty($jwt)){
+            $this->response(['error'=>'jwt为空']);
+        }else{
+            $token = $this->parsing_token($jwt);
+            $offset = $token->offset;
+            $limit = $token->limit;
+        }
+        $data = [
+            'user_id' => $user_id,
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
+        ];
+
+        // $data['user_id'] = $user_id;
+        // $data['offset'] = 0;
+        // $data['limit'] = 0;
+
+        $data = $this->users_model->get_user_articles($data);
         if(!$data)
         {
             $this->response(['error'=>'获取用户文章列表失败'], 400);
@@ -217,7 +252,19 @@ class Users extends REST_Controller
 
     public function collections_get($user_id)
     {
-        $data['user_id'] = $user_id;
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(!empty($jwt)){
+            $this->response(['error'=>'jwt为空']);
+        }else{
+            $token = $this->parsing_token($jwt);
+            $offset = $token->offset;
+            $limit = $token->limit;
+        }
+        $data = [
+            'user_id' => $user_id,
+            'limit'     => $this->get('limit')?:20,     //每页显示数
+            'offset'    => $this->get('offset')?:0,     //每页起始数
+        ];
 
         $re = $this->users_model->get_collect_articles($data);
 

@@ -365,7 +365,7 @@ class Users_model extends CI_Model
      * @param  [type] $user_id [description]
      * @return [type]          [description]
      */
-    public function get_user_articles($user_id)
+    public function get_user_articles($data)
     {
           $select = ' articles_base.id,
                     articles_content.title,
@@ -381,9 +381,9 @@ class Users_model extends CI_Model
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');     
         $this->db->join('articles_status','articles_status.id = articles_base.id');
-        $this->db->where("articles_base.author_id = {$user_id}");
+        $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
-        
         if (!$re['articles']) {
             return 0;
         }
@@ -430,9 +430,9 @@ class Users_model extends CI_Model
         }
 
 
-        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
+        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$data['user_id']}")->get()->row()->url;
         $re['author']['name'] = $re['articles'][0]['author_name'];
-        $re['author']['id'] = $user_id;
+        $re['author']['id'] = $data['user_id'];
 
         foreach ($re['articles'] as $key => $value) {
             unset($re['articles'][$key]['author_name']);
@@ -461,14 +461,14 @@ class Users_model extends CI_Model
                     user_collections.article_id,
                     articles_content.title,
                     articles_content.content,
-                    articles_status.status,
-                    
+                    articles_status.status
                     ';
         $this->db->select($select);
         $this->db->from('user_collections');
         $this->db->join('articles_content','articles_content.id = user_collections.article_id');
         $this->db->join('articles_status','articles_status.id = user_collections.article_id');
         $this->db->where("user_collections.user_id = {$data['user_id']}");
+        $this->db->limit($data['limit'],$data['offset']);
         $re['article'] =  $this->db->get()->result_array();
 
         //获取用户收藏总数
@@ -505,6 +505,7 @@ class Users_model extends CI_Model
         $this->db->from('image_url');
         $this->db->where("image_url.article_id = {$data['article_id']}");
         $this->db->where("image_url.delete_flg = 0");
+        $this->db->limit(3,0);
         $re= $this->db->get()->result_array();
         return $re;
 

@@ -439,7 +439,7 @@ class Articles_model extends CI_Model
      * @param bool $spaging
      * @return array 
      */
-    public function get_articles()
+    public function get_articles($data)
     {
     {
           $select = ' articles_base.id,
@@ -453,10 +453,10 @@ class Articles_model extends CI_Model
         ';
         $this->db->select("$select");
         $this->db->from('articles_base');
-        
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');     
         $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
 
         // if (!$re['articles']) {
@@ -606,9 +606,10 @@ class Articles_model extends CI_Model
         $this->db->from('articles_comments');
         $this->db->join('comment_contents','comment_contents.id = articles_comments.comment_id');
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
-        $this->db->where("articles_comments.article_id ={$article_id}");
+        $this->db->where("articles_comments.article_id ={$data['article_id']}");
+        $this->db->limit($data['limit'],$data['offset']);
         $data['reply'] = $this->db->get()->result_array();
-        $data['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$article_id)->get()->num_rows();
+        $data['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         // for ($i=0; $i < $data['total']; $i++) { 
         //     $data['reply'][$i]['comment'] = $data['reply'][$i]['content'];
         //     $data['reply'][$i]['user_name'] = $data['reply'][$i]['name'];
