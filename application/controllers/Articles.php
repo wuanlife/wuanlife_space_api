@@ -62,11 +62,11 @@ class Articles extends REST_Controller
             $image_urls_arr = explode(',', $image_urls);
 
             //验证POST数据
-            !empty($title) or $this->response(['error'=>'文章标题不能为空'], 400);
-            mb_strlen($title) <= 60 or $this->response(['error'=>'标题不能超过60个字符'], 400);
-            !empty($content) or $this->response(['error'=>'文章正文不能为空'], 400);
-            mb_strlen($content_txt) <= 5000 or $this->response(['error'=>'文章正文不能超过5000个字符'], 400);
-            count($image_urls_arr)<=3 or $this->response(['error'=>'至多三张预览图片'], 400);
+            empty($title) and $this->response(['error'=>'文章标题不能为空'], 400);
+            mb_strlen($title) > 60 and $this->response(['error'=>'标题不能超过60个字符'], 400);
+            empty($content) and $this->response(['error'=>'文章正文不能为空'], 400);
+            mb_strlen($content_txt) > 5000 and $this->response(['error'=>'文章正文不能超过5000个字符'], 400);
+            count($image_urls_arr) > 3 and $this->response(['error'=>'至多三张预览图片'], 400);
 
             //组合数据
             $data = [
@@ -89,16 +89,16 @@ class Articles extends REST_Controller
             $comment = trim($this->post('comment'));
 
             //验证POST数据
-            !empty($comment) or $this->response(['error'=>'回复内容不能为空'], 400);
-            mb_strlen($comment) <= 5000 or $this->response(['error'=>'回复内容不能超过5000个字符'], 400);
+            empty($comment) and $this->response(['error'=>'回复内容不能为空'], 400);
+            mb_strlen($comment) > 5000 and $this->response(['error'=>'回复内容不能超过5000个字符'], 400);
             //验证文章权限
             $status = $this->articles_model->get_status_post($aid);
-            (1&$status['status']) or $this->response(['error'=>'文章已关闭评论'], 403);
+            (1<<1&$status['status']) and $this->response(['error'=>'文章已关闭评论'], 403);
 
             //组合数据
             $data = [
-                'user_id'=>1,
-                'comment'=>'1111',
+                'user_id'=>$userArr['id'],
+                'comment'=>$comment,
                 'article_id'=>$aid,
             ];
             $result = $this->articles_model->commentsAdd($data);
@@ -138,16 +138,16 @@ class Articles extends REST_Controller
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
 
             //验证POST数据
-            !empty($title) or $this->response(['error'=>'文章标题不能为空'], 400);
-            mb_strlen($title) <= 60 or $this->response(['error'=>'标题不能超过60个字符'], 400);
-            !empty($content) or $this->response(['error'=>'文章正文不能为空'], 400);
-            mb_strlen($content_txt) <= 5000 or $this->response(['error'=>'文章正文不能超过5000个字符'], 400);
+            empty($title) and $this->response(['error'=>'文章标题不能为空'], 400);
+            mb_strlen($title) > 60 and $this->response(['error'=>'标题不能超过60个字符'], 400);
+            empty($content) and $this->response(['error'=>'文章正文不能为空'], 400);
+            mb_strlen($content_txt) > 5000 and $this->response(['error'=>'文章正文不能超过5000个字符'], 400);
 
             //权限验证
             $oinfo = $this->articles_model->articleInfoStatus(['ab.id'=>$aid], 'ab.author_id, as.status');
-            count($oinfo) > 0 or $this->response(['error'=>'文章不存在'], 404);
-            $user_info->user_id == $oinfo['author_id'] or $this->response(['error'=>'没有权限操作'], 403);
-            (2&$oinfo['status']) or $this->response(['error'=>'文章已被删除'], 410);
+            count($oinfo) <= 0 and $this->response(['error'=>'文章不存在'], 404);
+            $user_info->user_id != $oinfo[0]['author_id'] and $this->response(['error'=>'没有权限操作'], 403);
+            (1<<2&$oinfo[0]['status']) and $this->response(['error'=>'文章已被删除'], 410);
 
             //组合数据
             $data = [
