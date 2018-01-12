@@ -160,7 +160,7 @@ class Articles_model extends CI_Model
         if(empty($result)){
             return 0;
         }else{
-            return $res->result()->count;
+            return $result->count;
         }
     }
 
