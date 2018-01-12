@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS articles_status
 -- 如锁定状态为1，顶置状态为1<<1，精华状态为1<<2
 CREATE TABLE IF NOT EXISTS articles_status_detail
 (
-  status TINYINT UNSIGNED NOT NULL COMMENT '文章状态码',
+  status TINYINT UNSIGNED NOT NULL COMMENT '文章状态码偏移量',
   detail VARCHAR(6) COLLATE utf8_bin NOT NULL COMMENT '状态类型',
   PRIMARY KEY (status)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='文章状态对应关系表';
@@ -204,7 +204,8 @@ CREATE TABLE IF NOT EXISTS users_collections_count
   PRIMARY KEY (user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户文章收藏数缓存表';
 
--- 触发器
+
+-- ----------------------- 触发器 --------------------------------------------
 
 DELIMITER //
 
