@@ -365,29 +365,22 @@ class Articles_model extends CI_Model
      */
     public function delete_post($data,$article_info){
 
-        // return $this->db->set('status',2,false)
-        //     ->where('id', $data)
-        //     ->update('articles_status')?
-        //     TRUE:
-        //     FALSE;
-
+        //如果文章有状态执行叠加操作
         if($article_info){
 
-            $sql = $this->db->set('status',$article_info['status']<<2,false)
+            $sql = $this->db->set('status',($article_info['status'] | (1<<2)),false)
                     ->where('id', $data)
                     ->update('articles_status');
 
             return $sql;
-        }else{
+        }else{                    //如果文章不存在状态，添加删除状态
             $field = array(
                 'id' => $data,
                 'status' => 1<<2
                 );
             $sql = $this->db->insert('articles_status',$field);
             return $sql;
-
         }
-
     }
 
     /**

@@ -351,11 +351,6 @@ class Articles extends REST_Controller
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
 
-        // if(){
-        //     $this->response(['error'=>'该文章已被锁定！'],409);
-        // }
-        var_dump(($article_info['status']));
-        var_dump(($article_info['status']) & (1<<2));
         if(($article_info['status']) & (1<<2)){
             $this->response(['error'=>'该文章已被删除！'],410);
         }
