@@ -429,7 +429,7 @@ class Users_model extends CI_Model
             unset($data['author_id']);
         }
 
-
+        //获取用户信息
         $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$data['user_id']}")->get()->row()->url;
         $re['author']['name'] = $re['articles'][0]['author_name'];
         $re['author']['id'] = $data['user_id'];
@@ -438,6 +438,9 @@ class Users_model extends CI_Model
             unset($re['articles'][$key]['author_name']);
             unset($re['articles'][$key]['status']);
         }
+
+        //获取用户文章总数
+        $re['total'] = $this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
         
         return $re;
 

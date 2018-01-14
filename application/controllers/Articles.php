@@ -260,9 +260,10 @@ class Articles extends REST_Controller
     public function articles_get(): void
     {
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(!empty($jwt)){
+        if(empty($jwt)){
             $this->response(['error'=>'jwt为空']);
-        }else{
+        }
+        else{
             $token = $this->parsing_token($jwt);
             $offset = $token->offset;
             $limit = $token->limit;
@@ -443,11 +444,16 @@ class Articles extends REST_Controller
     {
 
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(!empty($jwt)){
-            $this->response(['error'=>'查看文章详情失败']);
+        if(empty($jwt)){
+            $this->response(['error'=>'$jwt为空']);
         }else{
             $token = $this->parsing_token($jwt);
            // $article_id = $token->article_id;
+        }
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+
+        if(empty($article_info)){
+            $this->response(['error'=>'该文章不存在！'],404);
         }
 
         $re = $this->articles_model->get_article($article_id);
@@ -501,12 +507,10 @@ class Articles extends REST_Controller
     {
         
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(!empty($jwt)){
+        if(empty($jwt)){
             $this->response(['error'=>'jwt为空']);
         }else{
             $token = $this->parsing_token($jwt);
-            $offset = $token->offset;
-            $limit = $token->limit;
         }
         $data = [
             'article_id' => $article_id,
