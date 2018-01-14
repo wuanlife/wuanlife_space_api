@@ -347,14 +347,11 @@ class Articles_model extends CI_Model
     public function lock_post($data)
     {
         //锁定文章
-        // $sql=$this->db->set('status',1,false)
-        //     ->where('id',$data)
-        //     ->update('articles_status');
-        // return $sql;
-
-        $sql=$this->db->set('status',1<<1,false)
-            ->where('id',$data)
-            ->update('articles_status');
+        $field = array(
+            'id' => $data,
+            'status' => 1<<1
+            );
+        $sql = $this->db->insert('articles_status',$field);
 
         return $sql;
     }
