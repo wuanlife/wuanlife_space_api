@@ -226,8 +226,8 @@ class Users extends REST_Controller
         }
         $data = [
             'user_id' => $user_id,
-            'limit'     => $this->get('limit')?:20,     //每页显示数
-            'offset'    => $this->get('offset')?:0,     //每页起始数
+            'limit'     => $this->get('limit') ?? 20,     //每页显示数
+            'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
         // $data['user_id'] = $user_id;
@@ -261,8 +261,6 @@ class Users extends REST_Controller
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
-        var_dump($data);
-        exit;
 
         $re = $this->users_model->get_collect_articles($data);
 

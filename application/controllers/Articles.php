@@ -271,8 +271,8 @@ class Articles extends REST_Controller
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
-        $re['data'] = $this->articles_model->get_articles($data);
-        if (!$re['data']) {
+        $re = $this->articles_model->get_articles($data);
+        if (!$re) {
             $this->response(['error'=>'获取用户文章列表失败'], 400);
         }
 

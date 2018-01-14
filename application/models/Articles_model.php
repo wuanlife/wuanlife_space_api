@@ -479,6 +479,7 @@ class Articles_model extends CI_Model
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
         $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
 
@@ -544,9 +545,6 @@ class Articles_model extends CI_Model
         unset($re['author']['user_id']);
         unset($re['author']['max(count)']);
         unset($re['articles']['author_id']);
-
-
-
 
         // $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
         // $re['author']['name'] = $re['articles'][0]['author_name'];
