@@ -296,7 +296,11 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
-
+        //判断是不是管理员，不是管理员不具备操作权限
+        if(!$this->admins_model->isAdmin($data['user_id'])){
+             $this->response(['error'=>'没有权限操作'],403);
+        }
+        
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -340,6 +344,10 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
+        //判断是不是管理员，不是管理员不具备操作权限
+        if(!$this->admins_model->isAdmin($data['user_id'])){
+             $this->response(['error'=>'没有权限操作'],403);
+        }
 
         //判断数据库中是否有该文章
         $article_exist = $this->articles_model->exist_article_post($data);
@@ -383,11 +391,7 @@ class Articles extends REST_Controller
             'article_id'=>$this->put('article_id'),
         );
 
-        // $this->form_validation->set_data($data);
-        // if ($this->form_validation->run('collect_post') == FALSE)
-        //     $this->response(['error'=>validation_errors()],422);
 
-        // $post_exist = $this->Common_model->judge_post_exist($data['article_id']);
         $article_exist = $this->articles_model->exist_article_post($data);
         if(!$article_exist){
             $this->response(['error'=>'该文章不存在！'],404);
