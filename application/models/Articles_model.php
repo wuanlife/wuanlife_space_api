@@ -613,16 +613,16 @@ class Articles_model extends CI_Model
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
         $this->db->limit($data['limit'],$data['offset']);
-        $data['reply'] = $this->db->get()->result_array();
-        $data['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
-        // for ($i=0; $i < $data['total']; $i++) { 
-        //     $data['reply'][$i]['comment'] = $data['reply'][$i]['content'];
-        //     $data['reply'][$i]['user_name'] = $data['reply'][$i]['name'];
-        //     unset($data['reply'][$i]['content']);
-        //     unset($data['reply'][$i]['name']);
-        // }
+        $re = $this->db->get()->result_array();
+        $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
+        for ($i=0; $i < $re['total']; $i++) { 
+            $re[$i]['comment'] = $data['reply'][$i]['content'];
+            $re[$i]['user_name'] = $data['reply'][$i]['name'];
+            unset($re[$i]['content']);
+            unset($re[$i]['name']);
+        }
         
-        return $data;
+        return $re;
 
     }
 
