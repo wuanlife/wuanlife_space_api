@@ -265,12 +265,10 @@ class Articles extends REST_Controller
         }
         else{
             $token = $this->parsing_token($jwt);
-            $offset = $token->offset;
-            $limit = $token->limit;
         }
         $data = [
-            'limit'     => $this->get('limit')?:20,     //每页显示数
-            'offset'    => $this->get('offset')?:0,     //每页起始数
+            'limit'     => $this->get('limit') ?? 20,     //每页显示数
+            'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
         $re['data'] = $this->articles_model->get_articles($data);

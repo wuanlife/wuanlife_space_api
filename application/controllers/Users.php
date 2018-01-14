@@ -223,8 +223,6 @@ class Users extends REST_Controller
             $this->response(['error'=>'jwt为空']);
         }else{
             $token = $this->parsing_token($jwt);
-            $offset = $token->offset;
-            $limit = $token->limit;
         }
         $data = [
             'user_id' => $user_id,
@@ -253,18 +251,18 @@ class Users extends REST_Controller
     public function collections_get($user_id)
     {
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(!empty($jwt)){
+        if(empty($jwt)){
             $this->response(['error'=>'jwt为空']);
         }else{
             $token = $this->parsing_token($jwt);
-            $offset = $token->offset;
-            $limit = $token->limit;
         }
         $data = [
             'user_id' => $user_id,
-            'limit'     => $this->get('limit')?:20,     //每页显示数
-            'offset'    => $this->get('offset')?:0,     //每页起始数
+            'limit'     => $this->get('limit') ?? 20,     //每页显示数
+            'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
+        var_dump($data);
+        exit;
 
         $re = $this->users_model->get_collect_articles($data);
 

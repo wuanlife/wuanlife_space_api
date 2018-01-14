@@ -441,7 +441,7 @@ class Users_model extends CI_Model
 
         //获取用户文章总数
         $re['total'] = $this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
-        
+
         return $re;
 
     }
@@ -479,7 +479,7 @@ class Users_model extends CI_Model
         $this->db->from('users_collections_count');
         $this->db->where("user_id = {$data['user_id']}");
         $re['total'] = $this->db->get()->row()->count;
-        for ($i=0; $i <$re['total'] ; $i++) { 
+        for ($i=0; $i <count($re['article']) ; $i++) {
             $re['article'][$i]['id'] = $re['article'][$i]['article_id'];
             if ($re['article'][$i]['status'] == '2') {
                 $re['article'][$i]['delete'] = true;
