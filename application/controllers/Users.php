@@ -219,7 +219,7 @@ class Users extends REST_Controller
     public function articles_get($user_id)
     {
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(!empty($jwt)){
+        if(empty($jwt)){
             $this->response(['error'=>'jwt为空']);
         }else{
             $token = $this->parsing_token($jwt);

@@ -482,11 +482,6 @@ class Articles_model extends CI_Model
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
 
-        // if (!$re['articles']) {
-        //     return 0;
-        // }
-
-
         foreach ($re['articles'] as $key => $value) {
 
             //获取文章评论数
@@ -531,19 +526,25 @@ class Articles_model extends CI_Model
             }
             $data['article_id'] = $re['articles'][$key]['id'];
             $re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+
+            unset($re['articles'][$key]['author_id']);
+
         }
         $query = "select user_id,max(count) from users_articles_count";
 
         $this->db->select(['user_id','max(count)']);
         $this->db->from('users_articles_count');
-        $re['au'] = $this->db->get()->row_array();
-        $re['au']['id'] = $re['au']['user_id'];
-        $re['au']['name'] = $this->db->select('author_name')->from('articles_base')->where("id = {$re['au']['id']}")->get()->row()->author_name;
-        $re['au']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au']['id']}")->get()->row()->url;
 
-        $re['total'] = $re['au']['max(count)'];
-        unset($re['au']['user_id']);
-        unset($re['au']['max(count)']);
+        $re['author'] = $this->db->get()->row_array();
+        $re['author']['id'] = $re['author']['user_id'];
+        $re['author']['name'] = $this->db->select('author_name')->from('articles_base')->where("id = {$re['author']['id']}")->get()->row()->author_name;
+        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['author']['id']}")->get()->row()->url;
+
+        $re['total'] = $re['author']['max(count)'];
+        unset($re['author']['user_id']);
+        unset($re['author']['max(count)']);
+        unset($re['articles']['author_id']);
+
 
 
 
@@ -585,6 +586,11 @@ class Articles_model extends CI_Model
         $this->db->join('articles_status','articles_status.id = articles_base.id');
 
         $re['articles'] = $this->db->get()->row_array();
+        if ($re['articles'] = null) {
+            return 0;
+        }
+        else
+        {
         $data['article_id'] = $article_id;
         //$re['articles']['image_urls'] = $this->users_model->get_article_img($data);
 
@@ -610,6 +616,7 @@ class Articles_model extends CI_Model
 
         return $re;
     }
+    }
 
 
     /**
@@ -617,7 +624,7 @@ class Articles_model extends CI_Model
      *
      * @return [type] [description]
      */
-    public function get_comments($article_id)
+    public function get_comments($data)
     {
         $select = ' articles_comments.user_id,
                     articles_comments.floor,
@@ -631,16 +638,18 @@ class Articles_model extends CI_Model
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
         $this->db->limit($data['limit'],$data['offset']);
-        $data['reply'] = $this->db->get()->result_array();
-        $data['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
-        // for ($i=0; $i < $data['total']; $i++) {
-        //     $data['reply'][$i]['comment'] = $data['reply'][$i]['content'];
-        //     $data['reply'][$i]['user_name'] = $data['reply'][$i]['name'];
-        //     unset($data['reply'][$i]['content']);
-        //     unset($data['reply'][$i]['name']);
-        // }
 
-        return $data;
+        $re = $this->db->get()->result_array();
+        $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
+        for ($i=0; $i < $re['total']; $i++) {
+            $re[$i]['comment'] = $data['reply'][$i]['content'];
+            $re[$i]['user_name'] = $data['reply'][$i]['name'];
+            unset($re[$i]['content']);
+            unset($re[$i]['name']);
+        }
+
+        return $re;
+
 
     }
 
