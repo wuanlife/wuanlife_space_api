@@ -218,16 +218,15 @@ class Articles extends REST_Controller
      */
     public function approval_post($article_id): void
     {
-        //echo $article_id;
 
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
 
+
         //输入参数校验
         $data=array(
             'user_id'=>$token->user_id,
-            // 'user_id'=>3,
             'article_id'=>$article_id,
         );
 
@@ -297,11 +296,11 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
-
-        // $this->form_validation->set_data($data);
-        // if ($this->form_validation->run('post_reply') == FALSE)
-        //     $this->response(['error'=>validation_errors()],422);
-
+        //判断是不是管理员，不是管理员不具备操作权限
+        if(!$this->admins_model->isAdmin($data['user_id'])){
+             $this->response(['error'=>'没有权限操作'],403);
+        }
+        
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -311,18 +310,10 @@ class Articles extends REST_Controller
         //判断数据库中是否有记录
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
-
-
-        // if($article_info['status'] == 1){
-        //     $this->response(['error'=>'该文章已被锁定！'],409);
-        // }
         if(($article_info['status']) & (1<<1)){
             $this->response(['error'=>'该文章已被锁定！'],409);
         }
 
-        // if($article_info['status'] == 2){
-        //     $this->response(['error'=>'该文章已被删除！'],410);
-        // }
         if(($article_info['status']) & (1<<2)){
             $this->response(['error'=>'该文章已被删除！'],410);
         }
@@ -333,17 +324,6 @@ class Articles extends REST_Controller
             $this->response(['error'=>'锁定失败'],400);
         }
 
-
-
-        //判断锁定权限并锁定文章，未写 未确定锁定需要管理员权限类别
-        // $re = $this->judge_authority($token->user_id,$post_id,$post_info['group_base_id']);
-        // if($re['lock_right']===1){
-        //     $this->Post_model->lock_post($post_id)?
-        //         $this->response(['success'=>'锁定成功'],200):
-        //         $this->response(['error'=>'锁定失败'],400);
-        // }else{
-        //     $this->response(['error'=>'仅星球创建者和发帖者和管理员能锁定帖子!'],403);
-        // }
 
     }
 
@@ -364,6 +344,10 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
+        //判断是不是管理员，不是管理员不具备操作权限
+        if(!$this->admins_model->isAdmin($data['user_id'])){
+             $this->response(['error'=>'没有权限操作'],403);
+        }
 
         //判断数据库中是否有该文章
         $article_exist = $this->articles_model->exist_article_post($data);
@@ -375,11 +359,6 @@ class Articles extends REST_Controller
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
 
-        // if(){
-        //     $this->response(['error'=>'该文章已被锁定！'],409);
-        // }
-        var_dump(($article_info['status']));
-        var_dump(($article_info['status']) & (1<<2));
         if(($article_info['status']) & (1<<2)){
             $this->response(['error'=>'该文章已被删除！'],410);
         }
@@ -412,11 +391,7 @@ class Articles extends REST_Controller
             'article_id'=>$this->put('article_id'),
         );
 
-        // $this->form_validation->set_data($data);
-        // if ($this->form_validation->run('collect_post') == FALSE)
-        //     $this->response(['error'=>validation_errors()],422);
 
-        // $post_exist = $this->Common_model->judge_post_exist($data['article_id']);
         $article_exist = $this->articles_model->exist_article_post($data);
         if(!$article_exist){
             $this->response(['error'=>'该文章不存在！'],404);
