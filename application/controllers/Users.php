@@ -218,12 +218,12 @@ class Users extends REST_Controller
      */
     public function articles_get($user_id)
     {
-        $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(empty($jwt)){
-            $this->response(['error'=>'jwt为空']);
-        }else{
-            $token = $this->parsing_token($jwt);
-        }
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $this->response(['error'=>'jwt为空']);
+        // }else{
+        //     $token = $this->parsing_token($jwt);
+        // }
         $data = [
             'user_id' => $user_id,
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
@@ -250,12 +250,12 @@ class Users extends REST_Controller
 
     public function collections_get($user_id)
     {
-        $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(empty($jwt)){
-            $this->response(['error'=>'jwt为空']);
-        }else{
-            $token = $this->parsing_token($jwt);
-        }
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $this->response(['error'=>'jwt为空']);
+        // }else{
+        //     $token = $this->parsing_token($jwt);
+        // }
         $data = [
             'user_id' => $user_id,
             'limit'     => $this->get('limit') ?? 20,     //每页显示数

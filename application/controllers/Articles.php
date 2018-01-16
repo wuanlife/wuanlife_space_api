@@ -218,7 +218,7 @@ class Articles extends REST_Controller
      */
     public function approval_post($article_id): void
     {
-        echo $article_id;
+        //echo $article_id;
 
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
@@ -259,13 +259,13 @@ class Articles extends REST_Controller
      */
     public function articles_get(): void
     {
-        $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(empty($jwt)){
-            $this->response(['error'=>'jwt为空']);
-        }
-        else{
-            $token = $this->parsing_token($jwt);
-        }
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $this->response(['error'=>'jwt为空']);
+        // }
+        // else{
+        //     $token = $this->parsing_token($jwt);
+        // }
         $data = [
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
@@ -452,13 +452,13 @@ class Articles extends REST_Controller
     public function article_get($article_id)
     {
 
-        $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(empty($jwt)){
-            $this->response(['error'=>'$jwt为空']);
-        }else{
-            $token = $this->parsing_token($jwt);
-           // $article_id = $token->article_id;
-        }
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $this->response(['error'=>'$jwt为空']);
+        // }else{
+        //     $token = $this->parsing_token($jwt);
+        //    // $article_id = $token->article_id;
+        // }
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
         if(empty($article_info)){
@@ -515,12 +515,12 @@ class Articles extends REST_Controller
     public function comments_get($article_id)
     {
 
-        $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        if(empty($jwt)){
-            $this->response(['error'=>'jwt为空']);
-        }else{
-            $token = $this->parsing_token($jwt);
-        }
+        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        // if(empty($jwt)){
+        //     $this->response(['error'=>'jwt为空']);
+        // }else{
+        //     $token = $this->parsing_token($jwt);
+        // }
         $data = [
             'article_id' => $article_id,
             'limit'     => $this->get('limit')?:20,     //每页显示数

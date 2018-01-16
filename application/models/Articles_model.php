@@ -531,20 +531,30 @@ class Articles_model extends CI_Model
             unset($re['articles'][$key]['author_id']);
 
         }
-        $query = "select user_id,max(count) from users_articles_count";
+        $month_start_time = date('y-m-01 00-00-00');
+        $time = date('y-m-d h-i-s');
+        $query = "select max(id),author_id,author_name from articles_base where create_at between '{$month_start_time}' and '{$time}'";
 
-        $this->db->select(['user_id','max(count)']);
-        $this->db->from('users_articles_count');
+        // $this->db->select('article_base.id,article_base.author_id,article_base.author_name,']);
+        // $this->db->from('article_base,articles_status');
+        // $this->db->where("create_at > {$month_start_time}");
+        // $this->db->where("create_at < {$time}");
 
-        $re['author'] = $this->db->get()->row_array();
-        $re['author']['id'] = $re['author']['user_id'];
-        $re['author']['name'] = $this->db->select('author_name')->from('articles_base')->where("id = {$re['author']['id']}")->get()->row()->author_name;
-        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['author']['id']}")->get()->row()->url;
 
-        $re['total'] = $re['author']['max(count)'];
-        unset($re['author']['user_id']);
-        unset($re['author']['max(count)']);
-        unset($re['articles']['author_id']);
+        // $re['au'] = $this->db->get()->row_array();
+        $re['au'] = $this->db->query($query)->row_array();
+        // var_dump($re['au']);
+        // exit;
+        $re['au']['id'] = $re['au']['author_id'];
+        $re['au']['name'] = $re['au']['author_name'];
+        $re['au']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au']['id']}")->get()->row()->url;
+        $re['au']['monthly_articles_num'] = $re['au']['max(id)'];
+        
+        $re['total'] = count($re['articles']);
+        
+        unset($re['au']['author_id']);
+        unset($re['au']['author_name)']);
+        // unset($re['articles']['author_id']);
 
         // $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
         // $re['author']['name'] = $re['articles'][0]['author_name'];
