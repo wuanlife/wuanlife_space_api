@@ -522,9 +522,13 @@ class Articles_model extends CI_Model
 
         }
         $month_start_time = date('y-m-01 00-00-00');
-        $time = date('y-m-d h-i-s');
-        $query = "select max(id),author_id,author_name from articles_base where create_at between '{$month_start_time}' and '{$time}'";
-
+        // $time = date('y-m-d h-i-s');
+        $time = date('y-01-18 00-00-00');
+        // var_dump($month_start_time);
+        // var_dump($time);
+        // exit;
+        $query = "select id,count(author_id),author_name from articles_base where create_at between '{$month_start_time}' and '{$time}' order by create_at DESC";
+        $query = "SELECT author_id,author_name,COUNT(0) AS 重复次数 FROM articles_base where create_at between '{$month_start_time}' and '{$time}}' GROUP BY author_id desc HAVING COUNT(author_id) limit 1 ";
         // $this->db->select('article_base.id,article_base.author_id,article_base.author_name,']);
         // $this->db->from('article_base,articles_status');
         // $this->db->where("create_at > {$month_start_time}");
@@ -538,12 +542,13 @@ class Articles_model extends CI_Model
         $re['au']['id'] = $re['au']['author_id'];
         $re['au']['name'] = $re['au']['author_name'];
         $re['au']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au']['id']}")->get()->row()->url;
-        $re['au']['monthly_articles_num'] = $re['au']['max(id)'];
+        $re['au']['monthly_articles_num'] = $re['au']['重复次数'];
         
         $re['total'] = count($re['articles']);
-        
+        unset($re['au']['author_name']);
         unset($re['au']['author_id']);
         unset($re['au']['author_name)']);
+        unset($re['au']['重复次数']);
         // unset($re['articles']['author_id']);
 
         // $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
