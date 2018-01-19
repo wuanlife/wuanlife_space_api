@@ -48,3 +48,7 @@ INSERT INTO wuan_api_new.articles_content
   FROM
     wuan_api_old.post_base INNER JOIN wuan_api_old.post_detail
       ON post_base.id = post_detail.post_base_id AND floor = 1;
+
+-- 添加文章状态数据
+INSERT INTO wuan_api_new.articles_status
+  SELECT id,0 AS status,create_at FROM wuan_api_new.articles_base;
