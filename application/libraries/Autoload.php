@@ -7,12 +7,15 @@
  */
 
 spl_autoload_register(function ($class) {
+    $class = implode('/',
+        explode('\\',$class)
+    );
     $address = APPPATH . 'libraries/' . $class . '.php';
     // 如果文件存在，则 require 该文件，否则抛出一个异常
     if (file_exists($address)) {
         require_once $address;
     }else{
-        throw new \Exception('引用的文件不存在！');
+        throw new \Exception('引用的文件\''.$address.'\'不存在！');
     }
 });
 
