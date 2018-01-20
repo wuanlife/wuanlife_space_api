@@ -50,7 +50,7 @@ class Users extends REST_Controller
         }
 
         if ( ! $this->users_model->login($data)) {
-            $this->response(['error' => '用户名密码错误，请重试！'], 401);
+            $this->response(['error' => '用户名密码错误，请重试！'], 400);
         }
 
         $this->responseBaseInfo();
