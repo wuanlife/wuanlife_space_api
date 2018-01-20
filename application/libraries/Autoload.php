@@ -7,7 +7,7 @@
  */
 
 spl_autoload_register(function ($class) {
-    $address = APPPATH . 'libraries\\' . $class . '.php';
+    $address = APPPATH . 'libraries/' . $class . '.php';
     // 如果文件存在，则 require 该文件，否则抛出一个异常
     if (file_exists($address)) {
         require_once $address;
@@ -16,4 +16,4 @@ spl_autoload_register(function ($class) {
     }
 });
 
-require APPPATH . 'libraries\\Qiniu\\functions.php';
+require APPPATH . 'libraries/Qiniu/functions.php';

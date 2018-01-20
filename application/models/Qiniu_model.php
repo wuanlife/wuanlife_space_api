@@ -37,7 +37,7 @@ class Qiniu_model extends CI_Model
     {
         // 加载七牛文件
         try {
-            require APPPATH . 'libraries\Autoload.php';
+            require APPPATH . 'libraries/Autoload.php';
         }catch (Exception $e){
             return 'error';
         }
