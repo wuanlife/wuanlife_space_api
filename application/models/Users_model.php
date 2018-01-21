@@ -104,6 +104,17 @@ class Users_model extends CI_Model
             ->get();
 
         $result = $res->result()[0];
+        switch ($result->sex){
+            case '男':
+                $result->sex = 'male';
+                break;
+            case '女':
+                $result->sex = 'famale';
+                break;
+            case '不想透露':
+                $result->sex = 'secrecy';
+                break;
+        }
 
         return
             [
