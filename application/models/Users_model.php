@@ -219,6 +219,22 @@ class Users_model extends CI_Model
     }
 
     /**
+     * 判断用户id是否存在
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function userIdExists(int $id): bool
+    {
+        $res = $this->db
+            ->select('id')
+            ->from('users_base')
+            ->get();
+
+        return (bool)$res->num_rows();
+    }
+
+    /**
      * 修改用户名
      *
      * @param $id

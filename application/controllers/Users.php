@@ -89,6 +89,9 @@ class Users extends REST_Controller
     {
         $info = $this->verifyStatus();
 
+        if ($this->users_model->userIdExists($id)){
+            $this->response(['error' => '用户不存在'],400);
+        }
         if ($info->user_id != $id) {
             $this->response(['error' => '非法请求，提供的id与令牌信息不符'], 422);
         }
