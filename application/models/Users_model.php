@@ -229,6 +229,7 @@ class Users_model extends CI_Model
         $res = $this->db
             ->select('id')
             ->from('users_base')
+            ->where(['id' => $id])
             ->get();
 
         return (bool)$res->num_rows();
