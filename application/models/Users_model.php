@@ -105,13 +105,13 @@ class Users_model extends CI_Model
 
         $result = $res->result()[0];
         switch ($result->sex){
-            case 0:
+            case '0':
                 $result->sex = 'male';
                 break;
-            case 1:
+            case '1':
                 $result->sex = 'famale';
                 break;
-            case 2:
+            case '2':
                 $result->sex = 'secrecy';
                 break;
         }
