@@ -627,7 +627,7 @@ class Articles_model extends CI_Model
         $re['articles']['author_id'] = $this->db->select('users_base.id')->from('users_base')->where("users_base.name = '{$re['articles']['author_name']}'")->get()->row()->id;
 
         //获取文章收藏数
-        $re['articles']['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$article_id}")->get()->num_rows();
+        $re['articles']['collected_num'] = (string)$this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$article_id}")->get()->num_rows();
 
         //获取作者的id name 头像url 发表文章数
         $re['articles']['author']['id'] =  $re['articles']['author_id'];
@@ -637,7 +637,7 @@ class Articles_model extends CI_Model
         unset($re['articles']['author_id']);
         unset($re['articles']['author_name']);
 
-        return $re;
+        return $re['articles'];
     
     }
 

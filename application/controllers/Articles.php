@@ -447,38 +447,38 @@ class Articles extends REST_Controller
             $this->response(['error'=>'查看文章详情失败']);
         }
 
-        if ($re['articles']['approved_num'] > 0 )
+        if ($re['approved_num'] > 0 )
         {
-            $re['articles']['approved'] = TRUE;
+            $re['approved'] = TRUE;
         }
         else
         {
-            $re['articles']['approved'] = False;
+            $re['approved'] = False;
         }
 
-        if ($re['articles']['collected_num'] > 0 )
+        if ($re['collected_num'] > 0 )
         {
-            $re['articles']['collected'] = TRUE;
+            $re['collected'] = TRUE;
         }
         else
         {
-            $re['articles']['collected'] = False;
+            $re['collected'] = False;
         }
 
         //判断文章状态  0正常  1被锁定  2被删除
-        if ($re['articles']['status'] == '1')
+        if ($re['status'] == '1')
         {
-            $re['articles']['lock'] = TRUE;
+            $re['lock'] = TRUE;
         }
-        elseif ($re['articles']['status'] == '2' )
+        elseif ($re['status'] == '2' )
         {
             $this->response(['error'=>'文章已被删除'],410);
         }
         else
         {
-            $re['articles']['lock'] = False;
+            $re['lock'] = False;
         }
-        unset($re['articles']['status']);
+        unset($re['status']);
 
 
          $this->response($re);
