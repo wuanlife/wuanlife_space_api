@@ -528,7 +528,7 @@ class Articles_model extends CI_Model
         // var_dump($time);
         // exit;
         // $query = "select id,count(author_id),author_name from articles_base where create_at between '{$month_start_time}' and '{$time}' order by create_at DESC";
-        $query = "SELECT author_id as id,author_name as name,COUNT(0) AS monthly_articles_num FROM articles_base where create_at between '{$month_start_time}' and '{$time}' GROUP BY author_id desc HAVING COUNT(author_id)";
+        $query = "SELECT author_id as id,author_name as name,COUNT(0) AS monthly_articles_num FROM articles_base where create_at between '{$month_start_time}' and '{$time}' GROUP BY author_id desc HAVING COUNT(author_id) order by monthly_articles_num desc";
         // $this->db->select('article_base.id,article_base.author_id,article_base.author_name,']);
         // $this->db->from('article_base,articles_status');
         // $this->db->where("create_at > {$month_start_time}");
