@@ -434,6 +434,7 @@ class Articles extends REST_Controller
         //     $token = $this->parsing_token($jwt);
         //    // $article_id = $token->article_id;
         // }
+        $data['article_id'] = $article_id;
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
         if(empty($article_info)){

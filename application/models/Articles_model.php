@@ -608,12 +608,13 @@ class Articles_model extends CI_Model
         $this->db->join('articles_status','articles_status.id = articles_base.id');
 
         $re['articles'] = $this->db->get()->row_array();
-        if ($re['articles'] = null) {
-            return 0;
-        }
-        else
-        {
-        $data['article_id'] = $article_id;
+        // print_r($re['articles']);
+        // exit;
+        // if ($re['articles'] = null) {
+        //     return 0;
+        // }
+
+        // $data['article_id'] = $article_id;
         //$re['articles']['image_urls'] = $this->users_model->get_article_img($data);
 
         //获取文章评论数
@@ -637,7 +638,7 @@ class Articles_model extends CI_Model
         unset($re['articles']['author_name']);
 
         return $re;
-    }
+    
     }
 
 
