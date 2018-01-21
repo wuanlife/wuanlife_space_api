@@ -52,3 +52,8 @@ INSERT INTO wuan_api_new.articles_content
 -- 添加文章状态数据
 INSERT INTO wuan_api_new.articles_status
   SELECT id,0 AS status,create_at FROM wuan_api_new.articles_base;
+
+-- 修正脏数据
+UPDATE wuan_api_new.users_detail SET sex = 2 WHERE sex = 3;
+
+
