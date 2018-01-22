@@ -103,7 +103,7 @@ class Articles extends REST_Controller
             ];
             $result = $this->articles_model->commentsAdd($data);
             if($result){
-                $result['user']['id'] = $userArr['id'];
+                $result['user']['id'] = (int)$userArr['id'];
                 $result['user']['name'] = $userArr['name'];
                 $this->response($result, 200);
             }else{
@@ -196,7 +196,10 @@ class Articles extends REST_Controller
             count($comments_info) > 0 or $this->response(['error'=>'评论不存在'], 404);
             $article_info = $this->articles_model->articleInfo(['id'=>$aid],'author_id');
             count($article_info) > 0 or $this->response(['error'=>'没有权限操作'], 403);
-            if(!$this->admins_model->isAdmin($user_info->user_id) && $user_info->user_id != $comments_info[0]['user_id'] && $user_info->user_id != $article_info[0]['user_id']){
+            if(!$this->admins_model->isAdmin($user_info->user_id)
+                && $user_info->user_id != $comments_info[0]['user_id']
+                && $user_info->user_id != $article_info[0]['user_id']
+            ){
                 $this->response(['error'=>'没有权限操作'], 403);
             }
 

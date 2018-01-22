@@ -218,8 +218,8 @@ class Articles_model extends CI_Model
         if($res1 && $res2){
             $result = [
                 'comment'=>$data['comment'],
-                'update_at'=>$now_time,
-                'create_at'=>$now_time,
+                'update_at'=>date('c',strtotime($now_time)),
+                'create_at'=>date('c',strtotime($now_time)),
                 'floor'=>$count+1
             ];
             return $result;
