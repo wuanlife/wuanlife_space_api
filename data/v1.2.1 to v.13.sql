@@ -24,6 +24,8 @@ INSERT INTO wuan_api_new.users_detail
   SELECT user_base_id as id, sex,'1970-01-01' as birthday FROM wuan_api_old.user_detail
   WHERE user_base_id NOT IN (SELECT id FROM wuan_api_new.users_detail) AND user_base_id > 9;
 
+-- 修正脏数据
+UPDATE wuan_api_old.post_detail SET create_time = '2017-12-12 00:00:00' WHERE create_time = '1497174485';
 
 -- 转移文章基础数据
 INSERT INTO wuan_api_new.articles_base
@@ -31,9 +33,9 @@ INSERT INTO wuan_api_new.articles_base
     post_base.id as id,
     post_base.user_base_id as author_id,
     user_base.nickname as author_name,
-    left(post_detail.text,85) as content_digest,
-    post_detail.createTime as update_at,
-    post_detail.createTime as create_at
+    ifnull(post_detail.text,'') as content_digest,
+    post_detail.create_time as update_at,
+    post_detail.create_time as create_at
   FROM
     (wuan_api_old.post_base
       LEFT JOIN wuan_api_old.user_base
@@ -55,5 +57,3 @@ INSERT INTO wuan_api_new.articles_status
 
 -- 修正脏数据
 UPDATE wuan_api_new.users_detail SET sex = 2 WHERE sex = 3;
-
-
