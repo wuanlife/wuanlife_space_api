@@ -476,18 +476,25 @@ class Articles_model extends CI_Model
         foreach ($re['articles'] as $key => $value) {
 
             //获取文章评论数
-            $re['articles'][$key]['replied_num'] = $this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+            $re['articles'][$key]['replied_num'] = (int)$this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
 
             //获取文章点赞数
-            $re['articles'][$key]['approved_num'] = $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+            $re['articles'][$key]['approved_num'] = (int)$this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
 
             //获取文章收藏数
-            $re['articles'][$key]['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$re['articles'][$key]['id']}")->get()->num_rows();
+            $re['articles'][$key]['collected_num'] = (int)$this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$re['articles'][$key]['id']}")->get()->num_rows();
 
             //获取文章作者id name avatar_url
-            $re['articles'][$key]['author']['id'] = $re['articles'][$key]['author_id'];
+            $re['articles'][$key]['author']['id'] = (int)$re['articles'][$key]['author_id'];
             $re['articles'][$key]['author']['name'] = $re['articles'][$key]['author_name'];
             $re['articles'][$key]['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['articles'][$key]['author_id']}")->get()->row()->url;
+
+            //id 转成int
+            $re['articles'][$key]['id'] = (int)$re['articles'][$key]['id'];
+
+            //日期转成iso格式
+            $re['articles'][$key]['update_at'] = date('c',strtotime($re['articles'][$key]['update_at']));
+            $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
 
             if ($re['articles'][$key]['approved_num'] > 0 )
             {
@@ -521,35 +528,20 @@ class Articles_model extends CI_Model
             unset($re['articles'][$key]['author_id']);
 
         }
-        $month_start_time = date('y-m-01 00-00-00');
+
+        //au
+        // $month_start_time = date('y-m-01 00-00-00');
         // $time = date('y-m-d h-i-s');
-        $time = date('y-m-d h-i-s');
-        // var_dump($month_start_time);
-        // var_dump($time);
-        // exit;
-        // $query = "select id,count(author_id),author_name from articles_base where create_at between '{$month_start_time}' and '{$time}' order by create_at DESC";
-        $query = "SELECT author_id as id,author_name as name,COUNT(0) AS monthly_articles_num FROM articles_base where create_at between '{$month_start_time}' and '{$time}' GROUP BY author_id desc HAVING COUNT(author_id) order by monthly_articles_num desc";
-        // $this->db->select('article_base.id,article_base.author_id,article_base.author_name,']);
-        // $this->db->from('article_base,articles_status');
-        // $this->db->where("create_at > {$month_start_time}");
-        // $this->db->where("create_at < {$time}");
 
+        // $query = "SELECT author_id as id,author_name as name,COUNT(0) AS monthly_articles_num FROM articles_base where create_at between '{$month_start_time}' and '{$time}' GROUP BY author_id desc HAVING COUNT(author_id) order by monthly_articles_num desc";
 
-        // $re['au'] = $this->db->get()->row_array();
-        $re['au'] = $this->db->query($query)->result_array();
-        // echo $re['au'][0]['author_id'];
-        // var_dump($re['au']);
-        // exit;
-        foreach ($re['au'] as $key => $value) {
-        // $re['au'][$key]['id'] = $re['au']['author_id'];
-        // $re['au'][$key]['name'] = $re['au']['author_name'];
-        $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url;
-        // $re['au']['key']['monthly_articles_num'] = $re['au']['重复次数'];
-        // unset($re['au']['key']['author_name']);
-        // unset($re['au']['key']['author_id']);
-        // unset($re['au']['key']['重复次数']);
+        // $re['au'] = $this->db->query($query)->result_array();
+
+        // foreach ($re['au'] as $key => $value) {
+
+        // $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url; 
+        // }
         
-        }
         //获取文章总数
         $select = ' articles_base.id,
                     articles_content.title,
@@ -567,12 +559,6 @@ class Articles_model extends CI_Model
         $this->db->join('articles_status','articles_status.id = articles_base.id');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $re['total'] = $this->db->get()->num_rows();
-
-        // unset($re['articles']['author_id']);
-
-        // $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$user_id}")->get()->row()->url;
-        // $re['author']['name'] = $re['articles'][0]['author_name'];
-        // $re['author']['id'] = $user_id;
 
         foreach ($re['articles'] as $key => $value) {
             unset($re['articles'][$key]['author_name']);
@@ -607,7 +593,7 @@ class Articles_model extends CI_Model
         $this->db->join('users_base','users_base.name = articles_base.author_name');
         $this->db->join('articles_status','articles_status.id = articles_base.id');
 
-        $re['articles'] = $this->db->get()->row_array();
+        $re = $this->db->get()->row_array();
         // print_r($re['articles']);
         // exit;
         // if ($re['articles'] = null) {
@@ -620,24 +606,31 @@ class Articles_model extends CI_Model
         //获取文章评论数
         // $re['articles']['replied_num'] = $this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$article_id}")->get()->row()->count;
 
+        //article id 改成int
+        $re['id'] = (int)$re['id'];
+
+        //日期转成iso格式
+        $re['update_at'] = date('c',strtotime($re['update_at']));
+        $re['create_at'] = date('c',strtotime($re['create_at']));
+
         //获取文章点赞数
-        $re['articles']['approved_num'] = $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$article_id}")->get()->row()->count;
+        $re['approved_num'] = (int)$this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$article_id}")->get()->row()->count;
 
         //获取文章作者id
-        $re['articles']['author_id'] = $this->db->select('users_base.id')->from('users_base')->where("users_base.name = '{$re['articles']['author_name']}'")->get()->row()->id;
+        $re['author_id'] = (int)$this->db->select('users_base.id')->from('users_base')->where("users_base.name = '{$re['author_name']}'")->get()->row()->id;
 
         //获取文章收藏数
-        $re['articles']['collected_num'] = (string)$this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$article_id}")->get()->num_rows();
+        $re['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$article_id}")->get()->num_rows();
 
         //获取作者的id name 头像url 发表文章数
-        $re['articles']['author']['id'] =  $re['articles']['author_id'];
-        $re['articles']['author']['name'] = $re['articles']['author_name'];
-        $re['articles']['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['articles']['author']['id']}")->get()->row()->url;
-        $re['articles']['author']['articles_num'] = $this->db->select('users_articles_count.count')->from('users_articles_count')->where("users_articles_count.user_id = {$re['articles']['author']['id']}")->get()->row()->count;
-        unset($re['articles']['author_id']);
-        unset($re['articles']['author_name']);
+        $re['author']['id'] =  $re['author_id'];
+        $re['author']['name'] = $re['author_name'];
+        $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['author']['id']}")->get()->row()->url;
+        $re['author']['articles_num'] = (int)$this->db->select('users_articles_count.count')->from('users_articles_count')->where("users_articles_count.user_id = {$re['author']['id']}")->get()->row()->count;
+        unset($re['author_id']);
+        unset($re['author_name']);
 
-        return $re['articles'];
+        return $re;
     
     }
 
@@ -652,8 +645,8 @@ class Articles_model extends CI_Model
         $select = ' articles_comments.user_id,
                     articles_comments.floor,
                     articles_comments.create_at,
-                    comment_contents.content,
-                    users_base.name,
+                    comment_contents.content as comment,
+                    users_base.name as user_name,
                     ';
         $this->db->select($select);
         $this->db->from('articles_comments');
@@ -661,16 +654,14 @@ class Articles_model extends CI_Model
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
         $this->db->limit($data['limit'],$data['offset']);
-
         $re = $this->db->get()->result_array();
-        $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
-        for ($i=0; $i < $re['total']; $i++) {
-            $re[$i]['comment'] = $data['reply'][$i]['content'];
-            $re[$i]['user_name'] = $data['reply'][$i]['name'];
-            unset($re[$i]['content']);
-            unset($re[$i]['name']);
-        }
 
+        foreach ($re as $key => $value) {
+            $re[$key]['user_id'] =(int)$re[$key]['user_id'];
+            $re[$key]['floor'] = (int)$re[$key]['floor'];
+            $re[$key]['create_at'] = date('c',strtotime($re[$key]['create_at']));
+        }
+        $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;
 
 

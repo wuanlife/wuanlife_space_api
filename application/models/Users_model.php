@@ -395,7 +395,7 @@ class Users_model extends CI_Model
      */
     public function get_user_articles($data)
     {
-          $select = ' articles_base.id,
+          $select = 'articles_base.id,
                     articles_content.title,
                     articles_content.content,
                     articles_base.update_at,
@@ -417,14 +417,21 @@ class Users_model extends CI_Model
         }
 
         foreach ($re['articles'] as $key => $value) {
-                //获取文章评论数
-            $re['articles'][$key]['replied_num'] = $this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+            //文章id转成int
+            $re['articles'][$key]['id'] = (int)$re['articles'][$key]['id'];
+
+            //获取文章评论数
+            $re['articles'][$key]['replied_num'] = (int)$this->db->select('articles_comments_count.count')->from('articles_comments_count')->where("articles_comments_count.articles_id = {$re['articles'][$key]['id']}")->get()->row()->count;
 
             //获取文章点赞数
-            $re['articles'][$key]['approved_num'] = $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
+            $re['articles'][$key]['approved_num'] =(int) $this->db->select('articles_approval_count.count')->from('articles_approval_count')->where("articles_approval_count.article_id = {$re['articles'][$key]['id']}")->get()->row()->count;
         
             //获取文章收藏数
             $re['articles'][$key]['collected_num'] = $this->db->select('user_collections.user_id')->from('user_collections')->where("article_id = {$re['articles'][$key]['id']}")->get()->num_rows();
+
+            //日期转成iso格式
+            $re['articles'][$key]['update_at'] = date('c',strtotime($re['articles'][$key]['update_at']));
+            $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
             
             if ($re['articles'][$key]['approved_num'] > 0 )
             {
@@ -460,7 +467,7 @@ class Users_model extends CI_Model
         //获取用户信息
         $re['author']['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$data['user_id']}")->get()->row()->url;
         $re['author']['name'] = $re['articles'][0]['author_name'];
-        $re['author']['id'] = $data['user_id'];
+        $re['author']['id'] = (int)$data['user_id'];
 
         foreach ($re['articles'] as $key => $value) {
             unset($re['articles'][$key]['author_name']);
@@ -468,7 +475,7 @@ class Users_model extends CI_Model
         }
 
         //获取用户文章总数
-        $re['total'] = $this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
+        $re['total'] = (int)$this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
 
         return $re;
 
@@ -488,39 +495,58 @@ class Users_model extends CI_Model
         //articles_content.content     文章内容
         //ser_collections.create_at    收藏时间
         //
-        $select = ' user_collections.create_at,
-                    user_collections.article_id,
+        $select = ' user_collections.article_id as id,
                     articles_content.title,
                     articles_content.content,
-                    articles_status.status
+                    articles_base.update_at,
+                    articles_base.create_at,
+                    user_collections.create_at as collect_at,
+                    articles_status.status,
+                    articles_base.author_name,
+                    articles_base.author_id,
                     ';
         $this->db->select($select);
         $this->db->from('user_collections');
         $this->db->join('articles_content','articles_content.id = user_collections.article_id');
         $this->db->join('articles_status','articles_status.id = user_collections.article_id');
-        $this->db->where("user_collections.user_id = {$data['user_id']}");
+        $this->db->join('articles_base','articles_base.id = user_collections.article_id');
+        $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->where("user_collections.user_id = user_collections.article_id");
         $this->db->limit($data['limit'],$data['offset']);
-        $re['article'] =  $this->db->get()->result_array();
+        $re['articles'] =  $this->db->get()->result_array();
+        // print_r($re['articles']);
+        // exit;
+        foreach ($re['articles'] as $key => $value) {
+            
+            //id转成int类型
+            $re['articles'][$key]['id'] = (int)$re['articles'][$key]['id'];
+
+            //日期转成iso格式
+            $re['articles'][$key]['update_at'] = date('c',strtotime($re['articles'][$key]['update_at']));
+            $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
+            $re['articles'][$key]['collect_at'] = date('c',strtotime($re['articles'][$key]['collect_at']));
+
+            if ($re['articles'][$key]['status'] == '2') {
+                $re['articles'][$key]['delete'] = true;
+            }
+            else
+            {
+                $re['articles'][$key]['delete'] = false;
+            }
+            unset($re['articles'][$key]['status']);
+
+            $re['articles'][$key]['author']['id'] = (int)$re['articles'][$key]['author_id'];
+            $re['articles'][$key]['author']['name'] = $re['articles'][$key]['author_name'];
+            unset($re['articles'][$key]['author_id']);
+            unset($re['articles'][$key]['author_name']);
+        }
 
         //获取用户收藏总数
         $this->db->select('users_collections_count.count');
         $this->db->from('users_collections_count');
         $this->db->where("user_id = {$data['user_id']}");
-        $re['total'] = $this->db->get()->row()->count;
-        for ($i=0; $i <count($re['article']) ; $i++) {
-            $re['article'][$i]['id'] = $re['article'][$i]['article_id'];
-            if ($re['article'][$i]['status'] == '2') {
-                $re['article'][$i]['delete'] = true;
-            }
-            else
-            {
-                $re['article'][$i]['delete'] = false;
-            }
-            //unset($re['article'][$i]['article_id']); 不知道为什么不能删
-            unset($re['article'][$i]['status']);
-        }
-        //$this->db->select();
-        //$re['title'] = 
+        $re['total'] = (int)$this->db->get()->row()->count;
+
         return $re;
     }
 
