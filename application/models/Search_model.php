@@ -78,7 +78,7 @@ class Search_model extends CI_Model
                 ->get();
 
         foreach ($res->result() as $row) {
-            $result[$i]['id'] = $row->id;
+            $result[$i]['id'] = (int)$row->id;
             $result[$i]['image'] = $row->url;
             $result[$i++]['name'] = $row->name;
         }
@@ -109,14 +109,14 @@ class Search_model extends CI_Model
         foreach ($res->result() as $row) {
             $result[$i]['title'] = $row->title;
             $result[$i]['content'] = $row->content;
-            $result[$i]['author_id'] = $row->id;
-            $result[$i]['update_at'] = $row->update_at;
-            $result[$i++]['create_at'] = $row->create_at;
+            $result[$i]['author_id'] = (int)$row->id;
+            $result[$i]['update_at'] = date('c',strtotime($row->update_at));
+            $result[$i++]['create_at'] = date('c',strtotime($row->create_at));
         }
 
         $total = $res->num_rows();
 
-        return ['articles' => $result, 'total' => $total];
+        return ['articles' => $result, 'total' => (int)$total];
     }
 
 }

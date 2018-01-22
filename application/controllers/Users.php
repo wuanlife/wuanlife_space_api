@@ -204,7 +204,7 @@ class Users extends REST_Controller
         $mail = $this->users_model->mail;
         $jwt  = $this->createJwtToken($id);
         $this->response([
-            'id'           => $id,
+            'id'           => (int)$id,
             'name'         => $name,
             'mail'         => $mail,
             'Access-Token' => $jwt
