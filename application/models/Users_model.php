@@ -341,8 +341,8 @@ class Users_model extends CI_Model
                 ->where(['DATE_FORMAT(create_at,\'%Y%m\')' => date('Ym',time())])
                 ->limit(5)
                 ->get();
-        return $res->result_array();
 
+        return $res->result_array();
     }
 
 
