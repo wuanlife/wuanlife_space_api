@@ -654,12 +654,12 @@ class Articles_model extends CI_Model
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
         $this->db->limit($data['limit'],$data['offset']);
-        $re = $this->db->get()->result_array();
+        $re['replay'] = $this->db->get()->result_array();
 
-        foreach ($re as $key => $value) {
-            $re[$key]['user_id'] =(int)$re[$key]['user_id'];
-            $re[$key]['floor'] = (int)$re[$key]['floor'];
-            $re[$key]['create_at'] = date('c',strtotime($re[$key]['create_at']));
+        foreach ($re['replay'] as $key => $value) {
+            $re['replay'][$key]['user_id'] =(int)$re['replay'][$key]['user_id'];
+            $re['replay'][$key]['floor'] = (int)$re['replay'][$key]['floor'];
+            $re['replay'][$key]['create_at'] = date('c',strtotime($re['replay'][$key]['create_at']));
         }
         $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;

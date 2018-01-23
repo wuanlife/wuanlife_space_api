@@ -507,10 +507,10 @@ class Articles extends REST_Controller
         ];
 
 
-        $re['reply'] = $this->articles_model->get_comments($data);
-        unset($data['reply']['article_id']);
-        unset($data['reply']['limit']);
-        unset($data['reply']['offset']);
+        $re = $this->articles_model->get_comments($data);
+        // unset($data['reply']['article_id']);
+        // unset($data['reply']['limit']);
+        // unset($data['reply']['offset']);
         
 
         $this->response($re);
