@@ -326,65 +326,24 @@ class Users_model extends CI_Model
         return true;
     }
 
+    /**
+     * 获取活跃用户
+     * @return array
+     */
+    public function getActiveUsers(): array
+    {
+        $res =
+            $this->db
+                ->select('author_id AS id,author_name AS name,url AS avatar_url,count(*) AS monthly_articles_num')
+                ->from('articles_base')
+                ->join('avatar_url', 'avatar_url.user_id = articles_base.id', 'left')
+                ->group_by('author_id')
+                ->where(['DATE_FORMAT(create_at,\'%Y%m\')' => date('Ym',time())])
+                ->limit(5)
+                ->get();
+        return $res->result_array();
 
-
-
-
-//
-///**
-// * 修改用户信息
-// *
-// * @param int   $id
-// * @param array $data
-// *
-// * @return bool
-// */
-//public function modifyInfo(int $id, array $data): bool
-//{
-//    $this->db->trans_start();
-//
-//    // 修改用户昵称
-//    if ( ! empty($data['name'])) {
-//        if ($this->usernameExists($data['name'])) {
-//            return '用户名已存在';
-//        }
-//        $this->db->where(['id' => $id])
-//                 ->update(
-//                     'users_base',
-//                     [
-//                         'name' => $data['name']
-//                     ]);
-//    }
-//    // 修改用户性别
-//    if ( ! empty($data['sex'])) {
-//        $this->db->where(['id' => $id])
-//                 ->update(
-//                     'users_detail',
-//                     ['sex' => $data['sex']]);
-//    }
-//    // 修改用户生日
-//    if ( ! empty($data['birthday'])) {
-//        $this->db->where(['id' => $id])
-//                 ->update(
-//                     'users_detail',
-//                     [
-//                         'birthday' => $data['birthday']
-//                     ]);
-//    }
-//    // 修改用户头像
-//    if ( ! empty($data['avatar_url'])) {
-//        $this->db->where(['user_id' => $id])
-//                 ->update(
-//                     'avatar_url',
-//                     [
-//                         'url' => $data['avatar_url']
-//                     ]);
-//    }
-//
-//    @$this->db->trans_complate();
-//
-//    return $this->db->trans_status();
-//}
+    }
 
 
 
