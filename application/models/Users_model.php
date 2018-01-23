@@ -340,9 +340,17 @@ class Users_model extends CI_Model
                 ->group_by('author_id')
                 ->where(['DATE_FORMAT(create_at,\'%Y%m\')' => date('Ym',time())])
                 ->limit(5)
-                ->get();
+                ->order_by('monthly_articles_num')
+                ->get()
+                ->result_array();
 
-        return $res->result_array();
+        foreach ($res as &$k){
+            $k['id'] = (int)$k['id'];
+            $k['monthly_articles_num'] = (int)$k['monthly_articles_num'];
+        }
+        unset($k);
+
+        return $res;
     }
 
 
