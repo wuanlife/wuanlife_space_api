@@ -16,7 +16,7 @@ class Users extends REST_Controller
         $this->form_validation->set_message('is_natural', '{field}不是自然数.');
     }
 
-        /**
+     /**
      * 解析jwt，获得用户id（旧的拷贝过来的）
      * @param $jwt
      * @return mixed
@@ -159,6 +159,15 @@ class Users extends REST_Controller
     }
 
     /**
+     * 获取活跃用户
+     */
+    public function active_get(): void
+    {
+        $active_users = $this->users_model->getActiveUsers();
+        $this->response(['au' => $active_users], 200);
+    }
+
+    /**
      * 验证用户登陆状态
      * @return stdClass
      */
@@ -248,7 +257,7 @@ class Users extends REST_Controller
 
     /**
      * A13 获取用户收藏列表
-     * 
+     *
      */
 
     public function collections_get($user_id)
@@ -272,7 +281,7 @@ class Users extends REST_Controller
             $re['articles'][$i]['image_url'] = $this->users_model->get_article_img($data);
         }
 
-        $this->response($re); 
+        $this->response($re);
 
      }
 
