@@ -577,7 +577,7 @@ class Articles_model extends CI_Model
         $this->db->join('articles_status','articles_status.id = articles_base.id');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $re['total'] = $this->db->get()->num_rows();
-
+        //删除不需要返回的
         foreach ($re['articles'] as $key => $value) {
             unset($re['articles'][$key]['author_name']);
             unset($re['articles'][$key]['status']);
@@ -674,11 +674,13 @@ class Articles_model extends CI_Model
         $this->db->limit($data['limit'],$data['offset']);
         $re['reply'] = $this->db->get()->result_array();
 
+        //id,floor转成int类型 时间转成ISO格式
         foreach ($re['reply'] as $key => $value) {
             $re['reply'][$key]['user_id'] =(int)$re['reply'][$key]['user_id'];
             $re['reply'][$key]['floor'] = (int)$re['reply'][$key]['floor'];
             $re['reply'][$key]['create_at'] = date('c',strtotime($re['reply'][$key]['create_at']));
         }
+        //获取评论总数
         $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;
 

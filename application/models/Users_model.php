@@ -400,6 +400,7 @@ class Users_model extends CI_Model
             $re['articles'][$key]['update_at'] = date('c',strtotime($re['articles'][$key]['update_at']));
             $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
             
+            //返回点赞数、收藏数、评论数真假
             if ($re['articles'][$key]['approved_num'] > 0 )
             {
                 $re['articles'][$key]['approved'] = TRUE;
@@ -427,6 +428,8 @@ class Users_model extends CI_Model
                 $re['articles'][$key]['replied'] = False;
             }
             $data['article_id'] = $re['articles'][$key]['id'];
+
+            //获取每篇文章的图片
             $re['articles'][$key]['image_urls'] = $this->get_article_img($data);
             unset($data['author_id']);
         }
@@ -481,8 +484,7 @@ class Users_model extends CI_Model
         $this->db->where("user_collections.user_id = user_collections.article_id");
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] =  $this->db->get()->result_array();
-        // print_r($re['articles']);
-        // exit;
+
         foreach ($re['articles'] as $key => $value) {
             
             //id转成int类型
@@ -493,6 +495,7 @@ class Users_model extends CI_Model
             $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
             $re['articles'][$key]['collect_at'] = date('c',strtotime($re['articles'][$key]['collect_at']));
 
+            //文章是否删除
             if ($re['articles'][$key]['status'] == '2') {
                 $re['articles'][$key]['delete'] = true;
             }
