@@ -384,6 +384,24 @@ class Articles_model extends CI_Model
     }
 
     /**
+     * 获取文章作者author_id
+     * @param $data
+     * @return mixed
+     */
+
+    public function author_article_post($data){
+
+        $sql=$this->db->select('*')
+            ->from('articles_base')
+            ->where('id',$data['article_id'])
+            ->get()
+            ->row_array();
+  
+        return $sql;
+    }
+
+
+    /**
      * 判断文章是否存在
      * @param $data
      * @return mixed
