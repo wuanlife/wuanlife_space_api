@@ -430,7 +430,17 @@ class Users_model extends CI_Model
             $data['article_id'] = $re['articles'][$key]['id'];
 
             //获取每篇文章的图片
-            $re['articles'][$key]['image_urls'] = $this->get_article_img($data);
+            //$re['articles'][$key]['image_urls'] = $this->get_article_img($data);
+            $a = $this->get_article_img($data);
+
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
+            }
+            // if ($re['articles'][$key]['image_urls']) {
+            //     # code...
+            // }
+
+            //echo count($re['articles'][$key]['image_urls']);
             unset($data['author_id']);
         }
 

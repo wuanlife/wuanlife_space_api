@@ -489,6 +489,12 @@ class Articles_model extends CI_Model
         $this->db->join('articles_status','articles_status.id = articles_base.id');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
+
+        //order参数为desc时为降序排序
+        if ($data['order'] == "desc") {
+            $this->db->order_by('articles_base.update_at','desc');
+        }
+        
         $re['articles'] = $this->db->get()->result_array();
 
         foreach ($re['articles'] as $key => $value) {
@@ -541,7 +547,13 @@ class Articles_model extends CI_Model
                 $re['articles'][$key]['replied'] = False;
             }
             $data['article_id'] = $re['articles'][$key]['id'];
-            $re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+            //$re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+
+            $a = $this->get_article_img($data);
+
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
+            }
 
             unset($re['articles'][$key]['author_id']);
 
@@ -684,6 +696,23 @@ class Articles_model extends CI_Model
         $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;
 
+
+    }
+
+    /**
+     * 用文章id搜索文章对应的图片
+     * @param  [array] $data [description]
+     * @return [array]       [description]
+     */
+    public function get_article_img($data)
+    {
+        $this->db->select('image_url.url');
+        $this->db->from('image_url');
+        $this->db->where("image_url.article_id = {$data['article_id']}");
+        $this->db->where("image_url.delete_flg = 0");
+        $this->db->limit(3,0);
+        $re= $this->db->get()->result_array();
+        return $re;
 
     }
 

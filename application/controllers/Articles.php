@@ -271,6 +271,7 @@ class Articles extends REST_Controller
         $data = [
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
+            'order'     => $this->get('order') ?? 'asc',
         ];
 
         $re = $this->articles_model->get_articles($data);
