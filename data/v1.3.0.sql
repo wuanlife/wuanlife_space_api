@@ -221,7 +221,7 @@ CREATE TRIGGER set_articles_default_buffer AFTER INSERT ON articles_base FOR EAC
   BEGIN
     INSERT INTO articles_comments_count VALUES (NEW.id,DEFAULT );
     INSERT INTO articles_approval_count VALUES (NEW.id,DEFAULT );
-    UPDATE users_articles_count set count = count + 1 WHERE user_id = new.id;
+    UPDATE users_articles_count set count = count + 1 WHERE user_id = new.author_id;
   END //
 
 -- 使用触发器自动缓存用户评论数
