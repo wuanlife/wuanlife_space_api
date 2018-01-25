@@ -104,17 +104,17 @@ class Users_model extends CI_Model
             ->get();
 
         $result = $res->result()[0];
-        switch ($result->sex){
-            case '0':
-                $result->sex = 'male';
-                break;
-            case '1':
-                $result->sex = 'famale';
-                break;
-            case '2':
-                $result->sex = 'secrecy';
-                break;
-        }
+//        switch ($result->sex){
+//            case '0':
+//                $result->sex = 'male';
+//                break;
+//            case '1':
+//                $result->sex = 'female';
+//                break;
+//            case '2':
+//                $result->sex = 'secrecy';
+//                break;
+//        }
 
         return
             [
@@ -268,6 +268,7 @@ class Users_model extends CI_Model
      */
     private function modifySex($id, $sex): bool
     {
+        //获取性别代码
         $get_sex_code =
             $this->db
                 ->select('id')
@@ -278,10 +279,11 @@ class Users_model extends CI_Model
             return false;
         }
         $sex_code = $get_sex_code->result()[0]->id;
-        $this->db->where(['id' => $id])
-                 ->update(
-                     'users_detail',
-                     ['sex' => $sex_code]);
+
+        //修改性别
+        $this->db
+            ->where(['id' => $id])
+            ->update('users_detail', ['sex' => $sex_code]);
 
         return true;
     }
