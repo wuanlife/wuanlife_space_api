@@ -486,7 +486,7 @@ class Articles_model extends CI_Model
         $this->db->from('articles_base');
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
 
@@ -586,7 +586,7 @@ class Articles_model extends CI_Model
         $this->db->from('articles_base');
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $re['total'] = $this->db->get()->num_rows();
         //删除不需要返回的
@@ -621,7 +621,7 @@ class Articles_model extends CI_Model
         $this->db->where("articles_base.id = {$article_id}");
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
 
         $re = $this->db->get()->row_array();
         // print_r($re['articles']);
