@@ -278,7 +278,11 @@ class Users extends REST_Controller
 
         for ($i=0; $i < count($re['articles']); $i++) {
             $data['article_id'] = $re['articles'][$i]['id'];
-            $re['articles'][$i]['image_url'] = $this->users_model->get_article_img($data);
+            
+            $a = $this->users_model->get_article_img($data);
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$i]['image_urls'][$key1] = $a[$key1]['url'];
+            }
         }
 
         $this->response($re);

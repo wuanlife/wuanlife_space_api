@@ -492,8 +492,8 @@ class Users_model extends CI_Model
         $this->db->join('articles_content','articles_content.id = user_collections.article_id');
         $this->db->join('articles_status','articles_status.id = user_collections.article_id','left');
         $this->db->join('articles_base','articles_base.id = user_collections.article_id');
-        $this->db->where("articles_base.author_id = {$data['user_id']}");
-        $this->db->where("user_collections.user_id = user_collections.article_id");
+       // $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->where("user_collections.user_id = {$data['user_id']}");
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] =  $this->db->get()->result_array();
 
