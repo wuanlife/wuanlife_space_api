@@ -458,7 +458,7 @@ class Users_model extends CI_Model
         }
 
         //获取用户文章总数
-        $re['total'] = (int)$this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
+        $re['author']['articles_num'] = (int)$this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
 
         return $re;
 
