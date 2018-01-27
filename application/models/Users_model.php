@@ -62,7 +62,7 @@ class Users_model extends CI_Model
         $this->db->insert(
             'avatar_url',
             [
-                'url' => 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100'
+                'url' => USER_DEFAULT_AVATAR_URL
             ]);
         $this->db->insert(
             'users_detail',
@@ -96,10 +96,11 @@ class Users_model extends CI_Model
     public function getUserInfo(int $id): array
     {
         $res = $this->db
-            ->select('users_base.id,url,mail,name,sex,birthday')
+            ->select('users_base.id,url,mail,name,sex_detail.sex AS sex,birthday')
             ->from('users_base')
             ->join('avatar_url', 'users_base.id = avatar_url.user_id', 'left')
             ->join('users_detail', 'users_base.id = users_detail.id', 'left')
+            ->join('sex_detail', 'users_detail.sex = sex_detail.id', 'left')
             ->where(['users_base.id' => $id])
             ->get();
 
