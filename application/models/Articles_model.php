@@ -683,9 +683,10 @@ class Articles_model extends CI_Model
         $this->db->join('comment_contents','comment_contents.id = articles_comments.comment_id');
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
+        $this->db->order_by('articles_comments.create_at','desc');
         $this->db->limit($data['limit'],$data['offset']);
         $re['reply'] = $this->db->get()->result_array();
-
+        print_r($re['reply']);
         //id,floor转成int类型 时间转成ISO格式
         foreach ($re['reply'] as $key => $value) {
             $re['reply'][$key]['user_id'] =(int)$re['reply'][$key]['user_id'];
