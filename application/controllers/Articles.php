@@ -218,6 +218,7 @@ class Articles extends REST_Controller
     /**
      * 点赞文章(A2)
      * @param $post_id
+     * POST /articles/:id/approval
      */
     public function approval_post($article_id): void
     {
@@ -239,14 +240,46 @@ class Articles extends REST_Controller
             $rs = $this->articles_model->get_approval_post($data);
 
 
-            if($rs){
-                $this->articles_model->update_approval_post($data)?
-                    $this->response(['success'=>'(取消)点赞成功'],200):
-                    $this->response(['error'=>'操作失败'],400);
-            }else{
+            if(!$rs){
                 $this->articles_model->add_approval_post($data)?
                     $this->response(['success'=>'点赞成功'],204):
                     $this->response(['error'=>'点赞失败'],400);
+            }else{
+                    $this->response(['error'=>'该文章您已点过赞'],400);
+            }
+        }else{
+            $this->response(['error'=>'未登录，不能操作'],401);
+        }
+    }
+    /**
+     * 取消点赞文章(A15)
+     * @param $post_id
+     */
+    public function reapproval_put($article_id): void
+    {
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+
+
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$article_id,
+        );
+
+        if($data['user_id']){
+
+            //获取文章点赞状态，并点赞，取消点赞，点赞数目
+            $rs = $this->articles_model->get_approval_post($data);
+            //如果用户已对该文章点赞过，则执行取消点赞
+            if($rs){
+                $this->articles_model->update_approval_post($data)?
+                    $this->response(['success'=>'取消点赞成功'],204):
+                    $this->response(['error'=>'操作失败'],400);
+            }else{
+                    $this->response(['error'=>'请先点赞后再执行此操作'],400);
             }
         }else{
             $this->response(['error'=>'未登录，不能操作'],401);
@@ -300,6 +333,7 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
+
         //判断是不是管理员，不是管理员不具备操作权限
         if(!$this->admins_model->isAdmin($data['user_id'])){
              $this->response(['error'=>'没有权限操作'],403);
@@ -314,12 +348,13 @@ class Articles extends REST_Controller
         //判断数据库中是否有记录
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
-        if(($article_info['status']) & (1<<1)){
-            $this->response(['error'=>'该文章已被锁定！'],409);
-        }
 
         if(($article_info['status']) & (1<<2)){
             $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
+        if(($article_info['status']) & (1<<1)){
+            $this->response(['error'=>'该文章已被锁定！'],400);
         }
 
         if(empty($article_info)){
@@ -328,8 +363,54 @@ class Articles extends REST_Controller
             $this->response(['error'=>'锁定失败'],400);
         }
 
-
     }
+
+    /**
+     * 取消锁定文章(A17)
+     * @param $post_id
+     * PUT /articles/:id/clear
+     */
+    public function clear_put($article_id): void
+    {
+
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$article_id,
+        );
+
+        // 判断是不是管理员，不是管理员不具备操作权限
+        if(!$this->admins_model->isAdmin($data['user_id'])){
+             $this->response(['error'=>'没有权限操作'],403);
+        }
+        
+        $article_exist = $this->articles_model->exist_article_post($data);
+
+        if(empty($article_exist)){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+
+        //判断数据库中是否有记录
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+
+
+        if(($article_info['status']) & (1<<2)){
+            $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
+        if(($article_info['status']) & (1<<1)){
+            $this->articles_model->clear_post($data['article_id'])?
+            $this->response(['success'=>'取消锁定成功'],204):
+            $this->response(['error'=>'取消锁定失败'],400);
+        }else{
+            $this->response(['error'=>'文章没有被锁定'],400);
+        }
+        
+    }
+
 
      /**
      * 删除文章(A11)
@@ -349,18 +430,19 @@ class Articles extends REST_Controller
             'article_id'=>$article_id,
         );
 
+        //判断数据库中是否有该文章
+        $article_exist = $this->articles_model->exist_article_post($data);
+        if(empty($article_exist)){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+
         // 获取文章的作者author_id
         $article_author_id = $this->articles_model->author_article_post($data);
+        
 
         //判断是不是管理员，不是管理员不具备操作权限 （可以短路） 或  判断登陆人是文章作者本人
         if(   ($this->admins_model->isAdmin($data['user_id'])) || ($data['user_id'] == $article_author_id['author_id'])   ){
              
-
-            //判断数据库中是否有该文章
-            $article_exist = $this->articles_model->exist_article_post($data);
-            if(empty($article_exist)){
-                $this->response(['error'=>'该文章不存在！'],404);
-            }
 
             //判断数据库中是否有记录
             $article_info = $this->articles_model->get_status_post($data['article_id']);
@@ -370,7 +452,7 @@ class Articles extends REST_Controller
                 $this->response(['error'=>'该文章已被删除！'],410);
             }
 
-            if(empty($article_info) || (($article_info['status']) & (1<<1))){
+            if(empty($article_info) || (($article_info['status']) & (1<<1)) || ($article_info['status'] == 0)){
 
                 $this->articles_model->delete_post($data['article_id'],$article_info)?
                 $this->response(['success'=>'删除成功'],204):
@@ -380,17 +462,69 @@ class Articles extends REST_Controller
             $this->response(['error'=>'没有权限操作'],403);
         }
 
-
     }
 
     /**
      * 收藏文章(A12)
+     * @param $user_id
+     * PUT /users/:id/collections
      */
     public function collections_put($user_id) :void
     {
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
         $token = $this->parsing_token($jwt);
+
+        //文档中有权限一项，验证提交id和登录id是否一样
+        if($token->user_id!=$user_id)
+        {
+            $this->response(['error'=>'您没有权限'],403);
+        }
+
+
+        //输入参数校验
+        $data=array(
+            'user_id'=>$token->user_id,
+            'article_id'=>$this->put('article_id'),
+        );
+
+        //检查文章是否存在
+        $article_exist = $this->articles_model->exist_article_post($data);
+        if(!$article_exist){
+            $this->response(['error'=>'该文章不存在！'],404);
+        }
+
+        //检查文章是否是删除状态
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+        if(($article_info['status']) & (1<<2)){
+            $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
+        //检查文章是否在收藏列表中
+        $exist = $this->articles_model->check_collections_post($data);
+        if(!$exist){
+            if($article_exist&&$this->articles_model->collections_post($data)){
+                $this->response(['success'=>'收藏成功'],204);
+            }else{
+                $this->response(['error'=>'收藏失败'],400);
+            }
+        }else{
+            $this->response(['error'=>'收藏失败，文章已被收藏过'],400);
+        }
+    }
+
+    /**
+     * 取消收藏文章(A16)
+     * @param $user_id
+     * PUT /users/:id/recollections
+     */
+    public function recollections_put($user_id) :void
+    {
+        //权限校验
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        $token = $this->parsing_token($jwt);
+
+        //文档中有权限一项，验证提交id和登录id是否一样
         if($token->user_id!=$user_id)
         {
             $this->response(['error'=>'您没有权限'],403);
@@ -402,27 +536,28 @@ class Articles extends REST_Controller
             'article_id'=>$this->put('article_id'),
         );
 
-
+        //检查文章是否存在
         $article_exist = $this->articles_model->exist_article_post($data);
         if(!$article_exist){
             $this->response(['error'=>'该文章不存在！'],404);
         }
+
+        //检查文章是否是删除状态
+        $article_info = $this->articles_model->get_status_post($data['article_id']);
+        if(($article_info['status']) & (1<<2)){
+            $this->response(['error'=>'该文章已被删除！'],410);
+        }
+
         $exist = $this->articles_model->check_collections_post($data);
 
         if($exist){
             $this->articles_model->delete_collections_post($exist)?
-                $this->response(['success'=>'(取消)收藏成功'],204):
-                $this->response(['error'=>'(取消)收藏失败']);
+                $this->response(['success'=>'取消收藏成功'],204):
+                $this->response(['error'=>'取消收藏失败'],400);
         }else{
-            if($article_exist&&$this->articles_model->collections_post($data)){
-                $this->response(['success'=>'收藏成功'],204);
-            }else{
-                $this->response(['error'=>'收藏失败，文章可能不存在']);
-            }
+                $this->response(['error'=>'取消收藏失败，文章没有被收藏'],404);
         }
     }
-
-
 
 
 
@@ -435,7 +570,7 @@ class Articles extends REST_Controller
      * @param  [type] $article_id [description]
      * @return [type]             [description]
      */
-    public function article_get($article_id)
+    public function article_get($article_id) 
     {
 
         // $jwt = $this->input->get_request_header('Access-Token', TRUE);

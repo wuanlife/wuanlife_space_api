@@ -289,10 +289,11 @@ class Articles_model extends CI_Model
 
         if($approved['user_id']){
 
-            //文章总赞数减一
-            $res1 = $this->db->set('count','count-1',false)
-                         ->where('article_id',$data['article_id'])
-                         ->update('articles_approval_count');
+            /*文章总赞数减一 (因数据库有减1的触发器，此处代码注释)
+               $res1 = $this->db->set('count','count-1',false)
+                            ->where('article_id',$data['article_id'])
+                            ->update('articles_approval_count');         */
+ 
             //取消用户对应文章点赞
             $res2 = $this->db->delete('articles_approval',$approved);
             //返回点赞成功
@@ -356,10 +357,25 @@ class Articles_model extends CI_Model
         return $sql;
     }
 
+    /*
+     * 取消锁定文章(A17)
+     * @param $data
+     * @return mixed
+     */
+    public function clear_post($data)
+    {
+        //取消锁定文章
+        // $sql = $this->db->set('status',($data['status'] & (~(1<<1))),false)
+        $sql = $this->db->set('status',0,false)
+                    ->where('id', $data)
+                    ->update('articles_status');
+
+        return $sql;
+    }
 
 
     /**
-     * 删除文章
+     * 删除文章(A11)
      * @param $data
      * @return bool
      */
