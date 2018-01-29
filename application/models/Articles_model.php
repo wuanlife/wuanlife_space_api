@@ -568,7 +568,7 @@ class Articles_model extends CI_Model
             $a = $this->get_article_img($data);
 
             foreach ($a as $key1 => $value) {
-                $re['articles'][$key]['image_urls'][$key1]['url'] = $a[$key1]['url'];
+                $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
             }
 
             unset($re['articles'][$key]['author_id']);
