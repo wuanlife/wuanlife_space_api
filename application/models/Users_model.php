@@ -380,6 +380,7 @@ class Users_model extends CI_Model
         $this->db->join('users_base','users_base.name = articles_base.author_name');     
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
         if (!$re['articles']) {
