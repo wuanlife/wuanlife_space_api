@@ -255,7 +255,7 @@ class Articles extends REST_Controller
      * 取消点赞文章(A15)
      * @param $post_id
      */
-    public function reapproval_put($article_id): void
+    public function approval_delete($article_id): void
     {
 
         //权限校验
@@ -370,7 +370,7 @@ class Articles extends REST_Controller
      * @param $post_id
      * PUT /articles/:id/clear
      */
-    public function clear_put($article_id): void
+    public function lock_delete($article_id): void
     {
 
         //权限校验
@@ -518,7 +518,7 @@ class Articles extends REST_Controller
      * @param $user_id
      * PUT /users/:id/recollections
      */
-    public function recollections_put($user_id) :void
+    public function collections_delete($user_id) :void
     {
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
@@ -533,7 +533,7 @@ class Articles extends REST_Controller
         //输入参数校验
         $data=array(
             'user_id'=>$token->user_id,
-            'article_id'=>$this->put('article_id'),
+            'article_id'=>$this->delete('article_id'),
         );
 
         //检查文章是否存在
