@@ -338,7 +338,7 @@ class Articles extends REST_Controller
         if(!$this->admins_model->isAdmin($data['user_id'])){
              $this->response(['error'=>'没有权限操作'],403);
         }
-        
+
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -357,12 +357,18 @@ class Articles extends REST_Controller
             $this->response(['error'=>'该文章已被锁定！'],400);
         }
 
+        //临时修正BUG，插入状态码：1为插入，2为更新
         if(empty($article_info)){
-            $this->articles_model->lock_post($data['article_id'])?
+            $this->articles_model->lock_post($data['article_id'],1)?
             $this->response(['success'=>'锁定成功'],204):
             $this->response(['error'=>'锁定失败'],400);
         }
 
+        if(($article_info['status']) == 0){
+            $this->articles_model->lock_post($data['article_id'],2)?
+            $this->response(['success'=>'锁定成功'],204):
+            $this->response(['error'=>'锁定失败'],400);
+        }
     }
 
     /**
@@ -386,7 +392,7 @@ class Articles extends REST_Controller
         if(!$this->admins_model->isAdmin($data['user_id'])){
              $this->response(['error'=>'没有权限操作'],403);
         }
-        
+
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -408,7 +414,7 @@ class Articles extends REST_Controller
         }else{
             $this->response(['error'=>'文章没有被锁定'],400);
         }
-        
+
     }
 
 
@@ -438,11 +444,11 @@ class Articles extends REST_Controller
 
         // 获取文章的作者author_id
         $article_author_id = $this->articles_model->author_article_post($data);
-        
+
 
         //判断是不是管理员，不是管理员不具备操作权限 （可以短路） 或  判断登陆人是文章作者本人
         if(   ($this->admins_model->isAdmin($data['user_id'])) || ($data['user_id'] == $article_author_id['author_id'])   ){
-             
+
 
             //判断数据库中是否有记录
             $article_info = $this->articles_model->get_status_post($data['article_id']);
@@ -570,7 +576,7 @@ class Articles extends REST_Controller
      * @param  [type] $article_id [description]
      * @return [type]             [description]
      */
-    public function article_get($article_id) 
+    public function article_get($article_id)
     {
 
         // $jwt = $this->input->get_request_header('Access-Token', TRUE);
