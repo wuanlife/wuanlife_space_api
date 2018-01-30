@@ -62,7 +62,7 @@ class Users_model extends CI_Model
         $this->db->insert(
             'avatar_url',
             [
-                'url' => 'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100'
+                'url' => USER_DEFAULT_AVATAR_URL
             ]);
         $this->db->insert(
             'users_detail',
@@ -96,10 +96,11 @@ class Users_model extends CI_Model
     public function getUserInfo(int $id): array
     {
         $res = $this->db
-            ->select('users_base.id,url,mail,name,sex,birthday')
+            ->select('users_base.id,url,mail,name,sex_detail.sex AS sex,birthday')
             ->from('users_base')
             ->join('avatar_url', 'users_base.id = avatar_url.user_id', 'left')
             ->join('users_detail', 'users_base.id = users_detail.id', 'left')
+            ->join('sex_detail', 'users_detail.sex = sex_detail.id', 'left')
             ->where(['users_base.id' => $id])
             ->get();
 
@@ -377,8 +378,9 @@ class Users_model extends CI_Model
         
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');     
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
         if (!$re['articles']) {
@@ -432,7 +434,17 @@ class Users_model extends CI_Model
             $data['article_id'] = $re['articles'][$key]['id'];
 
             //获取每篇文章的图片
-            $re['articles'][$key]['image_urls'] = $this->get_article_img($data);
+            //$re['articles'][$key]['image_urls'] = $this->get_article_img($data);
+            $a = $this->get_article_img($data);
+
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
+            }
+            // if ($re['articles'][$key]['image_urls']) {
+            //     # code...
+            // }
+
+            //echo count($re['articles'][$key]['image_urls']);
             unset($data['author_id']);
         }
 
@@ -447,7 +459,7 @@ class Users_model extends CI_Model
         }
 
         //获取用户文章总数
-        $re['total'] = (int)$this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
+        $re['author']['articles_num'] = (int)$this->db->select('count')->from('users_articles_count')->where("users_articles_count.user_id ={$data['user_id']}")->get()->row()->count;
 
         return $re;
 
@@ -480,10 +492,10 @@ class Users_model extends CI_Model
         $this->db->select($select);
         $this->db->from('user_collections');
         $this->db->join('articles_content','articles_content.id = user_collections.article_id');
-        $this->db->join('articles_status','articles_status.id = user_collections.article_id');
+        $this->db->join('articles_status','articles_status.id = user_collections.article_id','left');
         $this->db->join('articles_base','articles_base.id = user_collections.article_id');
-        $this->db->where("articles_base.author_id = {$data['user_id']}");
-        $this->db->where("user_collections.user_id = user_collections.article_id");
+       // $this->db->where("articles_base.author_id = {$data['user_id']}");
+        $this->db->where("user_collections.user_id = {$data['user_id']}");
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] =  $this->db->get()->result_array();
 

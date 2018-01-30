@@ -242,10 +242,6 @@ class Users extends REST_Controller
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
-        // $data['user_id'] = $user_id;
-        // $data['offset'] = 0;
-        // $data['limit'] = 0;
-
         $data = $this->users_model->get_user_articles($data);
         if(!$data)
         {
@@ -278,7 +274,11 @@ class Users extends REST_Controller
 
         for ($i=0; $i < count($re['articles']); $i++) {
             $data['article_id'] = $re['articles'][$i]['id'];
-            $re['articles'][$i]['image_url'] = $this->users_model->get_article_img($data);
+            
+            $a = $this->users_model->get_article_img($data);
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$i]['image_urls'][$key1] = $a[$key1]['url'];
+            }
         }
 
         $this->response($re);

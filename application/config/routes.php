@@ -77,6 +77,9 @@ $route['articles/(:num)/comments']['get'] = 'articles/comments/$1';
 
 // 文章状态相关路由
 $route['articles/(:num)/approval']['post'] = 'articles/approval/$1';
+$route['articles/(:num)/approval']['delete'] = 'articles/approval/$1';
 $route['articles/(:num)/lock']['post'] = 'articles/lock/$1';
+$route['articles/(:num)/lock']['delete'] = 'articles/lock/$1';
 $route['articles/(:num)']['delete'] = 'articles/articles/$1';
 $route['users/(:num)/collections']['put'] = 'articles/collections/$1';
+$route['users/(:num)/collections']['delete'] = 'articles/collections/$1';

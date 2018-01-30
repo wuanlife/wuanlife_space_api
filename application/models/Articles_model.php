@@ -289,10 +289,11 @@ class Articles_model extends CI_Model
 
         if($approved['user_id']){
 
-            //文章总赞数减一
-            $res1 = $this->db->set('count','count-1',false)
-                         ->where('article_id',$data['article_id'])
-                         ->update('articles_approval_count');
+            /*文章总赞数减一 (因数据库有减1的触发器，此处代码注释)
+               $res1 = $this->db->set('count','count-1',false)
+                            ->where('article_id',$data['article_id'])
+                            ->update('articles_approval_count');         */
+
             //取消用户对应文章点赞
             $res2 = $this->db->delete('articles_approval',$approved);
             //返回点赞成功
@@ -344,26 +345,60 @@ class Articles_model extends CI_Model
      * @param $data
      * @return mixed
      */
-    public function lock_post($data)
+    public function lock_post($data,$status)
     {
         //锁定文章
-        $field = array(
-            'id' => $data,
-            'status' => 1<<1
-            );
-        $sql = $this->db->insert('articles_status',$field);
+        if($status == 1){
+
+            $field = array(
+                'id' => $data,
+                'status' => 1<<1
+                );
+            $sql = $this->db->insert('articles_status',$field);
+
+            return $sql;
+
+        }else if($status == 2){
+
+            $sql = $this->db->set('status','status' | (1<<1),false)
+                        ->where('id', $data)
+                        ->update('articles_status');
+
+            return $sql;
+
+        }else{
+            return false;
+        }
+
+    }
+
+    /*
+     * 取消锁定文章(A17)
+     * @param $data
+     * @return mixed
+     */
+    public function clear_post($data)
+    {
+        //取消锁定文章
+        // $sql = $this->db->set('status',($data['status'] & (~(1<<1))),false)
+        $sql = $this->db->set('status','status' & (~(1<<1)),false)
+                    ->where('id', $data)
+                    ->update('articles_status');
 
         return $sql;
     }
 
 
-
     /**
-     * 删除文章
+     * 删除文章(A11)
      * @param $data
      * @return bool
      */
-    public function delete_post($data,$article_info){
+    public function delete_post($data,$article_info,$article_author_id){
+        //作者文章数减1
+        $res = $this->db->set('count','count-1',false)
+                    ->where('user_id',$article_author_id)
+                    ->update('users_articles_count');
 
         //如果文章有状态执行叠加操作
         if($article_info){
@@ -396,7 +431,7 @@ class Articles_model extends CI_Model
             ->where('id',$data['article_id'])
             ->get()
             ->row_array();
-  
+
         return $sql;
     }
 
@@ -486,9 +521,15 @@ class Articles_model extends CI_Model
         $this->db->from('articles_base');
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
+
+        //order参数为desc时为降序排序
+        if ($data['order'] == "desc") {
+            $this->db->order_by('articles_base.update_at','desc');
+        }
+
         $re['articles'] = $this->db->get()->result_array();
 
         foreach ($re['articles'] as $key => $value) {
@@ -541,7 +582,13 @@ class Articles_model extends CI_Model
                 $re['articles'][$key]['replied'] = False;
             }
             $data['article_id'] = $re['articles'][$key]['id'];
-            $re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+            //$re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
+
+            $a = $this->get_article_img($data);
+
+            foreach ($a as $key1 => $value) {
+                $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
+            }
 
             unset($re['articles'][$key]['author_id']);
 
@@ -557,9 +604,9 @@ class Articles_model extends CI_Model
 
         // foreach ($re['au'] as $key => $value) {
 
-        // $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url; 
+        // $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url;
         // }
-        
+
         //获取文章总数
         $select = ' articles_base.id,
                     articles_content.title,
@@ -574,7 +621,7 @@ class Articles_model extends CI_Model
         $this->db->from('articles_base');
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_status.status != 2"); //被删除的文章不显示
         $re['total'] = $this->db->get()->num_rows();
         //删除不需要返回的
@@ -609,7 +656,7 @@ class Articles_model extends CI_Model
         $this->db->where("articles_base.id = {$article_id}");
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
-        $this->db->join('articles_status','articles_status.id = articles_base.id');
+        $this->db->join('articles_status','articles_status.id = articles_base.id','left');
 
         $re = $this->db->get()->row_array();
         // print_r($re['articles']);
@@ -649,7 +696,7 @@ class Articles_model extends CI_Model
         unset($re['author_name']);
 
         return $re;
-    
+
     }
 
 
@@ -671,9 +718,10 @@ class Articles_model extends CI_Model
         $this->db->join('comment_contents','comment_contents.id = articles_comments.comment_id');
         $this->db->join('users_base','users_base.id = articles_comments.user_id');
         $this->db->where("articles_comments.article_id ={$data['article_id']}");
+        $this->db->order_by('articles_comments.create_at','desc');
         $this->db->limit($data['limit'],$data['offset']);
         $re['reply'] = $this->db->get()->result_array();
-
+        print_r($re['reply']);
         //id,floor转成int类型 时间转成ISO格式
         foreach ($re['reply'] as $key => $value) {
             $re['reply'][$key]['user_id'] =(int)$re['reply'][$key]['user_id'];
@@ -684,6 +732,23 @@ class Articles_model extends CI_Model
         $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;
 
+
+    }
+
+    /**
+     * 用文章id搜索文章对应的图片
+     * @param  [array] $data [description]
+     * @return [array]       [description]
+     */
+    public function get_article_img($data)
+    {
+        $this->db->select('image_url.url');
+        $this->db->from('image_url');
+        $this->db->where("image_url.article_id = {$data['article_id']}");
+        $this->db->where("image_url.delete_flg = 0");
+        $this->db->limit(3,0);
+        $re= $this->db->get()->result_array();
+        return $re;
 
     }
 
