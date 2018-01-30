@@ -293,7 +293,7 @@ class Articles_model extends CI_Model
                $res1 = $this->db->set('count','count-1',false)
                             ->where('article_id',$data['article_id'])
                             ->update('articles_approval_count');         */
- 
+
             //取消用户对应文章点赞
             $res2 = $this->db->delete('articles_approval',$approved);
             //返回点赞成功
@@ -345,16 +345,31 @@ class Articles_model extends CI_Model
      * @param $data
      * @return mixed
      */
-    public function lock_post($data)
+    public function lock_post($data,$status)
     {
         //锁定文章
-        $field = array(
-            'id' => $data,
-            'status' => 1<<1
-            );
-        $sql = $this->db->insert('articles_status',$field);
+        if($status == 1){
 
-        return $sql;
+            $field = array(
+                'id' => $data,
+                'status' => 1<<1
+                );
+            $sql = $this->db->insert('articles_status',$field);
+
+            return $sql;
+
+        }else if($status == 2){
+
+            $sql = $this->db->set('status','status' | (1<<1),false)
+                        ->where('id', $data)
+                        ->update('articles_status');
+
+            return $sql;
+
+        }else{
+            return false;
+        }
+
     }
 
     /*
@@ -366,7 +381,7 @@ class Articles_model extends CI_Model
     {
         //取消锁定文章
         // $sql = $this->db->set('status',($data['status'] & (~(1<<1))),false)
-        $sql = $this->db->set('status',0,false)
+        $sql = $this->db->set('status','status' & (~(1<<1)),false)
                     ->where('id', $data)
                     ->update('articles_status');
 
@@ -379,7 +394,11 @@ class Articles_model extends CI_Model
      * @param $data
      * @return bool
      */
-    public function delete_post($data,$article_info){
+    public function delete_post($data,$article_info,$article_author_id){
+        //作者文章数减1
+        $res = $this->db->set('count','count-1',false)
+                    ->where('user_id',$article_author_id)
+                    ->update('users_articles_count');
 
         //如果文章有状态执行叠加操作
         if($article_info){
@@ -412,7 +431,7 @@ class Articles_model extends CI_Model
             ->where('id',$data['article_id'])
             ->get()
             ->row_array();
-  
+
         return $sql;
     }
 
@@ -510,7 +529,7 @@ class Articles_model extends CI_Model
         if ($data['order'] == "desc") {
             $this->db->order_by('articles_base.update_at','desc');
         }
-        
+
         $re['articles'] = $this->db->get()->result_array();
 
         foreach ($re['articles'] as $key => $value) {
@@ -585,9 +604,9 @@ class Articles_model extends CI_Model
 
         // foreach ($re['au'] as $key => $value) {
 
-        // $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url; 
+        // $re['au'][$key]['avatar_url'] = $this->db->select('avatar_url.url')->from('avatar_url')->where("avatar_url.user_id = {$re['au'][$key]['id']}")->get()->row()->url;
         // }
-        
+
         //获取文章总数
         $select = ' articles_base.id,
                     articles_content.title,
@@ -677,7 +696,7 @@ class Articles_model extends CI_Model
         unset($re['author_name']);
 
         return $re;
-    
+
     }
 
 

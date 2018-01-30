@@ -254,8 +254,9 @@ class Articles extends REST_Controller
     /**
      * 取消点赞文章(A15)
      * @param $post_id
+     * DELETE /articles/:id/approval
      */
-    public function reapproval_put($article_id): void
+    public function approval_delete($article_id): void
     {
 
         //权限校验
@@ -338,7 +339,7 @@ class Articles extends REST_Controller
         if(!$this->admins_model->isAdmin($data['user_id'])){
              $this->response(['error'=>'没有权限操作'],403);
         }
-        
+
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -357,20 +358,26 @@ class Articles extends REST_Controller
             $this->response(['error'=>'该文章已被锁定！'],400);
         }
 
+        //临时修正BUG，插入状态码：1为插入，2为更新
         if(empty($article_info)){
-            $this->articles_model->lock_post($data['article_id'])?
+            $this->articles_model->lock_post($data['article_id'],1)?
             $this->response(['success'=>'锁定成功'],204):
             $this->response(['error'=>'锁定失败'],400);
         }
 
+        if(($article_info['status']) == 0){
+            $this->articles_model->lock_post($data['article_id'],2)?
+            $this->response(['success'=>'锁定成功'],204):
+            $this->response(['error'=>'锁定失败'],400);
+        }
     }
 
     /**
      * 取消锁定文章(A17)
      * @param $post_id
-     * PUT /articles/:id/clear
+     * DELETE /articles/:id/lock
      */
-    public function clear_put($article_id): void
+    public function lock_delete($article_id): void
     {
 
         //权限校验
@@ -386,7 +393,7 @@ class Articles extends REST_Controller
         if(!$this->admins_model->isAdmin($data['user_id'])){
              $this->response(['error'=>'没有权限操作'],403);
         }
-        
+
         $article_exist = $this->articles_model->exist_article_post($data);
 
         if(empty($article_exist)){
@@ -408,7 +415,7 @@ class Articles extends REST_Controller
         }else{
             $this->response(['error'=>'文章没有被锁定'],400);
         }
-        
+
     }
 
 
@@ -438,11 +445,11 @@ class Articles extends REST_Controller
 
         // 获取文章的作者author_id
         $article_author_id = $this->articles_model->author_article_post($data);
-        
+
 
         //判断是不是管理员，不是管理员不具备操作权限 （可以短路） 或  判断登陆人是文章作者本人
         if(   ($this->admins_model->isAdmin($data['user_id'])) || ($data['user_id'] == $article_author_id['author_id'])   ){
-             
+
 
             //判断数据库中是否有记录
             $article_info = $this->articles_model->get_status_post($data['article_id']);
@@ -454,7 +461,7 @@ class Articles extends REST_Controller
 
             if(empty($article_info) || (($article_info['status']) & (1<<1)) || ($article_info['status'] == 0)){
 
-                $this->articles_model->delete_post($data['article_id'],$article_info)?
+                $this->articles_model->delete_post($data['article_id'],$article_info,$article_author_id['author_id'])?
                 $this->response(['success'=>'删除成功'],204):
                 $this->response(['error'=>'删除失败'],400);
             }
@@ -516,9 +523,9 @@ class Articles extends REST_Controller
     /**
      * 取消收藏文章(A16)
      * @param $user_id
-     * PUT /users/:id/recollections
+     * DELETE /users/:id/collections
      */
-    public function recollections_put($user_id) :void
+    public function collections_delete($user_id) :void
     {
         //权限校验
         $jwt = $this->input->get_request_header('Access-Token', TRUE);
@@ -533,7 +540,7 @@ class Articles extends REST_Controller
         //输入参数校验
         $data=array(
             'user_id'=>$token->user_id,
-            'article_id'=>$this->put('article_id'),
+            'article_id'=>$this->delete('article_id'),
         );
 
         //检查文章是否存在
@@ -570,7 +577,7 @@ class Articles extends REST_Controller
      * @param  [type] $article_id [description]
      * @return [type]             [description]
      */
-    public function article_get($article_id) 
+    public function article_get($article_id)
     {
 
         // $jwt = $this->input->get_request_header('Access-Token', TRUE);
