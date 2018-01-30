@@ -460,7 +460,7 @@ class Articles extends REST_Controller
 
             if(empty($article_info) || (($article_info['status']) & (1<<1)) || ($article_info['status'] == 0)){
 
-                $this->articles_model->delete_post($data['article_id'],$article_info)?
+                $this->articles_model->delete_post($data['article_id'],$article_info,$article_author_id['author_id'])?
                 $this->response(['success'=>'删除成功'],204):
                 $this->response(['error'=>'删除失败'],400);
             }

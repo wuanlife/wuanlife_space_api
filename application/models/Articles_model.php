@@ -394,7 +394,11 @@ class Articles_model extends CI_Model
      * @param $data
      * @return bool
      */
-    public function delete_post($data,$article_info){
+    public function delete_post($data,$article_info,$article_author_id){
+        //作者文章数减1
+        $res = $this->db->set('count','count-1',false)
+                    ->where('user_id',$article_author_id)
+                    ->update('users_articles_count');
 
         //如果文章有状态执行叠加操作
         if($article_info){
