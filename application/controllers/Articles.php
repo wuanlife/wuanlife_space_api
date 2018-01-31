@@ -198,7 +198,7 @@ class Articles extends REST_Controller
             count($article_info) > 0 or $this->response(['error'=>'没有权限操作'], 403);
             if(!$this->admins_model->isAdmin($user_info->user_id)
                 && $user_info->user_id != $comments_info[0]['user_id']
-                && $user_info->user_id != $article_info[0]['user_id']
+                && $user_info->user_id != $article_info[0]['author_id']
             ){
                 $this->response(['error'=>'没有权限操作'], 403);
             }
