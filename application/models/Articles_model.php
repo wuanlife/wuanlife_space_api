@@ -554,32 +554,47 @@ class Articles_model extends CI_Model
             $re['articles'][$key]['update_at'] = date('c',strtotime($re['articles'][$key]['update_at']));
             $re['articles'][$key]['create_at'] = date('c',strtotime($re['articles'][$key]['create_at']));
 
-            if ($re['articles'][$key]['approved_num'] > 0 )
-            {
-                $re['articles'][$key]['approved'] = TRUE;
+            // 获取文章是否被当前用户点赞
+            // Gtaker  2018/2/1  23:43
+            if ($data['id'] === null) {
+                $re['articles'][$key]['approved'] = false;
+            } else {
+                $apr_num = $this->db
+                    ->select('id')
+                    ->from('articles_approval')
+                    ->where(['user_id' => $data['id']])
+                    ->get()->num_rows();
+                $re['articles'][$key]['approved'] = (bool)$apr_num;
             }
-            else
+            // 获取文章是否被当前用户收藏
+            // Gtaker  2018/2/1 23:43
+            if ($data['id'] === null) {
+                $re['articles'][$key]['collected'] = false;
+            } else {
+                $clt_num = $this->db
+                    ->select('id')
+                    ->from('user_collections')
+                    ->where(['user_id' => $data['id']])
+                    ->get()->num_rows();
+                $re['articles'][$key]['collected'] = (bool)$clt_num;
+            }
+            // 获取文章是否被当前用户回复
+            // Gtaker  2018/2/1 23:43
+            if ($data['id'] === null)
             {
-                $re['articles'][$key]['approved'] = False;
+                $re['articles'][$key]['replied'] = false;
+            } else {
+                $rpl_num = $this->db
+                    ->select('comment_id')
+                    ->from('articles_comments')
+                    ->where([
+                        'article_id' => $re['articles'][$key]['id'],
+                        'user_id'    => $data['id']
+                        ])
+                    ->get()->num_rows();
+                $re['articles'][$key]['replied'] = (bool)$rpl_num;
             }
 
-            if ($re['articles'][$key]['collected_num'] > 0 )
-            {
-                $re['articles'][$key]['collected'] = TRUE;
-            }
-            else
-            {
-                $re['articles'][$key]['collected'] = False;
-            }
-
-            if ($re['articles'][$key]['replied_num'] > 0 )
-            {
-                $re['articles'][$key]['replied'] = TRUE;
-            }
-            else
-            {
-                $re['articles'][$key]['replied'] = False;
-            }
             $data['article_id'] = $re['articles'][$key]['id'];
             //$re['articles'][$key]['image_urls'] = $this->users_model->get_article_img($data);
 
