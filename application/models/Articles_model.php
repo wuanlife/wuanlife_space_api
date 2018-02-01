@@ -560,7 +560,7 @@ class Articles_model extends CI_Model
                 $re['articles'][$key]['approved'] = false;
             } else {
                 $apr_num = $this->db
-                    ->select('id')
+                    ->select('user_id')
                     ->from('articles_approval')
                     ->where(['user_id' => $data['id']])
                     ->get()->num_rows();
@@ -572,7 +572,7 @@ class Articles_model extends CI_Model
                 $re['articles'][$key]['collected'] = false;
             } else {
                 $clt_num = $this->db
-                    ->select('id')
+                    ->select('user_id')
                     ->from('user_collections')
                     ->where(['user_id' => $data['id']])
                     ->get()->num_rows();
