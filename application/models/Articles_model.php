@@ -507,7 +507,6 @@ class Articles_model extends CI_Model
      */
     public function get_articles($data)
     {
-    {
         $select = ' articles_base.id,
                     articles_content.title,
                     articles_content.content,
@@ -522,7 +521,7 @@ class Articles_model extends CI_Model
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
-        $this->db->where('((articles_status.status >> 2) & 1) !=','0'); //被删除的文章不显示  更正判断逻辑，Gtaker 2018/2/1 17:53
+        $this->db->where('((articles_status.status >> 2) & 1) ==','0'); //被删除的文章不显示  更正判断逻辑，Gtaker 2018/2/1 17:53
         $this->db->limit($data['limit'],$data['offset']);
 
         //order参数为desc时为降序排序
@@ -622,7 +621,7 @@ class Articles_model extends CI_Model
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
-        $this->db->where('((articles_status.status >> 2) & 1) !=','0'); //被删除的文章不显示，更正判断删除的逻辑，Gtaker 2018/2/1   17:20
+        $this->db->where('((articles_status.status >> 2) & 1) ==','0'); //被删除的文章不显示，更正判断删除的逻辑，Gtaker 2018/2/1   17:20
         $re['total'] = $this->db->get()->num_rows();
         //删除不需要返回的
         foreach ($re['articles'] as $key => $value) {
@@ -632,7 +631,6 @@ class Articles_model extends CI_Model
 
         return $re;
 
-    }
     }
 
 
