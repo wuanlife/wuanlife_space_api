@@ -307,17 +307,18 @@ class Articles extends REST_Controller
      */
     public function articles_get(): void
     {
-        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        // if(empty($jwt)){
-        //     $this->response(['error'=>'jwt为空']);
-        // }
-        // else{
-        //     $token = $this->parsing_token($jwt);
-        // }
+         $jwt = $this->input->get_request_header('Access-Token', TRUE);
+         if(empty($jwt)){
+             $id = null;
+         } else{
+             $token = $this->parsing_token($jwt);
+             $id = $token->user_id;
+         }
         $data = [
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
             'order'     => $this->get('order') ?? 'asc',
+            'id'        => $id
         ];
 
         $re = $this->articles_model->get_articles($data);
