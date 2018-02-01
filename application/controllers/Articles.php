@@ -68,11 +68,9 @@ class Articles extends REST_Controller
                 function ($matches) use (&$image_urls_arr,&$i){
                     if ($i < 3){
                         $i++;
-                        $image_urls_arr[] = $matches[0];
-                        return '[图片]';
-                    }else {
-                        return $matches[0];
+                        $image_urls_arr[] = $matches[1];
                     }
+                    return $matches[0];
                 },$content);
 
             //验证POST数据
