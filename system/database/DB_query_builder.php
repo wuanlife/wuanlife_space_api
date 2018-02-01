@@ -2429,9 +2429,11 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
 					if ( ! empty($matches[4]))
 					{
 						$this->_is_literal($matches[4]) OR $matches[4] = $this->protect_identifiers(trim($matches[4]));
-						$matches[4] = ' '.$matches[4];
+                        //todo 暂时通过一条简单的if来避免bug，日后需要进行详细的修复
+                        if (!($matches[3] == ' >' and substr($matches[4],0,1) == '>')) {
+                            $matches[4] = ' ' . $matches[4];
+                        }
 					}
-
 					$conditions[$ci] = $matches[1].$this->protect_identifiers(trim($matches[2]))
 						.' '.trim($matches[3]).$matches[4].$matches[5];
 				}
