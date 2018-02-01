@@ -622,7 +622,7 @@ class Articles_model extends CI_Model
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
         $this->db->join('users_base','users_base.name = articles_base.author_name');
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
-        $this->db->where("articles_status.status != 2"); //被删除的文章不显示
+        $this->db->where("((articles_status.status >> 2) & 1) != 0"); //被删除的文章不显示，更正判断删除的逻辑，Gtaker 2018/2/1   17:20
         $re['total'] = $this->db->get()->num_rows();
         //删除不需要返回的
         foreach ($re['articles'] as $key => $value) {
@@ -724,10 +724,15 @@ class Articles_model extends CI_Model
         // print_r($re['reply']);
         //id,floor转成int类型 时间转成ISO格式
         foreach ($re['reply'] as $key => $value) {
-            $re['reply'][$key]['user_id'] =(int)$re['reply'][$key]['user_id'];
+            //修改返回的json格式
+            //Gtaker 2018/2/1  17:11
+            $re['reply'][$key]['user']['id'] = (int)$re['reply'][$key]['user_id'];
+            $re['reply'][$key]['user']['name'] = $re['reply'][$key]['user_name'];
             $re['reply'][$key]['floor'] = (int)$re['reply'][$key]['floor'];
             $re['reply'][$key]['create_at'] = date('c',strtotime($re['reply'][$key]['create_at']));
+            unset($re['reply'][$key]['user_name']);
         }
+
         //获取评论总数
         $re['total'] = $this->db->select('*')->from('articles_comments')->where('article_id',$data['article_id'])->get()->num_rows();
         return $re;
