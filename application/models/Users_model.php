@@ -339,9 +339,10 @@ class Users_model extends CI_Model
             $this->db
                 ->select('author_id AS id,author_name AS name,url AS avatar_url,count(*) AS monthly_articles_num')
                 ->from('articles_base')
-                ->join('avatar_url', 'avatar_url.user_id = articles_base.id', 'left')
+                ->join('users_base','users_base.name = name')
+                ->join('avatar_url', 'avatar_url.user_id = users_base.id', 'left')
                 ->group_by('author_id')
-                ->where(['DATE_FORMAT(create_at,\'%Y%m\')' => date('Ym',time())])
+                ->where(['DATE_FORMAT(articles_base.create_at,\'%Y%m\')' => date('Ym',time())])
                 ->limit(5)
                 ->order_by('monthly_articles_num')
                 ->get()
