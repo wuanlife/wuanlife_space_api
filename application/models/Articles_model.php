@@ -562,7 +562,10 @@ class Articles_model extends CI_Model
                 $apr_num = $this->db
                     ->select('user_id')
                     ->from('articles_approval')
-                    ->where(['user_id' => $data['id']])
+                    ->where([
+                        'article_id' => $re['articles'][$key]['id'],
+                        'user_id' => $data['id']
+                    ])
                     ->get()->num_rows();
                 $re['articles'][$key]['approved'] = (bool)$apr_num;
             }
@@ -574,7 +577,10 @@ class Articles_model extends CI_Model
                 $clt_num = $this->db
                     ->select('user_id')
                     ->from('user_collections')
-                    ->where(['user_id' => $data['id']])
+                    ->where([
+                        'article_id' => $re['articles'][$key]['id'],
+                        'user_id' => $data['id']
+                    ])
                     ->get()->num_rows();
                 $re['articles'][$key]['collected'] = (bool)$clt_num;
             }
