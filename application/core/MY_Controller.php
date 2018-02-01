@@ -1548,8 +1548,14 @@ abstract class REST_Controller extends CI_Controller {
      */
     protected function _parse_delete()
     {
+        // 修正无法使用该方法获取 raw 传值的问题
+        // Gtaker 2018/1/30
+        if ($this->request->format)
+        {
+        $this->request->body = $this->input->raw_input_stream;
+        }
         // These should exist if a DELETE request
-        if ($this->input->method() === 'delete')
+        elseif ($this->input->method() === 'delete')
         {
             $this->_delete_args = $this->input->input_stream();
         }

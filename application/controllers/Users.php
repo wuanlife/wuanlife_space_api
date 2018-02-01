@@ -242,10 +242,6 @@ class Users extends REST_Controller
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
-        // $data['user_id'] = $user_id;
-        // $data['offset'] = 0;
-        // $data['limit'] = 0;
-
         $data = $this->users_model->get_user_articles($data);
         if(!$data)
         {
