@@ -79,7 +79,7 @@ class Search_model extends CI_Model
 
         foreach ($res->result() as $row) {
             $result[$i]['id'] = (int)$row->id;
-            $result[$i]['image'] = $row->url;
+            $result[$i]['avatar_url'] = $row->url;
             $result[$i++]['name'] = $row->name;
         }
 
