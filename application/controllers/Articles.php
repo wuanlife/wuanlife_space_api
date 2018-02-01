@@ -58,15 +58,29 @@ class Articles extends REST_Controller
             $title = trim($this->post('title'));
             $content = trim($this->post('content'));
             $content_txt = str_replace('&nbsp;','',strip_tags($content));
-            $image_urls = $this->post('image_urls');
-            $image_urls_arr = explode(',', $image_urls);
+
+            //正则出三条正文中的url地址
+            //Gtaker 2018/2/1 17:00
+            $image_urls_arr = [];
+            $i = -1;
+            $content = preg_replace_callback(
+                "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/",
+                function ($matches) use (&$image_urls_arr,&$i){
+                    if ($i < 3){
+                        $i++;
+                        $arr[] = $matches[0];
+                        return '[图片]';
+                    }else {
+                        return $matches[0];
+                    }
+                },$content);
 
             //验证POST数据
             empty($title) and $this->response(['error'=>'文章标题不能为空'], 400);
             mb_strlen($title) > 60 and $this->response(['error'=>'标题不能超过60个字符'], 400);
             empty($content) and $this->response(['error'=>'文章正文不能为空'], 400);
             mb_strlen($content_txt) > 5000 and $this->response(['error'=>'文章正文不能超过5000个字符'], 400);
-            count($image_urls_arr) > 3 and $this->response(['error'=>'至多三张预览图片'], 400);
+            //count($image_urls_arr) > 3 and $this->response(['error'=>'至多三张预览图片'], 400);
 
             //组合数据
             $data = [
@@ -619,11 +633,12 @@ class Articles extends REST_Controller
         }
 
         //判断文章状态  0正常  1被锁定  2被删除
-        if ($re['status'] == '1')
+        //更正判断逻辑，Gtaker 2018/2/1  17:25
+        if ((($re['status'] >> 1) & 1) != 0)
         {
             $re['lock'] = TRUE;
         }
-        elseif ($re['status'] == '2' )
+        elseif ((($re['status'] >> 2) & 1) != 0)
         {
             $this->response(['error'=>'文章已被删除'],410);
         }
