@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS articles_base
   id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '文章id',
   author_id INT UNSIGNED NOT NULL COMMENT '作者id',
   author_name CHAR(20) COLLATE utf8_bin NOT NULL COMMENT '作者名',
+  -- 此处暂时认定为一个糟糕的设计，获取文章信息的作者名时不应该依赖该字段，而应该依赖于 users_base 表的 name 字段
   content_digest CHAR(90) COLLATE utf8_bin NOT NULL COMMENT '文章摘要',
   update_at TIMESTAMP NOT NULL COMMENT '文章更新时间',
   create_at TIMESTAMP NOT NULL COMMENT '文章创建时间',
