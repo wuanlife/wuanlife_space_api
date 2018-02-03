@@ -512,14 +512,14 @@ class Articles_model extends CI_Model
                     articles_content.content,
                     articles_base.update_at,
                     articles_base.create_at,
-                    articles_base.author_name,
+                    users_base.name as author_name,
                     articles_base.author_id,
                     articles_status.status
         ';
         $this->db->select("$select");
         $this->db->from('articles_base');
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
-        $this->db->join('users_base','users_base.name = articles_base.author_name');
+        $this->db->join('users_base','users_base.id = articles_base.author_id');        // 文章作者昵称暂时依赖 users_base 表
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where('((articles_status.status >> 2) & 1) =','0'); //被删除的文章不显示  更正判断逻辑，Gtaker 2018/2/1 17:53
         $this->db->limit($data['limit'],$data['offset']);
@@ -667,14 +667,14 @@ class Articles_model extends CI_Model
                     articles_content.content,
                     articles_base.update_at,
                     articles_base.create_at,
-                    articles_base.author_name,
+                    users_base.name as author_name,
                     articles_status.status
         ';
         $this->db->select($select);
         $this->db->from('articles_base');
         $this->db->where("articles_base.id = {$article_id}");
         $this->db->join('articles_content',' articles_content.id = articles_base.id');
-        $this->db->join('users_base','users_base.name = articles_base.author_name');
+        $this->db->join('users_base','users_base.id = articles_base.author_id');
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
 
         $re = $this->db->get()->row_array();
