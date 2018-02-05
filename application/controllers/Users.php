@@ -211,12 +211,14 @@ class Users extends REST_Controller
         $id   = $this->users_model->id;
         $name = $this->users_model->name;
         $mail = $this->users_model->mail;
+        $auth = $this->users_model->is_admin;
         $jwt  = $this->createJwtToken($id);
         $this->response([
             'id'           => (int)$id,
             'name'         => $name,
             'mail'         => $mail,
-            'Access-Token' => $jwt
+            'Access-Token' => $jwt,
+            'is_admin'     => $auth
         ]);
     }
 
