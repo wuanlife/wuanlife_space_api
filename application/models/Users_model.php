@@ -21,12 +21,23 @@ class Users_model extends CI_Model
             ->from('users_base')
             ->where(['mail' => $data['mail'], 'password' => md5($data['password'])])
             ->get();
-
         if ($res->num_rows()) {
             $info       = $res->result();
             $this->id   = $info[0]->id;
             $this->name = $info[0]->name;
             $this->mail = $info[0]->mail;
+
+            $res = $this->db
+                ->select('auth')
+                ->from('users_auth')
+                ->where(['id' => $this->id])
+                ->get();
+            if (!$res->num_rows()){
+                $auth = false;
+            } else {
+                $auth = ($res->result()[0]->auth ^ 1<<1) || ($res->result()[0]->auth ^ 1<<2);
+            }
+            $this->is_admin = (bool)$auth;
 
             return true;
         } else {
