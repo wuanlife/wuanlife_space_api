@@ -9,7 +9,7 @@ INSERT INTO wuan_api_new.users_base
 
 -- 增加用户头像数据
 INSERT INTO wuan_api_new.avatar_url
-  SELECT id,'default_url',0 FROM wuan_api_old.user_base;
+  SELECT id,'http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg',0 FROM wuan_api_old.user_base;
 
 -- 转移用户详细数据
 INSERT INTO wuan_api_new.users_detail
