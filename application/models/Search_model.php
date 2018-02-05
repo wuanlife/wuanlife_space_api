@@ -22,14 +22,16 @@ class Search_model extends CI_Model
         return
             [
                 'keyword' => $this->input->get('keyword'),
-                'offset' => $this->input->get('offset') ?? 0,
-                'limit' => $this->input->get('limit') ?? 21
+                'offset'  => $this->input->get('offset') ?? 0,
+                'limit'   => $this->input->get('limit') ?? 21
             ];
     }
 
     /**
      * 验证参数是否合法
+     *
      * @param array $data
+     *
      * @return bool
      */
     public function validateSearchParam(array $data): bool
@@ -39,13 +41,16 @@ class Search_model extends CI_Model
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * 根据关键字进行搜索
+     *
      * @param array  $data
      * @param string $aim
+     *
      * @return array
      */
     public function search(array $data, string $aim): array
@@ -61,14 +66,16 @@ class Search_model extends CI_Model
 
     /**
      * 搜索相关用户
+     *
      * @param array $data
+     *
      * @return array
      */
     public function search_users(array $data): array
     {
-        $i = 0;
+        $i      = 0;
         $result = [];
-        $res =
+        $res    =
             $this->db
                 ->select('id,url,mail,name')
                 ->from('users_base')
@@ -78,9 +85,9 @@ class Search_model extends CI_Model
                 ->get();
 
         foreach ($res->result() as $row) {
-            $result[$i]['id'] = (int)$row->id;
+            $result[$i]['id']         = (int)$row->id;
             $result[$i]['avatar_url'] = $row->url;
-            $result[$i++]['name'] = $row->name;
+            $result[$i++]['name']     = $row->name;
         }
 
         $total = $res->num_rows();
@@ -90,28 +97,57 @@ class Search_model extends CI_Model
 
     /**
      * 搜索相关文章
+     *
      * @param $data
+     *
      * @return array
      */
     public function search_articles($data): array
     {
-        $i = 0;
+        $i      = 0;
         $result = [];
-        $res =
+        $res    =
             $this->db
-                ->select('title,content,articles_base.id,update_at,create_at')
+                ->select('title,content,articles_base.id,update_at,articles_base.create_at,url,author_id,name')
                 ->from('articles_content')
                 ->join('articles_base', 'articles_base.id = articles_content.id', 'inner')
+                ->join('users_base', 'users_base.id = articles_base.author_id')
+                ->join('avatar_url', 'avatar_url.user_id = articles_base.author_id', 'left')
                 ->or_like(['title' => $data['keyword'], 'content' => $data['keyword']])
                 ->limit($data['limit'], $data['offset'])
                 ->get();
 
         foreach ($res->result() as $row) {
-            $result[$i]['title'] = $row->title;
-            $result[$i]['content'] = $row->content;
-            $result[$i]['author_id'] = (int)$row->id;
-            $result[$i]['update_at'] = date('c',strtotime($row->update_at));
-            $result[$i++]['create_at'] = date('c',strtotime($row->create_at));
+            // 查询文章的三张预览图
+            $articles_image_urls = $this->db
+                ->select('url')
+                ->from('image_url')
+                ->where(['article_id' => $row->id])
+                ->get()->result();
+            $images              = [];
+            $j                   = 0;
+            foreach ($articles_image_urls as $url) {
+                if ( ! empty($url->url) && $j++ < 3) {
+                    $images[] = $url->url;
+                }
+            }
+
+            // 格式化数据
+            $result[$i++] =
+                [
+                    'title'     => $row->title,
+                    'content'   => $row->content,
+                    'id'        => (int)$row->id,
+                    'update_at' => date('c', strtotime($row->update_at)),
+                    'create_at' => date('c', strtotime($row->create_at)),
+                    'author'    =>
+                        [
+                            'id'         => $row->author_id,
+                            'name'       => $row->name,
+                            'avatar_url' => $row->url
+                        ],
+                    'images'    => $images
+                ];
         }
 
         $total = $res->num_rows();
