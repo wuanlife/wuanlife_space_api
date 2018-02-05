@@ -22,8 +22,8 @@ class Search_model extends CI_Model
         return
             [
                 'keyword' => $this->input->get('keyword'),
-                'offset' => $this->input->get('offset'),
-                'limit' => $this->input->get('limit')
+                'offset' => $this->input->get('offset') ?? 0,
+                'limit' => $this->input->get('limit') ?? 21
             ];
     }
 
