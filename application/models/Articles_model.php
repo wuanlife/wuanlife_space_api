@@ -98,15 +98,18 @@ class Articles_model extends CI_Model
         ];
         $this->db->insert($this->a_status, $data_status);
 
-        //添加文章图片url
-        $data_url = [];
-        foreach($data['image_urls_arr'] as $k => $v){
-            $data_url[$k] = [
-                'article_id'=>$id,
-                'url'=>$v
-            ];
+        // 添加文章图片url
+        // 只有在image_urls_arr 不为空的时候，才需要添加url地址   By Gtaker  2018/2/5 17:23
+        if (!empty($data['image_urls_arr'])) {
+            $data_url = [];
+            foreach ($data['image_urls_arr'] as $k => $v) {
+                $data_url[$k] = [
+                    'article_id' => $id,
+                    'url' => $v
+                ];
+            }
+            $this->db->insert_batch($this->i_url, $data_url);
         }
-        $this->db->insert_batch($this->i_url, $data_url);
 
         //结束 end
         $this->db->trans_complete();
