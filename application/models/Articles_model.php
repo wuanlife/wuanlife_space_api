@@ -663,7 +663,7 @@ class Articles_model extends CI_Model
      * @param  [type] $article_id [description]
      * @return [type]             [description]
      */
-    public function get_article($article_id):array
+    public function get_article($article_id,$users_id):array
     {
         $select = ' articles_base.id,
                     articles_content.title,
@@ -676,8 +676,8 @@ class Articles_model extends CI_Model
         $this->db->select($select);
         $this->db->from('articles_base');
         $this->db->where("articles_base.id = {$article_id}");
-        $this->db->join('articles_content',' articles_content.id = articles_base.id');
-        $this->db->join('users_base','users_base.id = articles_base.author_id');
+        $this->db->join('articles_content',' articles_content.id = articles_base.id','left');
+        $this->db->join('users_base','users_base.id = articles_base.author_id','left');
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
 
         $re = $this->db->get()->row_array();
@@ -716,6 +716,37 @@ class Articles_model extends CI_Model
         $re['author']['articles_num'] = (int)$this->db->select('users_articles_count.count')->from('users_articles_count')->where("users_articles_count.user_id = {$re['author']['id']}")->get()->row()->count;
         unset($re['author_id']);
         unset($re['author_name']);
+
+        // 获取文章是否被当前用户点赞
+        // Gtaker  2018/2/6  21:28
+        if ($users_id === null) {
+            $re['approved'] = false;
+        } else {
+            $apr_num = $this->db
+                ->select('user_id')
+                ->from('articles_approval')
+                ->where([
+                    'article_id' => $article_id,
+                    'user_id' => $users_id
+                ])
+                ->get()->num_rows();
+            $re['approved'] = (bool)$apr_num;
+        }
+        // 获取文章是否被当前用户收藏
+        // Gtaker  2018/2/6 21:28
+        if ($users_id === null) {
+            $re['collected'] = false;
+        } else {
+            $clt_num = $this->db
+                ->select('user_id')
+                ->from('user_collections')
+                ->where([
+                    'article_id' => $article_id,
+                    'user_id' => $users_id
+                ])
+                ->get()->num_rows();
+            $re['collected'] = (bool)$clt_num;
+        }
 
         return $re;
 

@@ -593,13 +593,13 @@ class Articles extends REST_Controller
     public function article_get($article_id)
     {
 
-        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        // if(empty($jwt)){
-        //     $this->response(['error'=>'$jwt为空']);
-        // }else{
-        //     $token = $this->parsing_token($jwt);
-        //    // $article_id = $token->article_id;
-        // }
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $id = null;
+        } else{
+            $token = $this->parsing_token($jwt);
+            $id = $token->user_id;
+        }
         $data['article_id'] = $article_id;
         $article_info = $this->articles_model->get_status_post($data['article_id']);
 
@@ -607,28 +607,10 @@ class Articles extends REST_Controller
             $this->response(['error'=>'该文章不存在！'],404);
         }
 
-        $re = $this->articles_model->get_article($article_id);
+        $re = $this->articles_model->get_article($article_id, $id);
         if(!isset($re))
         {
             $this->response(['error'=>'查看文章详情失败']);
-        }
-
-        if ($re['approved_num'] > 0 )
-        {
-            $re['approved'] = TRUE;
-        }
-        else
-        {
-            $re['approved'] = False;
-        }
-
-        if ($re['collected_num'] > 0 )
-        {
-            $re['collected'] = TRUE;
-        }
-        else
-        {
-            $re['collected'] = False;
         }
 
         //判断文章状态  0正常  1被锁定  2被删除
