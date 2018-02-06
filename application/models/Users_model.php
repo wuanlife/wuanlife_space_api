@@ -2,6 +2,8 @@
 
 class Users_model extends CI_Model
 {
+    public $is_admin = false;
+
     public function __construct()
     {
         parent::__construct();
