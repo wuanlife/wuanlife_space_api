@@ -146,7 +146,7 @@ class Search_model extends CI_Model
                             'name'       => $row->name,
                             'avatar_url' => $row->url
                         ],
-                    'images'    => $images
+                    'image_urls'    => $images
                 ];
         }
 
