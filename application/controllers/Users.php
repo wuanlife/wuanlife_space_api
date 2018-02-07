@@ -232,19 +232,22 @@ class Users extends REST_Controller
      */
     public function articles_get($user_id)
     {
-        // $jwt = $this->input->get_request_header('Access-Token', TRUE);
-        // if(empty($jwt)){
-        //     $this->response(['error'=>'jwt为空']);
-        // }else{
-        //     $token = $this->parsing_token($jwt);
-        // }
+        $jwt = $this->input->get_request_header('Access-Token', TRUE);
+        if(empty($jwt)){
+            $id = null;
+        } else{
+            $token = $this->parsing_token($jwt);
+            $id = $token->user_id;
+        }
         $data = [
             'user_id' => $user_id,
+            'login_users_id' => $id,
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
             'offset'    => $this->get('offset') ?? 0,     //每页起始数
         ];
 
         $data = $this->users_model->get_user_articles($data);
+
         if(!$data)
         {
             $this->response(['error'=>'获取用户文章列表失败'], 400);
