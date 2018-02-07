@@ -146,6 +146,20 @@ class Articles_model extends CI_Model
         ];
         $this->db->where($data_content_where)->update($this->a_content, $data_content_data);
 
+        //添加文章预览图表
+        //Gtaker 2018/2/7  13:29
+        $this->db
+            ->where(['article_id' => $data['id']])
+            ->update($this->i_url, ['delete_flg' => 1]);
+        foreach ($data['image_urls_arr'] as $image_url) {
+            $this->db
+                ->insert($this->i_url, [
+                    'article_id' => $data['id'],
+                    'url' => $image_url,
+                    'delete_flg' => 0
+                ]);
+        }
+
         //结束 end
         $this->db->trans_complete();
         return $data['id'];

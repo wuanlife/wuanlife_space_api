@@ -39,7 +39,7 @@ class Articles extends REST_Controller
      * @param null $type
      * @param null $floor
      */
-    public function index_post($aid = null, $type = null, $floor = null): void
+    public function index_post($aid = null, $type = null, $floor = null)
     {
         //校验权限
         $token = $this->input->get_request_header('Access-Token', TRUE);
@@ -161,12 +161,27 @@ class Articles extends REST_Controller
             $user_info->user_id != $oinfo[0]['author_id'] and $this->response(['error'=>'没有权限操作'], 403);
             (1<<2&$oinfo[0]['status']) and $this->response(['error'=>'文章已被删除'], 410);
 
+            //正则出三条正文中的url地址
+            //Gtaker 2018/2/7 13:36
+            $image_urls_arr = [];
+            $i = -1;
+            $content = preg_replace_callback(
+                "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/",
+                function ($matches) use (&$image_urls_arr,&$i){
+                    if ($i < 3){
+                        $i++;
+                        $image_urls_arr[] = $matches[1];
+                    }
+                    return $matches[0];
+                },$content);
+
             //组合数据
             $data = [
                 'id'=>$aid,
                 'title'=>$title,
                 'content'=>$content,
-                'resume'=>substr($content_txt,0,90).'...'
+                'resume'=>substr($content_txt,0,90).'...',
+                'image_urls_arr' => $image_urls_arr
             ];
 
             $result['id'] = $this->articles_model->articleUpd($data);
