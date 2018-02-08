@@ -248,7 +248,7 @@ class Users extends REST_Controller
 
         $data = $this->users_model->get_user_articles($data);
 
-        if(!$data)
+        if($data == 0)
         {
             $this->response(['error'=>'获取用户文章列表失败'], 400);
         }

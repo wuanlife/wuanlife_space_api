@@ -379,6 +379,17 @@ class Users_model extends CI_Model
      */
     public function get_user_articles($data)
     {
+        // 检测是否存在该用户
+        $user_exists = $this->db
+            ->select('id')
+            ->from('users_base')
+            ->where(['id' => $data['user_id']])
+            ->get()->num_rows();
+        if (!$user_exists){
+            return 0;
+        }
+
+        // 查询该用户的文章列表
           $select = 'articles_base.id,
                     articles_content.title,
                     articles_content.content,
@@ -394,11 +405,11 @@ class Users_model extends CI_Model
         $this->db->join('users_base','users_base.name = articles_base.author_name');     
         $this->db->join('articles_status','articles_status.id = articles_base.id','left');
         $this->db->where("articles_base.author_id = {$data['user_id']}");
-        $this->db->where("articles_status.status != 2"); //被删除的文章不显示
+        $this->db->where('((articles_status.status >> 2) & 1) =','0'); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
         $re['articles'] = $this->db->get()->result_array();
         if (!$re['articles']) {
-            return 0;
+            return ["articles" => []];
         }
 
         foreach ($re['articles'] as $key => $value) {
@@ -474,11 +485,7 @@ class Users_model extends CI_Model
             foreach ($a as $key1 => $value) {
                 $re['articles'][$key]['image_urls'][$key1] = $a[$key1]['url'];
             }
-            // if ($re['articles'][$key]['image_urls']) {
-            //     # code...
-            // }
 
-            //echo count($re['articles'][$key]['image_urls']);
             unset($data['author_id']);
         }
 
