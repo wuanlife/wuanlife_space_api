@@ -89,7 +89,7 @@ class Articles extends REST_Controller
                 'resume'=>
                 substr(
                     strip_tags(
-                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content_txt)
+                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content)
                     ),
                 0,90).'...',
                 'image_urls_arr'=>$image_urls_arr
@@ -188,7 +188,7 @@ class Articles extends REST_Controller
                 'resume'=>
                 substr(
                     strip_tags(
-                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content_txt)
+                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content)
                     ),
                 0,90).'...',
                 'image_urls_arr' => $image_urls_arr
