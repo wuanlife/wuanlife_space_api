@@ -89,4 +89,4 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 */
 defined('USER_DEFAULT_AVATAR_URL')
 OR
-define('USER_DEFAULT_AVATAR_URL','http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg?imageView2/1/w/100/h/100');
+define('USER_DEFAULT_AVATAR_URL','http://7xlx4u.com1.z0.glb.clouddn.com/o_1aqt96pink2kvkhj13111r15tr7.jpg');
