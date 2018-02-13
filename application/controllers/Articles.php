@@ -86,7 +86,12 @@ class Articles extends REST_Controller
                 'user_name'=>$userArr['name'],
                 'title'=>$title,
                 'content'=>$content,
-                'resume'=>substr($content_txt,0,90).'...',
+                'resume'=>
+                substr(
+                    strip_tags(
+                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content_txt)
+                    ),
+                0,90).'...',
                 'image_urls_arr'=>$image_urls_arr
             ];
 
@@ -180,7 +185,12 @@ class Articles extends REST_Controller
                 'id'=>$aid,
                 'title'=>$title,
                 'content'=>$content,
-                'resume'=>substr($content_txt,0,90).'...',
+                'resume'=>
+                substr(
+                    strip_tags(
+                        preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content_txt)
+                    ),
+                0,90).'...',
                 'image_urls_arr' => $image_urls_arr
             ];
 
