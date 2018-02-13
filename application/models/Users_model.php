@@ -542,8 +542,6 @@ class Users_model extends CI_Model
 
         foreach ($re['articles'] as $key => $value) {
             
-            $re['articles'][$key]['content'] = script_tags($re['articles'][$key]['content']);
-
             //id转成int类型
             $re['articles'][$key]['id'] = (int)$re['articles'][$key]['id'];
 
