@@ -538,8 +538,8 @@ class Users_model extends CI_Model
         $this->db->join('articles_base','articles_base.id = user_collections.article_id');
        // $this->db->where("articles_base.author_id = {$data['user_id']}");
         $this->db->where("user_collections.user_id = {$data['user_id']}");
+        $this->db->order_by('user_collections.create_at','desc');
         $this->db->limit($data['limit'],$data['offset']);
-        $this->db->order_by('collect_at','desc');
         $re['articles'] =  $this->db->get()->result_array();
 
         foreach ($re['articles'] as $key => $value) {
