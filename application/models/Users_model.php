@@ -522,7 +522,7 @@ class Users_model extends CI_Model
         //
         $select = ' user_collections.article_id as id,
                     articles_content.title,
-                    articles_content.content,
+                    articles_base.content_digest as content,
                     articles_base.update_at,
                     articles_base.create_at,
                     user_collections.create_at as collect_at,
@@ -542,6 +542,8 @@ class Users_model extends CI_Model
 
         foreach ($re['articles'] as $key => $value) {
             
+            $re['articles'][$key]['content'] = script_tags($re['articles'][$key]['content']);
+
             //id转成int类型
             $re['articles'][$key]['id'] = (int)$re['articles'][$key]['id'];
 
