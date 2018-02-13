@@ -84,7 +84,7 @@ class Articles extends REST_Controller
             $data = [
                 'user_id'=>$userArr['id'],
                 'user_name'=>$userArr['name'],
-                'title'=>$title,
+                'title'=>htmlentities($title,ENT_QUOTES,UTF-8),
                 'content'=>$content,
                 'resume'=>
                 substr(
@@ -183,7 +183,7 @@ class Articles extends REST_Controller
             //组合数据
             $data = [
                 'id'=>$aid,
-                'title'=>$title,
+                'title'=>htmlentities($title,ENT_QUOTES,UTF-8),
                 'content'=>$content,
                 'resume'=>
                 substr(
