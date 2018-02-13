@@ -64,7 +64,7 @@ class Articles extends REST_Controller
             $image_urls_arr = [];
             $i = -1;
             $content = preg_replace_callback(
-                "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/",
+                '/<img [^>]*src="([^"]+)"[^>]*>/',
                 function ($matches) use (&$image_urls_arr,&$i){
                     if ($i < 3){
                         $i++;
@@ -166,7 +166,7 @@ class Articles extends REST_Controller
             $image_urls_arr = [];
             $i = -1;
             $content = preg_replace_callback(
-                "/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/",
+                '/<img [^>]*src="([^"]+)"[^>]*>/',
                 function ($matches) use (&$image_urls_arr,&$i){
                     if ($i < 3){
                         $i++;
