@@ -526,7 +526,7 @@ class Articles_model extends CI_Model
     {
         $select = ' articles_base.id,
                     articles_content.title,
-                    articles_content.content,
+                    articles_base.content_digest as content,
                     articles_base.update_at,
                     articles_base.create_at,
                     users_base.name as author_name,
