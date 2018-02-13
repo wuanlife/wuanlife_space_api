@@ -392,7 +392,7 @@ class Users_model extends CI_Model
         // 查询该用户的文章列表
           $select = 'articles_base.id,
                     articles_content.title,
-                    articles_content.content,
+                    articles_base.content_digest as content,
                     articles_base.update_at,
                     articles_base.create_at,
                     articles_base.author_name,
@@ -407,6 +407,7 @@ class Users_model extends CI_Model
         $this->db->where("articles_base.author_id = {$data['user_id']}");
         $this->db->where('((articles_status.status >> 2) & 1) =','0'); //被删除的文章不显示
         $this->db->limit($data['limit'],$data['offset']);
+        $this->db->order_by('create_at','desc');
         $re['articles'] = $this->db->get()->result_array();
         if (!$re['articles']) {
             return ["articles" => []];
