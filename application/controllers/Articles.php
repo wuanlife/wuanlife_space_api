@@ -21,7 +21,7 @@ class Articles extends REST_Controller
      * @param $jwt
      * @return mixed
      */
-    private function parsing_token($jwt)
+    private function parsing_token($jwt, $err = false)
     {
         try{
             $token = $this->jwt->decode($jwt,$this->config->item('encryption_key'));
@@ -29,7 +29,11 @@ class Articles extends REST_Controller
         }
         catch(Exception $e)
         {
-            return $this->response(['error'=>'未登录，不能操作'],401);
+            if($err = false){
+                return $this->response(['error'=>'未登录，不能操作'],401);
+            } else {
+                return null;
+            }
         }
     }
 
@@ -336,8 +340,8 @@ class Articles extends REST_Controller
          if(empty($jwt)){
              $id = null;
          } else{
-             $token = $this->parsing_token($jwt);
-             $id = $token->user_id;
+             $token = $this->parsing_token($jwt, true);
+             $id = @$token->user_id ?? null;
          }
         $data = [
             'limit'     => $this->get('limit') ?? 20,     //每页显示数
