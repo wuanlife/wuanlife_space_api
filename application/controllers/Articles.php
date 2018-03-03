@@ -29,7 +29,7 @@ class Articles extends REST_Controller
         }
         catch(Exception $e)
         {
-            if($err = false){
+            if($err === false){
                 return $this->response(['error'=>'未登录，不能操作'],401);
             } else {
                 return null;
