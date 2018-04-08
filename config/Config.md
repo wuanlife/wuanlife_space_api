@@ -14,21 +14,18 @@
     systemctl stop firewalld.service
     systemctl disable firewalld.service
     
-#### 3.安装epel源
-    yum -y install epel-release
+#### 3.更新yum源
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/epel-release.rpm
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 #### 4.更新系统
     yum -y update
 #### 5.安装git、vim、unzip等必要组件
     yum -y install git vim unzip wget
-#### 6.更新yum安装包
-    rpm -Uvh https://mirror.webtatic.com/yum/el7/epel-release.rpm
-    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 ### 二、安装PHP环境
 #### 1.安装MariaDB
     yum -y install mariadb mariadb-server net-tools
 #### 2.安装PHP7
-    yum -y install php70w.x86_64 php70w-cli.x86_64 php70w-common.x86_64 php70w-gd.x86_64 php70w-ldap.x86_64 php70w-mbstring.x86_64 php70w-mcrypt.x86_64 php70w-mysqlnd.x86_64 php70w-pdo.x86_64
-    yum -y install php70w-fpm
+    yum -y install php72w php72w-fpm php72w-cli php72w-common php72w-gd php72w-ldap php72w-mbstring php72w-mcrypt php72w-mysqlnd php72w-pdo
 #### 3.安装nginx
     yum -y install nginx
 #### 4.启动环境并设置自启
