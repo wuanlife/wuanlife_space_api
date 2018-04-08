@@ -51,10 +51,10 @@
     mkdir /home/www
     cp /usr/share/nginx/html /home/www/html -rf
     cd /home/www/html
-    git clone https://github.com/wuanlife/wuanlife_api.git
-    wget https://files.phpmyadmin.net/phpMyAdmin/4.4.15.10/phpMyAdmin-4.4.15.10-all-languages.zip
-    unzip phpMyAdmin-4.4.15.10-all-languages.zip
-    mv phpMyAdmin-4.4.15.10-all-languages phpmyadmin
+    git clone https://github.com/wuanlife/wuanlife_space_api.git
+    wget https://files.phpmyadmin.net/phpMyAdmin/4.8.0/phpMyAdmin-4.8.0-all-languages.zip
+    unzip phpMyAdmin-4.8.0-all-languages.zip
+    mv phpMyAdmin-4.8.0-all-languages phpmyadmin
     chown -R root:nginx /home/www
     chmod 775 /home/www
 #### 8.修改nginx配置
@@ -64,26 +64,24 @@
     wget https://raw.githubusercontent.com/wuanlife/wuanlife_api/wiki/config/default.conf
     wget https://raw.githubusercontent.com/wuanlife/wuanlife_api/wiki/config/phpmyadmin.conf
     systemctl reload nginx
-访问下http://YourIP:8080和http://YourIP:800，应该已经部署好了
+#### 9.修改配置
+    vim /home/www/html/wuanlife_space_api/application/config/config.php
+    vim /home/www/html/wuanlife_space_api/application/config/database.php
 ### 三、部署前端代码
 #### 1.安装node.js环境
-    yum -y install nodejs npm
+    curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+    yum -y install nodejs
 #### 2.下载前端代码
     cd /home/www/html/
-    git clone https://github.com/wuanlife/wuanlife.git
-
-#### 3.配置node.js
+    git clone https://github.com/wuanlife/wuanlife_space.git
+#### 3.配置项目
+    vim /home/www/html/wuanlife_space/config/prod.env.js
+#### 4.编译项目
+    cd wuanlife_space
     npm install
-    // 编译,编译前你可能需要修改config文件夹中的地址。生产环境prod
-    npm run build:prod  //部署生产环境
+    npm run build:prod
     
 #### 4.配置nginx
-dist文件夹下的是生产环境代码
-
-    
-### 四、修改配置
-其中，API代码需修改数据库配置，前端代码需修改接口地址，修改后重启node。
-
-    vim /home/www/html/wuanlife_api/Config/dbs.php
-    vim /home/www/html/wuanlife/config/config.js
-    forever restart --uid wuanlife bin/www
+    cd /etc/nginx/conf.d
+    wget https://raw.githubusercontent.com/wuanlife/wuanlife_api/wiki/config/wuanlife.conf
+    systemctl reload nginx
