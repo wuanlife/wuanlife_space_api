@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS articles_base
   author_id INT UNSIGNED NOT NULL COMMENT '作者id',
   author_name CHAR(20) COLLATE utf8_bin NOT NULL COMMENT '作者名',
   -- 此处暂时认定为一个糟糕的设计，获取文章信息的作者名时不应该依赖该字段，而应该依赖于 users_base 表的 name 字段
-  content_digest CHAR(90) COLLATE utf8_bin NOT NULL COMMENT '文章摘要',
+  content_digest TEXT COLLATE utf8_bin NOT NULL COMMENT '文章摘要',
   update_at TIMESTAMP NOT NULL COMMENT '文章更新时间',
   create_at TIMESTAMP NOT NULL COMMENT '文章创建时间',
   PRIMARY KEY (id),
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS articles_base
 -- 使用一张MyIsam引擎的表储存，以便实现全文索引
 CREATE TABLE IF NOT EXISTS articles_content (
   id INT UNSIGNED NOT NULL COMMENT '文章id',
-  title CHAR(55) COLLATE utf8_bin NOT NULL COMMENT '文章标题', -- 是否使用CHAR有待商榷
+  title CHAR(200) COLLATE utf8_bin NOT NULL COMMENT '文章标题', -- 是否使用CHAR有待商榷
   content TEXT COLLATE utf8_bin NOT NULL COMMENT '文章内容',
   PRIMARY KEY (id),
   FULLTEXT KEY content_index(title,content)
