@@ -78,14 +78,18 @@ class Articles_Commen extends Controller
 
         $comments = new Comment_Contents();
         $comment = $request->input("comment");
-        $user_id = $request->input("id-token");
+        $user_id = $request->get("id-token")->uid;
         //保存到数据库
         $comment_id = $comments->add_comment($comment, $id, $user_id);
         if ($comment_id > 0) {
             $user_base = new Users_Base();
             $articles_comments = new Articles_Comments();
-            $data = $this->splicing($user_base->get_user($user_id), ["content" => $comment],
-                $articles_comments->get_articles_comments_count($comment_id));
+            $response = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$user_id}"
+            );
+            $user = json_decode($response['contents']);
+            $data = $this->splicing($user, ["content" => $comment], $articles_comments->get_articles_comments_count($comment_id));
             return response($data, Response::HTTP_OK);
         } else {
             return response(["error" => "新增评论失败"], Response::HTTP_BAD_REQUEST);
@@ -101,7 +105,7 @@ class Articles_Commen extends Controller
      */
     function delete_comments($id, $floor, Request $request)
     {
-        $user_id = $request->input("id-token");
+        $user_id = $request->get("id-token")->uid;
         $articles_comments = new Articles_Comments();
         $buffer = $articles_comments->get_articles_comments_count_by_floor($id, $floor);
 
@@ -112,7 +116,6 @@ class Articles_Commen extends Controller
 
         //验证用户是否有权限进行操作,文章作者与评论者有权删除
         if (!($articles_comments->validate($id, $user_id) || $buffer["user_id"] == $user_id)) {
-            var_dump(111);
             return response(["error" => "没有权限操作"], Response::HTTP_FORBIDDEN);
         }
         //开始删除

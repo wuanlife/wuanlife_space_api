@@ -14,18 +14,25 @@ use Illuminate\Http\Request;
 */
 
 /*****************************************
- * 需要登录后操作的接口
+ * 不需要权限验证的接口
  *****************************************/
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+
+], function () {
+    // A5 文章评论列表
+    Route::get('/articles/{id}/comments', 'Articles_Commen@get_comments_list');
 });
 
+/*****************************************
+ * 需要登录后操作的接口
+ *****************************************/
 Route::group([
     'middleware' => [
         'logged',
     ]
 ], function () {
-    Route::get('/test', 'TestAccessToken@token');
+    Route::post('/articles/{id}/comments', 'Articles_Commen@add_comments');
+    Route::delete('/articles/{id}/comments/{floor}', 'Articles_Commen@delete_comments');
 });
 
 /*****************************************
