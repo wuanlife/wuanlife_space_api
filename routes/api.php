@@ -24,4 +24,5 @@ Route::group([
 ], function () {
     Route::get('/test', 'TestAccessToken@token');
 });
+Route::get('/articles/{article_id}/approval','ArticleController@approval');
 
