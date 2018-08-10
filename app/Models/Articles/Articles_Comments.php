@@ -11,7 +11,7 @@ namespace App\Models\Articles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Articles_Comments extends Model
+class Articles_Comment extends Model
 {
     protected $table = "articles_comments";//表名称
     protected $primaryKey = "comment_id";//主键

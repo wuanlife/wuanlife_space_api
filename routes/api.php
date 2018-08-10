@@ -41,5 +41,7 @@ Route::group([
     Route::post('/articles/{id}/lock', 'ArticlesController@lock');
     //  A17 取消锁定
     Route::post('/articles/{id}/unlock', 'ArticlesController@unlock');
+
+
 });
 

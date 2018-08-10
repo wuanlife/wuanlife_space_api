@@ -11,5 +11,4 @@ class ArticlesBase extends Model
     {
         return $this->hasOne(ArticlesStatus::class, 'id', 'id');
     }
-
 }

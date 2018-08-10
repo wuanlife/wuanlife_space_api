@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles\ArticlesBase;
 use App\Models\Articles\ArticlesStatusDetail;
+use App\Models\Articles\Articles_Content;
 
 class ArticlesController extends Controller
 {
@@ -69,4 +70,31 @@ class ArticlesController extends Controller
             return response(['error' => '取消锁定失败'], 400);
         }
     }
+
+
+    /**
+     * 获取用户文章列表
+     * GET /users/:id/articles
+     * @param $id
+     */
+    public function getUsersArticles($id=NULL)
+    {
+        $res_articlebase = ArticlesBase::find($id);
+        echo $id;
+
+        $articles['id'] = $res_articlebase->id;
+        $res_articlescontent = Articles_Content::find($id);
+        dd($res_articlebase->update_at);
+        $articles['title'] = $res_articlescontent->title;
+        $articles['content'] = $res_articlescontent->content;
+        $articles['update_at'] = $res_articlebase->update_at;
+        $articles['create_at'] = $res_articlebase->create_at;
+
+
+
+    }
+
+
+
+
 }

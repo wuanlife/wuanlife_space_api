@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/users/articles/{id}',['uses'=>'ArticlesController@getUsersArticles']);
