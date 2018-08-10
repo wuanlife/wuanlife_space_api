@@ -10,33 +10,28 @@ namespace App\Models\Users;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class UsersAuth
+ * Class AvatarUrl
  * 
- * @property int $id
- * @property string $name
- * @property int $auth
+ * @property int $user_id
+ * @property string $url
+ * @property int $delete_flg
  *
  * @package App\Models
  */
-class UsersAuth extends Eloquent
+class AvatarUrl extends Eloquent
 {
+	protected $table = 'avatar_url';
 	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
-		'auth' => 'int'
+		'user_id' => 'int',
+		'delete_flg' => 'int'
 	];
 
 	protected $fillable = [
-		'name',
-		'auth'
+		'user_id',
+		'url',
+		'delete_flg'
 	];
-
-    protected $table = 'users_auth';
-
-    function auth()
-    {
-        return $this->hasOne(AuthDetail::class, 'id', 'auth');
-    }
 }
