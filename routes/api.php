@@ -22,6 +22,9 @@ Route::group([
         'logged',
     ]
 ], function () {
-    Route::get('/test', 'TestAccessToken@token');
-});
+    Route::get('/test', function (){echo 66;});
+    Route::get('/articles', 'Articles_Commen@get_articles_index');
 
+});
+Route::post('/articles/search', 'Articles_Commen@get_articles_search');
+Route::post('/users/search', 'UsersCommon@get_users_search');
