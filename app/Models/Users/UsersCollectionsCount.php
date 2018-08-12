@@ -10,33 +10,26 @@ namespace App\Models\Users;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class UsersAuth
+ * Class UsersCollectionsCount
  * 
- * @property int $id
- * @property string $name
- * @property int $auth
+ * @property int $user_id
+ * @property int $count
  *
  * @package App\Models
  */
-class UsersAuth extends Eloquent
+class UsersCollectionsCount extends Eloquent
 {
+	protected $table = 'users_collections_count';
+	protected $primaryKey = 'user_id';
 	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'id' => 'int',
-		'auth' => 'int'
+		'user_id' => 'int',
+		'count' => 'int'
 	];
 
 	protected $fillable = [
-		'name',
-		'auth'
+		'count'
 	];
-
-    protected $table = 'users_auth';
-
-    function auth()
-    {
-        return $this->hasOne(AuthDetail::class, 'id', 'auth');
-    }
 }
