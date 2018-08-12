@@ -10,26 +10,21 @@ namespace App\Models\Articles;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class ArticlesStatusDetail
+ * Class ArticlesApproval
  * 
- * @property int $status
- * @property string $detail
+ * @property int $article_id
+ * @property int $user_id
  *
  * @package App\Models
  */
-class ArticlesStatusDetail extends Eloquent
+class ArticlesApproval extends Eloquent
 {
-	protected $primaryKey = 'status';
+	protected $table = 'articles_approval';
 	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'status' => 'int'
+		'article_id' => 'int',
+		'user_id' => 'int'
 	];
-
-	protected $fillable = [
-		'detail'
-	];
-
-    protected $table = 'articles_status_detail';
 }
