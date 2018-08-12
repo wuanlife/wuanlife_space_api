@@ -49,9 +49,4 @@ class ArticleController extends Controller
             response("未登录，不能操作", 401);
         }
     }
-
-    // A12 收藏文章
-    public function collect (){
-
-    }
 }
