@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Articles\ArticlesBase;
 use App\Models\Articles\ArticlesStatusDetail;
 use App\Models\Articles\Articles_Content;
+use App\Models\Articles\ArticlesApproval;
+use App\Models\Articles\ArticlesApprovalCount;
+use App\Models\Users\UserCollections;
 
 class ArticlesController extends Controller
 {
@@ -84,12 +87,20 @@ class ArticlesController extends Controller
 
         $articles['id'] = $res_articlebase->id;
         $res_articlescontent = Articles_Content::find($id);
-        dd($res_articlebase->update_at);
+
         $articles['title'] = $res_articlescontent->title;
         $articles['content'] = $res_articlescontent->content;
         $articles['update_at'] = $res_articlebase->update_at;
         $articles['create_at'] = $res_articlebase->create_at;
 
+        $articles_approve = new ArticlesApproval;
+        $articles['approved'] = $articles_approve->getApproved($id);
+        $articles_approve_count = new ArticlesApprovalCount;
+        $approved_num = $articles_approve_count->getApprovedNum($id);
+
+        $user_collections = new UserCollections;
+        $res = $user_collections -> getCollected($id);
+        dd($res);
 
 
     }
