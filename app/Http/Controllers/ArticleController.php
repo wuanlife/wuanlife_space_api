@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Articles\Article_approval;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
@@ -20,16 +21,15 @@ class ArticleController extends Controller
                 $a->user_id = $user_id;
                 $bool = $a->save();
                 if ($bool == true) {
-                    return response("点赞成功", 204);
+                    return response(['点赞成功'], 204);
                 } else {
-                    return response("点赞失败", 400);
+                    return response(['点赞失败'], 400);
                 }
             } else {
-                return response("点赞失败", 204);
+                return response(['点赞失败'], 204);
             }
-        }
-        else {
-            return response("未登录，不能操作", 401);
+        } else {
+            return response(['未登录，不能操作'], 401);
         }
     }
 
@@ -41,12 +41,12 @@ class ArticleController extends Controller
         if (isset($user_id)) {
             $bool = Article_approval::where(['article_id' => $article_id, 'user_id' => $user_id])->delete();
             if ($bool == true) {
-                return response("取消点赞成功", 204);
+                return response(['取消点赞成功'], 204);
             } else {
-                return response("取消点赞失败", 400);
+                return response(['取消点赞失败'], 400);
             }
         } else {
-            response("未登录，不能操作", 401);
+            return response(['未登录，不能操作'], 401);
         }
     }
 }
