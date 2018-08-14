@@ -26,5 +26,5 @@ Route::group([
 });
 Route::post('/articles/{article_id}/approval','ArticleController@approval')->where('article_id','[0-9]+');
 Route::delete('/articles/{article_id}/approval','ArticleController@del_approval')->where('article_id','[0-9]+');
-Route::get('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
+Route::put('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
 Route::delete('/users/{user_id}/collections','UserController@del_collect')->where('user_id','[0-9]+');
