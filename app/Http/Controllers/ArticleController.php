@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Articles\Article_approval;
-use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
@@ -12,8 +11,8 @@ class ArticleController extends Controller
     // articles_approval 表中记录点赞状态
     public function approval($article_id, Request $request)
     {
-        $user_id = $request->get('Access-Token')->uid;
-        if (isset($user_id)) {
+        if ($request->get('Access-Token') != NULL) {
+            $user_id = $request->get('Access-Token')->uid;
             $user = Article_approval::where(['article_id' => $article_id, 'user_id' => $user_id])->first();
             if (!isset($user)) {
                 $a = new Article_Approval;
@@ -36,9 +35,8 @@ class ArticleController extends Controller
 //A15 取消点赞
     public function del_approval($article_id, Request $request)
     {
-
-        $user_id = $request->get('Access-Token')->uid;
-        if (isset($user_id)) {
+        if ($request->get('Access-Token') != NULL) {
+            $user_id = $request->get('Access-Token')->uid;
             $bool = Article_approval::where(['article_id' => $article_id, 'user_id' => $user_id])->delete();
             if ($bool == true) {
                 return response(['取消点赞成功'], 204);
