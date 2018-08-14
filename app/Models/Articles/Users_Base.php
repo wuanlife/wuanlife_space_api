@@ -26,4 +26,10 @@ class Users_Base extends Model
     {
         return $this->where("id", "=", $id)->first();
     }
+
+    //同上
+    public static function getUserInfo($id)
+    {
+        return self::find($id) -> toArray();
+    }
 }

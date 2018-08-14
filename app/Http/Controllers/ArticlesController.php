@@ -7,7 +7,10 @@ use App\Models\Articles\ArticlesStatusDetail;
 use App\Models\Articles\Articles_Content;
 use App\Models\Articles\ArticlesApproval;
 use App\Models\Articles\ArticlesApprovalCount;
+use App\Models\Articles\Users_Base;
 use App\Models\Users\UserCollections;
+use App\Models\Users\AvatarUrl;
+
 
 class ArticlesController extends Controller
 {
@@ -82,8 +85,22 @@ class ArticlesController extends Controller
      */
     public function getUsersArticles($id=NULL)
     {
-        $res_articlebase = ArticlesBase::find($id);
+
         echo $id;
+        $author['id'] = $id;
+
+        //avatar_url
+        $author['avatar_url'] = AvatarUrl::getUrl($id);
+        $res_author = Users_Base::getUserInfo($id);
+        $author['name'] = $res_author['name'];
+        var_dump($author['name']);
+        exit;
+
+
+
+
+        $res_articlebase = ArticlesBase::find($id);
+
 
         $articles['id'] = $res_articlebase->id;
         $res_articlescontent = Articles_Content::find($id);
