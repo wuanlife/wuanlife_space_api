@@ -44,4 +44,7 @@ Route::group([
     //  A17 取消锁定
     Route::post('/articles/{id}/unlock', 'ArticlesController@unlock');
 });
-
+Route::post('/articles/{article_id}/approval','ArticleController@approval')->where('article_id','[0-9]+');
+Route::delete('/articles/{article_id}/approval','ArticleController@del_approval')->where('article_id','[0-9]+');
+Route::get('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
+Route::delete('/users/{user_id}/collections','UserController@del_collect')->where('user_id','[0-9]+');
