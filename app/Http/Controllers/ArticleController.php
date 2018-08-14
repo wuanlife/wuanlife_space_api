@@ -15,8 +15,8 @@ class ArticleController extends Controller
     {
         if ($request->get('Access-Token') != NULL) {
             //判断用户是否登陆
-            //$user_id = $request->get('Access-Token')->uid;
-            $user_id = 1;
+            $user_id = $request->get('Access-Token')->uid;
+            //$user_id = 1;
             $bool = Article_base::find($article_id);
             if (isset($bool)) {
                 //判断文章是否存在
