@@ -11,15 +11,14 @@ class ArticlesApprovalCount extends Model
     protected $primaryKey = 'article_id';
     public $timestamps = 'false';
 
-    public function getApprovedNum($id)
+    public static function getApprovedNum($id)
     {
-        $res = $this -> where('article_id',$id) -> get();
+        $res = self::where('article_id',$id) -> get();
         if($res){
             return $res[0]->count;
         }else{
             return 0;
         }
-
     }
 
 

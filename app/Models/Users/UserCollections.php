@@ -14,12 +14,30 @@ use Illuminate\Database\Eloquent\Model;
 class UserCollections extends Model
 {
     protected $table = 'user_collections';
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = ['user_id','article_id'];
     public $timestamps = 'false';
 
-    public function getCollected($id)
+    /**
+     * 查询此文章是否已被该用户收藏
+     * @param $user_id
+     * @param $article_id
+     * @return bool
+     */
+    public static function getIsCollected($user_id,$article_id)
     {
-        $res = $this -> where('$user_id',$id) -> get();
-        return $res;
+        $res = self::where('user_id',$user_id)
+            -> where('article_id',$article_id)
+            -> first();
+        return $res ? true : false;
+    }
+
+    /**
+     * 查询文章被收藏数目
+     * @param $article_id
+     * @return mixed
+     */
+    public static function getCollectedNum($article_id)
+    {
+        return self::where('article_id',$article_id) -> count();
     }
 }

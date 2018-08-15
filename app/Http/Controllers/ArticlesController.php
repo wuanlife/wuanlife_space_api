@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles\ArticlesBase;
 use App\Models\Articles\ArticlesStatusDetail;
-use App\Models\Articles\Articles_Content;
+use App\Models\Articles\ArticlesContent;
 use App\Models\Articles\ArticlesApproval;
 use App\Models\Articles\ArticlesApprovalCount;
+use App\Models\Articles\UsersArticlesCount;
 use App\Models\Articles\Users_Base;
+use App\Models\Articles\Articles_Comments;
+use App\Models\Articles\Articles_Comments_Count;
+use App\Models\Articles\ImageUrl;
 use App\Models\Users\UserCollections;
 use App\Models\Users\AvatarUrl;
 
@@ -77,52 +81,48 @@ class ArticlesController extends Controller
         }
     }
 
-
     /**
-     * 获取用户文章列表
+     * 获取用户文章列表 (A3)
      * GET /users/:id/articles
-     * @param $id
+     * @param null $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getUsersArticles($id=NULL)
     {
-
-        echo $id;
-        $author['id'] = $id;
-
-        //avatar_url
-        $author['avatar_url'] = AvatarUrl::getUrl($id);
+        //如果无用户id返回空
+        if(empty($id)){
+            return response('',200);
+        }
+        //用户、作者相关
         $res_author = Users_Base::getUserInfo($id);
+        if(is_null($res_author)){
+            return response(['error'=>'获取用户文章列表失败'],400);
+        }
+        $author['avatar_url'] = AvatarUrl::getUrl($id);
         $author['name'] = $res_author['name'];
-        var_dump($author['name']);
-        exit;
-
-
-
-
-        $res_articlebase = ArticlesBase::find($id);
-
-
-        $articles['id'] = $res_articlebase->id;
-        $res_articlescontent = Articles_Content::find($id);
-
-        $articles['title'] = $res_articlescontent->title;
-        $articles['content'] = $res_articlescontent->content;
-        $articles['update_at'] = $res_articlebase->update_at;
-        $articles['create_at'] = $res_articlebase->create_at;
-
-        $articles_approve = new ArticlesApproval;
-        $articles['approved'] = $articles_approve->getApproved($id);
-        $articles_approve_count = new ArticlesApprovalCount;
-        $approved_num = $articles_approve_count->getApprovedNum($id);
-
-        $user_collections = new UserCollections;
-        $res = $user_collections -> getCollected($id);
-        dd($res);
-
-
+        $author['id'] = $id;
+        $author['articles_num'] = UsersArticlesCount::ArticlesNum($id);
+        //文章相关
+        $res_articlebase = ArticlesBase::getUsersArticles($id);
+        if(empty($res_articlebase)){
+            return response(['articles' => array()],200);
+        }
+        foreach($res_articlebase as $key => $res){
+            $articles[$key]['id'] = $res['id'];
+            $articles[$key]['title'] = ArticlesContent::getArticleTitle($res['id']);
+            $articles[$key]['content'] = ArticlesContent::getArticleContent($res['id']);
+            $articles[$key]['update_at'] = $res['update_at'];
+            $articles[$key]['create_at'] = $res['create_at'];
+            $articles[$key]['approved'] = ArticlesApproval::getApproved($res['id']);
+            $articles[$key]['approved_num'] = ArticlesApprovalCount::getApprovedNum($res['id']);
+            $articles[$key]['collected'] = UserCollections::getIsCollected($id,$res['id']);
+            $articles[$key]['collected_num'] = UserCollections::getCollectedNum($res['id']);
+            $articles[$key]['replied'] = Articles_Comments::ArticleIsReplied($res['id']);
+            $articles[$key]['replied_num'] = Articles_Comments_Count::getRepliedNum($res['id']);
+            $articles[$key]['image_urls'] = ImageUrl::getImageUrls($res['id']);
+        }
+        $response['articles'] = $articles;
+        $response['author'] = $author;
+        return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
-
-
-
-
 }

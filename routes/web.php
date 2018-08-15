@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/users/{id}/articles',['uses'=>'ArticlesController@getUsersArticles']);
+Route::get('/users/{id?}/articles',['uses'=>'ArticlesController@getUsersArticles']);

@@ -22,13 +22,16 @@ class ArticlesApproval extends Model
      * @param $id
      * @return bool
      */
-    public function getApproved($id)
+    public static function getApproved($id)
     {
-        $res = $this -> where('article_id',$id) -> first();
+        $res = self::where('article_id',$id) -> first();
+        return $res ? true : false;
+        /*
         if($res){
             return true;
         }else{
             return false;
         }
+        */
     }
 }
