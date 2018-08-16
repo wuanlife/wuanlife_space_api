@@ -10,16 +10,16 @@ namespace App\Models\Users;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class UsersCollectionsCount
+ * Class UsersArticlesCount
  * 
  * @property int $user_id
  * @property int $count
  *
  * @package App\Models
  */
-class UsersCollectionsCount extends Eloquent
+class UsersArticlesCount extends Eloquent
 {
-	protected $table = 'users_collections_count';
+	protected $table = 'users_articles_count';
 	protected $primaryKey = 'user_id';
 	public $incrementing = false;
 	public $timestamps = false;

@@ -10,26 +10,29 @@ namespace App\Models\Users;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class UsersCollectionsCount
+ * Class UsersDetail
  * 
- * @property int $user_id
- * @property int $count
+ * @property int $id
+ * @property int $sex
+ * @property \Carbon\Carbon $birthday
  *
  * @package App\Models
  */
-class UsersCollectionsCount extends Eloquent
+class UsersDetail extends Eloquent
 {
-	protected $table = 'users_collections_count';
-	protected $primaryKey = 'user_id';
-	public $incrementing = false;
+	protected $table = 'users_detail';
 	public $timestamps = false;
 
 	protected $casts = [
-		'user_id' => 'int',
-		'count' => 'int'
+		'sex' => 'int'
+	];
+
+	protected $dates = [
+		'birthday'
 	];
 
 	protected $fillable = [
-		'count'
+		'sex',
+		'birthday'
 	];
 }

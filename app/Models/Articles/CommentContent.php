@@ -5,31 +5,28 @@
  * Date: Mon, 06 Aug 2018 02:29:28 +0000.
  */
 
-namespace App\Models\Users;
+namespace App\Models\Articles;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class UsersCollectionsCount
+ * Class CommentContent
  * 
- * @property int $user_id
- * @property int $count
+ * @property int $id
+ * @property string $content
  *
  * @package App\Models
  */
-class UsersCollectionsCount extends Eloquent
+class CommentContent extends Eloquent
 {
-	protected $table = 'users_collections_count';
-	protected $primaryKey = 'user_id';
 	public $incrementing = false;
 	public $timestamps = false;
 
 	protected $casts = [
-		'user_id' => 'int',
-		'count' => 'int'
+		'id' => 'int'
 	];
 
 	protected $fillable = [
-		'count'
+		'content'
 	];
 }
