@@ -9,8 +9,13 @@ class ArticlesApprovalCount extends Model
 {
     protected $table = 'articles_approval_count';
     protected $primaryKey = 'article_id';
-    public $timestamps = 'false';
+    public $timestamps = false;
 
+    /**
+     * 获得文章点赞数目
+     * @param $id
+     * @return int
+     */
     public static function getApprovedNum($id)
     {
         $res = self::where('article_id',$id) -> get();
@@ -20,6 +25,4 @@ class ArticlesApprovalCount extends Model
             return 0;
         }
     }
-
-
 }

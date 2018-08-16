@@ -15,7 +15,7 @@ class UserCollections extends Model
 {
     protected $table = 'user_collections';
     protected $primaryKey = ['user_id','article_id'];
-    public $timestamps = 'false';
+    public $timestamps = false;
 
     /**
      * 查询此文章是否已被该用户收藏

@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('/users/{id?}/articles',['uses'=>'ArticlesController@getUsersArticles']);
+Route::get('/articles/{id?}',['uses'=>'ArticlesController@getArticles']);
+Route::post('/articles',['uses'=>'ArticlesController@postArticles']);

@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class ArticlesContent extends Model
 {
     protected $table = 'articles_content';
-    public $timestamps = 'false';
+    public $timestamps = false;
+    protected $fillable = [
+        'id',
+        'title',
+        'content'
+    ];
 
     /**
      * 获得文章Title

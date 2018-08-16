@@ -15,8 +15,13 @@ class AvatarUrl extends Model
 {
     protected $table = 'avatar_url';
     protected $primaryKey = 'user_id';
-    public $timestamps = 'false';
+    public $timestamps = false;
 
+    /**
+     * 获得作者头像url地址
+     * @param $user_id
+     * @return mixed
+     */
     public static function getUrl($user_id)
     {
         return self::where('user_id',$user_id)->value('url');

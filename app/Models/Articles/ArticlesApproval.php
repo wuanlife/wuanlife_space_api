@@ -15,7 +15,7 @@ class ArticlesApproval extends Model
 {
     protected $table = 'articles_approval';
     protected $primaryKey = 'article_id';
-    public $timestamps = 'false';
+    public $timestamps = false;
 
     /**
      * 获取文章是否已经被点赞
@@ -26,12 +26,5 @@ class ArticlesApproval extends Model
     {
         $res = self::where('article_id',$id) -> first();
         return $res ? true : false;
-        /*
-        if($res){
-            return true;
-        }else{
-            return false;
-        }
-        */
     }
 }

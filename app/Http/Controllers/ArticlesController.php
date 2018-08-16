@@ -12,8 +12,10 @@ use App\Models\Articles\Users_Base;
 use App\Models\Articles\Articles_Comments;
 use App\Models\Articles\Articles_Comments_Count;
 use App\Models\Articles\ImageUrl;
+use App\Models\Articles\ArticlesStatus;
 use App\Models\Users\UserCollections;
 use App\Models\Users\AvatarUrl;
+use Illuminate\Http\Request;
 
 
 class ArticlesController extends Controller
@@ -82,7 +84,7 @@ class ArticlesController extends Controller
     }
 
     /**
-     * 获取用户文章列表 (A3)
+     * 获取用户文章列表(A3)
      * GET /users/:id/articles
      * @param null $id
      * @return \Illuminate\Http\JsonResponse
@@ -124,5 +126,90 @@ class ArticlesController extends Controller
         $response['articles'] = $articles;
         $response['author'] = $author;
         return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * 文章详情-文章内容(A4)
+     * GET /articles/:id
+     * @param null $article_id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getArticles($article_id=NULL)
+    {
+        //通过Access-Token获取用户是否登录
+        $user_id = NULL;
+        //地址中未传入article_id，无法查到对应文章详情
+        if(is_null($article_id)){
+            return response(['error' => '查看文章详情失败'],400);
+        }
+        //获取文章相关信息
+        $res_articlebase = ArticlesBase::getArticleUser($article_id);
+        if(empty($res_articlebase)){
+            return response(['error' => '文章不存在'],404);
+        }
+        $res_articlebase = $res_articlebase[0];
+        //查询文章状态是否为delete状态
+        if(ArticlesStatus::is_status($article_id,'delete')){
+            return response(['error' => '文章已被删除'],410);
+        }
+        $article['id'] = $article_id;
+        $article['title'] = ArticlesContent::getArticleTitle($article_id);
+        $article['content'] = ArticlesContent::getArticleContent($article_id);
+        $article['update_at'] = $res_articlebase['update_at'];
+        $article['create_at'] = $res_articlebase['create_at'];
+        $article['lock'] = ArticlesStatus::is_status($article_id,'lock');
+        $article['approved'] = ArticlesApproval::getApproved($article_id);
+        $article['approved_num'] = ArticlesApprovalCount::getApprovedNum($article_id);
+        $article['collected'] = is_null($user_id) ? false : UserCollections::getIsCollected($user_id,$article_id);
+        $article['collected_num'] = UserCollections::getCollectedNum($article_id);
+        $article['author']['id'] = $res_articlebase['author_id'];
+        $article['author']['name'] = $res_articlebase['author_name'];
+        $article['author']['articles_num'] = UsersArticlesCount::ArticlesNum($res_articlebase['author_id']);
+        $article['author']['avatar_url'] = AvatarUrl::getUrl($res_articlebase['author_id']);
+        return response() -> json($article,200) -> setEnCodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * 发表文章 (A6)
+     * POST /articles
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function postArticles(Request $request)
+    {
+        //获得用户id
+        $user_id = 1;
+        if(empty($user_id)){
+            return response(['error' => '未登录，不能操作'],401);
+        }
+        //从User表中查到登录用户的信息
+        $res_author = Users_Base::getUserInfo($user_id);
+        //获得将保存到articles_content的文章 title content
+        $articlescontent = $request -> all('title','content');
+        if(empty($articlescontent)){
+            return response(['error' => '创建失败'],400);
+        }
+        //保存articles_base并获得将要用来保存的文章 id
+        $res_articlesbase = new ArticlesBase;
+        $res_articlesbase -> author_id = $user_id;
+        $res_articlesbase -> author_name = $res_author['name'];
+        $res_articlesbase -> content_digest = mb_substr($articlescontent['content'],0,100,'utf-8');
+        $res_articlesbase_save = $res_articlesbase -> save();
+        if($res_articlesbase_save){
+            $res_articlescontent = ArticlesContent::create(
+                [
+                    'id' => $res_articlesbase -> id,
+                    'title' => $articlescontent['title'],
+                    'content' => $articlescontent['content']
+                ]
+            );
+            if($res_articlescontent){
+                return response(['id' => $res_articlesbase -> id],200);
+            }else{
+                return response(['error' => '创建失败'],400);
+            };
+        }else{
+            return response(['error' => '创建失败'],400);
+        }
     }
 }

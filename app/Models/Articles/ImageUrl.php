@@ -15,8 +15,13 @@ class ImageUrl extends Model
 {
     protected $table = 'image_url';
     protected $primaryKey = 'article_id';
-    public $timestamps = 'false';
+    public $timestamps = false;
 
+    /**
+     * 查询文章中图片的urls
+     * @param $article_id
+     * @return mixed
+     */
     public static function getImageUrls($article_id)
     {
         return self::where('article_id',$article_id) -> get(['url']) -> toArray();

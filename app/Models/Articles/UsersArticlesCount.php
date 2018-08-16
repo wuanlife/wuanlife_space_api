@@ -15,8 +15,13 @@ class UsersArticlesCount extends Model
 {
     protected $table = 'users_articles_count';
     protected $primaryKey = 'user_id';
-    public $timestamps = 'false';
+    public $timestamps = false;
 
+    /**
+     * 查询作者写的文章总数
+     * @param $user_id
+     * @return mixed
+     */
     public static function ArticlesNum($user_id)
     {
         return self::where('user_id',$user_id) -> value('count');
