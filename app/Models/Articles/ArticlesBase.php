@@ -34,4 +34,14 @@ class ArticlesBase extends Model
     {
         return self::where('id',$article_id) -> get() -> toArray();
     }
+
+    /**
+     * 查找文章id返回作者author_id (int)
+     * @param $article_id
+     * @return mixed
+     */
+    public static function getAuthor($article_id)
+    {
+        return self::where('id',$article_id) -> value('author_id');
+    }
 }

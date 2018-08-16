@@ -212,4 +212,46 @@ class ArticlesController extends Controller
             return response(['error' => '创建失败'],400);
         }
     }
+
+    /**
+     * 编辑文章 - 文章的编辑操作 (A8)
+     * PUT /articles/:id
+     * @param null $article_id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function putArticles($article_id = NULL)
+    {
+        $user_id = 1;
+        if(empty($user_id)){
+            return response(['error' => '未登录，不能操作'],401);
+        }
+        if(is_null($article_id)){
+            return response(['error' => '文章不存在'],404);
+        }
+        if(ArticlesStatus::is_status($article_id,'delete')){
+            return response(['error' => '文章已被删除'],410);
+        }
+        $author_id = ArticlesBase::getAuthor($article_id);
+        if($author_id != $user_id){
+            // 缺管理权限判断           if(is_admin($user_id)){}
+            return response(['error' => '没有权限操作'],403);
+        };
+        //接收put过来的数据，并转换成数组
+        $res_put = file_get_contents('php://input');
+        $res_put = json_decode($res_put,true);
+        //查找文章是否存在，如果存在，而开始编辑
+        $res_articlescontent = ArticlesContent::find($article_id);
+        if($res_articlescontent){
+            if($res_articlescontent -> update($res_put)){
+                return response(['id' => $article_id],200);
+            }else{
+                return response(['error' => '编辑失败'],400);
+            };
+        }else{
+            return response(['error' => '文章不存在'],404);
+        }
+    }
+
+
+
 }
