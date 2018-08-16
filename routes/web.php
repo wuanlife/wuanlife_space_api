@@ -20,4 +20,3 @@ Route::get('/articles/{id?}',['uses'=>'ArticlesController@getArticles']);
 Route::post('/articles',['uses'=>'ArticlesController@postArticles']);
 Route::put('/articles/{id?}',['uses'=>'ArticlesController@putArticles']);
 Route::delete('/articles/{id}',['uses'=>'ArticlesController@deleteArticles']);
-Route::get('/users/articles/{id?}',['uses'=>'ArticlesController@unionUsersArticles']);
