@@ -252,6 +252,36 @@ class ArticlesController extends Controller
         }
     }
 
-
-
+    /**
+     * 删除文章 (A11)
+     * DELETE /articles/:id
+     * @param $article_id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteArticles($article_id)
+    {
+//        $user_id = $request->get('Access-Token')->uid;
+//        dd($user_id);
+        $user_id = 1;
+        if(empty($user_id)){
+            return response(['error' => '未登录，不能操作'],401);
+        }
+        if(is_null($article_id)){
+            return response(['error' => '文章不存在'],404);
+        }
+        $author_id = ArticlesBase::getAuthor($article_id);
+        if($author_id != $user_id){
+            // 缺管理权限判断           if(is_admin($user_id)){}
+            return response(['error' => '没有权限操作'],403);
+        };
+        if(ArticlesStatus::is_status($article_id,'delete')){
+            return response(['error' => '文章已被删除'],410);
+        }
+        $res_changestatus = ArticlesStatus::changeStatus($article_id,'delete');
+        if($res_changestatus){
+            return response('删除成功',204);
+        }else{
+            return response(['error' => '删除失败'],400);
+        };
+    }
 }

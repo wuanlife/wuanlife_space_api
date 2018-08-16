@@ -19,3 +19,4 @@ Route::get('/users/{id?}/articles',['uses'=>'ArticlesController@getUsersArticles
 Route::get('/articles/{id?}',['uses'=>'ArticlesController@getArticles']);
 Route::post('/articles',['uses'=>'ArticlesController@postArticles']);
 Route::put('/articles/{id?}',['uses'=>'ArticlesController@putArticles']);
+Route::delete('/articles/{id}',['uses'=>'ArticlesController@deleteArticles']);

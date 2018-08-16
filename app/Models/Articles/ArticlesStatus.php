@@ -36,4 +36,15 @@ class ArticlesStatus extends Model
         //对比是否相等，返回true or false
         return ($article_status == $detail_status) ? true : false ;
     }
+
+    public static function changeStatus($article_id,$detail)
+    {
+        //查询某状态对应的status
+        $detail_status = ArticlesStatusDetail::getStatus($detail);
+
+        $res_articlestatus = self::find($article_id);
+        $res_articlestatus -> status = $detail_status;
+        return $res_articlestatus -> save();
+
+    }
 }
