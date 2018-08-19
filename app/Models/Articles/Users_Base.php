@@ -26,4 +26,15 @@ class Users_Base extends Model
     {
         return $this->where("id", "=", $id)->first();
     }
+
+    /**
+     * 根据用户id获取信息，返回数组，如果id不存在并返回Null
+     * @param $id
+     * @return mixed
+     */
+    public static function getUserInfo($id)
+    {
+        $res = self::find($id);
+        return  $res ? $res -> toArray() : $res;
+    }
 }
