@@ -1,14 +1,12 @@
 <?php
-
 /**
- * Created by Reliese Model.
- * Date: Mon, 06 Aug 2018 02:29:28 +0000.
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2018/8/12 0012
+ * Time: 下午 1:45
  */
-
 namespace App\Models\Articles;
-
-use Reliese\Database\Eloquent\Model as Eloquent;
-
+use Illuminate\Database\Eloquent\Model;
 /**
  * Class ArticlesApproval
  * 
@@ -17,14 +15,25 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  *
  * @package App\Models
  */
-class ArticlesApproval extends Eloquent
+class ArticlesApproval extends Model
 {
-	protected $table = 'articles_approval';
-	public $incrementing = false;
-	public $timestamps = false;
+    protected $table = 'articles_approval';
+    protected $primaryKey = 'article_id';
+    public $incrementing = false;
+    public $timestamps = false;
+    protected $casts = [
+      'article_id' => 'int',
+      'user_id' => 'int'
+    ];
 
-	protected $casts = [
-		'article_id' => 'int',
-		'user_id' => 'int'
-	];
+    /**
+     * 获取文章是否已经被点赞
+     * @param $id
+     * @return bool
+     */
+    public static function getApproved($id)
+    {
+        $res = self::where('article_id',$id) -> first();
+        return $res ? true : false;
+    }
 }
