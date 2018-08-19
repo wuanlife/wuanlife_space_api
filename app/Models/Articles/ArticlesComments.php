@@ -11,7 +11,7 @@ namespace App\Models\Articles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Articles_Comments extends Model
+class Articles_Comment extends Model
 {
     protected $table = "articles_comments";//表名称
     protected $primaryKey = "comment_id";//主键
@@ -77,9 +77,9 @@ class Articles_Comments extends Model
      */
     public function validate($article_id, $user_id)
     {
-        $buffers = DB::table("articles_base")
-            ->where("id", "=", $article_id)
-            ->where("author_id", "=", $user_id)
+        $buffers = DB::table("articles_approval")
+            ->where("article_id", "=", $article_id)
+            ->where("user_id", "=", $user_id)
             ->get();
         if (count($buffers->all()) > 0) {
             return true;
@@ -95,16 +95,5 @@ class Articles_Comments extends Model
     public function delete_articles_comments($comment_id)
     {
         return $this::destroy($comment_id);
-    }
-
-    /**
-     * 查询该文章是否已被评论
-     * @param $article_id
-     * @return mixed
-     */
-    public static function ArticleIsReplied($article_id)
-    {
-        $res = self::where('article_id',$article_id) -> first();
-        return $res ? true : false;
     }
 }
