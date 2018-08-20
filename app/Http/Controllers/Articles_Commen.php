@@ -46,6 +46,11 @@ class Articles_Commen extends Controller
         $articles =  $article->orderBy('update_at',$data['order'])->offset($data['offset'])->limit($data['limit'])->get();
 
         foreach ($articles as $k=>$v) {
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$v->author_id}"
+            );
+            $user = json_decode($user_info['contents']);
             $rs['articles'][$k]=[
                 "id"=>$v->id,
                 "title"=>$v->content['title'],
@@ -54,9 +59,9 @@ class Articles_Commen extends Controller
                 "update_at"=>$v->update_at,
                 "create_at"=>$v->create_at,
                 "author"=>[
-                    "avatar_url"=>$v->avatar_url['url'],
-                    "name"=>$v->author_name,
-                    "id"=>$v->author_id
+                    "avatar_url"=>$user->avatar_url,
+                    "name"=>$user->name,
+                    "id"=>$user->id
                 ]
             ];
         }
