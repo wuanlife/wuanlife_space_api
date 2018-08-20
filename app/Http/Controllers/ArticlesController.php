@@ -121,7 +121,7 @@ class ArticlesController extends Controller
         $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
         $limit = empty($input['limit']) ? 20 : (int)$input['limit'];
 
-        $articles = ArticlesBase::with(['content', 'approved', 'approval_count', 'collected', 'comments_count', 'replied', 'articles_image'])->where(['author_id' => $id])->offset($offset)->limit($limit)->get();
+        $articles = ArticlesBase::with(['content', 'approved', 'approval_count', 'collected', 'collections_count', 'comments_count', 'replied', 'articles_image'])->where(['author_id' => $id])->offset($offset)->limit($limit)->get();
         if($articles->isEmpty()){
             return response(['articles' => array()],200);
         }
@@ -138,8 +138,7 @@ class ArticlesController extends Controller
                 'collected' => $article->collected ? TRUE : FALSE,
                 'collected_num' => $article->comments_count->count,
                 'replied' => $article->replied ? TRUE : FALSE,
-                // TODO 评论数
-                'replied_num' => 0,
+                'replied_num' => $article->collections_count->count,
                 'image_urls' => $article->articles_image,
             ];
         }
