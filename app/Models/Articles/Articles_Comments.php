@@ -77,9 +77,9 @@ class Articles_Comments extends Model
      */
     public function validate($article_id, $user_id)
     {
-        $buffers = DB::table("articles_approval")
-            ->where("article_id", "=", $article_id)
-            ->where("user_id", "=", $user_id)
+        $buffers = DB::table("articles_base")
+            ->where("id", "=", $article_id)
+            ->where("author_id", "=", $user_id)
             ->get();
         if (count($buffers->all()) > 0) {
             return true;

@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Articles\ArticlesBase;
-use App\Models\Articles\ArticlesStatusDetail;
-use App\Models\Articles\ArticlesContent;
 use App\Models\Articles\ArticlesApproval;
 use App\Models\Articles\ArticlesApprovalCount;
-use App\Models\Articles\UsersArticlesCount;
-use App\Models\Articles\Users_Base;
-use App\Models\Articles\Articles_Comments;
-use App\Models\Articles\Articles_Comments_Count;
-use App\Models\Articles\ImageUrl;
+use App\Models\Articles\ArticlesBase;
+use App\Models\Articles\ArticlesContent;
 use App\Models\Articles\ArticlesStatus;
-use App\Models\Users\UserCollections;
+use App\Models\Articles\ArticlesStatusDetail;
+use App\Models\Articles\UsersArticlesCount;
 use App\Models\Users\AvatarUrl;
+use App\Models\Users\UserCollections;
 use Illuminate\Http\Request;
 
 
 class ArticlesController extends Controller
 {
+    /**
+     * 锁定文章
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function lock($id)
     {
         $article = ArticlesBase::find($id);
@@ -60,6 +61,11 @@ class ArticlesController extends Controller
         }
     }
 
+    /**
+     * 取消锁定
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function unlock($id)
     {
         $article = ArticlesBase::find($id);
@@ -85,50 +91,58 @@ class ArticlesController extends Controller
 
     /**
      * 获取用户文章列表(A3)
+     * @param Request $request
      * GET /users/:id/articles
      * @param null $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUsersArticles(Request $request,$id=NULL)
+    public function getUsersArticles(Request $request, $id=NULL)
     {
-        //通过Access-Token获取用户是否登录
-        $user_id = $request->get('Access-Token')->uid;
         //如果无用户id返回空
         if(empty($id)){
             return response('',200);
         }
         //用户、作者相关
-        $res_author = Users_Base::getUserInfo($id);
-        if(is_null($res_author)){
+        $user_info = Builder::requestInnerApi(
+            env('OIDC_SERVER'),
+            "/api/app/users/{$id}"
+        );
+        $user = json_decode($user_info['contents']);
+        if(is_null($user)){
             return response(['error'=>'获取用户文章列表失败'],400);
         }
-        $author['avatar_url'] = AvatarUrl::getUrl($id);
-        $author['name'] = $res_author['name'];
+        $author['avatar_url'] = $user->avatar_url;
+        $author['name'] = $user->name;
         $author['id'] = $id;
         $author['articles_num'] = UsersArticlesCount::ArticlesNum($id);
         //文章相关
         $input = $request -> all();
         $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
         $limit = empty($input['limit']) ? 20 : (int)$input['limit'];
-        $res_articlebase = ArticlesBase::getUsersArticlesOffsetLimit($id,$offset,$limit);
-        if(empty($res_articlebase)){
+
+        $articles = ArticlesBase::with(['content', 'approved', 'approval_count', 'collected', 'collections_count', 'comments_count', 'replied', 'articles_image'])->where(['author_id' => $id])->offset($offset)->limit($limit)->get();
+        if($articles->isEmpty()){
             return response(['articles' => array()],200);
         }
-        foreach($res_articlebase as $key => $res){
-            $articles[$key]['id'] = $res['id'];
-            $articles[$key]['title'] = ArticlesContent::getArticleTitle($res['id']);
-            $articles[$key]['content'] = ArticlesContent::getArticleContent($res['id']);
-            $articles[$key]['update_at'] = $res['update_at'];
-            $articles[$key]['create_at'] = $res['create_at'];
-            $articles[$key]['approved'] = ArticlesApproval::getApproved($res['id']);
-            $articles[$key]['approved_num'] = ArticlesApprovalCount::getApprovedNum($res['id']);
-            $articles[$key]['collected'] = is_null($user_id) ? false : UserCollections::getIsCollected($user_id,$res['id']);
-            $articles[$key]['collected_num'] = UserCollections::getCollectedNum($res['id']);
-            $articles[$key]['replied'] = Articles_Comments::ArticleIsReplied($res['id']);
-            $articles[$key]['replied_num'] = Articles_Comments_Count::getRepliedNum($res['id']);
-            $articles[$key]['image_urls'] = ImageUrl::getImageUrls($res['id']);
+        $res = [];
+        foreach($articles as $article){
+            $res[] = [
+                'id' => $article->id,
+                'title' => $article->content->title,
+                'content' => $article->content->content,
+                'update_at' => $article->update_at,
+                'create_at' => $article->create_at,
+                'approved' => $article->approved ? TRUE : FALSE,
+                'approved_num' => $article->approval_count->count,
+                'collected' => $article->collected ? TRUE : FALSE,
+                'collected_num' => $article->comments_count->count,
+                'replied' => $article->replied ? TRUE : FALSE,
+                'replied_num' => $article->collections_count->count,
+                'image_urls' => $article->articles_image,
+            ];
         }
-        $response['articles'] = $articles;
+        $response['articles'] = $res;
         $response['author'] = $author;
         return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
@@ -139,7 +153,7 @@ class ArticlesController extends Controller
      * @param null $article_id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function getArticles($article_id=NULL)
+    public function getArticles(Request $request, $article_id=NULL)
     {
         //通过Access-Token获取用户是否登录
         $user_id = $request->get('Access-Token')->uid;
@@ -183,12 +197,10 @@ class ArticlesController extends Controller
     public function postArticles(Request $request)
     {
         //获得用户id
-        $user_id = $request->get('Access-Token')->uid;
+        $user_id = $request->get('id-token')->uid;
         if(empty($user_id)){
             return response(['error' => '未登录，不能操作'],401);
         }
-        //从User表中查到登录用户的信息
-        $res_author = Users_Base::getUserInfo($user_id);
         //获得将保存到articles_content的文章 title content
         $articlescontent = $request -> all('title','content');
         if(empty($articlescontent)){
@@ -197,7 +209,7 @@ class ArticlesController extends Controller
         //保存articles_base并获得将要用来保存的文章 id
         $res_articlesbase = new ArticlesBase;
         $res_articlesbase -> author_id = $user_id;
-        $res_articlesbase -> author_name = $res_author['name'];
+        $res_articlesbase -> author_name = $request->get('id-token')->uname;
         $res_articlesbase -> content_digest = mb_substr($articlescontent['content'],0,100,'utf-8');
         $res_articlesbase_save = $res_articlesbase -> save();
         if($res_articlesbase_save){
@@ -224,9 +236,9 @@ class ArticlesController extends Controller
      * @param null $article_id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function putArticles($article_id = NULL)
+    public function putArticles(Request $request, $article_id = NULL)
     {
-        $user_id = $request->get('Access-Token')->uid;
+        $user_id = $request->get('id-token')->uid;
         if(empty($user_id)){
             return response(['error' => '未登录，不能操作'],401);
         }
@@ -263,9 +275,9 @@ class ArticlesController extends Controller
      * @param $article_id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function deleteArticles($article_id)
+    public function deleteArticles(Request $request, $article_id)
     {
-        $user_id = $request->get('Access-Token')->uid;
+        $user_id = $request->get('id-token')->uid;
         if(empty($user_id)){
             return response(['error' => '未登录，不能操作'],401);
         }
