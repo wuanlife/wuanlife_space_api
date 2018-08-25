@@ -136,44 +136,45 @@ class ArticlesCommentController extends Controller
         $rs['total'] = $article->count();
         return $rs;
     }
+
     /**
-     * 文章评论列表A5
-     * @param $id
+     * A5 文章评论列表
+     * @param $id int 文章id
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function index($id, Request $request)
     {
-        //获取页面容量
-        $limit = env("LIMIT");
-        if ($request->input("limit") != null) {
-            $limit = $request->input("limit");
+        $limit = $request->input('limit') ?? env("LIMIT");
+        $offset = $request->input('offset') ?? 0;
+
+        // 判断文章是否存在
+        $article = ArticlesBase::find($id);
+        if (!$article) {
+            return response(['error' => '该文章不存在'], 404);
         }
 
-        //获取起始点
-        $offset = 0;
-        if ($request->input("offset") != null) {
-            $offset = $request->input("offset");
-        }
-
-        $datas = [];
-        $user_base = new Users_Base();
-        $articles_comments = new ArticlesComments();
-        $comment_contents = new Comment_Contents();
-        $articles_comments_count = new Articles_Comments_Count();
+        $articles_comments = ArticlesComment::where("article_id", "=", $id)
+            ->select("comment_id", "user_id", "floor", "create_at")
+            ->paginate($limit, '', $offset);
 
         //拼接成文档约定的格式
-        foreach ($articles_comments->page_articles_comments($id, $offset, $limit) as $buffer) {
-            $buffer = $this->splicing($user_base->get_user($buffer->user_id), $comment_contents->get_comment_by_id($buffer->comment_id),
-                ["floor" => $buffer->floor, "create_at" => $buffer->create_at]);
-            array_push($datas, $buffer);
-
+        $data = [];
+        foreach ($articles_comments as $articles_comment) {
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$articles_comment->user_id}"
+            );
+            $user = json_decode($user_info['contents']);
+            $buffer = $this->splicing($user, $articles_comment);
+            $data[] = $buffer;
         }
-        $datas = [
-            "reply" => $datas,
-            "total" => ($articles_comments_count->get_articles_comments_count($id))["count"]
+        $result = [
+            "reply" => $data,
+            "total" => $articles_comments->total()
         ];
-        return response($datas, Response::HTTP_OK);
+        return response($result, Response::HTTP_OK);
     }
 
     /**

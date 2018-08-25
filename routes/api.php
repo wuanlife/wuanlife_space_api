@@ -20,7 +20,7 @@ Route::group([
 
 ], function () {
     // A5 文章评论列表
-    Route::get('/articles/{id}/comments', 'Articles_Commen@get_comments_list');
+    Route::get('/articles/{id}/comments', 'ArticlesCommentsController@index');
     // A1 首页
     Route::get('/articles', 'Articles_Commen@get_articles_index');
     // A14 文章搜索
