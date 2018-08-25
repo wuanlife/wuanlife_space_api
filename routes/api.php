@@ -14,22 +14,45 @@ use Illuminate\Http\Request;
 */
 
 /*****************************************
- * 需要登录后操作的接口
+ * 不需要权限验证的接口
  *****************************************/
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+
+], function () {
+    // A5 文章评论列表
+    Route::get('/articles/{id}/comments', 'Articles_Commen@get_comments_list');
+    // A1 首页
+    Route::get('/articles', 'Articles_Commen@get_articles_index');
+    // A14 文章搜索
+    Route::post('/articles/search', 'Articles_Commen@get_articles_search');
+    // U6 用户搜索
+    Route::post('/users/search', 'UsersCommon@get_users_search');
+    // A3 获取用户文章列表
+    Route::get('/users/{id?}/articles',['uses'=>'ArticlesController@getUsersArticles']);
+    // A4 文章详情
+    Route::get('/articles/{id?}',['uses'=>'ArticlesController@getArticles']);
 });
 
+/*****************************************
+ * 需要登录后操作的接口
+ *****************************************/
 Route::group([
     'middleware' => [
         'logged',
     ]
 ], function () {
-    Route::get('/articles', 'Articles_Commen@get_articles_index');
-
+    // A6 发表文章
+    Route::post('/articles', 'ArticlesController@postArticles');
+    // A8 编辑文章
+    Route::put('/articles/{id}',['uses'=>'ArticlesController@putArticles']);
+    // A11 删除文章
+    Route::delete('/articles/{id}',['uses'=>'ArticlesController@deleteArticles']);
+    // A7 评论文章
+    Route::post('/articles/{id}/comments', 'Articles_Commen@add_comments');
+    // A9 删除文章评论
+    Route::delete('/articles/{id}/comments/{floor}', 'Articles_Commen@delete_comments');
 });
-Route::post('/articles/search', 'Articles_Commen@get_articles_search');
-Route::post('/users/search', 'UsersCommon@get_users_search');
+
 /*****************************************
  * 需要管理员权限的接口
  *****************************************/

@@ -62,15 +62,6 @@ class ArticlesBase extends Model
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     * 帖子作者头像
-     */
-    public function avatar_url()
-    {
-        return $this->hasOne('App\Models\Users\AvatarUrl','user_id','author_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      * 点赞数
      */
     public function approval_count()
@@ -93,7 +84,7 @@ class ArticlesBase extends Model
      */
     public function comments_count()
     {
-        return $this->hasOne('App\Models\Articles\ArticlesCommentsCount','article_id','id');
+        return $this->hasOne('App\Models\Articles\ArticlesCommentsCount','articles_id','id');
     }
 
     /**
