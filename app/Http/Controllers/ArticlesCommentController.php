@@ -24,120 +24,6 @@ use Validator;
 class ArticlesCommentController extends Controller
 {
     /**
-     * @param Request $request
-     * @return mixed
-     * 2018/8/6 15:22---aunhappy
-     * 搜索帖子A14
-     */
-    public function get_articles_search(Request $request)
-    {
-        $data = [
-            'limit'     => $request->input('limit') ?? 20,     //每页显示数
-            'offset'    => $request->input('offset') ?? 0,     //每页起始数
-            'keyword'     => $request->input('keyword'),       //关键字
-            'order'     => $request->input('order') ?? 'asc',
-        ];
-        $articles_id = ArticlesBase::search($data['keyword'])->keys()->toArray();
-        //sort($articles_id);
-        $article = ArticlesBase::wherein('articles_base.id',$articles_id)
-            ->wherenotin('articles_base.id',function ($query){
-                $query->select('articles_status.id')
-                ->from('articles_status')
-                ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
-        });
-
-        $articles =  $article->orderBy('update_at',$data['order'])->offset($data['offset'])->limit($data['limit'])->get();
-
-        foreach ($articles as $k=>$v) {
-            $user_info = Builder::requestInnerApi(
-                env('OIDC_SERVER'),
-                "/api/app/users/{$v->author_id}"
-            );
-            $user = json_decode($user_info['contents']);
-            $rs['articles'][$k]=[
-                "id"=>$v->id,
-                "title"=>$v->content['title'],
-               // "content"=>$v->content['content'],
-                "content_digest"=>$v->content_digest,
-                "update_at"=>$v->update_at,
-                "create_at"=>$v->create_at,
-                "author"=>[
-                    "avatar_url"=>$user->avatar_url,
-                    "name"=>$user->name,
-                    "id"=>$user->id
-                ]
-            ];
-        }
-        $rs['total'] = $article->count();
-        return $rs;
-    }
-    /**
-     * @param Request $request
-     * @return mixed
-     * 2018/8/6 12:41---aunhappy
-     * A1帖子主页
-     */
-    public function get_articles_index(Request $request)
-    {
-        $data = [
-            'limit'     => $request->input('limit') ?? 20,     //每页显示数
-            'offset'    => $request->input('offset') ?? 0,     //每页起始数
-            'order'     => $request->input('order') ?? 'asc',
-            'id'        => $request->get('id-token')->uid ?? null,
-        ];
-        $with = [
-            //'content','avatar_url','approval_count','collections_count','comments_count',
-            'approved'=>function($query) use ($data) {
-                $query->where('user_id',$data['id']);
-            },
-            'collected'=>function($query) use ($data) {
-                $query->where('user_id',$data['id']);
-            },
-            'replied'=>function($query) use ($data) {
-                $query->where('user_id',$data['id']);
-            },
-            //'articles_status'
-        ];
-        $article = ArticlesBase::with($with)->whereNotExists(function ($query){
-            $query->select('articles_status.id')
-                ->from('articles_status')
-                ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
-        });
-        $articles =  $article->orderBy('update_at',$data['order'])->offset($data['offset'])->limit($data['limit'])->get();
-        foreach ($articles as $k => $v){
-            $j = 0;
-            $images = [];
-            foreach ($v->articles_image as $url) {
-                if ( ! empty($url->url) && $j++ < 3) {
-                    $images[] = $url->url;
-                }
-            }
-            $rs['articles'][$k]=[
-                "id"=>$v->id,
-                "title"=>$v->content['title'],
-                //"content"=>$v->content['content'],
-                "content_digest"=>$v->content_digest,
-                "update_at"=>$v->update_at,
-                "create_at"=>$v->create_at,
-                "approved"=>$v->approved?true:false,
-                "approved_num"=>$v->approval_count['count'],
-                "collected"=>$v->collected?true:false,
-                "collected_num"=>$v->collections_count['count'],
-                "replied"=>$v->replied?true:false,
-                "replied_num"=>$v->comments_count['count'],
-                "image_urls"=>$images,
-                "author"=>[
-                    "avatar_url"=>$v->avatar_url['url'],
-                    "name"=>$v->author_name,
-                    "id"=>$v->author_id
-                ]
-            ];
-        }
-        $rs['total'] = $article->count();
-        return $rs;
-    }
-
-    /**
      * A5 文章评论列表
      * @param $id int 文章id
      * @param Request $request
@@ -192,7 +78,8 @@ class ArticlesCommentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response(["error" => "表单验证失败"], Response::HTTP_BAD_REQUEST);
+            $errors = $validator->errors();
+            return response(["error" => $errors->first('comment')], Response::HTTP_BAD_REQUEST);
         }
 
         $comment = $request->input("comment");
