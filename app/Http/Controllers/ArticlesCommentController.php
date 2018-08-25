@@ -142,7 +142,7 @@ class ArticlesCommentController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
      */
-    public function get_comments_list($id, Request $request)
+    public function index($id, Request $request)
     {
         //获取页面容量
         $limit = env("LIMIT");
@@ -198,6 +198,11 @@ class ArticlesCommentController extends Controller
         $user_id = $request->get("id-token")->uid;
         // 开启事务
         DB::beginTransaction();
+        // 判断文章是否存在
+        $article = ArticlesBase::find($id);
+        if (!$article) {
+            return response(['error' => '该文章不存在'], 404);
+        }
         // 获取最新的楼数
         $floor = ArticlesComment::where([
             'article_id' => $id,
