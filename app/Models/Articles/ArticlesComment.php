@@ -27,4 +27,12 @@ class ArticlesComment extends Model
     {
         return $this->hasOne(ArticlesCommentContent::class, 'id', 'comment_id');
     }
+
+    /**
+     * 文章
+     */
+    public function article()
+    {
+        return $this->belongsTo(ArticlesBase::class, 'article_id', 'id');
+    }
 }

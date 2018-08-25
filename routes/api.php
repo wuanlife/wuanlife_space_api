@@ -50,7 +50,7 @@ Route::group([
     // A7 评论文章
     Route::post('/articles/{id}/comments', 'Articles_Commen@add_comments');
     // A9 删除文章评论
-    Route::delete('/articles/{id}/comments/{floor}', 'Articles_Commen@delete_comments');
+    Route::delete('/articles/{id}/comments/{floor}', 'ArticlesCommentsController@delete');
 });
 
 /*****************************************

@@ -12,12 +12,12 @@ namespace App\Http\Controllers;
 use App\Models\Articles\Articles_Comments;
 use App\Models\Articles\Articles_Comments_Count;
 use App\Models\Articles\ArticlesComment;
-use App\Models\Articles\ArticlesComments;
 use App\Models\Articles\Users_Base;
 use App\Models\Articles\Comment_Contents;
 use App\Models\Articles\ArticlesBase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Validator;
 
@@ -209,59 +209,72 @@ class ArticlesCommentController extends Controller
             'article_id' => $id,
         ])->orderBy('create_at', 'desc')->value('floor');
 
-        $article_comment = ArticlesComment::create([
-            'article_id' => $id,
-            'user_id' => $user_id,
-            'floor' => $floor + 1 ?? 1,
-            'create_at' => time(),
-        ]);
+        try {
+            DB::beginTransaction();
+            $article_comment = ArticlesComment::create([
+                'article_id' => $id,
+                'user_id' => $user_id,
+                'floor' => $floor + 1 ?? 1,
+                'create_at' => time(),
+            ]);
 
-        $content = $article_comment->content()->create([
-            'content' => $comment,
-        ]);
-        if ($content) {
-            DB::commit();
-
+            $article_comment->content()->create([
+                'content' => $comment,
+            ]);
             $response = Builder::requestInnerApi(
                 env('OIDC_SERVER'),
                 "/api/app/users/{$user_id}"
             );
             $user = json_decode($response['contents']);
             $data = $this->splicing($user, $article_comment);
+            DB::commit();
             return response($data, Response::HTTP_OK);
-        } else {
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
             return response(["error" => "新增评论失败"], Response::HTTP_BAD_REQUEST);
         }
     }
 
     /**
-     * 删除评论A9
+     * A9 删除评论
      * @param $id
      * @param $floor
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
      */
-    function delete_comments($id, $floor, Request $request)
+    public function delete(Request $request, $id, $floor)
     {
         $user_id = $request->get("id-token")->uid;
-        $articles_comments = new ArticlesComments();
-        $buffer = $articles_comments->get_articles_comments_count_by_floor($id, $floor);
 
-        //验证评论是否存在
-        if ($buffer == null) {
+        // 查询文章评论
+        $article_comment = ArticlesComment::where([
+            'article_id' => $id,
+            'floor' => $floor
+        ])->first();
+
+        if (!$article_comment) {
             return response(["error" => "评论不存在"], Response::HTTP_NOT_FOUND);
         }
 
-        //验证用户是否有权限进行操作,文章作者与评论者有权删除
-        if (!($articles_comments->validate($id, $user_id) || $buffer["user_id"] == $user_id)) {
+        // 验证用户是否有权限进行操作，文章作者与评论者有权删除
+        if ($article_comment->article->author_id == $user_id || $article_comment->user_id == $user_id) {
             return response(["error" => "没有权限操作"], Response::HTTP_FORBIDDEN);
         }
-        //开始删除
-        $comment_contents = new Comment_Contents();
-        if ($comment_contents->delete_comment($buffer["comment_id"])) {
+
+        try {
+            DB::beginTransaction();
+            // 删除评论详情
+            $article_comment->content()->delete();
+            // 删除评论
+            $article_comment->delete();
+            DB::commit();
             return response(["删除成功"], Response::HTTP_NO_CONTENT);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+            return response(["error" => "删除失败"], Response::HTTP_BAD_REQUEST);
         }
-        return response(["error" => "删除失败"], Response::HTTP_BAD_REQUEST);
     }
 
     /**
