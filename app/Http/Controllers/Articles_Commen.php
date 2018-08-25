@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles\Articles_Comments;
 use App\Models\Articles\Articles_Comments_Count;
+use App\Models\Articles\ArticlesComments;
 use App\Models\Articles\Users_Base;
 use App\Models\Articles\Comment_Contents;
 use App\Models\Articles\ArticlesBase;
@@ -155,7 +156,7 @@ class Articles_Commen extends Controller
 
         $datas = [];
         $user_base = new Users_Base();
-        $articles_comments = new Articles_Comments();
+        $articles_comments = new ArticlesComments();
         $comment_contents = new Comment_Contents();
         $articles_comments_count = new Articles_Comments_Count();
 
@@ -197,7 +198,7 @@ class Articles_Commen extends Controller
         $comment_id = $comments->add_comment($comment, $id, $user_id);
         if ($comment_id > 0) {
             $user_base = new Users_Base();
-            $articles_comments = new Articles_Comments();
+            $articles_comments = new ArticlesComments();
             $response = Builder::requestInnerApi(
                 env('OIDC_SERVER'),
                 "/api/app/users/{$user_id}"
@@ -220,7 +221,7 @@ class Articles_Commen extends Controller
     function delete_comments($id, $floor, Request $request)
     {
         $user_id = $request->get("id-token")->uid;
-        $articles_comments = new Articles_Comments();
+        $articles_comments = new ArticlesComments();
         $buffer = $articles_comments->get_articles_comments_count_by_floor($id, $floor);
 
         //验证评论是否存在

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Articles\Articles_status;
+use App\Models\Articles\ArticlesStatus;
 use Illuminate\Http\Request;
 use App\Models\Users\user_collection;
-use App\Models\Articles\Article_base;
+use App\Models\Articles\ArticlesBase;
 
 class UserController extends Controller
 {
@@ -19,10 +19,10 @@ class UserController extends Controller
                 //判断uid和token里的id是否一致
                 $article_id = $request->input("artilce_id");
 //                $article_id = 2;
-                $bool = Article_base::find($article_id);
+                $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = Articles_status::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
@@ -67,10 +67,10 @@ class UserController extends Controller
                 //判断uid和token里的id是否一致
                 $article_id = $request->input("artilce_id");
 //                $article_id = 1;
-                $bool = Article_base::find($article_id);
+                $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = Articles_status::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
