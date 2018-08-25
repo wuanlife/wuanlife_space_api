@@ -11,15 +11,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Articles\Articles_Comments;
 use App\Models\Articles\Articles_Comments_Count;
+use App\Models\Articles\ArticlesComment;
 use App\Models\Articles\ArticlesComments;
 use App\Models\Articles\Users_Base;
 use App\Models\Articles\Comment_Contents;
 use App\Models\Articles\ArticlesBase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Validator;
 
-class Articles_Commen extends Controller
+class ArticlesCommentController extends Controller
 {
     /**
      * @param Request $request
@@ -175,12 +177,13 @@ class Articles_Commen extends Controller
     }
 
     /**
-     * 评论文章A7
-     * @param $id
+     * A7 评论文章
      * @param Request $request
+     * @param $id int 文章id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function add_comments($id, Request $request)
+    public function create(Request $request, $id)
     {
         //表单验证
         $validator = Validator::make($request->all(), [
@@ -191,20 +194,34 @@ class Articles_Commen extends Controller
             return response(["error" => "表单验证失败"], Response::HTTP_BAD_REQUEST);
         }
 
-        $comments = new Comment_Contents();
         $comment = $request->input("comment");
         $user_id = $request->get("id-token")->uid;
-        //保存到数据库
-        $comment_id = $comments->add_comment($comment, $id, $user_id);
-        if ($comment_id > 0) {
-            $user_base = new Users_Base();
-            $articles_comments = new ArticlesComments();
+        // 开启事务
+        DB::beginTransaction();
+        // 获取最新的楼数
+        $floor = ArticlesComment::where([
+            'article_id' => $id,
+        ])->orderBy('create_at', 'desc')->value('floor');
+
+        $article_comment = ArticlesComment::create([
+            'article_id' => $id,
+            'user_id' => $user_id,
+            'floor' => $floor + 1 ?? 1,
+            'create_at' => time(),
+        ]);
+
+        $content = $article_comment->content()->create([
+            'content' => $comment,
+        ]);
+        if ($content) {
+            DB::commit();
+
             $response = Builder::requestInnerApi(
                 env('OIDC_SERVER'),
                 "/api/app/users/{$user_id}"
             );
             $user = json_decode($response['contents']);
-            $data = $this->splicing($user, ["content" => $comment], $articles_comments->get_articles_comments_count($comment_id));
+            $data = $this->splicing($user, $article_comment);
             return response($data, Response::HTTP_OK);
         } else {
             return response(["error" => "新增评论失败"], Response::HTTP_BAD_REQUEST);
