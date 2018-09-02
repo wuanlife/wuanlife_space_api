@@ -17,6 +17,72 @@ use Illuminate\Http\Request;
 class ArticlesController extends Controller
 {
     /**
+     * A1帖子主页
+     * @param Request $request
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function index(Request $request)
+    {
+        $data = [
+            'limit' => $request->input('limit') ?? 10,     //每页显示数
+            'offset' => $request->input('offset') ?? 0,     //每页起始数
+            'order' => $request->input('order') ?? 'asc',
+            'id' => $request->get('id-token')->uid ?? null,
+        ];
+        $with = [
+            'approved' => function ($query) use ($data) {
+                $query->where('user_id', $data['id']);
+            },
+            'collected' => function ($query) use ($data) {
+                $query->where('user_id', $data['id']);
+            },
+            'replied' => function ($query) use ($data) {
+                $query->where('user_id', $data['id']);
+            },
+            'articles_image'
+        ];
+        $article = ArticlesBase::with($with)->whereNotExists(function ($query) {
+            $query->select('articles_status.id')
+                ->from('articles_status')
+                ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
+        });
+        $articles = $article->orderBy('update_at', $data['order'])->paginate($data['limit'], ['*'], '', $data['offset']);
+        foreach ($articles as $article) {
+            $images = [];
+            foreach ($article->articles_image as $k =>  $url) {
+                $images[$k]['url'] = $url->url;
+            }
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$article->author_id}"
+            );
+            $user = json_decode($user_info['contents']);
+            $rs['articles'][] = [
+                "id" => $article->id,
+                "title" => $article->content['title'],
+                "content_digest" => $article->content_digest,
+                "update_at" => $article->update_at,
+                "create_at" => $article->create_at,
+                "approved" => $article->approved ? true : false,
+                "approved_num" => $article->approval_count['count'],
+                "collected" => $article->collected ? true : false,
+                "collected_num" => $article->collections_count['count'],
+                "replied" => $article->replied ? true : false,
+                "replied_num" => $article->comments_count['count'],
+                "image_urls" => $images,
+                "author" => [
+                    "avatar_url" => $user->avatar_url,
+                    "name" => $user->name,
+                    "id" => $user->id
+                ]
+            ];
+        }
+        $rs['total'] = $articles->total();
+        return $rs;
+    }
+
+    /**
      * 锁定文章
      * @param $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response

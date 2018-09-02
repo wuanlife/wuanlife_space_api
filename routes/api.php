@@ -22,7 +22,7 @@ Route::group([
     // A5 文章评论列表
     Route::get('/articles/{id}/comments', 'ArticlesCommentsController@index');
     // A1 首页
-    Route::get('/articles', 'Articles_Commen@get_articles_index');
+    Route::get('/articles', 'ArticlesController@index');
     // A14 文章搜索
     Route::post('/articles/search', 'Articles_Commen@get_articles_search');
     // U6 用户搜索
@@ -42,7 +42,7 @@ Route::group([
     ]
 ], function () {
     // A6 发表文章
-    Route::post('/articles', 'ArticlesController@postArticles');
+    Route::post('/articles', 'ArticlesController@create');
     // A8 编辑文章
     Route::put('/articles/{id}',['uses'=>'ArticlesController@putArticles']);
     // A11 删除文章

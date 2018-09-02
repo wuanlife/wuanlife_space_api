@@ -20,7 +20,6 @@ class ArticlesBase extends Model
             'title' => $this->content->title,
             'content' => $this->content->content,
         ];
-        //return $this->only('id', 'title', 'content');
     }
     protected $table = 'articles_base';
     protected $primaryKey = 'id';
