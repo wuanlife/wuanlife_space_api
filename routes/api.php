@@ -41,6 +41,8 @@ Route::group([
         'logged',
     ]
 ], function () {
+    // A2 点赞文章
+    Route::post('/articles/{id}/approval', 'ArticlesController@approval');
     // A6 发表文章
     Route::post('/articles', 'ArticlesController@create');
     // A8 编辑文章
