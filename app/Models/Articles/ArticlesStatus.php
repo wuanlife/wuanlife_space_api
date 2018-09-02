@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class ArticlesStatus
- * 
+ *
  * @property int $id
  * @property int $status
  * @property \Carbon\Carbon $create_at
@@ -20,16 +20,16 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class ArticlesStatus extends Eloquent
 {
-	public $incrementing = false;
+    public $incrementing = false;
 
-	protected $casts = [
-		'id' => 'int',
-		'status' => 'int'
-	];
+    protected $casts = [
+        'id' => 'int',
+        'status' => 'int'
+    ];
 
-	protected $dates = [
-		'create_at'
-	];
+    protected $dates = [
+        'create_at'
+    ];
 
     protected $table = 'articles_status';
     protected $fillable = ['status'];
@@ -47,19 +47,18 @@ class ArticlesStatus extends Eloquent
     }
 
     /**
-     * 判断文章是否处于当前状态
-     * @param $article_id
-     * @param $detail
+     * 检测文章状态
+     * @param $articles_status int 文章状态
+     * @param $detail string 状态标识 lock delete
      * @return bool
      */
-    public static function is_status($article_id,$detail)
+    public static function status($articles_status, $detail)
     {
-        //查询文章id对应的status
-        $article_status = self::getArticlesStatus($article_id);
-        //查询某状态对应的status
-        $detail_status = ArticlesStatusDetail::getStatus($detail);
-        //对比是否相等，返回true or false
-        return ($article_status == $detail_status) ? true : false ;
+        if ($articles_status & (1 << ArticlesStatusDetail::where('detail', $detail)->value('status'))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function changeStatus($article_id,$detail)

@@ -214,44 +214,49 @@ class ArticlesController extends Controller
     }
 
     /**
-     * 文章详情-文章内容(A4)
-     * GET /articles/:id
-     * @param null $article_id
+     * A4 文章详情-文章内容
+     * @param Request $request
+     * @param $article_id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getArticles(Request $request, $article_id=NULL)
+    public function show(Request $request, $article_id)
     {
-        //通过Access-Token获取用户是否登录
-        $user_id = $request->get('Access-Token')->uid;
-        //地址中未传入article_id，无法查到对应文章详情
-        if(is_null($article_id)){
-            return response(['error' => '查看文章详情失败'],400);
+        $user_id = 0;
+        if ($request->get('id-token')) {
+            $user_id = $request->get('id-token')->uid;
         }
-        //获取文章相关信息
-        $res_articlebase = ArticlesBase::getArticleUser($article_id);
-        if(empty($res_articlebase)){
-            return response(['error' => '文章不存在'],404);
+        $article = ArticlesBase::find($article_id);
+        if (!$article) {
+            return response(['error' => '文章不存在'], 404);
         }
-        $res_articlebase = $res_articlebase[0];
         //查询文章状态是否为delete状态
-        if(ArticlesStatus::is_status($article_id,'delete')){
-            return response(['error' => '文章已被删除'],410);
+        if (ArticlesStatus::status($article->status, 'delete')) {
+            return response(['error' => '文章已被删除'], 410);
         }
-        $article['id'] = $article_id;
-        $article['title'] = ArticlesContent::getArticleTitle($article_id);
-        $article['content'] = ArticlesContent::getArticleContent($article_id);
-        $article['update_at'] = $res_articlebase['update_at'];
-        $article['create_at'] = $res_articlebase['create_at'];
-        $article['lock'] = ArticlesStatus::is_status($article_id,'lock');
-        $article['approved'] = ArticlesApproval::getApproved($article_id);
-        $article['approved_num'] = ArticlesApprovalCount::getApprovedNum($article_id);
-        $article['collected'] = is_null($user_id) ? false : UserCollections::getIsCollected($user_id,$article_id);
-        $article['collected_num'] = UserCollections::getCollectedNum($article_id);
-        $article['author']['id'] = $res_articlebase['author_id'];
-        $article['author']['name'] = $res_articlebase['author_name'];
-        $article['author']['articles_num'] = UsersArticlesCount::ArticlesNum($res_articlebase['author_id']);
-        $article['author']['avatar_url'] = AvatarUrl::getUrl($res_articlebase['author_id']);
-        return response() -> json($article,200) -> setEnCodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        //用户、作者相关
+        $user_info = Builder::requestInnerApi(
+            env('OIDC_SERVER'),
+            "/api/app/users/{$article->author_id}"
+        );
+        $user = json_decode($user_info['contents']);
+        $res['id'] = $article_id;
+        $res['title'] = $article->content->title;
+        $res['content'] = $article->content->content;
+        $res['update_at'] = $article->update_at;
+        $res['create_at'] = $article->create_at;
+        $res['lock'] = ArticlesStatus::status(isset($article->articles_status->status) ? $article->articles_status->status : 0, 'lock');
+        $res['approved'] = ArticlesApproval::getApproved($article_id);
+        $res['approved_num'] = ArticlesApprovalCount::getApprovedNum($article_id);
+        $res['collected'] = is_null($user_id) ? false : UserCollections::getIsCollected($user_id, $article_id);
+        $res['collected_num'] = UserCollections::getCollectedNum($article_id);
+        $res['author'] = [
+            'id' => $article->author_id,
+            'name' => $article->author_name,
+            'articles_num' => UsersArticlesCount::ArticlesNum($article->author_id),
+            'avatar_url' => $user->avatar_url
+        ];
+        return response()->json($res, 200)->setEnCodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
