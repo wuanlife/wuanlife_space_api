@@ -65,11 +65,9 @@ Route::group([
     ]
 ], function () {
     // A10 锁定文章
-    Route::post('/articles/{id}/lock', 'ArticlesController@lock');
+    Route::post('/articles/{id}/lock', 'ArticlesStatusController@lock');
     //  A17 取消锁定
-    Route::post('/articles/{id}/unlock', 'ArticlesController@unlock');
-
-
+    Route::post('/articles/{id}/unlock', 'ArticlesStatusController@unlock');
 });
 Route::post('/articles/{article_id}/approval','ArticleController@approval')->where('article_id','[0-9]+');
 Route::delete('/articles/{article_id}/approval','ArticleController@del_approval')->where('article_id','[0-9]+');
