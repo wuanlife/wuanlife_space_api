@@ -22,10 +22,14 @@ class ArticlesBase extends Model
         ];
     }
     protected $table = 'articles_base';
-    protected $primaryKey = 'id';
     const CREATED_AT = 'create_at';
     const UPDATED_AT = 'update_at';
-    public $timestamps = true;
+
+    protected $fillable = [
+        'author_id',
+        'author_name',
+        'content_digest',
+    ];
 
     /**
      * @param $value
@@ -56,7 +60,7 @@ class ArticlesBase extends Model
      */
     public function content()
     {
-        return $this->hasOne('App\Models\Articles\ArticlesContent','id','id');
+        return $this->hasOne(ArticlesContent::class,'id','id');
     }
 
     /**
@@ -120,15 +124,16 @@ class ArticlesBase extends Model
      */
     public function articles_image()
     {
-        return $this->hasMany('App\Models\Articles\ImageUrl','article_id','id')->select(['article_id','url']);
+        return $this->hasMany('App\Models\Articles\ImageUrl','article_id','id')->where(['delete_flag' => 0])->select(['article_id','url']);
     }
+
+    /**
+     * 文章状态
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function articles_status()
     {
-        return $this->hasMany('App\Models\Articles\ArticlesStatus','id','id')->select(['id','status']);
-    }
-    public function status()
-    {
-        return $this->hasOne(ArticlesStatus::class, 'id', 'id');
+        return $this->hasOne(ArticlesStatus::class,'id','id')->select(['id','status']);
     }
 
     /**
@@ -152,16 +157,6 @@ class ArticlesBase extends Model
     }
 
     /**
-     * 通过文章id查询该文章的其它信息
-     * @param $article_id
-     * @return mixed
-     */
-    public static function getArticleUser($article_id)
-    {
-        return self::where('id',$article_id) -> get() -> toArray();
-    }
-
-    /**
      * 查找文章id返回作者author_id (int)
      * @param $article_id
      * @return mixed
@@ -169,5 +164,10 @@ class ArticlesBase extends Model
     public static function getAuthor($article_id)
     {
         return self::where('id',$article_id) -> value('author_id');
+    }
+
+    public function articles_comments()
+    {
+        return $this->hasMany(ArticlesComment::class, 'id', 'article_id');
     }
 }

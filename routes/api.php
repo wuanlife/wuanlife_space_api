@@ -29,7 +29,7 @@ Route::group([
     Route::post('/users/search', 'UsersCommon@get_users_search');
     // A3 获取用户文章列表
     Route::get('/users/{id?}/articles',['uses'=>'ArticlesController@getUsersArticles']);
-// A4 文章详情
+    // A4 文章详情
     Route::get('/articles/{id?}',['uses'=>'ArticlesController@show']);
 });
 

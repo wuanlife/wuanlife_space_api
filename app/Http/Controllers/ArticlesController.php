@@ -9,9 +9,9 @@ use App\Models\Articles\ArticlesContent;
 use App\Models\Articles\ArticlesStatus;
 use App\Models\Articles\ArticlesStatusDetail;
 use App\Models\Articles\UsersArticlesCount;
-use App\Models\Users\AvatarUrl;
 use App\Models\Users\UserCollections;
 use Illuminate\Http\Request;
+use Validator;
 
 
 class ArticlesController extends Controller
@@ -265,37 +265,42 @@ class ArticlesController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function postArticles(Request $request)
+    public function create(Request $request)
     {
         //获得用户id
         $user_id = $request->get('id-token')->uid;
-        if(empty($user_id)){
-            return response(['error' => '未登录，不能操作'],401);
-        }
+
         //获得将保存到articles_content的文章 title content
-        $articlescontent = $request -> all('title','content');
-        if(empty($articlescontent)){
-            return response(['error' => '创建失败'],400);
+        $article_content = $request -> all('title','content');
+        //表单验证
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|filled|between:1,60',
+            'content' => 'required|string|filled|between:1,5000',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $error = '';
+            foreach ($errors->all() as $message) {
+                $error .= $message;
+            }
+            return response(["error" => $error], Response::HTTP_BAD_REQUEST);
         }
-        //保存articles_base并获得将要用来保存的文章 id
-        $res_articlesbase = new ArticlesBase;
-        $res_articlesbase -> author_id = $user_id;
-        $res_articlesbase -> author_name = $request->get('id-token')->uname;
-        $res_articlesbase -> content_digest = mb_substr($articlescontent['content'],0,100,'utf-8');
-        $res_articlesbase_save = $res_articlesbase -> save();
-        if($res_articlesbase_save){
-            $res_articlescontent = ArticlesContent::create(
-                [
-                    'id' => $res_articlesbase -> id,
-                    'title' => $articlescontent['title'],
-                    'content' => $articlescontent['content']
-                ]
-            );
-            if($res_articlescontent){
-                return response(['id' => $res_articlesbase -> id],200);
-            }else{
-                return response(['error' => '创建失败'],400);
-            };
+        $id = ArticlesBase::max('id');
+        $article_content = ArticlesContent::create([
+            'id' => $id + 1,
+            'title' => $article_content['title'],
+            'content' => $article_content['content']
+        ]);
+
+        $article_content->base()->create([
+            'author_id' => $user_id,
+            'author_name' => $request->get('id-token')->uname,
+            'content_digest' => mb_substr($article_content['content'],0,100,'utf-8')
+        ]);
+
+        if($article_content){
+            return response(['id' => $article_content -> id],200);
         }else{
             return response(['error' => '创建失败'],400);
         }
