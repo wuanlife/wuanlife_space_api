@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Validator;
 
-class ArticlesCommentController extends Controller
+class ArticlesCommentsController extends Controller
 {
     /**
      * A5 文章评论列表
@@ -145,7 +145,7 @@ class ArticlesCommentController extends Controller
         }
 
         // 验证用户是否有权限进行操作，文章作者与评论者有权删除
-        if ($article_comment->article->author_id == $user_id || $article_comment->user_id == $user_id) {
+        if ($article_comment->article->author_id != $user_id || $article_comment->user_id != $user_id) {
             return response(["error" => "没有权限操作"], Response::HTTP_FORBIDDEN);
         }
 
