@@ -361,16 +361,17 @@ class ArticlesController extends Controller
         if(is_null($article_id)){
             return response(['error' => '文章不存在'],404);
         }
-        $author_id = ArticlesBase::getAuthor($article_id);
-        if($author_id != $user_id){
-            // 缺管理权限判断           if(is_admin($user_id)){}
+        $article = ArticlesBase::find($article_id);
+        if($article->author_id != $user_id){
+            // 缺管理权限判断
             return response(['error' => '没有权限操作'],403);
         };
-        if(ArticlesStatus::is_status($article_id,'delete')){
+        if(ArticlesStatus::status($article->articles_status->status,'删除')){
             return response(['error' => '文章已被删除'],410);
         }
-        $res_changestatus = ArticlesStatus::changeStatus($article_id,'delete');
-        if($res_changestatus){
+        $status = $article->articles_status->status | (1 << ArticlesStatusDetail::where('detail', '删除')->value('status'));
+        $res = ArticlesStatus::where('id', $article_id)->update(['status' => $status]);
+        if($res){
             return response('删除成功',204);
         }else{
             return response(['error' => '删除失败'],400);
