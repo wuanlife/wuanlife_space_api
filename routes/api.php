@@ -24,7 +24,7 @@ Route::group([
     // A1 首页
     Route::get('/articles', 'ArticlesController@index');
     // A14 文章搜索
-    Route::post('/articles/search', 'Articles_Commen@get_articles_search');
+    Route::post('/articles/search', 'ArticlesController@search');
     // U6 用户搜索
     Route::post('/users/search', 'UsersCommon@get_users_search');
     // A3 获取用户文章列表
@@ -53,6 +53,9 @@ Route::group([
     Route::post('/articles/{id}/comments', 'Articles_Commen@add_comments');
     // A9 删除文章评论
     Route::delete('/articles/{id}/comments/{floor}', 'ArticlesCommentsController@delete');
+    // A13 收藏文章
+    Route::post('/articles/{article_id}/approval','ArticleController@approval')->where('article_id','[0-9]+');
+    Route::delete('/articles/{article_id}/approval','ArticleController@del_approval')->where('article_id','[0-9]+');
 });
 
 /*****************************************
@@ -69,7 +72,5 @@ Route::group([
     //  A17 取消锁定
     Route::post('/articles/{id}/unlock', 'ArticlesStatusController@unlock');
 });
-Route::post('/articles/{article_id}/approval','ArticleController@approval')->where('article_id','[0-9]+');
-Route::delete('/articles/{article_id}/approval','ArticleController@del_approval')->where('article_id','[0-9]+');
 Route::put('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
 Route::delete('/users/{user_id}/collections','UserController@del_collect')->where('user_id','[0-9]+');

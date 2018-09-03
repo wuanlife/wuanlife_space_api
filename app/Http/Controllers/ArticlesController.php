@@ -11,13 +11,14 @@ use App\Models\Articles\ArticlesStatusDetail;
 use App\Models\Articles\UsersArticlesCount;
 use App\Models\Users\UserCollections;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Validator;
 
 
 class ArticlesController extends Controller
 {
     /**
-     * A1帖子主页
+     * A1 主页
      * @param Request $request
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -446,5 +447,58 @@ class ArticlesController extends Controller
         } else {
             return response(['未登录，不能操作'], 401);
         }
+    }
+
+
+    /**
+     * A14 搜索文章
+     * @param Request $request
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function search(Request $request)
+    {
+        $data = [
+            'limit'     => $request->input('limit') ?? 20,     //每页显示数
+            'offset'    => $request->input('offset') ?? 0,     //每页起始数
+            'keyword'     => $request->input('keyword'),       //关键字
+            'order'     => $request->input('order') ?? 'asc',
+        ];
+        if (!$data['keyword']) {
+            return response(["error" => '缺少keyword'], Response::HTTP_BAD_REQUEST);
+        }
+        $articles_id = ArticlesBase::search($data['keyword'])->keys()->toArray();
+        //sort($articles_id);
+        $article = ArticlesBase::wherein('articles_base.id',$articles_id)
+            ->wherenotin('articles_base.id',function ($query){
+                $query->select('articles_status.id')
+                    ->from('articles_status')
+                    ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
+            });
+
+        $articles =  $article->orderBy('update_at',$data['order'])->offset($data['offset'])->limit($data['limit'])->get();
+
+        foreach ($articles as $k=>$v) {
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$v->author_id}"
+            );
+            $user = json_decode($user_info['contents']);
+            $rs['articles'][$k]=[
+                "id"=>$v->id,
+                "title"=>$v->content['title'],
+                // "content"=>$v->content['content'],
+                "content_digest"=>$v->content_digest,
+                "update_at"=>$v->update_at,
+                "create_at"=>$v->create_at,
+                "author"=>[
+                    "avatar_url"=>$user->avatar_url,
+                    "name"=>$user->name,
+                    "id"=>$user->id
+                ]
+            ];
+        }
+        $rs['total'] = $article->count();
+        return $rs;
     }
 }
