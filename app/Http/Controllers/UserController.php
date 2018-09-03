@@ -12,12 +12,12 @@ class UserController extends Controller
     //收藏文章A12
     public function collect($user_id, Request $request)
     {
-        if ($request->get('Access-Token') != NULL) {
+        if ($request->get('id-token') != NULL) {
             //判断是否登陆
-            $uid = $request->get('Access-Token')->uid;
+            $uid = $request->get('id-token')->uid;
             if ($uid == $user_id) {
                 //判断uid和token里的id是否一致
-                $article_id = $request->input("artilce_id");
+                $article_id = $request->input("article_id");
 //                $article_id = 2;
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
@@ -32,6 +32,7 @@ class UserController extends Controller
                             $a = new User_collection;
                             $a->user_id = $user_id;
                             $a->article_id = $article_id;
+                            $a->create_at = time();
                             $bool = $a->save();
                             if ($bool == true) {
                                 return response(['收藏成功'], 204);
@@ -59,13 +60,13 @@ class UserController extends Controller
     //取消收藏文章A16
     public function del_collect($user_id, Request $request)
     {
-        if ($request->get('Access-Token') != NULL) {
+        if ($request->get('id-token') != NULL) {
             //判断是否登陆
-            $uid = $request->get('Access-Token')->uid;
+            $uid = $request->get('id-token')->uid;
             //判断是否登陆
             if ($uid == $user_id) {
                 //判断uid和token里的id是否一致
-                $article_id = $request->input("artilce_id");
+                $article_id = $request->input("article_id");
 //                $article_id = 1;
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
