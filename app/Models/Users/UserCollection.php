@@ -7,6 +7,7 @@
 
 namespace App\Models\Users;
 
+use App\Models\Articles\ArticlesBase;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -35,4 +36,10 @@ class UserCollection extends Eloquent
 	protected $fillable = [
 		'create_at'
 	];
+
+	public function article()
+    {
+        return $this->belongsTo(ArticlesBase::class, 'article_id', 'id');
+    }
+
 }

@@ -1,44 +1,38 @@
 <?php
 
-/**
- * Created by Reliese Model.
- * Date: Mon, 06 Aug 2018 02:29:28 +0000.
- */
-
 namespace App\Models\Articles;
 
-use Reliese\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class ArticlesComment
- * 
- * @property int $comment_id
- * @property int $article_id
- * @property int $user_id
- * @property int $floor
- * @property \Carbon\Carbon $create_at
- *
- * @package App\Models
- */
-class ArticlesComment extends Eloquent
+class ArticlesComment extends Model
 {
 	protected $primaryKey = 'comment_id';
 	public $timestamps = false;
 
-	protected $casts = [
-		'article_id' => 'int',
-		'user_id' => 'int',
-		'floor' => 'int'
-	];
+    protected $fillable = [
+        'article_id',
+        'user_id',
+        'floor',
+        'create_at'
+    ];
 
 	protected $dates = [
 		'create_at'
 	];
 
-	protected $fillable = [
-		'article_id',
-		'user_id',
-		'floor',
-		'create_at'
-	];
+    /**
+     * 评论详情
+     */
+    public function content()
+    {
+        return $this->hasOne(ArticlesCommentContent::class, 'id', 'comment_id');
+    }
+
+    /**
+     * 文章
+     */
+    public function article()
+    {
+        return $this->belongsTo(ArticlesBase::class, 'article_id', 'id');
+    }
 }

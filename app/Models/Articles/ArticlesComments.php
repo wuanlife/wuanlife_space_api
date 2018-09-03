@@ -11,7 +11,7 @@ namespace App\Models\Articles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Articles_Comment extends Model
+class ArticlesComments extends Model
 {
     protected $table = "articles_comments";//表名称
     protected $primaryKey = "comment_id";//主键
@@ -95,5 +95,16 @@ class Articles_Comment extends Model
     public function delete_articles_comments($comment_id)
     {
         return $this::destroy($comment_id);
+    }
+
+    /**
+     * 查询该文章是否已被评论
+     * @param $article_id
+     * @return mixed
+     */
+    public static function ArticleIsReplied($article_id)
+    {
+        $res = self::where('article_id',$article_id) -> first();
+        return $res ? true : false;
     }
 }
