@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Articles\ArticlesStatus;
+use App\Models\Users\UserCollection;
 use Illuminate\Http\Request;
 use App\Models\Users\user_collection;
 use App\Models\Articles\ArticlesBase;
@@ -98,5 +99,62 @@ class UserController extends Controller
         } else {
             return response(['未登录，不能操作'], 401);
         }
+    }
+
+    /**
+     * A13 收藏列表
+     * @param Request $request
+     * @param $user_id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCollect(Request $request, $user_id)
+    {
+        //判断是否登陆
+        if ($request->get('id-token') == NULL) {
+            return response(['未登录，不能操作'], 401);
+        }
+        $uid = $request->get('id-token')->uid;
+        //判断uid和token里的id是否一致
+        if ($uid != $user_id) {
+            return response(['没有权限操作'], 403);
+        }
+        //用户、作者相关
+        $user_info = Builder::requestInnerApi(
+            env('OIDC_SERVER'),
+            "/api/app/users/{$uid}"
+        );
+        $user = json_decode($user_info['contents']);
+        if(is_null($user)){
+            return response(['error'=>'获取用户文章列表失败'],400);
+        }
+        $author['name'] = $user->name;
+        $author['id'] = $uid;
+        //文章相关
+        $input = $request->all();
+        $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
+        $limit = empty($input['limit']) ? 20 : (int)$input['limit'];
+
+        $articles = UserCollection::with(['article.content', 'article.articles_status', 'article.articles_image'])->where(['user_id' => $uid])->offset($offset)->limit($limit)->get();
+        if($articles->isEmpty()){
+            return response(['articles' => array()],200);
+        }
+        $res = [];
+        foreach($articles as $article){
+//            dd($article->toArray());
+            $res[] = [
+                'id' => $article->article->id,
+                'title' => $article->article->content->title,
+                'content' => $article->article->content->content,
+                'update_at' => $article->article->update_at,
+                'create_at' => $article->article->create_at,
+                'collect_at' => $article->create_at,
+                'delete' => ArticlesStatus::status($article->article->articles_status->status, '删除'),
+                'image_urls' => $article->article->articles_image,
+            ];
+        }
+        $response['articles'] = $res;
+        $response['author'] = $author;
+        return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }

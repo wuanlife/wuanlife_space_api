@@ -57,6 +57,8 @@ Route::group([
     Route::put('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
     // A16 取消收藏
     Route::delete('/users/{user_id}/collections','UserController@del_collect')->where('user_id','[0-9]+');
+    // A13 收藏列表
+    Route::get('/users/{user_id}/collections','UserController@getCollect')->where('user_id','[0-9]+');
 });
 
 /*****************************************
