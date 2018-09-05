@@ -87,7 +87,7 @@ class ArticlesBase extends Model
      */
     public function comments_count()
     {
-        return $this->hasOne('App\Models\Articles\ArticlesCommentsCount','articles_id','id');
+        return $this->hasOne('App\Models\Articles\ArticlesCommentsCount','article_id','id');
     }
 
     /**
