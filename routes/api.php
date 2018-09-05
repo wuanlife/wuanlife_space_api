@@ -50,7 +50,7 @@ Route::group([
     // A11 删除文章
     Route::delete('/articles/{id}',['uses'=>'ArticlesController@deleteArticles']);
     // A7 评论文章
-    Route::post('/articles/{id}/comments', 'Articles_Commen@add_comments');
+    Route::post('/articles/{id}/comments', 'ArticlesCommentsController@create');
     // A9 删除文章评论
     Route::delete('/articles/{id}/comments/{floor}', 'ArticlesCommentsController@delete');
     // A12 收藏文章
