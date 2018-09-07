@@ -21,18 +21,6 @@ class ArticlesCommentsCount extends Model
     ];
 
     /**
-     * 新增评论总数
-     * @param $articles_id
-     * @return bool
-     */
-    public function add_articles_comments_count($articles_id)
-    {
-        $this->articles_id = $articles_id;
-        $this->count = 0;
-        return $this->save();
-    }
-
-    /**
      * 根据id获取评论总数
      * @param $articles_id
      * @return mixed

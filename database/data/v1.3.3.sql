@@ -175,14 +175,6 @@ CREATE TABLE IF NOT EXISTS articles_collections_count (
 -- ----------------------- 触发器 --------------------------------------------
 
 DELIMITER //
-
--- 用户注册时，注册用户收藏数、用户文章数缓存表
-CREATE TRIGGER set_users_default_buffer AFTER INSERT ON users_base FOR EACH ROW
-  BEGIN
-    INSERT INTO users_collections_count VALUES (NEW.id,DEFAULT );
-    INSERT INTO users_articles_count VALUES (NEW.id,DEFAULT );
-  END //
-
 -- 发表文章时，注册文章评论数 、 点赞数缓存表 和 文章被收藏数，并更新用户文章数缓存表
 CREATE TRIGGER set_articles_default_buffer AFTER INSERT ON articles_base FOR EACH ROW
   BEGIN
@@ -191,46 +183,62 @@ CREATE TRIGGER set_articles_default_buffer AFTER INSERT ON articles_base FOR EAC
     INSERT INTO articles_collections_count VALUES (NEW.id,DEFAULT );
     UPDATE users_articles_count set count = count + 1 WHERE user_id = new.author_id;
   END //
+DELIMITER ;
 
+DELIMITER //
 -- 删除文章时，更新缓存表数据
 CREATE TRIGGER set_articles_delete_buffer AFTER DELETE ON articles_base FOR EACH ROW
   BEGIN
     UPDATE users_articles_count set count = count - 1 WHERE user_id = OLD.author_id;
   END //
+DELIMITER ;
 
+DELIMITER //
 -- 使用触发器自动缓存用户评论数
 CREATE TRIGGER buffer_users_comment_count AFTER INSERT ON articles_comments FOR EACH ROW
   BEGIN
     UPDATE articles_comments_count SET count = count + 1 WHERE article_id = NEW.article_id;
   END //
+DELIMITER ;
 
+DELIMITER //
+-- 删除评论
 CREATE TRIGGER buffer_users_comment_count_cancel AFTER DELETE ON articles_comments FOR EACH ROW
   BEGIN
     UPDATE articles_comments_count SET count = count - 1 WHERE article_id = OLD.article_id;
   END //
+DELIMITER ;
 
+DELIMITER //
 -- 使用触发器自动缓存用户收藏数
 CREATE TRIGGER buffer_collections_count AFTER INSERT ON user_collections FOR EACH ROW
   BEGIN
     UPDATE users_collections_count SET count = count + 1 WHERE user_id = NEW.user_id;
 		UPDATE articles_collections_count set count = count + 1 WHERE article_id = NEW.article_id;
   END//
+DELIMITER ;
 
+DELIMITER //
+-- 取消收藏
 CREATE TRIGGER buffer_collections_count_cancel AFTER DELETE ON user_collections FOR EACH ROW
   BEGIN
     UPDATE users_collections_count SET count = count - 1 WHERE user_id = OLD.user_id;
 		UPDATE articles_collections_count set count = count - 1 WHERE article_id = OLD.article_id;
   END//
+DELIMITER ;
 
+DELIMITER //
 -- 使用触发器自动缓存文章点赞数
 CREATE TRIGGER buffer_approvals_count AFTER INSERT ON articles_approval FOR EACH ROW
   BEGIN
     UPDATE articles_approval_count set count = count + 1 WHERE article_id = NEW.article_id;
   END //
+DELIMITER ;
 
+DELIMITER //
+-- 取消收藏
 CREATE TRIGGER buffer_approvals_count_cancel AFTER DELETE ON articles_approval FOR EACH ROW
   BEGIN
     UPDATE articles_approval_count set count = count - 1 WHERE article_id = OLD.article_id;
   END //
-
 DELIMITER ;

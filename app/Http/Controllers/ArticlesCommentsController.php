@@ -171,6 +171,8 @@ class ArticlesCommentsController extends Controller
      */
     private function splicing($user, $comment)
     {
+        $time = explode(' ', $comment["create_at"]);
+        $created_at = $time[0] . 'T' . $time[1] . 'Z';
         $data = [
             "user" => [
                 "id" => $user->id,
@@ -178,7 +180,7 @@ class ArticlesCommentsController extends Controller
             ],
             "comment" => $comment->content,
             "floor" => $comment["floor"],
-            "create_at" => $comment["create_at"]
+            "create_at" => $created_at
         ];
         return $data;
     }
