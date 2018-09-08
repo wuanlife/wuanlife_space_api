@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Articles\ArticlesStatus;
 use App\Models\Users\UserCollection;
 use Illuminate\Http\Request;
-use App\Models\Users\user_collection;
+use App\Models\Users\User_collection;
 use App\Models\Articles\ArticlesBase;
 
 class UserController extends Controller
@@ -23,7 +23,10 @@ class UserController extends Controller
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first();
+                    if ($status) {
+                        $status = $status->status;
+                    }
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
