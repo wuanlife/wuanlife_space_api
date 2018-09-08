@@ -124,17 +124,7 @@ class UserController extends Controller
         if ($uid != $user_id) {
             return response(['没有权限操作'], 403);
         }
-        //用户、作者相关
-        $user_info = Builder::requestInnerApi(
-            env('OIDC_SERVER'),
-            "/api/app/users/{$uid}"
-        );
-        $user = json_decode($user_info['contents']);
-        if(is_null($user)){
-            return response(['error'=>'获取用户文章列表失败'],400);
-        }
-        $author['name'] = $user->name;
-        $author['id'] = $uid;
+
         //文章相关
         $input = $request->all();
         $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
@@ -146,6 +136,17 @@ class UserController extends Controller
         }
         $res = [];
         foreach($articles as $article){
+            //用户、作者相关
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$article->article->author_id}"
+            );
+            $user = json_decode($user_info['contents']);
+            if(is_null($user)){
+                return response(['error'=>'获取用户文章列表失败'],400);
+            }
+            $author['name'] = $user->name;
+            $author['id'] = $uid;
             $time = explode(' ', $article->create_at);
             $collect_at = $time[0] . 'T' . $time[1] . 'Z';
             $res[] = [
@@ -157,10 +158,10 @@ class UserController extends Controller
                 'collect_at' => $collect_at,
                 'delete' => isset($article->article->articles_status->status) ? ArticlesStatus::status($article->article->articles_status->status, '删除') : false,
                 'image_urls' => $article->article->articles_image,
+                'author' => $author
             ];
         }
         $response['articles'] = $res;
-        $response['author'] = $author;
         return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }
