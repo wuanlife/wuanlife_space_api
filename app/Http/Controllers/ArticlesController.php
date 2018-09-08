@@ -418,19 +418,22 @@ class ArticlesController extends Controller
     //A15 取消点赞
     public function del_approval($article_id, Request $request)
     {
-        if ($request->get('Access-Token') != NULL) {
+        if ($request->get('id-token') != NULL) {
             //判断用户是否登陆
-            $user_id = $request->get('Access-Token')->uid;
-            $bool = Article_base::find($article_id);
+            $user_id = $request->get('id-token')->uid;
+            $bool = ArticlesBase::find($article_id);
             if (isset($bool)) {
                 //判断文章是否存在
-                $status = Articles_status::where('id', $article_id)->first()->status;
+                $status = ArticlesStatus::where('id', $article_id)->first();
+                if ($status) {
+                    $status = $status->status;
+                }
                 if ($status != 4) {
                     //判断文章是否被删除 4为删除
-                    $user = Article_approval::where(['article_id' => $article_id, 'user_id' => $user_id])->first();
+                    $user = ArticlesApproval::where(['article_id' => $article_id, 'user_id' => $user_id])->first();
                     if ($user == true) {
                         //判断用户是否已点赞
-                        $bool = Article_approval::where(['article_id' => $article_id, 'user_id' => $user_id])->delete();
+                        $bool = ArticlesApproval::where(['article_id' => $article_id, 'user_id' => $user_id])->delete();
                         if ($bool == true) {
                             return response(['取消点赞成功'], 204);
                         } else {

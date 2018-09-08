@@ -84,8 +84,7 @@ class ArticlesCommentsController extends Controller
 
         $comment = $request->input("comment");
         $user_id = $request->get("id-token")->uid;
-        // 开启事务
-        DB::beginTransaction();
+
         // 判断文章是否存在
         $article = ArticlesBase::find($id);
         if (!$article) {
@@ -168,19 +167,20 @@ class ArticlesCommentsController extends Controller
      * 拼接信息
      * @param $user
      * @param $comment
-     * @param $articles_comments
      * @return array
      */
-    private function splicing($user, $comment, $articles_comments)
+    private function splicing($user, $comment)
     {
+        $time = explode(' ', $comment["create_at"]);
+        $created_at = $time[0] . 'T' . $time[1] . 'Z';
         $data = [
             "user" => [
                 "id" => $user->id,
                 "name" => $user->name,
             ],
-            "comment" => $comment["content"],
-            "floor" => $articles_comments["floor"],
-            "create_at" => $articles_comments["create_at"]
+            "comment" => $comment->content,
+            "floor" => $comment["floor"],
+            "create_at" => $created_at
         ];
         return $data;
     }

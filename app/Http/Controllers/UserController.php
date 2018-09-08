@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Articles\ArticlesStatus;
 use App\Models\Users\UserCollection;
 use Illuminate\Http\Request;
-use App\Models\Users\user_collection;
+use App\Models\Users\User_collection;
 use App\Models\Articles\ArticlesBase;
 
 class UserController extends Controller
@@ -23,7 +23,10 @@ class UserController extends Controller
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first();
+                    if ($status) {
+                        $status = $status->status;
+                    }
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
@@ -68,11 +71,13 @@ class UserController extends Controller
             if ($uid == $user_id) {
                 //判断uid和token里的id是否一致
                 $article_id = $request->input("article_id");
-//                $article_id = 1;
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first();
+                    if ($status) {
+                        $status = $status->status;
+                    }
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
@@ -119,17 +124,7 @@ class UserController extends Controller
         if ($uid != $user_id) {
             return response(['没有权限操作'], 403);
         }
-        //用户、作者相关
-        $user_info = Builder::requestInnerApi(
-            env('OIDC_SERVER'),
-            "/api/app/users/{$uid}"
-        );
-        $user = json_decode($user_info['contents']);
-        if(is_null($user)){
-            return response(['error'=>'获取用户文章列表失败'],400);
-        }
-        $author['name'] = $user->name;
-        $author['id'] = $uid;
+
         //文章相关
         $input = $request->all();
         $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
@@ -141,20 +136,32 @@ class UserController extends Controller
         }
         $res = [];
         foreach($articles as $article){
-//            dd($article->toArray());
+            //用户、作者相关
+            $user_info = Builder::requestInnerApi(
+                env('OIDC_SERVER'),
+                "/api/app/users/{$article->article->author_id}"
+            );
+            $user = json_decode($user_info['contents']);
+            if(is_null($user)){
+                return response(['error'=>'获取用户文章列表失败'],400);
+            }
+            $author['name'] = $user->name;
+            $author['id'] = $uid;
+            $time = explode(' ', $article->create_at);
+            $collect_at = $time[0] . 'T' . $time[1] . 'Z';
             $res[] = [
                 'id' => $article->article->id,
                 'title' => $article->article->content->title,
                 'content' => $article->article->content->content,
                 'update_at' => $article->article->update_at,
                 'create_at' => $article->article->create_at,
-                'collect_at' => $article->create_at,
-                'delete' => ArticlesStatus::status($article->article->articles_status->status, '删除'),
+                'collect_at' => $collect_at,
+                'delete' => isset($article->article->articles_status->status) ? ArticlesStatus::status($article->article->articles_status->status, '删除') : false,
                 'image_urls' => $article->article->articles_image,
+                'author' => $author
             ];
         }
         $response['articles'] = $res;
-        $response['author'] = $author;
         return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }
