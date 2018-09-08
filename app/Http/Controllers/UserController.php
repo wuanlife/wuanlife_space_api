@@ -144,15 +144,16 @@ class UserController extends Controller
         }
         $res = [];
         foreach($articles as $article){
-//            dd($article->toArray());
+            $time = explode(' ', $article->create_at);
+            $collect_at = $time[0] . 'T' . $time[1] . 'Z';
             $res[] = [
                 'id' => $article->article->id,
                 'title' => $article->article->content->title,
                 'content' => $article->article->content->content,
                 'update_at' => $article->article->update_at,
                 'create_at' => $article->article->create_at,
-                'collect_at' => $article->create_at,
-                'delete' => ArticlesStatus::status($article->article->articles_status->status, '删除'),
+                'collect_at' => $collect_at,
+                'delete' => isset($article->article->articles_status->status) ? ArticlesStatus::status($article->article->articles_status->status, '删除') : false,
                 'image_urls' => $article->article->articles_image,
             ];
         }
