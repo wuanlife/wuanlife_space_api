@@ -55,6 +55,8 @@ Route::group([
     Route::delete('/articles/{id}/comments/{floor}', 'ArticlesCommentsController@delete');
     // A12 收藏文章
     Route::put('/users/{user_id}/collections','UserController@collect')->where('user_id','[0-9]+');
+    // A15 取消点赞
+    Route::delete('/articles/{id}/approval', 'ArticlesController@del_approval');
     // A16 取消收藏
     Route::delete('/users/{user_id}/collections','UserController@del_collect')->where('user_id','[0-9]+');
     // A13 收藏列表
