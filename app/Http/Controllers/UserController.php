@@ -71,11 +71,13 @@ class UserController extends Controller
             if ($uid == $user_id) {
                 //判断uid和token里的id是否一致
                 $article_id = $request->input("article_id");
-//                $article_id = 1;
                 $bool = ArticlesBase::find($article_id);
                 if (isset($bool)) {
                     //判断文章是否存在
-                    $status = ArticlesStatus::where('id', $article_id)->first()->status;
+                    $status = ArticlesStatus::where('id', $article_id)->first();
+                    if ($status) {
+                        $status = $status->status;
+                    }
                     if ($status != 4) {
                         //判断文章是否被删除 4为删除
                         $user = User_collection::where(['user_id' => $user_id, 'article_id' => $article_id])->first();
