@@ -31,6 +31,7 @@ class ArticlesController extends Controller
             'order' => $request->input('order') ?? 'asc',
             'id' => $request->get('id-token')->uid ?? null,
         ];
+        $page = $data['offset'] / $data['limit'];
         $with = [
             'approved' => function ($query) use ($data) {
                 $query->where('user_id', $data['id']);
@@ -48,7 +49,7 @@ class ArticlesController extends Controller
                 ->from('articles_status')
                 ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
         });
-        $articles = $article->orderBy('update_at', $data['order'])->paginate($data['limit'], ['*'], '', $data['offset']);
+        $articles = $article->orderBy('update_at', $data['order'])->paginate($data['limit'], ['*'], '', $page);
         foreach ($articles as $article) {
             $images = [];
             foreach ($article->articles_image as $k =>  $url) {
@@ -322,7 +323,7 @@ class ArticlesController extends Controller
         if(is_null($article_id)){
             return response(['error' => '文章不存在'],404);
         }
-        if(ArticlesStatus::is_status($article_id,'delete')){
+        if(ArticlesStatus::status($article_id,'删除')){
             return response(['error' => '文章已被删除'],410);
         }
         $author_id = ArticlesBase::getAuthor($article_id);
@@ -330,17 +331,37 @@ class ArticlesController extends Controller
             // 缺管理权限判断           if(is_admin($user_id)){}
             return response(['error' => '没有权限操作'],403);
         };
-        //接收put过来的数据，并转换成数组
-        $res_put = file_get_contents('php://input');
-        $res_put = json_decode($res_put,true);
+
+        //获得将保存到articles_content的文章 title content
+        $article_content = $request -> all('title','content');
+        //表单验证
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|filled|between:1,60',
+            'content' => 'required|string|filled|between:1,5000',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $error = '';
+            foreach ($errors->all() as $message) {
+                $error .= $message;
+            }
+            return response(["error" => $error], Response::HTTP_BAD_REQUEST);
+        }
         //查找文章是否存在，如果存在，而开始编辑
         $res_articlescontent = ArticlesContent::find($article_id);
         if($res_articlescontent){
-            if($res_articlescontent -> update($res_put)){
-                return response(['id' => $article_id],200);
+            if($res_articlescontent->update($article_content)){
+                $article_base = ArticlesBase::find($article_id);
+                $article_base->content_digest = mb_substr($article_content['content'],0,100,'utf-8');
+                if ($article_base->save()) {
+                    return response(['id' => $article_id],200);
+                } else {
+                    return response(['error' => '编辑失败'],400);
+                }
             }else{
                 return response(['error' => '编辑失败'],400);
-            };
+            }
         }else{
             return response(['error' => '文章不存在'],404);
         }
