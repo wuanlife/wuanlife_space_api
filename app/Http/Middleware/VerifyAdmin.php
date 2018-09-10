@@ -23,6 +23,9 @@ class VerifyAdmin
             $user_id = $id_token->uid;
 
             $user = UsersAuth::find($user_id);
+            if (!$user) {
+                return response(['error' => 'Insufficient permissions,need administrator rights'], 403);
+            }
             $auth = $user->auth()->whereIn('identity', ['管理员','最高管理员'])->count();
             if (!$auth) {
                 return response(['error' => 'Insufficient permissions,need administrator rights'], 403);

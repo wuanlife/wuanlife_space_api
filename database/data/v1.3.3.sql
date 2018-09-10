@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS users_auth
 CREATE TABLE IF NOT EXISTS auth_detail
 (
   id INT UNSIGNED AUTO_INCREMENT NOT NULL COMMENT '权限id(偏移量)',
-  indentity VARCHAR(30) COLLATE utf8_bin NOT NULL COMMENT '权限类型',
+  identity VARCHAR(30) COLLATE utf8_bin NOT NULL COMMENT '权限类型',
   PRIMARY KEY (id),
-  UNIQUE KEY (indentity)
+  UNIQUE KEY (identity)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='权限对应关系表';
 
 -- 文章基础信息表
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS articles_status
 (
   id INT UNSIGNED NOT NULL COMMENT '文章id',
   status TINYINT UNSIGNED NOT NULL COMMENT '文章状态',
-  create_at TIMESTAMP NOT NULL COMMENT '操作时间',
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY articles_status_index(status,id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='文章状态表';
 
