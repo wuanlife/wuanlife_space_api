@@ -31,7 +31,7 @@ class ArticlesController extends Controller
             'order' => $request->input('order') ?? 'asc',
             'id' => $request->get('id-token')->uid ?? null,
         ];
-        $page = $data['offset'] / $data['limit'];
+        $page = ($data['offset'] / $data['limit']) + 1;
         $with = [
             'approved' => function ($query) use ($data) {
                 $query->where('user_id', $data['id']);
