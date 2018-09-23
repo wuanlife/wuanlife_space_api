@@ -228,7 +228,7 @@ class ArticlesController extends Controller
         if ($request->get('id-token')) {
             $user_id = $request->get('id-token')->uid;
         }
-        $article = ArticlesBase::find($article_id);
+        $article = ArticlesBase::with('collected')->find($article_id);
         if (!$article) {
             return response(['error' => '文章不存在'], 404);
         }
@@ -250,7 +250,7 @@ class ArticlesController extends Controller
         $res['lock'] = ArticlesStatus::status(isset($article->articles_status->status) ? $article->articles_status->status : 0, 'lock');
         $res['approved'] = ArticlesApproval::getApproved($article_id);
         $res['approved_num'] = ArticlesApprovalCount::getApprovedNum($article_id);
-        $res['collected'] = is_null($user_id) ? false : UserCollections::getIsCollected($user_id, $article_id);
+        $res['collected'] = $article->collected ? TRUE : FALSE;
         $res['collected_num'] = UserCollections::getCollectedNum($article_id);
         $res['author'] = [
             'id' => $article->author_id,
