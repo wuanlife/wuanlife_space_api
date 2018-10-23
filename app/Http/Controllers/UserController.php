@@ -7,6 +7,7 @@ use App\Models\Users\UserCollection;
 use Illuminate\Http\Request;
 use App\Models\Users\User_collection;
 use App\Models\Articles\ArticlesBase;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -163,5 +164,42 @@ class UserController extends Controller
         }
         $response['articles'] = $res;
         return response()->json($response,200)->setEncodingOptions(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * U7 获取活跃用户
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function active(Request $request)
+    {
+        $limit = $request->input('limit') ?? 10;
+        //每页显示数
+        $offset = $request->input('offset') ?? 0;   //每页起始数
+        $page = ($offset / $limit) + 1;
+        try {
+            $users = ArticlesBase::whereMonth('create_at', 8)->distinct()->select('author_id')->paginate($limit, ['*'], '', $page);
+            if ($users->isEmpty()) {
+                return response(['au' => [], 'total' => 0], Response::HTTP_OK);
+            }
+            foreach($users as $user) {
+                $user_info = Builder::requestInnerApi(
+                    env('OIDC_SERVER'),
+                    "/api/app/users/{$user->author_id}"
+                );
+                $user_info = json_decode($user_info['contents']);
+                $res['au'][] = [
+                    'id' => $user->author_id,
+                    'name' => $user_info->name,
+                    'avatar_url' => $user_info->avatar_url,
+                    'monthly_articles_num' => ArticlesBase::where('author_id', $user->author_id)->count()
+                ];
+            }
+            $res['total'] = $users->total();
+            return response($res, 200);
+        } catch (\Exception $exception) {
+            return response(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
