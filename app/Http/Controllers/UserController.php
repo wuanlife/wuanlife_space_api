@@ -193,7 +193,7 @@ class UserController extends Controller
                     'id' => $user->author_id,
                     'name' => $user_info->name,
                     'avatar_url' => $user_info->avatar_url,
-                    'monthly_articles_num' => ArticlesBase::where('author_id', $user->author_id)->count()
+                    'monthly_articles_num' => ArticlesBase::whereMonth('create_at', 8)->where('author_id', $user->author_id)->count()
                 ];
             }
             $res['total'] = $users->total();
