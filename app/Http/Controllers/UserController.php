@@ -179,7 +179,8 @@ class UserController extends Controller
         $offset = $request->input('offset') ?? 0;   //每页起始数
         $page = ($offset / $limit) + 1;
         try {
-            $users = ArticlesBase::whereMonth('create_at', 8)->distinct()->select('author_id')->paginate($limit, ['*'], '', $page);
+            $users = ArticlesBase::whereMonth('create_at', date('m', time()))->distinct()->select('author_id')->paginate($limit, ['*'], '', $page);
+            $total = ArticlesBase::whereMonth('create_at',  date('m', time()))->distinct()->select('author_id')->get();
             if ($users->isEmpty()) {
                 return response(['au' => [], 'total' => 0], Response::HTTP_OK);
             }
@@ -193,11 +194,11 @@ class UserController extends Controller
                     'id' => $user->author_id,
                     'name' => $user_info->name,
                     'avatar_url' => $user_info->avatar_url,
-                    'monthly_articles_num' => ArticlesBase::where('author_id', $user->author_id)->count()
+                    'monthly_articles_num' => ArticlesBase::whereMonth('create_at',  date('m', time()))->where('author_id', $user->author_id)->count()
                 ];
             }
-            $res['total'] = $users->total();
-            return response($res, 200);
+            $res['total'] = $total->count();
+            return response($res, Response::HTTP_OK);
         } catch (\Exception $exception) {
             return response(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
