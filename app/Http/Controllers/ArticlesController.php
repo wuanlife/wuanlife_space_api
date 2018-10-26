@@ -502,7 +502,9 @@ class ArticlesController extends Controller
             });
 
         $articles =  $article->orderBy('update_at',$data['order'])->offset($data['offset'])->limit($data['limit'])->get();
-
+        if ($articles->isEmpty()) {
+            return response(['articles' => [], 'total' => 0], Response::HTTP_OK);
+        }
         foreach ($articles as $k=>$v) {
             $user_info = Builder::requestInnerApi(
                 env('OIDC_SERVER'),
