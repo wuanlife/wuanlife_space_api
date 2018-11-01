@@ -25,11 +25,13 @@ class ArticlesController extends Controller
      */
     public function index(Request $request)
     {
+        $id_token = $request->header('ID-Token');
+        $id = $id_token ? json_decode(base64_decode(explode('.', $id_token)[1]))->uid : null;
         $data = [
             'limit' => $request->input('limit') ?? 10,     //每页显示数
             'offset' => $request->input('offset') ?? 0,     //每页起始数
             'order' => $request->input('order') ?? 'asc',
-            'id' => $request->get('id-token')->uid ?? null,
+            'id' => $id
         ];
         $page = ($data['offset'] / $data['limit']) + 1;
         $with = [
