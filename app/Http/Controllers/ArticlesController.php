@@ -185,13 +185,21 @@ class ArticlesController extends Controller
         $author['avatar_url'] = $user->avatar_url;
         $author['name'] = $user->name;
         $author['id'] = $id;
-        $author['articles_num'] = UsersArticlesCount::ArticlesNum($id);
+        $author['articles_num'] = UsersArticlesCount::ArticlesNum($id) ?? 0;
         //文章相关
         $input = $request -> all();
         $offset = empty($input['offset']) ? 0 : (int)$input['offset'];
         $limit = empty($input['limit']) ? 20 : (int)$input['limit'];
+        $page = ($offset / $limit) + 1;
 
-        $articles = ArticlesBase::with(['content', 'approved', 'approval_count', 'collected', 'collections_count', 'comments_count', 'replied', 'articles_image'])->where(['author_id' => $id])->offset($offset)->limit($limit)->get();
+        $articles = ArticlesBase::with(['content', 'approved', 'approval_count', 'collected', 'collections_count', 'comments_count', 'replied', 'articles_image'])
+            ->where(['author_id' => $id])
+            ->whereNotExists(function ($query) {
+                $query->select('articles_status.id')
+                    ->from('articles_status')
+                    ->whereRaw('`status` >> 2 & 1 = 1 AND articles_base.id = articles_status.id');
+            })
+            ->paginate($limit, ['*'], '', $page);
         if($articles->isEmpty()){
             return response(['articles' => array()],200);
         }
@@ -289,6 +297,13 @@ class ArticlesController extends Controller
                 $error .= $message;
             }
             return response(["error" => $error], Response::HTTP_BAD_REQUEST);
+        }
+
+        // 判断用户文章数
+        if (!UsersArticlesCount::ArticlesNum($user_id)) {
+            $user_articles_count = new UsersArticlesCount();
+            $user_articles_count->user_id = $user_id;
+            $user_articles_count->save();
         }
         $id = ArticlesBase::max('id');
         $article_content = ArticlesContent::create([
