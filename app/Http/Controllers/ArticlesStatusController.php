@@ -65,6 +65,10 @@ class ArticlesStatusController extends Controller
             return response(['error' => '该文章不存在'], 404);
         }
 
+        if (!$article->articles_status) {
+            return response([], 204);
+        }
+
         if (ArticlesStatus::status($article->articles_status->status, '删除')) {
             return response(['error' => '文章已被删除'], 410);
         }

@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS articles_content (
 
 -- 文章状态表
 -- 使用 | 操作符来进行状态的叠加，使用 & 运算符进行状态的判断
+-- 1 锁定 2 删除
 CREATE TABLE IF NOT EXISTS articles_status
 (
   id INT UNSIGNED NOT NULL COMMENT '文章id',

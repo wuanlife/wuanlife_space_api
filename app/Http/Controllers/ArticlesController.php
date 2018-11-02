@@ -384,21 +384,33 @@ class ArticlesController extends Controller
         if(is_null($article_id)){
             return response(['error' => '文章不存在'],404);
         }
-        $article = ArticlesBase::find($article_id);
+        $article = ArticlesBase::with('articles_status')->find($article_id);
         if($article->author_id != $user_id){
             // 缺管理权限判断
             return response(['error' => '没有权限操作'],403);
         };
-        if(ArticlesStatus::status($article->articles_status->status,'删除')){
+        if($article->articles_status && ArticlesStatus::status($article->articles_status->status,'删除')){
             return response(['error' => '文章已被删除'],410);
         }
-        $status = $article->articles_status->status | (1 << ArticlesStatusDetail::where('detail', '删除')->value('status'));
-        $res = ArticlesStatus::where('id', $article_id)->update(['status' => $status]);
+
+        if ($article->articles_status) {
+            $status = $article->articles_status->status | (1 << ArticlesStatusDetail::where('detail', '删除')->value('status'));
+        } else {
+            $status = (1 << ArticlesStatusDetail::where('detail', '删除')->value('status'));
+        }
+        if (!$article->articles_status) {
+            $article_status = new ArticlesStatus();
+            $article_status->id = $article_id;
+            $article_status->status = $status;
+            $res = $article_status->save();
+        } else {
+            $res = ArticlesStatus::where('id', $article_id)->update(['status' => $status]);
+        }
         if($res){
             return response('删除成功',204);
         }else{
             return response(['error' => '删除失败'],400);
-        };
+        }
     }
 
     /**
