@@ -210,7 +210,27 @@ class ArticlesController extends Controller
         $res_articlesbase = new ArticlesBase;
         $res_articlesbase -> author_id = $user_id;
         $res_articlesbase -> author_name = $request->get('id-token')->uname;
-        $res_articlesbase -> content_digest = mb_substr($articlescontent['content'],0,100,'utf-8');
+//        $res_articlesbase -> content_digest = mb_substr($articlescontent['content'],0,100,'utf-8');  //旧方法摘要
+        //正则出三条正文中的url地址  CC 2018-11-23
+        $image_urls_arr = [];
+        $i = -1;
+        $articlescontent['content'] = preg_replace_callback(
+            '/<img [^>]*src="([^"]+)"[^>]*>/',
+            function ($matches) use (&$image_urls_arr,&$i){
+                if ($i < 3){
+                    $i++;
+                    $image_urls_arr[] = $matches[1];
+                }
+                return $matches[0];
+            },$articlescontent['content']);
+
+        $res_articlesbase -> content_digest =
+            substr(
+                strip_tags(
+                    preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content)
+                ),
+                0,100).'...';
+
         $res_articlesbase_save = $res_articlesbase -> save();
         if($res_articlesbase_save){
             $res_articlescontent = ArticlesContent::create(
@@ -220,6 +240,16 @@ class ArticlesController extends Controller
                     'content' => $articlescontent['content']
                 ]
             );
+            //保存摘要3张图片 2018-11-23
+            foreach($image_urls_arr as $v){
+                $res_imageurl = ImageUrl::create(
+                    [
+                        'article_id' => $res_articlesbase -> id,
+                        'url' => $v,
+                        'delete_flg' =>0
+                    ]
+                );
+            }
             if($res_articlescontent){
                 return response(['id' => $res_articlesbase -> id],200);
             }else{
