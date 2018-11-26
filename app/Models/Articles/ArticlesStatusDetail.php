@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class ArticlesStatusDetail
- * 
+ *
  * @property int $status
  * @property string $detail
  *
@@ -19,21 +19,19 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class ArticlesStatusDetail extends Eloquent
 {
-	protected $primaryKey = 'status';
-	public $incrementing = false;
-	public $timestamps = false;
-
-	protected $casts = [
-		'status' => 'int'
-	];
-
-	protected $fillable = [
-		'detail'
-	];
-
     protected $table = 'articles_status_detail';
     protected $primaryKey = 'status';
+    public $incrementing = false;
     public $timestamps = false;
+
+    protected $casts = [
+        'status' => 'int'
+    ];
+
+    protected $fillable = [
+        'detail'
+    ];
+
 
     /**
      * 查询文章状态码详情

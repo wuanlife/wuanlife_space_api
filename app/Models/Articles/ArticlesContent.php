@@ -27,23 +27,9 @@ class ArticlesContent extends Model
         'content'
     ];
 
-    /**
-     * 获得文章Title
-     * @param $id
-     * @return mixed
-     */
-    public static function getArticleTitle($id)
+    public function base()
     {
-        return self::find($id) -> toArray()['title'];
+        return $this->belongsTo(ArticlesBase::class, 'id', 'id');
     }
 
-    /**
-     * 获得文章具体内容
-     * @param $id
-     * @return mixed
-     */
-    public static function getArticleContent($id)
-    {
-        return self::find($id) -> toArray()['content'];
-    }
 }

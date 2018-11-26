@@ -29,4 +29,36 @@ class CommentContent extends Eloquent
 	protected $fillable = [
 		'content'
 	];
+
+    /**
+     * 根据id获取评论
+     * @param $id
+     * @return mixed
+     */
+    public function get_comment_by_id($id)
+    {
+        return $this->where("id", "=", $id)->first();
+    }
+
+    public function get_comment_id_by_floor()
+    {
+    }
+
+    /**
+     * 根据评论id删除评论
+     * @param $comment_id
+     * @return mixed
+     */
+    public function delete_comment($comment_id)
+    {
+        //开启事务
+        return DB::transaction(function () use ($comment_id) {
+            $articles_comments = new ArticlesComments();
+            if ($articles_comments->delete_articles_comments($comment_id) > 0 &&
+                $this::destroy($comment_id) > 0) {
+                return true;
+            }
+            return false;
+        });
+    }
 }
