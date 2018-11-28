@@ -319,7 +319,7 @@ class ArticlesController extends Controller
         $res_articlesbase -> content_digest =
             substr(
                 strip_tags(
-                    preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$content)
+                    preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$article_content['content'])
                 ),
                 0,100).'...';
 
@@ -328,8 +328,8 @@ class ArticlesController extends Controller
             $res_articlescontent = ArticlesContent::create(
                 [
                     'id' => $res_articlesbase -> id,
-                    'title' => $articlescontent['title'],
-                    'content' => $articlescontent['content']
+                    'title' => $article_content['title'],
+                    'content' => $article_content['content']
                 ]
             );
             //保存摘要3张图片 2018-11-23
