@@ -306,7 +306,7 @@ class ArticlesController extends Controller
         //正则出三条正文中的url地址  CC 2018-11-23
         $image_urls_arr = [];
         $i = -1;
-        $articlescontent['content'] = preg_replace_callback(
+        $article_content['content'] = preg_replace_callback(
             '/<img [^>]*src="([^"]+)"[^>]*>/',
             function ($matches) use (&$image_urls_arr,&$i){
                 if ($i < 3){
@@ -314,7 +314,7 @@ class ArticlesController extends Controller
                     $image_urls_arr[] = $matches[1];
                 }
                 return $matches[0];
-            },$articlescontent['content']);
+            },$article_content['content']);
 
         $res_articlesbase -> content_digest =
             substr(
