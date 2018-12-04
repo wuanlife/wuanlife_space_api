@@ -17,8 +17,8 @@ class ArticlesBase extends Model
     {
         return [
             'id' => $this->id,
-            'title' => $this->content->title,
-            'content' => $this->content->content,
+//            'title' => $this->content->title,
+//            'content' => $this->content->content,
         ];
     }
     protected $table = 'articles_base';
