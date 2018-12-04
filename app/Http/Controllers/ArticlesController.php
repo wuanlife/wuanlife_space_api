@@ -8,6 +8,7 @@ use App\Models\Articles\ArticlesBase;
 use App\Models\Articles\ArticlesContent;
 use App\Models\Articles\ArticlesStatus;
 use App\Models\Articles\ArticlesStatusDetail;
+use App\Models\Articles\ImageUrl;
 use App\Models\Articles\UsersArticlesCount;
 use App\Models\Users\UserCollections;
 use Illuminate\Http\Request;
@@ -306,7 +307,7 @@ class ArticlesController extends Controller
         //正则出三条正文中的url地址  CC 2018-11-23
         $image_urls_arr = [];
         $i = -1;
-        $article_content['content'] = htmlentities($article_content['content'],ENT_QUOTES);
+//        $article_content['content'] = htmlentities($article_content['content'],ENT_QUOTES);
         $article_content['content'] = preg_replace_callback(
             '/<img [^>]*src="([^"]+)"[^>]*>/',
             function ($matches) use (&$image_urls_arr,&$i){
@@ -318,7 +319,7 @@ class ArticlesController extends Controller
             },$article_content['content']);
 
         $res_articlesbase -> content_digest =
-            substr(
+            mb_substr(
                 strip_tags(
                     preg_replace('/<img [^>]*src="([^"]+)"[^>]*>/','[图片]',$article_content['content'])
                 ),
@@ -339,7 +340,6 @@ class ArticlesController extends Controller
                     [
                         'article_id' => $res_articlesbase -> id,
                         'url' => $v,
-                        'delete_flg' =>0
                     ]
                 );
             }
